@@ -1,8 +1,10 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../router/locations/locations.dart';
+import 'bottom_nav_bar_model.dart';
 
 class CustomBottomNavBar extends StatefulWidget {
   const CustomBottomNavBar({super.key, required this.beamerKey});
@@ -113,4 +115,15 @@ class CustomBottomNavBarItem extends BottomNavigationBarItem {
       String? label,
       Widget? activeIcon})
       : super(icon: icon, label: label, activeIcon: activeIcon ?? icon);
+}
+
+abstract class CustomBottomNavBarController
+    extends StateNotifier<CustomBottomNavBarModel> {
+  CustomBottomNavBarController() : super(const CustomBottomNavBarModel());
+
+  List<BottomNavigationBarItem> getNavBarItems();
+  void goToOtherPage(int index, BuildContext context);
+
+  set currentIndex(int index);
+  set iconSize(double iconSize);
 }
