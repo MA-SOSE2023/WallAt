@@ -1,5 +1,6 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../provider.dart';
@@ -11,6 +12,41 @@ class CustomBottomNavBar extends ConsumerStatefulWidget {
   final GlobalKey<BeamerState> beamerKey;
 
   static const double iconSize = 30.0;
+
+  static const List<CustomBottomNavBarItem> baseItems = [
+    CustomBottomNavBarItem(
+      icon: Icon(Icons.home),
+      activeIcon: Icon(Icons.home),
+      label: 'HOME',
+      initialLocation: '/home',
+    ),
+    CustomBottomNavBarItem(
+      icon: Icon(Icons.favorite_outline),
+      activeIcon: Icon(Icons.favorite),
+      label: 'FAVORITES',
+      initialLocation: '/favorites',
+    ),
+    CustomBottomNavBarItem(
+      icon: Icon(Icons.folder_open),
+      activeIcon: Icon(Icons.folder),
+      label: 'FOLDERS',
+      initialLocation: '/folders',
+    ),
+  ];
+
+  static const CustomBottomNavBarItem cameraItem = CustomBottomNavBarItem(
+    icon: Icon(Icons.camera_alt_outlined),
+    activeIcon: Icon(Icons.camera_alt),
+    label: 'CAMERA',
+    initialLocation: '/camera',
+  );
+
+  static const CustomBottomNavBarItem settingsItem = CustomBottomNavBarItem(
+    icon: Icon(Icons.settings_outlined),
+    activeIcon: Icon(Icons.settings),
+    label: 'SETTINGS',
+    initialLocation: '/settings',
+  );
 
   @override
   ConsumerState<CustomBottomNavBar> createState() => _CustomBottomNavBarState();
@@ -65,9 +101,6 @@ abstract class CustomBottomNavBarController
     extends StateNotifier<CustomBottomNavBarModel> {
   CustomBottomNavBarController() : super(const CustomBottomNavBarModel());
 
-  List<BottomNavigationBarItem> getNavBarItems();
+  List<CustomBottomNavBarItem> getNavBarItems();
   void goToOtherPage(int index, BuildContext context);
-
-  set currentIndex(int index);
-  set iconSize(double iconSize);
 }
