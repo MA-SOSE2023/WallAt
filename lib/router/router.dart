@@ -10,7 +10,9 @@ class Routers {
   static final globalRouterDelegate = BeamerDelegate(
     initialPath: '/home',
     locationBuilder: BeamerLocationBuilder(
-      beamLocations: [],
+      beamLocations: [
+        GlobalLocation(),
+      ],
     ),
   );
 
@@ -21,7 +23,11 @@ class Routers {
   static final bottomNavRouterDelegate = BeamerDelegate(
     navigatorObservers: [HeroController()],
     locationBuilder: BeamerLocationBuilder(
-      beamLocations: [],
+      beamLocations: [
+        HomeLocation(),
+        FavoritesLocation(),
+        FoldersLocation(),
+      ],
     ),
   );
 }
