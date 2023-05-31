@@ -1,12 +1,11 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../router/locations/locations.dart';
+import '../../provider.dart';
 import 'bottom_nav_bar_model.dart';
 
-class CustomBottomNavBar extends StatefulWidget {
+class CustomBottomNavBar extends ConsumerStatefulWidget {
   const CustomBottomNavBar({super.key, required this.beamerKey});
 
   final GlobalKey<BeamerState> beamerKey;
@@ -14,48 +13,11 @@ class CustomBottomNavBar extends StatefulWidget {
   static const double iconSize = 30.0;
 
   @override
-  State<CustomBottomNavBar> createState() => _CustomBottomNavBarState();
+  ConsumerState<CustomBottomNavBar> createState() => _CustomBottomNavBarState();
 }
 
-class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
+class _CustomBottomNavBarState extends ConsumerState<CustomBottomNavBar> {
   late final BeamerDelegate _beamerDelegate;
-  BeamLocation? _currentLocation;
-  int _currentIndex = 0;
-
-  static const List<CustomBottomNavBarItem> _baseTabs = [
-    CustomBottomNavBarItem(
-      icon: Icon(Icons.home),
-      activeIcon: Icon(Icons.home),
-      label: 'HOME',
-      initialLocation: '/home',
-    ),
-    CustomBottomNavBarItem(
-      icon: Icon(Icons.favorite_outline),
-      activeIcon: Icon(Icons.favorite),
-      label: 'FAVORITES',
-      initialLocation: '/favorites',
-    ),
-    CustomBottomNavBarItem(
-      icon: Icon(Icons.folder_open),
-      activeIcon: Icon(Icons.folder),
-      label: 'FOLDERS',
-      initialLocation: '/folders',
-    ),
-  ];
-
-  static const CustomBottomNavBarItem _cameraItem = CustomBottomNavBarItem(
-    icon: Icon(Icons.camera_alt_outlined),
-    activeIcon: Icon(Icons.camera_alt),
-    label: 'CAMERA',
-    initialLocation: '/camera',
-  );
-
-  static const CustomBottomNavBarItem _settingsItem = CustomBottomNavBarItem(
-    icon: Icon(Icons.settings_outlined),
-    activeIcon: Icon(Icons.settings),
-    label: 'SETTINGS',
-    initialLocation: '/settings',
-  );
 
   void _setStateListener() => setState(() {});
 
@@ -68,35 +30,17 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
 
   @override
   Widget build(BuildContext context) {
-    _currentLocation = _beamerDelegate.currentBeamLocation;
-    _currentIndex = _currentLocation is HomeLocation
-        ? 0
-        : _currentLocation is FavoritesLocation
-            ? 1
-            : _currentLocation is FoldersLocation
-                ? 2
-                : 3;
-
-    double iconSize = CustomBottomNavBar.iconSize;
+    CustomBottomNavBarModel state =
+        ref.watch(Providers.customBottomNavBarControllerProvider);
+    CustomBottomNavBarController controller =
+        ref.read(Providers.customBottomNavBarControllerProvider.notifier);
 
     return CupertinoTabBar(
-      iconSize: iconSize,
-      onTap: (index) => _goOtherPage(index),
-      currentIndex: _currentIndex,
-      items: [..._baseTabs, _currentIndex == 0 ? _settingsItem : _cameraItem],
+      iconSize: state.iconSize,
+      onTap: (index) => controller.goToOtherPage(index, context),
+      currentIndex: state.currentIndex,
+      items: controller.getNavBarItems(),
     );
-  }
-
-  void _goOtherPage(int index) {
-    if (index == 3) {
-      if (_currentIndex == 0) {
-        context.beamToNamed(_settingsItem.initialLocation);
-      } else {
-        context.beamToNamed(_cameraItem.initialLocation);
-      }
-    } else {
-      context.beamToNamed(_baseTabs[index].initialLocation);
-    }
   }
 
   @override
