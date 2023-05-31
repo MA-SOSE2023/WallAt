@@ -9,6 +9,8 @@ class CustomBottomNavBar extends StatefulWidget {
 
   final GlobalKey<BeamerState> beamerKey;
 
+  static const double iconSize = 30.0;
+
   @override
   State<CustomBottomNavBar> createState() => _CustomBottomNavBarState();
 }
@@ -18,7 +20,6 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
   BeamLocation? _currentLocation;
   int _currentIndex = 0;
 
-  static const double iconSize = 30.0;
   static const List<CustomBottomNavBarItem> _baseTabs = [
     CustomBottomNavBarItem(
       icon: Icon(Icons.home),
@@ -73,6 +74,8 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
             : _currentLocation is FoldersLocation
                 ? 2
                 : 3;
+
+    double iconSize = CustomBottomNavBar.iconSize;
 
     return CupertinoTabBar(
       iconSize: iconSize,
