@@ -4,7 +4,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../provider.dart';
+import '../../../router/router.dart';
+
 import 'bottom_nav_bar_model.dart';
+
+class CustomBottomNavBarScreen extends StatelessWidget {
+  const CustomBottomNavBarScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Beamer(
+        key: Routers.bottomNavRouterBeamerKey,
+        routerDelegate: Routers.bottomNavRouterDelegate,
+      ),
+      bottomNavigationBar: CustomBottomNavBar(
+        beamerKey: Routers.bottomNavRouterBeamerKey,
+      ),
+    );
+  }
+}
 
 class CustomBottomNavBar extends ConsumerStatefulWidget {
   const CustomBottomNavBar({super.key, required this.beamerKey});

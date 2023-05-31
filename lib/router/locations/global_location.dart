@@ -1,6 +1,8 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/cupertino.dart';
 
+import 'package:gruppe4/common/custom_widgets/bottom_nav_bar/bottom_nav_bar_view.dart';
+
 class GlobalLocation extends BeamLocation<BeamState> {
   @override
   List<String> get pathPatterns =>
@@ -11,7 +13,7 @@ class GlobalLocation extends BeamLocation<BeamState> {
         const BeamPage(
           key: ValueKey('global'),
           type: BeamPageType.noTransition,
-          child: Placeholder(), // TODO: Screen with BottomNavBarWidget
+          child: CustomBottomNavBarScreen(),
         ),
         if (state.routeInformation.location == '/settings')
           const BeamPage(
