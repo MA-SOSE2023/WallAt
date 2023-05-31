@@ -4,8 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'router/router.dart';
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class App extends StatelessWidget {
+  const App({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,4 +17,4 @@ class MyApp extends StatelessWidget {
   }
 }
 
-void main() => runApp(const ProviderScope(child: MyApp()));
+void main() => runApp(const ProviderScope(child: App()));
