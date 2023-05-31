@@ -6,5 +6,12 @@ class HomeLocation extends BeamLocation<BeamState> {
   List<String> get pathPatterns => ['/home'];
 
   @override
-  List<BeamPage> buildPages(BuildContext context, BeamState state) => [];
+  List<BeamPage> buildPages(BuildContext context, BeamState state) => [
+        const BeamPage(
+          key: ValueKey('home'),
+          title: 'Home',
+          type: BeamPageType.noTransition,
+          child: Placeholder(), // TODO: Home Screen
+        ),
+      ];
 }

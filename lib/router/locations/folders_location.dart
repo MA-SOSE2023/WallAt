@@ -3,8 +3,15 @@ import 'package:flutter/cupertino.dart';
 
 class FoldersLocation extends BeamLocation<BeamState> {
   @override
-  List<String> get pathPatterns => ['/home'];
+  List<String> get pathPatterns => ['/folders'];
 
   @override
-  List<BeamPage> buildPages(BuildContext context, BeamState state) => [];
+  List<BeamPage> buildPages(BuildContext context, BeamState state) => [
+        const BeamPage(
+          key: ValueKey('folders'),
+          title: 'Folders',
+          type: BeamPageType.noTransition,
+          child: Placeholder(), // TODO: Folder Screen
+        ),
+      ];
 }
