@@ -191,3 +191,10 @@ class ActionButtons extends StatelessWidget {
     );
   }
 }
+
+abstract class SingleItemController extends StateNotifier<SingleItem> {
+  SingleItemController(SingleItem state) : super(state);
+
+  Image getImage();
+  String getDescription();
+}
