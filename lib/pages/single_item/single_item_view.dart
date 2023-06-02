@@ -14,6 +14,8 @@ class SingleItemPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final SingleItem item =
         ref.watch(Providers.singleItemControllerProvider(_id));
+    final SingleItemController controller =
+        ref.read(Providers.singleItemControllerProvider(_id).notifier);
     return Scaffold(
       body: Column(
         children: [
@@ -22,7 +24,7 @@ class SingleItemPage extends ConsumerWidget {
               shrinkWrap: true,
               children: [
                 PictureContainer(
-                  id: _id,
+                  image: controller.getImage(),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(20.0),
@@ -47,11 +49,11 @@ class SingleItemPage extends ConsumerWidget {
 class PictureContainer extends ConsumerStatefulWidget {
   const PictureContainer({
     Key? key,
-    required String id,
-  })  : _id = id,
+    required Image image,
+  })  : _image = image,
         super(key: key);
 
-  final String _id;
+  final Image _image;
 
   @override
   ConsumerState<PictureContainer> createState() => _PictureContainerState();
@@ -62,8 +64,6 @@ class _PictureContainerState extends ConsumerState<PictureContainer> {
 
   @override
   Widget build(BuildContext context) {
-    final SingleItemController controller =
-        ref.read(Providers.singleItemControllerProvider(widget._id).notifier);
     final double itemImageHeight = MediaQuery.of(context).size.height / 1.5;
     if (isFullscreen) {
       return GestureDetector(
@@ -76,7 +76,7 @@ class _PictureContainerState extends ConsumerState<PictureContainer> {
           height: MediaQuery.of(context).size.height,
           child: FittedBox(
             fit: BoxFit.contain,
-            child: controller.getImage(),
+            child: widget._image,
           ),
         ),
       );
@@ -97,7 +97,7 @@ class _PictureContainerState extends ConsumerState<PictureContainer> {
           ),
           child: FittedBox(
             fit: BoxFit.cover,
-            child: controller.getImage(),
+            child: widget._image,
           ),
         ),
       );
