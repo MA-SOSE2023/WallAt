@@ -3,19 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../common/provider.dart';
 import 'model/single_item.dart';
 
-void main() => runApp(const ProviderScope(child: MyApp()));
-
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: SingleItemPage(id: '1'),
-    );
-  }
-}
-
 class SingleItemPage extends ConsumerWidget {
   const SingleItemPage({required String id, Key? key})
       : _id = id,
