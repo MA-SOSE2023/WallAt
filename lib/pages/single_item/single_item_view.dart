@@ -15,13 +15,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-//@TODO: include this into the application
-const exampleSingleItem = SingleItem(
-  title: 'Example Title',
-  description: 'Example Description',
-  image: 'assets/images/example_document.png',
-);
-
 class SingleItemPage extends ConsumerWidget {
   const SingleItemPage({Key? key}) : super(key: key);
 
