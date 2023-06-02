@@ -27,8 +27,6 @@ class SingleItemPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final double itemImageHeight = MediaQuery.of(context).size.height / 1.5;
-
     return Scaffold(
       body: Column(
         children: [
@@ -38,7 +36,6 @@ class SingleItemPage extends ConsumerWidget {
               children: [
                 PictureContainer(
                   pictureLink: exampleSingleItem.image,
-                  imageHeight: itemImageHeight,
                 ),
                 Padding(
                   padding: const EdgeInsets.all(20.0),
@@ -64,11 +61,9 @@ class PictureContainer extends StatefulWidget {
   const PictureContainer({
     Key? key,
     required this.pictureLink,
-    required this.imageHeight,
   }) : super(key: key);
 
   final String pictureLink;
-  final double imageHeight;
 
   @override
   _PictureContainerState createState() => _PictureContainerState();
@@ -79,6 +74,7 @@ class _PictureContainerState extends State<PictureContainer> {
 
   @override
   Widget build(BuildContext context) {
+    final double itemImageHeight = MediaQuery.of(context).size.height / 1.5;
     if (isFullscreen) {
       return GestureDetector(
         onTap: () {
@@ -88,9 +84,11 @@ class _PictureContainerState extends State<PictureContainer> {
         },
         child: SizedBox(
           height: MediaQuery.of(context).size.height,
-          child: Image.asset(
-            widget.pictureLink,
+          child: FittedBox(
             fit: BoxFit.contain,
+            child: Image.asset(
+              widget.pictureLink,
+            ),
           ),
         ),
       );
@@ -102,16 +100,18 @@ class _PictureContainerState extends State<PictureContainer> {
           });
         },
         child: Container(
-          height: widget.imageHeight,
+          height: itemImageHeight,
           decoration: BoxDecoration(
             border: Border.all(
               color: Colors.black,
               width: 1,
             ),
           ),
-          child: Image.asset(
-            widget.pictureLink,
+          child: FittedBox(
             fit: BoxFit.cover,
+            child: Image.asset(
+              widget.pictureLink,
+            ),
           ),
         ),
       );
