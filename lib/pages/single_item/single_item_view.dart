@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../common/provider.dart';
 import 'model/single_item.dart';
 
 void main() => runApp(const ProviderScope(child: MyApp()));
@@ -10,16 +11,22 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: SingleItemPage(),
+      home: SingleItemPage(id: '1'),
     );
   }
 }
 
 class SingleItemPage extends ConsumerWidget {
-  const SingleItemPage({Key? key}) : super(key: key);
+  const SingleItemPage({required String id, Key? key})
+      : _id = id,
+        super(key: key);
+
+  final String _id;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final SingleItem item =
+        ref.watch(Providers.singleItemControllerProvider(_id));
     return Scaffold(
       body: Column(
         children: [
@@ -28,16 +35,16 @@ class SingleItemPage extends ConsumerWidget {
               shrinkWrap: true,
               children: [
                 PictureContainer(
-                  pictureLink: exampleSingleItem.image,
+                  id: _id,
                 ),
                 Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: InfoContainer(
-                    text: exampleSingleItem.description,
+                    text: item.description,
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, right: 20),
+                const Padding(
+                  padding: EdgeInsets.only(left: 20, right: 20),
                   child: ActionButtons(),
                 ),
               ],
@@ -50,23 +57,26 @@ class SingleItemPage extends ConsumerWidget {
   }
 }
 
-class PictureContainer extends StatefulWidget {
+class PictureContainer extends ConsumerStatefulWidget {
   const PictureContainer({
     Key? key,
-    required this.pictureLink,
-  }) : super(key: key);
+    required String id,
+  })  : _id = id,
+        super(key: key);
 
-  final String pictureLink;
+  final String _id;
 
   @override
-  _PictureContainerState createState() => _PictureContainerState();
+  ConsumerState<PictureContainer> createState() => _PictureContainerState();
 }
 
-class _PictureContainerState extends State<PictureContainer> {
+class _PictureContainerState extends ConsumerState<PictureContainer> {
   bool isFullscreen = false;
 
   @override
   Widget build(BuildContext context) {
+    final SingleItemController controller =
+        ref.read(Providers.singleItemControllerProvider(widget._id).notifier);
     final double itemImageHeight = MediaQuery.of(context).size.height / 1.5;
     if (isFullscreen) {
       return GestureDetector(
@@ -79,9 +89,7 @@ class _PictureContainerState extends State<PictureContainer> {
           height: MediaQuery.of(context).size.height,
           child: FittedBox(
             fit: BoxFit.contain,
-            child: Image.asset(
-              widget.pictureLink,
-            ),
+            child: controller.getImage(),
           ),
         ),
       );
@@ -102,9 +110,7 @@ class _PictureContainerState extends State<PictureContainer> {
           ),
           child: FittedBox(
             fit: BoxFit.cover,
-            child: Image.asset(
-              widget.pictureLink,
-            ),
+            child: controller.getImage(),
           ),
         ),
       );
