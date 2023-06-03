@@ -30,5 +30,5 @@ dev_dependencies:
 
 flutter:
   assets:
-    - assets/images/
+    - assets/dev_debug_images/
   uses-material-design: true

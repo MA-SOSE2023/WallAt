@@ -1,34 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../common/provider.dart';
 import 'model/single_item.dart';
 
-void main() => runApp(const ProviderScope(child: MyApp()));
-
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: SingleItemPage(),
-    );
-  }
-}
-
-//@TODO: include this into the application
-const exampleSingleItem = SingleItem(
-  title: 'Example Title',
-  description: 'Example Description',
-  image: 'assets/images/example_document.png',
-);
-
 class SingleItemPage extends ConsumerWidget {
-  const SingleItemPage({Key? key}) : super(key: key);
+  const SingleItemPage({required String id, Key? key})
+      : _id = id,
+        super(key: key);
+
+  final String _id;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final double itemImageHeight = MediaQuery.of(context).size.height / 1.5;
-
+    final SingleItem item =
+        ref.watch(Providers.singleItemControllerProvider(_id));
+    final SingleItemController controller =
+        ref.read(Providers.singleItemControllerProvider(_id).notifier);
     return Scaffold(
       body: Column(
         children: [
@@ -37,17 +24,16 @@ class SingleItemPage extends ConsumerWidget {
               shrinkWrap: true,
               children: [
                 PictureContainer(
-                  pictureLink: exampleSingleItem.image,
-                  imageHeight: itemImageHeight,
+                  image: controller.getImage(),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: InfoContainer(
-                    text: exampleSingleItem.description,
+                    text: item.description,
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, right: 20),
+                const Padding(
+                  padding: EdgeInsets.only(left: 20, right: 20),
                   child: ActionButtons(),
                 ),
               ],
@@ -60,25 +46,25 @@ class SingleItemPage extends ConsumerWidget {
   }
 }
 
-class PictureContainer extends StatefulWidget {
+class PictureContainer extends ConsumerStatefulWidget {
   const PictureContainer({
     Key? key,
-    required this.pictureLink,
-    required this.imageHeight,
-  }) : super(key: key);
+    required Image image,
+  })  : _image = image,
+        super(key: key);
 
-  final String pictureLink;
-  final double imageHeight;
+  final Image _image;
 
   @override
-  _PictureContainerState createState() => _PictureContainerState();
+  ConsumerState<PictureContainer> createState() => _PictureContainerState();
 }
 
-class _PictureContainerState extends State<PictureContainer> {
+class _PictureContainerState extends ConsumerState<PictureContainer> {
   bool isFullscreen = false;
 
   @override
   Widget build(BuildContext context) {
+    final double itemImageHeight = MediaQuery.of(context).size.height / 1.5;
     if (isFullscreen) {
       return GestureDetector(
         onTap: () {
@@ -88,9 +74,9 @@ class _PictureContainerState extends State<PictureContainer> {
         },
         child: SizedBox(
           height: MediaQuery.of(context).size.height,
-          child: Image.asset(
-            widget.pictureLink,
+          child: FittedBox(
             fit: BoxFit.contain,
+            child: widget._image,
           ),
         ),
       );
@@ -102,16 +88,16 @@ class _PictureContainerState extends State<PictureContainer> {
           });
         },
         child: Container(
-          height: widget.imageHeight,
+          height: itemImageHeight,
           decoration: BoxDecoration(
             border: Border.all(
               color: Colors.black,
               width: 1,
             ),
           ),
-          child: Image.asset(
-            widget.pictureLink,
+          child: FittedBox(
             fit: BoxFit.cover,
+            child: widget._image,
           ),
         ),
       );
@@ -190,4 +176,11 @@ class ActionButtons extends StatelessWidget {
       ),
     );
   }
+}
+
+abstract class SingleItemController extends StateNotifier<SingleItem> {
+  SingleItemController(SingleItem state) : super(state);
+
+  Image getImage();
+  String getDescription();
 }
