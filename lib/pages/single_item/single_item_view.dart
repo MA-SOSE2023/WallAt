@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:photo_view/photo_view.dart';
 import '../../common/provider.dart';
+import 'full_screen_image_view.dart';
 import 'model/single_item.dart';
 
 class SingleItemPage extends ConsumerWidget {
@@ -24,7 +26,17 @@ class SingleItemPage extends ConsumerWidget {
               shrinkWrap: true,
               children: [
                 PictureContainer(
-                  image: controller.getImage(),
+                  image: controller.getImage().image,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => FullScreenImagePage(
+                          imageProvider: controller.getImage().image,
+                        ),
+                      ),
+                    );
+                  },
                 ),
                 Padding(
                   padding: const EdgeInsets.all(20.0),
@@ -46,62 +58,33 @@ class SingleItemPage extends ConsumerWidget {
   }
 }
 
-class PictureContainer extends ConsumerStatefulWidget {
+class PictureContainer extends StatelessWidget {
   const PictureContainer({
     Key? key,
-    required Image image,
-  })  : _image = image,
-        super(key: key);
+    required this.image,
+    required this.onTap,
+  }) : super(key: key);
 
-  final Image _image;
-
-  @override
-  ConsumerState<PictureContainer> createState() => _PictureContainerState();
-}
-
-class _PictureContainerState extends ConsumerState<PictureContainer> {
-  bool isFullscreen = false;
+  final ImageProvider image;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    final double itemImageHeight = MediaQuery.of(context).size.height / 1.5;
-    if (isFullscreen) {
-      return GestureDetector(
-        onTap: () {
-          setState(() {
-            isFullscreen = false;
-          });
-        },
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          child: FittedBox(
-            fit: BoxFit.contain,
-            child: widget._image,
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: Colors.black,
+            width: 1,
           ),
         ),
-      );
-    } else {
-      return GestureDetector(
-        onTap: () {
-          setState(() {
-            isFullscreen = true;
-          });
-        },
-        child: Container(
-          height: itemImageHeight,
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: Colors.black,
-              width: 1,
-            ),
-          ),
-          child: FittedBox(
-            fit: BoxFit.cover,
-            child: widget._image,
-          ),
+        child: Image(
+          image: image,
+          fit: BoxFit.cover,
         ),
-      );
-    }
+      ),
+    );
   }
 }
 
