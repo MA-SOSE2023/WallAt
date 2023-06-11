@@ -35,7 +35,7 @@ class EditSingleItemPage extends ConsumerWidget {
                 PictureContainer(
                   image: controller.getImage().image,
                   onTap: () {
-                    // Handle full-screen image logic
+                    // open galery sselect image and ssave it
                   },
                 ),
                 Padding(

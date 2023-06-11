@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:photo_view/photo_view.dart';
 import '../../common/provider.dart';
 import 'full_screen_image_view.dart';
 import 'model/single_item.dart';
 import 'edit_single_item_view.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class SingleItemPage extends ConsumerWidget {
   const SingleItemPage({required String id, Key? key})
@@ -21,24 +21,41 @@ class SingleItemPage extends ConsumerWidget {
         ref.read(Providers.singleItemControllerProvider(_id).notifier);
     return Scaffold(
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          Padding(
+            padding: const EdgeInsets.only(
+                top: 30, bottom: 8), // Adjust the padding value here
+            child: Text(
+              item.title, // Add the item title here
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          SizedBox(
+            height: MediaQuery.of(context).size.height *
+                0.6, // Set the height to half the screen height
+            child: PictureContainer(
+              image: controller.getImage().image,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => FullScreenImagePage(
+                      imageProvider: controller.getImage().image,
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
           Expanded(
             child: ListView(
               shrinkWrap: true,
               children: [
-                PictureContainer(
-                  image: controller.getImage().image,
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => FullScreenImagePage(
-                          imageProvider: controller.getImage().image,
-                        ),
-                      ),
-                    );
-                  },
-                ),
                 Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: InfoContainer(
@@ -97,7 +114,7 @@ class InfoContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height / 11,
+      height: MediaQuery.of(context).size.height / 12,
       decoration: BoxDecoration(
         color: Colors.grey[200],
         borderRadius: BorderRadius.circular(10),
@@ -135,7 +152,7 @@ class ActionButtons extends StatelessWidget {
           onPressed: () {
             // Handle share button logic
           },
-          icon: Icons.share,
+          icon: FontAwesomeIcons.solidShareFromSquare,
         ),
         _buildActionButton(
           onPressed: () {
@@ -146,19 +163,19 @@ class ActionButtons extends StatelessWidget {
               ),
             );
           },
-          icon: Icons.edit,
+          icon: FontAwesomeIcons.solidEdit,
         ),
         _buildActionButton(
           onPressed: () {
             // Handle delete button logic
           },
-          icon: Icons.delete,
+          icon: FontAwesomeIcons.solidTrashCan,
         ),
         _buildActionButton(
           onPressed: () {
             // Handle favorite button logic
           },
-          icon: Icons.favorite,
+          icon: FontAwesomeIcons.heart,
         ),
       ],
     );
@@ -166,12 +183,34 @@ class ActionButtons extends StatelessWidget {
 
   Widget _buildActionButton(
       {required VoidCallback onPressed, required IconData icon}) {
-    return CircleAvatar(
-      backgroundColor: Colors.blue,
-      child: IconButton(
+    return Container(
+      width: 48,
+      height: 48,
+      decoration: BoxDecoration(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(24),
+      ),
+      child: TextButton(
         onPressed: onPressed,
-        icon: Icon(icon),
-        color: Colors.white,
+        style: ButtonStyle(
+          overlayColor: MaterialStateProperty.resolveWith<Color?>(
+            (Set<MaterialState> states) {
+              if (states.contains(MaterialState.hovered)) {
+                return Colors.grey.withOpacity(0.2);
+              }
+              if (states.contains(MaterialState.focused) ||
+                  states.contains(MaterialState.pressed)) {
+                return Colors.grey.withOpacity(0.4);
+              }
+              return null;
+            },
+          ),
+        ),
+        child: FaIcon(
+          icon,
+          color: Color.fromARGB(255, 22, 128, 199),
+          size: 24,
+        ),
       ),
     );
   }
