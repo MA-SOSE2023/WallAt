@@ -25,4 +25,9 @@ class SingleItemControllerMock extends SingleItemController {
   String getDescription() {
     return state.description;
   }
+
+  @override
+  void setDescription(String text) {
+    state = state.copyWith(description: text);
+  }
 }

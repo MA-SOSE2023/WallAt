@@ -4,6 +4,7 @@ import 'package:photo_view/photo_view.dart';
 import '../../common/provider.dart';
 import 'full_screen_image_view.dart';
 import 'model/single_item.dart';
+import 'edit_single_item_view.dart';
 
 class SingleItemPage extends ConsumerWidget {
   const SingleItemPage({required String id, Key? key})
@@ -44,9 +45,9 @@ class SingleItemPage extends ConsumerWidget {
                     text: item.description,
                   ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.only(left: 20, right: 20),
-                  child: ActionButtons(),
+                Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  child: ActionButtons(itemId: _id),
                 ),
               ],
             ),
@@ -121,7 +122,9 @@ class InfoContainer extends StatelessWidget {
 }
 
 class ActionButtons extends StatelessWidget {
-  const ActionButtons({Key? key}) : super(key: key);
+  const ActionButtons({Key? key, required this.itemId}) : super(key: key);
+
+  final String itemId;
 
   @override
   Widget build(BuildContext context) {
@@ -129,19 +132,32 @@ class ActionButtons extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         _buildActionButton(
-          onPressed: () {},
+          onPressed: () {
+            // Handle share button logic
+          },
           icon: Icons.share,
         ),
         _buildActionButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => EditSingleItemPage(id: itemId),
+              ),
+            );
+          },
           icon: Icons.edit,
         ),
         _buildActionButton(
-          onPressed: () {},
+          onPressed: () {
+            // Handle delete button logic
+          },
           icon: Icons.delete,
         ),
         _buildActionButton(
-          onPressed: () {},
+          onPressed: () {
+            // Handle favorite button logic
+          },
           icon: Icons.favorite,
         ),
       ],
@@ -166,4 +182,5 @@ abstract class SingleItemController extends StateNotifier<SingleItem> {
 
   Image getImage();
   String getDescription();
+  void setDescription(String description);
 }

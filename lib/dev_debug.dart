@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'pages/single_item/single_item_view.dart';
+import 'pages/single_item/edit_single_item_view.dart';
 
 void main() => runApp(const ProviderScope(child: MyApp()));
 
