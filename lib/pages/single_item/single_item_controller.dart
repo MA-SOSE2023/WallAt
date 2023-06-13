@@ -22,6 +22,11 @@ class SingleItemControllerMock extends SingleItemController {
   }
 
   @override
+  void setImage(Image image) {
+    state = state.copyWith(image: image.toString());
+  }
+
+  @override
   String getDescription() {
     return state.description;
   }
@@ -29,5 +34,15 @@ class SingleItemControllerMock extends SingleItemController {
   @override
   void setDescription(String text) {
     state = state.copyWith(description: text);
+  }
+
+  @override
+  String getTitle() {
+    return state.title;
+  }
+
+  @override
+  void setTitle(String text) {
+    state = state.copyWith(title: text);
   }
 }

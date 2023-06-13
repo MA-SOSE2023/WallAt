@@ -220,6 +220,14 @@ abstract class SingleItemController extends StateNotifier<SingleItem> {
   SingleItemController(SingleItem state) : super(state);
 
   Image getImage();
+
+  void setImage(Image image);
+
   String getDescription();
+
   void setDescription(String description);
+
+  String getTitle();
+
+  void setTitle(String title);
 }
