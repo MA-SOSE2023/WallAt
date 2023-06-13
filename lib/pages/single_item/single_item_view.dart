@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../common/provider.dart';
@@ -19,59 +20,52 @@ class SingleItemPage extends ConsumerWidget {
         ref.watch(Providers.singleItemControllerProvider(_id));
     final SingleItemController controller =
         ref.read(Providers.singleItemControllerProvider(_id).notifier);
-    return Scaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(
-                top: 30, bottom: 8), // Adjust the padding value here
-            child: Text(
-              item.title, // Add the item title here
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height *
-                0.6, // Set the height to half the screen height
-            child: PictureContainer(
-              image: controller.getImage().image,
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => FullScreenImagePage(
-                      imageProvider: controller.getImage().image,
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-          Expanded(
-            child: ListView(
-              shrinkWrap: true,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: InfoContainer(
-                    text: item.description,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, right: 20),
-                  child: ActionButtons(itemId: _id),
-                ),
-              ],
-            ),
-          ),
-        ],
+    return CupertinoPageScaffold(
+      navigationBar: CupertinoNavigationBar(
+        middle: Text(item.title),
       ),
       backgroundColor: Colors.grey[100],
+      child: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            SizedBox(
+              height: MediaQuery.of(context).size.height *
+                  0.6, // Set the height to half the screen height
+              child: PictureContainer(
+                image: controller.getImage().image,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                      builder: (context) => FullScreenImagePage(
+                        imageProvider: controller.getImage().image,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: InfoContainer(
+                      text: item.description,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20, right: 20),
+                    child: ActionButtons(itemId: _id),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -90,16 +84,16 @@ class PictureContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: Colors.black,
-            width: 1,
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
           ),
-        ),
-        child: Image(
-          image: image,
-          fit: BoxFit.cover,
+          child: Image(
+            image: image,
+            fit: BoxFit.cover,
+          ),
         ),
       ),
     );
@@ -145,73 +139,51 @@ class ActionButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        _buildActionButton(
-          onPressed: () {
-            // Handle share button logic
-          },
-          icon: FontAwesomeIcons.solidShareFromSquare,
-        ),
-        _buildActionButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => EditSingleItemPage(id: itemId),
-              ),
-            );
-          },
-          icon: FontAwesomeIcons.solidEdit,
-        ),
-        _buildActionButton(
-          onPressed: () {
-            // Handle delete button logic
-          },
-          icon: FontAwesomeIcons.solidTrashCan,
-        ),
-        _buildActionButton(
-          onPressed: () {
-            // Handle favorite button logic
-          },
-          icon: FontAwesomeIcons.heart,
-        ),
-      ],
-    );
+    return Padding(
+        padding: const EdgeInsets.only(bottom: 20),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            _buildActionButton(
+              onPressed: () {
+                // Handle share button logic
+              },
+              icon: CupertinoIcons.share, // Use the Cupertino icon
+            ),
+            _buildActionButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  CupertinoPageRoute(
+                    builder: (context) => EditSingleItemPage(id: itemId),
+                  ),
+                );
+              },
+              icon: CupertinoIcons.pencil_circle, // Use the Cupertino icon
+            ),
+            _buildActionButton(
+              onPressed: () {
+                // Handle delete button logic
+              },
+              icon: CupertinoIcons.delete, // Use the Cupertino icon
+            ),
+            _buildActionButton(
+              onPressed: () {
+                // Handle favorite button logic
+              },
+              icon: CupertinoIcons.heart, // Use the Cupertino icon
+            ),
+          ],
+        ));
   }
 
-  Widget _buildActionButton(
-      {required VoidCallback onPressed, required IconData icon}) {
-    return Container(
-      width: 48,
-      height: 48,
-      decoration: BoxDecoration(
-        color: Colors.transparent,
-        borderRadius: BorderRadius.circular(24),
-      ),
-      child: TextButton(
-        onPressed: onPressed,
-        style: ButtonStyle(
-          overlayColor: MaterialStateProperty.resolveWith<Color?>(
-            (Set<MaterialState> states) {
-              if (states.contains(MaterialState.hovered)) {
-                return Colors.grey.withOpacity(0.2);
-              }
-              if (states.contains(MaterialState.focused) ||
-                  states.contains(MaterialState.pressed)) {
-                return Colors.grey.withOpacity(0.4);
-              }
-              return null;
-            },
-          ),
-        ),
-        child: FaIcon(
-          icon,
-          color: Color.fromARGB(255, 22, 128, 199),
-          size: 24,
-        ),
-      ),
+  Widget _buildActionButton({
+    required VoidCallback onPressed,
+    required IconData icon,
+  }) {
+    return CupertinoButton(
+      onPressed: onPressed,
+      child: Icon(icon),
     );
   }
 }

@@ -6,7 +6,7 @@ import 'single_item_view.dart';
 const mockSingleItem = SingleItem(
   title: 'Example Title',
   description: 'Example Description',
-  image: 'assets/dev_debug_images/hampter1.jpg',
+  image: 'assets/dev_debug_images/example_document.png',
 );
 
 class SingleItemControllerMock extends SingleItemController {

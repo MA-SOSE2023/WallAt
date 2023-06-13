@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gruppe4/pages/single_item/single_item_view.dart';
@@ -17,116 +18,93 @@ class EditSingleItemPage extends ConsumerWidget {
         ref.watch(Providers.singleItemControllerProvider(_id));
     final SingleItemController controller =
         ref.read(Providers.singleItemControllerProvider(_id).notifier);
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: EditableTitleContainer(
-              initialText: item.title,
-              onTextChanged: (text) {
-                controller.setTitle(text);
-              },
-            ),
-          ),
-          Expanded(
-            child: ListView(
-              shrinkWrap: true,
-              children: [
-                PictureContainer(
-                  image: controller.getImage().image,
-                  onTap: () {
-                    // open gallery, select image and save it
-                  },
+    return CupertinoPageScaffold(
+      navigationBar: const CupertinoNavigationBar(),
+      backgroundColor: Colors.grey[100],
+      child: SafeArea(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.circular(10),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: EditableInfoContainer(
-                    initialText: item.description,
-                    onTextChanged: (text) {
-                      controller.setDescription(text);
-                    },
-                  ),
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextFieldWithIcon(
+                        controller: TextEditingController(text: item.title),
+                        onChanged: controller.setTitle,
+                        hintText: 'Title',
+                        icon: CupertinoIcons.pencil,
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(right: 20.0, bottom: 20.0),
-            child: Align(
-              alignment: Alignment.bottomRight,
-              child: IconButton(
-                icon: Icon(Icons.calendar_today),
-                onPressed: () {
-                  // Handle button onPressed
-                },
               ),
             ),
-          ),
-        ],
-      ),
-      backgroundColor: Colors.grey[100],
-    );
-  }
-}
-
-class EditableTitleContainer extends StatefulWidget {
-  const EditableTitleContainer({
-    Key? key,
-    required this.initialText,
-    required this.onTextChanged,
-  }) : super(key: key);
-
-  final String initialText;
-  final Function(String) onTextChanged;
-
-  @override
-  _EditableTitleContainerState createState() => _EditableTitleContainerState();
-}
-
-class _EditableTitleContainerState extends State<EditableTitleContainer> {
-  late TextEditingController _textEditingController;
-
-  @override
-  void initState() {
-    super.initState();
-    _textEditingController = TextEditingController(text: widget.initialText);
-  }
-
-  @override
-  void dispose() {
-    _textEditingController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: MediaQuery.of(context).size.height / 11,
-      decoration: BoxDecoration(
-        color: Colors.grey[200],
-        borderRadius: BorderRadius.circular(10),
-      ),
-      padding: const EdgeInsets.all(10.0),
-      child: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        scrollDirection: Axis.vertical,
-        child: Row(
-          children: [
-            Expanded(
-              child: TextField(
-                controller: _textEditingController,
-                onChanged: widget.onTextChanged,
-                decoration: const InputDecoration(
-                  border: InputBorder.none,
+            GestureDetector(
+              onTap: () {
+                // Open gallery, select image, and save it
+              },
+              child: Container(
+                width: MediaQuery.of(context).size.width - 40,
+                height: 200,
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Stack(
+                  children: [
+                    Container(
+                      height: double.infinity,
+                      margin: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: controller.getImage().image != null
+                          ? Image(
+                              image: controller.getImage().image!,
+                              fit: BoxFit.cover,
+                            )
+                          : Icon(
+                              CupertinoIcons.photo,
+                              size: 40,
+                              color: Colors.grey[500],
+                            ),
+                    ),
+                    Positioned(
+                      right: 10,
+                      top: 80,
+                      child: CupertinoButton(
+                        onPressed: () {
+                          // Edit icon button action
+                        },
+                        padding: EdgeInsets.zero,
+                        child: Icon(CupertinoIcons.pencil),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: TextFieldWithIcon(
+                  controller: TextEditingController(text: item.description),
+                  onChanged: controller.setDescription,
+                  hintText: 'Description',
+                  icon: CupertinoIcons.pencil,
                 ),
               ),
             ),
@@ -137,69 +115,37 @@ class _EditableTitleContainerState extends State<EditableTitleContainer> {
   }
 }
 
-class EditableInfoContainer extends StatefulWidget {
-  const EditableInfoContainer({
+class TextFieldWithIcon extends StatelessWidget {
+  const TextFieldWithIcon({
     Key? key,
-    required this.initialText,
-    required this.onTextChanged,
+    required this.controller,
+    required this.onChanged,
+    required this.hintText,
+    required this.icon,
   }) : super(key: key);
 
-  final String initialText;
-  final Function(String) onTextChanged;
-
-  @override
-  _EditableInfoContainerState createState() => _EditableInfoContainerState();
-}
-
-class _EditableInfoContainerState extends State<EditableInfoContainer> {
-  late TextEditingController _textEditingController;
-
-  @override
-  void initState() {
-    super.initState();
-    _textEditingController = TextEditingController(text: widget.initialText);
-  }
-
-  @override
-  void dispose() {
-    _textEditingController.dispose();
-    super.dispose();
-  }
+  final TextEditingController controller;
+  final Function(String) onChanged;
+  final String hintText;
+  final IconData icon;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Row(
       children: [
-        Container(
-          height: MediaQuery.of(context).size.height / 11,
-          decoration: BoxDecoration(
-            color: Colors.grey[200],
-            borderRadius: BorderRadius.circular(10),
-          ),
-          padding: const EdgeInsets.all(10.0),
-          child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            scrollDirection: Axis.vertical,
-            child: TextField(
-              controller: _textEditingController,
-              onChanged: widget.onTextChanged,
-              decoration: const InputDecoration(
-                border: InputBorder.none,
-              ),
-            ),
+        Expanded(
+          child: CupertinoTextField(
+            controller: controller,
+            onChanged: onChanged,
+            placeholder: hintText,
+            padding: EdgeInsets.symmetric(vertical: 12, horizontal: 10),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.only(right: 20.0),
-          child: Align(
-            alignment: Alignment.bottomRight,
-            child: IconButton(
-              icon: Icon(Icons.calendar_today),
-              onPressed: () {
-                // Handle button onPressed
-              },
-            ),
-          ),
+        CupertinoButton(
+          onPressed: () {
+            // Edit icon button action
+          },
+          child: Icon(icon),
         ),
       ],
     );

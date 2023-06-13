@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:photo_view/photo_view.dart';
@@ -12,12 +13,10 @@ class FullScreenImagePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return CupertinoPageScaffold(
+      navigationBar: const CupertinoNavigationBar(),
       backgroundColor: Colors.black,
-      body: GestureDetector(
-        onTap: () {
-          Navigator.pop(context);
-        },
+      child: SafeArea(
         child: PhotoView(
           imageProvider: imageProvider,
           backgroundDecoration: const BoxDecoration(
