@@ -14,103 +14,200 @@ class EditSingleItemPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final SingleItem item =
-        ref.watch(Providers.singleItemControllerProvider(_id));
     final SingleItemController controller =
         ref.read(Providers.singleItemControllerProvider(_id).notifier);
+
     return CupertinoPageScaffold(
-      navigationBar: const CupertinoNavigationBar(),
+      navigationBar: const CupertinoNavigationBar(
+        middle: Text('Edit item'),
+      ),
       backgroundColor: Colors.grey[100],
       child: SafeArea(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextFieldWithIcon(
-                        controller: TextEditingController(text: item.title),
-                        onChanged: controller.setTitle,
-                        hintText: 'Title',
-                        icon: CupertinoIcons.pencil,
-                      ),
-                    ),
-                  ],
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Padding(
+                padding: EdgeInsets.only(left: 25.0, top: 20),
+                child: Text(
+                  'Title',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
-            ),
-            GestureDetector(
-              onTap: () {
-                // Open gallery, select image, and save it
-              },
-              child: Container(
-                width: MediaQuery.of(context).size.width - 40,
-                height: 200,
-                decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Stack(
-                  children: [
-                    Container(
-                      height: double.infinity,
-                      margin: EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: Colors.grey[300],
-                        borderRadius: BorderRadius.circular(10),
+              Padding(
+                padding: const EdgeInsets.only(left: 20, right: 20),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: TextFieldWithIcon(
+                          controller: TextEditingController(
+                              text: controller.getTitle()),
+                          onChanged: (value) {
+                            controller
+                                .setTitle(value); // Update the local state
+                          },
+                          hintText: 'Title',
+                          icon: CupertinoIcons.pencil,
+                        ),
                       ),
-                      child: controller.getImage().image != null
-                          ? Image(
-                              image: controller.getImage().image!,
-                              fit: BoxFit.cover,
-                            )
-                          : Icon(
-                              CupertinoIcons.photo,
-                              size: 40,
-                              color: Colors.grey[500],
-                            ),
-                    ),
-                    Positioned(
-                      right: 10,
-                      top: 80,
-                      child: CupertinoButton(
-                        onPressed: () {
-                          // Edit icon button action
-                        },
-                        padding: EdgeInsets.zero,
-                        child: Icon(CupertinoIcons.pencil),
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                child: TextFieldWithIcon(
-                  controller: TextEditingController(text: item.description),
-                  onChanged: controller.setDescription,
-                  hintText: 'Description',
-                  icon: CupertinoIcons.pencil,
+              const Padding(
+                padding: EdgeInsets.only(left: 25.0, top: 20),
+                child: Text(
+                  'Image',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
-            ),
-          ],
+              GestureDetector(
+                onTap: () {
+                  // Open gallery, select image, and save it
+                },
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 20.0),
+                  child: Container(
+                    width: MediaQuery.of(context).size.width - 40,
+                    height: 200,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Stack(
+                      children: [
+                        Container(
+                          height: double.infinity,
+                          margin: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[300],
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: controller.getImage(),
+                        ),
+                        Positioned(
+                          right: 10,
+                          top: 80,
+                          child: CupertinoButton(
+                            onPressed: () {
+                              // Edit icon button action
+                            },
+                            padding: EdgeInsets.zero,
+                            child: const Icon(CupertinoIcons.pencil),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.only(left: 25.0, top: 20),
+                child: Text(
+                  'Description',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 20, left: 20, right: 20),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: TextFieldWithIcon(
+                    controller: TextEditingController(
+                        text: controller.getDescription()),
+                    onChanged: (value) {
+                      controller
+                          .setDescription(value); // Update the local state
+                    },
+                    hintText: 'Description',
+                    icon: CupertinoIcons.pencil,
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  _showCalendarPopup(context); // Open calendar popup
+                },
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 20.0),
+                  child: Container(
+                    width: 150,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: const Center(
+                      child: Text(
+                        'Calendar',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
+    );
+  }
+
+  void _showCalendarPopup(BuildContext context) {
+    showCupertinoModalPopup(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          height: 300,
+          color: Colors.white,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: CupertinoTextField(
+                  placeholder: 'Start Date',
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: CupertinoTextField(
+                  placeholder: 'End Date',
+                ),
+              ),
+              CupertinoButton(
+                onPressed: () {
+                  // Close the calendar popup
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Close'),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
