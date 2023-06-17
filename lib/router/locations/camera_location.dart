@@ -1,6 +1,8 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/cupertino.dart';
 
+import '/pages/camera/camera_view.dart';
+
 class CameraLocation extends BeamLocation<BeamState> {
   @override
   List<String> get pathPatterns => ['/camera'];
@@ -12,7 +14,7 @@ class CameraLocation extends BeamLocation<BeamState> {
           title: 'Camera',
           type: BeamPageType.noTransition,
           child:
-              Placeholder(), // TODO: Favorites Screen, aka Folder Detail Screen
+              TakePictureScreen(),
         ),
       ];
 }

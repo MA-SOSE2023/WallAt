@@ -73,9 +73,8 @@ class TakePictureScreenState extends State<TakePictureScreen> {
             ),
           ),
           Positioned(
-            bottom: 16,
-            left: 16,
-            right: 16,
+            bottom: 18,
+            right: 18,
             child: SafeArea(
               child: CupertinoButton(
                 onPressed: () async {
@@ -99,7 +98,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                 },
                 color: CupertinoColors.activeBlue,
                 borderRadius: BorderRadius.circular(25),
-                padding: const EdgeInsets.all(12),
+                padding: const EdgeInsets.all(20),
                 child: const Icon(CupertinoIcons.camera, color: CupertinoColors.white),
               ),
             ),

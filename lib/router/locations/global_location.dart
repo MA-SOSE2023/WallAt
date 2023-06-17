@@ -2,7 +2,6 @@ import 'package:beamer/beamer.dart';
 import 'package:flutter/cupertino.dart';
 
 import '/common/custom_widgets/bottom_nav_bar/bottom_nav_bar_view.dart';
-import '/pages/camera/camera_view.dart';
 
 class GlobalLocation extends BeamLocation<BeamState> {
   @override
@@ -22,13 +21,6 @@ class GlobalLocation extends BeamLocation<BeamState> {
             title: 'Settings',
             type: BeamPageType.cupertino,
             child: Placeholder(), // TODO: Settings Screen
-          ),
-        if (state.routeInformation.location == '/camera')
-          const BeamPage(
-            key: ValueKey('camera'),
-            title: 'Camera',
-            type: BeamPageType.cupertino,
-            child: Placeholder(), // TODO: Camera Screen
           ),
         if (state.routeInformation.location == '/profiles')
           const BeamPage(
