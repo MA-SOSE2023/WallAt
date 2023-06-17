@@ -2,6 +2,7 @@ import 'package:beamer/beamer.dart';
 import 'package:flutter/cupertino.dart';
 
 import '/common/custom_widgets/bottom_nav_bar/bottom_nav_bar_view.dart';
+import '/pages/camera/camera_view.dart';
 
 class GlobalLocation extends BeamLocation<BeamState> {
   @override

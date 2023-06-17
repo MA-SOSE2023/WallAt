@@ -27,6 +27,7 @@ class Routers {
         HomeLocation(),
         FavoritesLocation(),
         FoldersLocation(),
+        CameraLocation(),
       ],
     ),
   );
