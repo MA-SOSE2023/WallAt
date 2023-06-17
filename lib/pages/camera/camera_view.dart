@@ -47,7 +47,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return CupertinoPageScaffold(
+      return const CupertinoPageScaffold(
         child: Center(
           child: CupertinoActivityIndicator(),
         ),
@@ -55,52 +55,52 @@ class TakePictureScreenState extends State<TakePictureScreen> {
     }
 
     return CupertinoPageScaffold(
-      navigationBar: CupertinoNavigationBar(
-        middle: const Text('Take a picture'),
+      navigationBar: const CupertinoNavigationBar(
+        middle: Text('Take a picture'),
       ),
       child: Stack(
         children: [
-          FutureBuilder<void>(
-            future: _initializeControllerFuture,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                return CameraPreview(_controller);
-              } else {
-                return Center(child: CupertinoActivityIndicator());
-              }
-            },
+          Positioned.fill(
+            child: FutureBuilder<void>(
+              future: _initializeControllerFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  return CameraPreview(_controller);
+                } else {
+                  return const Center(child: CupertinoActivityIndicator());
+                }
+              },
+            ),
           ),
           Positioned(
             bottom: 16,
             left: 16,
             right: 16,
-            child: GestureDetector(
-              onTap: () async {
-                try {
-                  await _initializeControllerFuture;
+            child: SafeArea(
+              child: CupertinoButton(
+                onPressed: () async {
+                  try {
+                    await _initializeControllerFuture;
 
-                  final image = await _controller.takePicture();
+                    final image = await _controller.takePicture();
 
-                  if (!mounted) return;
+                    if (!mounted) return;
 
-                  await Navigator.of(context).push(
-                    CupertinoPageRoute(
-                      builder: (context) => DisplayPictureScreen(
-                        imagePath: image.path,
+                    await Navigator.of(context).push(
+                      CupertinoPageRoute(
+                        builder: (context) => DisplayPictureScreen(
+                          imagePath: image.path,
+                        ),
                       ),
-                    ),
-                  );
-                } catch (e) {
-                  print(e);
-                }
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                  color: CupertinoColors.activeBlue,
-                  borderRadius: BorderRadius.circular(25),
-                ),
-                padding: EdgeInsets.all(12),
-                child: Icon(CupertinoIcons.camera, color: CupertinoColors.white),
+                    );
+                  } catch (e) {
+                    print(e);
+                  }
+                },
+                color: CupertinoColors.activeBlue,
+                borderRadius: BorderRadius.circular(25),
+                padding: const EdgeInsets.all(12),
+                child: const Icon(CupertinoIcons.camera, color: CupertinoColors.white),
               ),
             ),
           ),
@@ -119,8 +119,8 @@ class DisplayPictureScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-      navigationBar: CupertinoNavigationBar(
-        middle: const Text('Display the Picture'),
+      navigationBar: const CupertinoNavigationBar(
+        middle: Text('Display the Picture'),
       ),
       child: SafeArea(
         child: Image.file(File(imagePath)),
