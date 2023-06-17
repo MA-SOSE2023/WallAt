@@ -143,31 +143,13 @@ class EditSingleItemPage extends ConsumerWidget {
                   ),
                 ),
               ),
-              GestureDetector(
-                onTap: () {
-                  _showCalendarPopup(context); // Open calendar popup
+              CupertinoButton(
+                alignment: Alignment.bottomRight,
+                onPressed: () {
+                  _showCalendarPopup(context);
                 },
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 20.0),
-                  child: Container(
-                    width: 150,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: const Center(
-                      child: Text(
-                        'Calendar',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+                child: Icon(CupertinoIcons.calendar),
+              )
             ],
           ),
         ),
@@ -176,40 +158,81 @@ class EditSingleItemPage extends ConsumerWidget {
   }
 
   void _showCalendarPopup(BuildContext context) {
-    showCupertinoModalPopup(
+    DateTime? selectedDate;
+    String description = '';
+
+    showCupertinoDialog(
       context: context,
       builder: (BuildContext context) {
-        return Container(
-          height: 300,
-          color: Colors.white,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+        return CupertinoAlertDialog(
+          title: Text('Select Date'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: CupertinoTextField(
-                  placeholder: 'Start Date',
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: CupertinoTextField(
-                  placeholder: 'End Date',
-                ),
-              ),
               CupertinoButton(
-                onPressed: () {
-                  // Close the calendar popup
-                  Navigator.of(context).pop();
+                onPressed: () async {
+                  final DateTime? pickedDate = await showCupertinoModalPopup(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return SizedBox(
+                        height: 216,
+                        child: CupertinoDatePicker(
+                          mode: CupertinoDatePickerMode.date,
+                          initialDateTime: DateTime.now(),
+                          minimumDate: DateTime(1900),
+                          maximumDate: DateTime(2100),
+                          onDateTimeChanged: (DateTime? dateTime) {
+                            selectedDate = dateTime;
+                          },
+                        ),
+                      );
+                    },
+                  );
+
+                  if (pickedDate != null) {
+                    setState(() {
+                      selectedDate = pickedDate;
+                    });
+                  }
                 },
-                child: const Text('Close'),
+                child: Text(selectedDate != null
+                    ? 'Selected Date: ${selectedDate.toString()}'
+                    : 'Select Date'),
+              ),
+              SizedBox(height: 20),
+              CupertinoTextField(
+                onChanged: (value) {
+                  description = value;
+                },
               ),
             ],
           ),
+          actions: [
+            CupertinoDialogAction(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancel'),
+            ),
+            CupertinoDialogAction(
+              onPressed: () {
+                // Do something with the selected date and description
+                if (selectedDate != null) {
+                  // Use the selected date and description as needed
+                  print('Selected Date: $selectedDate');
+                  print('Description: $description');
+                }
+                Navigator.of(context).pop();
+              },
+              child: Text('Save'),
+            ),
+          ],
         );
       },
     );
   }
+
+  void setState(Null Function() param0) {}
 }
 
 class TextFieldWithIcon extends StatelessWidget {
