@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return CupertinoApp(
         home: Scaffold(
-      body: TakePictureScreen(),
+      body: const TakePictureScreen(),
       bottomNavigationBar: CupertinoTabBar(
         iconSize: 30,
         onTap: (index) => {},
