@@ -1,0 +1,149 @@
+// coverage:ignore-file
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
+
+part of 'item_event.dart';
+
+// **************************************************************************
+// FreezedGenerator
+// **************************************************************************
+
+T _$identity<T>(T value) => value;
+
+final _privateConstructorUsedError = UnsupportedError(
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+
+/// @nodoc
+mixin _$ItemEvent {
+  String get description => throw _privateConstructorUsedError;
+  DateTime get date => throw _privateConstructorUsedError;
+
+  @JsonKey(ignore: true)
+  $ItemEventCopyWith<ItemEvent> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $ItemEventCopyWith<$Res> {
+  factory $ItemEventCopyWith(ItemEvent value, $Res Function(ItemEvent) then) =
+      _$ItemEventCopyWithImpl<$Res, ItemEvent>;
+  @useResult
+  $Res call({String description, DateTime date});
+}
+
+/// @nodoc
+class _$ItemEventCopyWithImpl<$Res, $Val extends ItemEvent>
+    implements $ItemEventCopyWith<$Res> {
+  _$ItemEventCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? description = null,
+    Object? date = null,
+  }) {
+    return _then(_value.copyWith(
+      description: null == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String,
+      date: null == date
+          ? _value.date
+          : date // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$_ItemEventCopyWith<$Res> implements $ItemEventCopyWith<$Res> {
+  factory _$$_ItemEventCopyWith(
+          _$_ItemEvent value, $Res Function(_$_ItemEvent) then) =
+      __$$_ItemEventCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String description, DateTime date});
+}
+
+/// @nodoc
+class __$$_ItemEventCopyWithImpl<$Res>
+    extends _$ItemEventCopyWithImpl<$Res, _$_ItemEvent>
+    implements _$$_ItemEventCopyWith<$Res> {
+  __$$_ItemEventCopyWithImpl(
+      _$_ItemEvent _value, $Res Function(_$_ItemEvent) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? description = null,
+    Object? date = null,
+  }) {
+    return _then(_$_ItemEvent(
+      description: null == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String,
+      date: null == date
+          ? _value.date
+          : date // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$_ItemEvent implements _ItemEvent {
+  const _$_ItemEvent({required this.description, required this.date});
+
+  @override
+  final String description;
+  @override
+  final DateTime date;
+
+  @override
+  String toString() {
+    return 'ItemEvent(description: $description, date: $date)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_ItemEvent &&
+            (identical(other.description, description) ||
+                other.description == description) &&
+            (identical(other.date, date) || other.date == date));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, description, date);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$_ItemEventCopyWith<_$_ItemEvent> get copyWith =>
+      __$$_ItemEventCopyWithImpl<_$_ItemEvent>(this, _$identity);
+}
+
+abstract class _ItemEvent implements ItemEvent {
+  const factory _ItemEvent(
+      {required final String description,
+      required final DateTime date}) = _$_ItemEvent;
+
+  @override
+  String get description;
+  @override
+  DateTime get date;
+  @override
+  @JsonKey(ignore: true)
+  _$$_ItemEventCopyWith<_$_ItemEvent> get copyWith =>
+      throw _privateConstructorUsedError;
+}

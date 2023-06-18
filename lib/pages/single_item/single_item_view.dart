@@ -5,7 +5,7 @@ import '../../common/provider.dart';
 import 'full_screen_image_view.dart';
 import 'model/single_item.dart';
 import 'edit_single_item_view.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'model/item_event.dart';
 
 class SingleItemPage extends ConsumerWidget {
   const SingleItemPage({required String id, Key? key})
@@ -202,4 +202,10 @@ abstract class SingleItemController extends StateNotifier<SingleItem> {
   String getTitle();
 
   void setTitle(String title);
+
+  void addEvent(ItemEvent event);
+
+  List<ItemEvent> getEvents();
+
+  void removeEvent(ItemEvent event);
 }

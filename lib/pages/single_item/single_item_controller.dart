@@ -1,12 +1,15 @@
 import 'package:flutter/cupertino.dart';
 
 import 'model/single_item.dart';
+import 'model/item_event.dart';
 import 'single_item_view.dart';
 
 const mockSingleItem = SingleItem(
   title: 'Example Title',
   description: 'Example Description',
   image: 'assets/dev_debug_images/example_document.png',
+  isFavorite: false,
+  events: [],
 );
 
 class SingleItemControllerMock extends SingleItemController {
@@ -44,5 +47,20 @@ class SingleItemControllerMock extends SingleItemController {
   @override
   void setTitle(String text) {
     state = state.copyWith(title: text);
+  }
+
+  @override
+  void addEvent(ItemEvent event) {
+    state = state.copyWith(events: [...state.events, event]);
+  }
+
+  @override
+  void removeEvent(ItemEvent event) {
+    state = state.copyWith(events: state.events..remove(event));
+  }
+
+  @override
+  List<ItemEvent> getEvents() {
+    return state.events;
   }
 }

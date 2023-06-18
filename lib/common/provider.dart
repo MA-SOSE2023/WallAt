@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // Single Item
@@ -24,4 +25,9 @@ class Providers {
           CustomBottomNavBarModel> customBottomNavBarControllerProvider =
       StateNotifierProvider<CustomBottomNavBarController,
           CustomBottomNavBarModel>((ref) => CustomBottomNavBarControllerImpl());
+
+  static final navigatorKeyProvider =
+      Provider<GlobalKey<NavigatorState>>((ref) {
+    return GlobalKey<NavigatorState>();
+  });
 }

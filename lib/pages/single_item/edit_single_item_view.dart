@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gruppe4/pages/single_item/single_item_view.dart';
 import '../../common/provider.dart';
 import 'model/single_item.dart';
+import 'model/item_event.dart';
 
 class EditSingleItemPage extends ConsumerWidget {
   const EditSingleItemPage({required String id, Key? key})
@@ -143,13 +144,21 @@ class EditSingleItemPage extends ConsumerWidget {
                   ),
                 ),
               ),
-              CupertinoButton(
-                alignment: Alignment.bottomRight,
-                onPressed: () {
-                  _showCalendarPopup(context);
-                },
-                child: Icon(CupertinoIcons.calendar),
-              )
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                CupertinoButton(
+                  alignment: Alignment.bottomRight,
+                  onPressed: () {
+                    _showCalendarPopup(context, controller);
+                  },
+                  child: const Icon(CupertinoIcons.calendar),
+                ),
+                CupertinoButton(
+                  onPressed: () {
+                    _showEventList(context, controller);
+                  },
+                  child: const Icon(CupertinoIcons.list_bullet),
+                ),
+              ])
             ],
           ),
         ),
@@ -157,7 +166,8 @@ class EditSingleItemPage extends ConsumerWidget {
     );
   }
 
-  void _showCalendarPopup(BuildContext context) {
+  void _showCalendarPopup(
+      BuildContext context, SingleItemController controller) {
     DateTime? selectedDate;
     String description = '';
 
@@ -196,7 +206,7 @@ class EditSingleItemPage extends ConsumerWidget {
                   }
                 },
                 child: Text(selectedDate != null
-                    ? 'Selected Date: ${selectedDate.toString()}'
+                    ? '${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}'
                     : 'Select Date'),
               ),
               SizedBox(height: 20),
@@ -217,10 +227,14 @@ class EditSingleItemPage extends ConsumerWidget {
             CupertinoDialogAction(
               onPressed: () {
                 // Do something with the selected date and description
-                if (selectedDate != null) {
+                if (selectedDate != null && description.isNotEmpty) {
                   // Use the selected date and description as needed
-                  print('Selected Date: $selectedDate');
-                  print('Description: $description');
+                  ItemEvent newEvent = ItemEvent(
+                    date: selectedDate!,
+                    description: description,
+                  );
+
+                  controller.addEvent(newEvent);
                 }
                 Navigator.of(context).pop();
               },
@@ -233,6 +247,59 @@ class EditSingleItemPage extends ConsumerWidget {
   }
 
   void setState(Null Function() param0) {}
+}
+
+void _showEventList(BuildContext context, SingleItemController controller) {
+  List<ItemEvent> events = controller.getEvents();
+
+  showCupertinoDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return CupertinoAlertDialog(
+        title: const Text('Event List'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (events.isNotEmpty)
+              Container(
+                height: 300, // Adjust the height as needed
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: events.length,
+                  itemBuilder: (context, index) {
+                    final ItemEvent event = events[index];
+                    return CupertinoListTile(
+                      title: Text(event.description),
+                      subtitle: Text(
+                        '${event.date.day}/${event.date.month}/${event.date.year}',
+                      ),
+                      trailing: CupertinoButton(
+                        onPressed: () {
+                          controller.removeEvent(event);
+                          Navigator.of(context).pop();
+                        },
+                        padding: EdgeInsets.zero,
+                        child: const Icon(CupertinoIcons.minus_circled),
+                      ),
+                    );
+                  },
+                ),
+              )
+            else
+              const Text('No events'),
+          ],
+        ),
+        actions: [
+          CupertinoDialogAction(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text('Close'),
+          ),
+        ],
+      );
+    },
+  );
 }
 
 class TextFieldWithIcon extends StatelessWidget {

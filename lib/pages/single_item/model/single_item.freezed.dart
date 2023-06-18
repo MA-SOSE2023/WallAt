@@ -19,6 +19,8 @@ mixin _$SingleItem {
   String get title => throw _privateConstructorUsedError;
   String get description => throw _privateConstructorUsedError;
   String get image => throw _privateConstructorUsedError;
+  bool get isFavorite => throw _privateConstructorUsedError;
+  List<ItemEvent> get events => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $SingleItemCopyWith<SingleItem> get copyWith =>
@@ -31,7 +33,12 @@ abstract class $SingleItemCopyWith<$Res> {
           SingleItem value, $Res Function(SingleItem) then) =
       _$SingleItemCopyWithImpl<$Res, SingleItem>;
   @useResult
-  $Res call({String title, String description, String image});
+  $Res call(
+      {String title,
+      String description,
+      String image,
+      bool isFavorite,
+      List<ItemEvent> events});
 }
 
 /// @nodoc
@@ -50,6 +57,8 @@ class _$SingleItemCopyWithImpl<$Res, $Val extends SingleItem>
     Object? title = null,
     Object? description = null,
     Object? image = null,
+    Object? isFavorite = null,
+    Object? events = null,
   }) {
     return _then(_value.copyWith(
       title: null == title
@@ -64,6 +73,14 @@ class _$SingleItemCopyWithImpl<$Res, $Val extends SingleItem>
           ? _value.image
           : image // ignore: cast_nullable_to_non_nullable
               as String,
+      isFavorite: null == isFavorite
+          ? _value.isFavorite
+          : isFavorite // ignore: cast_nullable_to_non_nullable
+              as bool,
+      events: null == events
+          ? _value.events
+          : events // ignore: cast_nullable_to_non_nullable
+              as List<ItemEvent>,
     ) as $Val);
   }
 }
@@ -76,7 +93,12 @@ abstract class _$$_SingleItemCopyWith<$Res>
       __$$_SingleItemCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String title, String description, String image});
+  $Res call(
+      {String title,
+      String description,
+      String image,
+      bool isFavorite,
+      List<ItemEvent> events});
 }
 
 /// @nodoc
@@ -93,6 +115,8 @@ class __$$_SingleItemCopyWithImpl<$Res>
     Object? title = null,
     Object? description = null,
     Object? image = null,
+    Object? isFavorite = null,
+    Object? events = null,
   }) {
     return _then(_$_SingleItem(
       title: null == title
@@ -107,6 +131,14 @@ class __$$_SingleItemCopyWithImpl<$Res>
           ? _value.image
           : image // ignore: cast_nullable_to_non_nullable
               as String,
+      isFavorite: null == isFavorite
+          ? _value.isFavorite
+          : isFavorite // ignore: cast_nullable_to_non_nullable
+              as bool,
+      events: null == events
+          ? _value._events
+          : events // ignore: cast_nullable_to_non_nullable
+              as List<ItemEvent>,
     ));
   }
 }
@@ -115,7 +147,12 @@ class __$$_SingleItemCopyWithImpl<$Res>
 
 class _$_SingleItem implements _SingleItem {
   const _$_SingleItem(
-      {required this.title, required this.description, required this.image});
+      {required this.title,
+      required this.description,
+      required this.image,
+      required this.isFavorite,
+      required final List<ItemEvent> events})
+      : _events = events;
 
   @override
   final String title;
@@ -123,10 +160,19 @@ class _$_SingleItem implements _SingleItem {
   final String description;
   @override
   final String image;
+  @override
+  final bool isFavorite;
+  final List<ItemEvent> _events;
+  @override
+  List<ItemEvent> get events {
+    if (_events is EqualUnmodifiableListView) return _events;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_events);
+  }
 
   @override
   String toString() {
-    return 'SingleItem(title: $title, description: $description, image: $image)';
+    return 'SingleItem(title: $title, description: $description, image: $image, isFavorite: $isFavorite, events: $events)';
   }
 
   @override
@@ -137,11 +183,15 @@ class _$_SingleItem implements _SingleItem {
             (identical(other.title, title) || other.title == title) &&
             (identical(other.description, description) ||
                 other.description == description) &&
-            (identical(other.image, image) || other.image == image));
+            (identical(other.image, image) || other.image == image) &&
+            (identical(other.isFavorite, isFavorite) ||
+                other.isFavorite == isFavorite) &&
+            const DeepCollectionEquality().equals(other._events, _events));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, title, description, image);
+  int get hashCode => Object.hash(runtimeType, title, description, image,
+      isFavorite, const DeepCollectionEquality().hash(_events));
 
   @JsonKey(ignore: true)
   @override
@@ -154,7 +204,9 @@ abstract class _SingleItem implements SingleItem {
   const factory _SingleItem(
       {required final String title,
       required final String description,
-      required final String image}) = _$_SingleItem;
+      required final String image,
+      required final bool isFavorite,
+      required final List<ItemEvent> events}) = _$_SingleItem;
 
   @override
   String get title;
@@ -162,6 +214,10 @@ abstract class _SingleItem implements SingleItem {
   String get description;
   @override
   String get image;
+  @override
+  bool get isFavorite;
+  @override
+  List<ItemEvent> get events;
   @override
   @JsonKey(ignore: true)
   _$$_SingleItemCopyWith<_$_SingleItem> get copyWith =>
