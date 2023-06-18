@@ -259,59 +259,65 @@ class CalendarButton extends ConsumerStatefulWidget {
 class _ListEventButtonState extends ConsumerState<ListEventButton> {
   @override
   Widget build(BuildContext context) {
-    final List<ItemEvent> events =
-        ref.watch(Providers.singleItemControllerProvider(widget.id)).events;
-
     return CupertinoButton(
       child: const Icon(CupertinoIcons.list_bullet),
       onPressed: () => showCupertinoDialog(
         context: context,
         builder: (BuildContext context) {
-          return CupertinoAlertDialog(
-            title: const Text('Event List'),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (events.isNotEmpty)
-                  SizedBox(
-                    height: 300, // Adjust the height as needed
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: events.length,
-                      itemBuilder: (context, index) {
-                        final ItemEvent event = events[index];
-                        return CupertinoListTile(
-                          title: Text(event.description),
-                          subtitle: Text(
-                            '${event.date.day}/${event.date.month}/${event.date.year}',
-                          ),
-                          trailing: CupertinoButton(
-                            onPressed: () {
-                              ref
-                                  .read(Providers.singleItemControllerProvider(
-                                          widget.id)
-                                      .notifier)
-                                  .removeEvent(event);
-                            },
-                            padding: EdgeInsets.zero,
-                            child: const Icon(CupertinoIcons.minus_circled),
-                          ),
-                        );
-                      },
-                    ),
-                  )
-                else
-                  const Text('No events'),
-              ],
-            ),
-            actions: [
-              CupertinoDialogAction(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text('Close'),
-              ),
-            ],
+          return Consumer(
+            builder: (context, ref, _) {
+              final List<ItemEvent> events = ref
+                  .watch(Providers.singleItemControllerProvider(widget.id))
+                  .events;
+
+              return CupertinoAlertDialog(
+                title: const Text('Event List'),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (events.isNotEmpty)
+                      SizedBox(
+                        height: 300, // Adjust the height as needed
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: events.length,
+                          itemBuilder: (context, index) {
+                            final ItemEvent event = events[index];
+                            return CupertinoListTile(
+                              title: Text(event.description),
+                              subtitle: Text(
+                                '${event.date.day}/${event.date.month}/${event.date.year}',
+                              ),
+                              trailing: CupertinoButton(
+                                onPressed: () {
+                                  ref
+                                      .read(Providers
+                                              .singleItemControllerProvider(
+                                                  widget.id)
+                                          .notifier)
+                                      .removeEvent(event);
+                                },
+                                padding: EdgeInsets.zero,
+                                child: const Icon(CupertinoIcons.minus_circled),
+                              ),
+                            );
+                          },
+                        ),
+                      )
+                    else
+                      const Text('No events'),
+                  ],
+                ),
+                actions: [
+                  CupertinoDialogAction(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text('Close'),
+                  ),
+                ],
+              );
+            },
           );
         },
       ),
