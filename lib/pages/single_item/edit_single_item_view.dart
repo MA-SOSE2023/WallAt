@@ -144,162 +144,188 @@ class EditSingleItemPage extends ConsumerWidget {
                   ),
                 ),
               ),
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                CupertinoButton(
-                  alignment: Alignment.bottomRight,
-                  onPressed: () {
-                    _showCalendarPopup(context, controller);
-                  },
-                  child: const Icon(CupertinoIcons.calendar),
-                ),
-                CupertinoButton(
-                  onPressed: () {
-                    _showEventList(context, controller);
-                  },
-                  child: const Icon(CupertinoIcons.list_bullet),
-                ),
-              ])
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  CalendarButton(id: _id), // Pass the ID to the button widget
+                  ListEventButton(id: _id), // Pass the ID to the button widget
+                ],
+              ),
             ],
           ),
         ),
       ),
     );
   }
-
-  void _showCalendarPopup(
-      BuildContext context, SingleItemController controller) {
-    DateTime? selectedDate;
-    String description = '';
-
-    showCupertinoDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return CupertinoAlertDialog(
-          title: Text('Select Date'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              CupertinoButton(
-                onPressed: () async {
-                  final DateTime? pickedDate = await showCupertinoModalPopup(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return SizedBox(
-                        height: 216,
-                        child: CupertinoDatePicker(
-                          mode: CupertinoDatePickerMode.date,
-                          initialDateTime: DateTime.now(),
-                          minimumDate: DateTime(1900),
-                          maximumDate: DateTime(2100),
-                          onDateTimeChanged: (DateTime? dateTime) {
-                            selectedDate = dateTime;
-                          },
-                        ),
-                      );
-                    },
-                  );
-
-                  if (pickedDate != null) {
-                    setState(() {
-                      selectedDate = pickedDate;
-                    });
-                  }
-                },
-                child: Text(selectedDate != null
-                    ? '${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}'
-                    : 'Select Date'),
-              ),
-              SizedBox(height: 20),
-              CupertinoTextField(
-                onChanged: (value) {
-                  description = value;
-                },
-              ),
-            ],
-          ),
-          actions: [
-            CupertinoDialogAction(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('Cancel'),
-            ),
-            CupertinoDialogAction(
-              onPressed: () {
-                // Do something with the selected date and description
-                if (selectedDate != null && description.isNotEmpty) {
-                  // Use the selected date and description as needed
-                  ItemEvent newEvent = ItemEvent(
-                    date: selectedDate!,
-                    description: description,
-                  );
-
-                  controller.addEvent(newEvent);
-                }
-                Navigator.of(context).pop();
-              },
-              child: Text('Save'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void setState(Null Function() param0) {}
 }
 
-void _showEventList(BuildContext context, SingleItemController controller) {
-  List<ItemEvent> events = controller.getEvents();
+class _CalendarButtonState extends ConsumerState<CalendarButton> {
+  DateTime? selectedDate;
+  String description = '';
 
-  showCupertinoDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return CupertinoAlertDialog(
-        title: const Text('Event List'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (events.isNotEmpty)
-              Container(
-                height: 300, // Adjust the height as needed
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: events.length,
-                  itemBuilder: (context, index) {
-                    final ItemEvent event = events[index];
-                    return CupertinoListTile(
-                      title: Text(event.description),
-                      subtitle: Text(
-                        '${event.date.day}/${event.date.month}/${event.date.year}',
-                      ),
-                      trailing: CupertinoButton(
-                        onPressed: () {
-                          controller.removeEvent(event);
-                          Navigator.of(context).pop();
-                        },
-                        padding: EdgeInsets.zero,
-                        child: const Icon(CupertinoIcons.minus_circled),
-                      ),
+  @override
+  Widget build(BuildContext context) {
+    final SingleItemController controller =
+        ref.read(Providers.singleItemControllerProvider(widget.id).notifier);
+
+    return CupertinoButton(
+      child: const Icon(CupertinoIcons.calendar),
+      onPressed: () => showCupertinoDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return CupertinoAlertDialog(
+            title: Text('Select Date'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CupertinoButton(
+                  onPressed: () async {
+                    final DateTime? pickedDate = await showCupertinoModalPopup(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return SizedBox(
+                          height: 216,
+                          child: CupertinoDatePicker(
+                            mode: CupertinoDatePickerMode.date,
+                            initialDateTime: DateTime.now(),
+                            minimumDate: DateTime(1900),
+                            maximumDate: DateTime(2100),
+                            onDateTimeChanged: (DateTime? dateTime) {
+                              selectedDate = dateTime;
+                            },
+                          ),
+                        );
+                      },
                     );
+
+                    if (pickedDate != null) {
+                      setState(() {
+                        selectedDate = pickedDate;
+                      });
+                    }
+                  },
+                  child: Text(selectedDate != null
+                      ? '${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}'
+                      : 'Select Date'),
+                ),
+                SizedBox(height: 20),
+                CupertinoTextField(
+                  onChanged: (value) {
+                    description = value;
                   },
                 ),
-              )
-            else
-              const Text('No events'),
-          ],
-        ),
-        actions: [
-          CupertinoDialogAction(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: const Text('Close'),
-          ),
-        ],
-      );
-    },
-  );
+              ],
+            ),
+            actions: [
+              CupertinoDialogAction(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('Cancel'),
+              ),
+              CupertinoDialogAction(
+                onPressed: () {
+                  // Do something with the selected date and description
+                  if (selectedDate != null && description.isNotEmpty) {
+                    // Use the selected date and description as needed
+                    ItemEvent newEvent = ItemEvent(
+                      date: selectedDate!,
+                      description: description,
+                    );
+
+                    controller.addEvent(newEvent);
+                  }
+                  Navigator.of(context).pop();
+                },
+                child: Text('Save'),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+}
+
+class CalendarButton extends ConsumerStatefulWidget {
+  const CalendarButton({required this.id, Key? key}) : super(key: key);
+
+  final String id;
+
+  @override
+  _CalendarButtonState createState() => _CalendarButtonState();
+}
+
+class _ListEventButtonState extends ConsumerState<ListEventButton> {
+  @override
+  Widget build(BuildContext context) {
+    final List<ItemEvent> events =
+        ref.watch(Providers.singleItemControllerProvider(widget.id)).events;
+
+    return CupertinoButton(
+      child: const Icon(CupertinoIcons.list_bullet),
+      onPressed: () => showCupertinoDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return CupertinoAlertDialog(
+            title: const Text('Event List'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (events.isNotEmpty)
+                  SizedBox(
+                    height: 300, // Adjust the height as needed
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: events.length,
+                      itemBuilder: (context, index) {
+                        final ItemEvent event = events[index];
+                        return CupertinoListTile(
+                          title: Text(event.description),
+                          subtitle: Text(
+                            '${event.date.day}/${event.date.month}/${event.date.year}',
+                          ),
+                          trailing: CupertinoButton(
+                            onPressed: () {
+                              ref
+                                  .read(Providers.singleItemControllerProvider(
+                                          widget.id)
+                                      .notifier)
+                                  .removeEvent(event);
+                            },
+                            padding: EdgeInsets.zero,
+                            child: const Icon(CupertinoIcons.minus_circled),
+                          ),
+                        );
+                      },
+                    ),
+                  )
+                else
+                  const Text('No events'),
+              ],
+            ),
+            actions: [
+              CupertinoDialogAction(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Close'),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+}
+
+class ListEventButton extends ConsumerStatefulWidget {
+  const ListEventButton({required this.id, Key? key}) : super(key: key);
+
+  final String id;
+
+  @override
+  _ListEventButtonState createState() => _ListEventButtonState();
 }
 
 class TextFieldWithIcon extends StatelessWidget {

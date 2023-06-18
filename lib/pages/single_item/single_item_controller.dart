@@ -56,11 +56,12 @@ class SingleItemControllerMock extends SingleItemController {
 
   @override
   void removeEvent(ItemEvent event) {
-    state = state.copyWith(events: state.events..remove(event));
+    state = state.copyWith(
+        events: List<ItemEvent>.from(state.events)..remove(event));
   }
 
   @override
   List<ItemEvent> getEvents() {
-    return state.events;
+    return List<ItemEvent>.from(state.events);
   }
 }
