@@ -11,5 +11,6 @@ class SingleItem with _$SingleItem {
     required String image,
     required bool isFavorite,
     required List<ItemEvent> events,
+    DateTime? currentSelectedDate,
   }) = _SingleItem;
 }

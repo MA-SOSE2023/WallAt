@@ -82,19 +82,37 @@ class PictureContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              image: DecorationImage(
+                image: image,
+                fit: BoxFit.cover,
+              ),
+            ),
           ),
-          child: Image(
-            image: image,
-            fit: BoxFit.cover,
+          Positioned(
+            bottom: 16.0,
+            right: 16.0,
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.5),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: IconButton(
+                onPressed: onTap,
+                icon: Icon(
+                  CupertinoIcons.search,
+                  color: Colors.white,
+                ),
+              ),
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -191,6 +209,10 @@ class ActionButtons extends StatelessWidget {
 abstract class SingleItemController extends StateNotifier<SingleItem> {
   SingleItemController(SingleItem state) : super(state);
 
+  DateTime? getSelectedDate();
+
+  void setSelectedDate(DateTime date);
+
   Image getImage();
 
   void setImage(Image image);
@@ -208,4 +230,8 @@ abstract class SingleItemController extends StateNotifier<SingleItem> {
   List<ItemEvent> getEvents();
 
   void removeEvent(ItemEvent event);
+
+  void setCurrentDate(DateTime date);
+
+  DateTime? getCurrentDate();
 }
