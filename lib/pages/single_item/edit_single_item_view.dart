@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gruppe4/pages/single_item/single_item_view.dart';
 import '../../common/provider.dart';
-import 'model/single_item.dart';
 import 'model/item_event.dart';
 
 class EditSingleItemPage extends ConsumerWidget {
@@ -91,7 +90,7 @@ class EditSingleItemPage extends ConsumerWidget {
                       children: [
                         Container(
                           height: double.infinity,
-                          margin: EdgeInsets.all(10),
+                          margin: const EdgeInsets.all(10),
                           decoration: BoxDecoration(
                             color: Colors.grey[300],
                             borderRadius: BorderRadius.circular(10),
@@ -162,6 +161,15 @@ class EditSingleItemPage extends ConsumerWidget {
   }
 }
 
+class CalendarButton extends ConsumerStatefulWidget {
+  const CalendarButton({required this.id, Key? key}) : super(key: key);
+
+  final String id;
+
+  @override
+  ConsumerState<CalendarButton> createState() => _CalendarButtonState();
+}
+
 class _CalendarButtonState extends ConsumerState<CalendarButton> {
   String description = '';
 
@@ -179,14 +187,13 @@ class _CalendarButtonState extends ConsumerState<CalendarButton> {
                   .currentSelectedDate;
 
               return CupertinoAlertDialog(
-                title: Text('Select Date'),
+                title: const Text('Select Date'),
                 content: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     CupertinoButton(
-                      onPressed: () async {
-                        final DateTime? pickedDate =
-                            await showCupertinoModalPopup(
+                      onPressed: () {
+                        showCupertinoModalPopup(
                           context: context,
                           builder: (BuildContext context) {
                             return SizedBox(
@@ -213,7 +220,7 @@ class _CalendarButtonState extends ConsumerState<CalendarButton> {
                           ? '${currentDate.day}/${currentDate.month}/${currentDate.year}'
                           : 'Select Date'),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     CupertinoTextField(
                       onChanged: (value) {
                         description = value;
@@ -226,7 +233,7 @@ class _CalendarButtonState extends ConsumerState<CalendarButton> {
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    child: Text('Cancel'),
+                    child: const Text('Cancel'),
                   ),
                   CupertinoDialogAction(
                     onPressed: () {
@@ -246,7 +253,7 @@ class _CalendarButtonState extends ConsumerState<CalendarButton> {
                       }
                       Navigator.of(context).pop();
                     },
-                    child: Text('Save'),
+                    child: const Text('Save'),
                   ),
                 ],
               );
@@ -258,13 +265,13 @@ class _CalendarButtonState extends ConsumerState<CalendarButton> {
   }
 }
 
-class CalendarButton extends ConsumerStatefulWidget {
-  const CalendarButton({required this.id, Key? key}) : super(key: key);
+class ListEventButton extends ConsumerStatefulWidget {
+  const ListEventButton({required this.id, Key? key}) : super(key: key);
 
   final String id;
 
   @override
-  _CalendarButtonState createState() => _CalendarButtonState();
+  ConsumerState<ListEventButton> createState() => _ListEventButtonState();
 }
 
 class _ListEventButtonState extends ConsumerState<ListEventButton> {
@@ -336,15 +343,6 @@ class _ListEventButtonState extends ConsumerState<ListEventButton> {
   }
 }
 
-class ListEventButton extends ConsumerStatefulWidget {
-  const ListEventButton({required this.id, Key? key}) : super(key: key);
-
-  final String id;
-
-  @override
-  _ListEventButtonState createState() => _ListEventButtonState();
-}
-
 class TextFieldWithIcon extends StatelessWidget {
   const TextFieldWithIcon({
     Key? key,
@@ -368,7 +366,7 @@ class TextFieldWithIcon extends StatelessWidget {
             controller: controller,
             onChanged: onChanged,
             placeholder: hintText,
-            padding: EdgeInsets.symmetric(vertical: 12, horizontal: 10),
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
           ),
         ),
         CupertinoButton(

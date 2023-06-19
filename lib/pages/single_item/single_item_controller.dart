@@ -47,8 +47,8 @@ class SingleItemControllerMock extends SingleItemController {
   }
 
   @override
-  void setDescription(String text) {
-    state = state.copyWith(description: text);
+  void setDescription(String description) {
+    state = state.copyWith(description: description);
   }
 
   @override
@@ -57,8 +57,8 @@ class SingleItemControllerMock extends SingleItemController {
   }
 
   @override
-  void setTitle(String text) {
-    state = state.copyWith(title: text);
+  void setTitle(String title) {
+    state = state.copyWith(title: title);
   }
 
   @override
