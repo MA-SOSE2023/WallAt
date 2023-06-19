@@ -44,6 +44,7 @@ class SingleItemPage extends ConsumerWidget {
                     Navigator.push(
                       context,
                       CupertinoPageRoute(
+                        fullscreenDialog: true,
                         builder: (context) => FullScreenImagePage(
                           itemId: _id,
                           imageProvider: controller.getImage().image,
@@ -158,13 +159,13 @@ class InfoContainer extends StatelessWidget {
   }
 }
 
-class ActionButtons extends StatelessWidget {
+class ActionButtons extends ConsumerWidget {
   const ActionButtons({Key? key, required this.itemId}) : super(key: key);
 
   final String itemId;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
         padding: const EdgeInsets.only(bottom: 20),
         child: Row(
@@ -178,11 +179,11 @@ class ActionButtons extends StatelessWidget {
             ),
             _buildActionButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  CupertinoPageRoute(
-                    builder: (context) => EditSingleItemPage(id: itemId),
-                  ),
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  backgroundColor: Colors.transparent,
+                  builder: (context) => EditSingleItemPage(id: itemId),
                 );
               },
               icon: CupertinoIcons.pencil_circle, // Use the Cupertino icon

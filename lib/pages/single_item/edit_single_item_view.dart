@@ -17,141 +17,202 @@ class EditSingleItemPage extends ConsumerWidget {
     final SingleItemController controller =
         ref.read(Providers.singleItemControllerProvider(_id).notifier);
 
-    return CupertinoPageScaffold(
-      navigationBar: const CupertinoNavigationBar(
-        middle: Text('Edit item'),
-      ),
-      backgroundColor: Colors.grey[100],
-      child: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    Widget makeDismissable({required Widget child}) => GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () => Navigator.of(context).pop(),
+          child: GestureDetector(
+            onTap: () {},
+            child: child,
+          ),
+        );
+
+    return makeDismissable(
+      child: DraggableScrollableSheet(
+        initialChildSize: 0.94,
+        maxChildSize: 0.94,
+        minChildSize: 0.4,
+        snap: true,
+        builder: (context, scrollController) => Container(
+          decoration: BoxDecoration(
+            color: CupertinoTheme.of(context).scaffoldBackgroundColor,
+            borderRadius: const BorderRadius.vertical(
+              top: Radius.circular(20),
+            ),
+          ),
+          child: Stack(
             children: [
-              const Padding(
-                padding: EdgeInsets.only(left: 25.0, top: 20),
-                child: Text(
-                  'Title',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 20, right: 20),
+              SizedBox(
+                height: 52,
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    borderRadius: BorderRadius.circular(10),
+                    color: CupertinoTheme.of(context).barBackgroundColor,
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(20),
+                    ),
                   ),
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Expanded(
-                        child: TextFieldWithIcon(
-                          controller: TextEditingController(
-                              text: controller.getTitle()),
-                          onChanged: (value) {
-                            controller
-                                .setTitle(value); // Update the local state
-                          },
-                          hintText: 'Title',
-                          icon: CupertinoIcons.pencil,
-                        ),
+                      CupertinoButton(
+                        child: const Text('Cancel',
+                            style: TextStyle(fontSize: 18)),
+                        onPressed: () {
+                          // Cancel the edit
+                          Navigator.of(context).pop();
+                        },
                       ),
+                      const Text('Edit Item', style: TextStyle(fontSize: 20)),
+                      CupertinoButton(
+                          child: const Text('Save',
+                              style: TextStyle(fontSize: 18)),
+                          onPressed: () {
+                            // Save the item
+                            Navigator.of(context).pop();
+                          }),
                     ],
                   ),
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.only(left: 25.0, top: 20),
-                child: Text(
-                  'Image',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  // Open gallery, select image, and save it
-                },
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 20.0),
-                  child: Container(
-                    width: MediaQuery.of(context).size.width - 40,
-                    height: 200,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(10),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(8.0, 52.0, 8.0, 0.0),
+                child: ListView(
+                  controller: scrollController,
+                  children: [
+                    /*const Text(
+                      "lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident sunt in culpa qui officia deserunt mollit anim id est laborum.",
+                      style: TextStyle(fontSize: 32),
+                    ),*/
+                    const Padding(
+                      padding: EdgeInsets.only(left: 25.0, top: 20),
+                      child: Text(
+                        'Title',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
-                    child: Stack(
-                      children: [
-                        Container(
-                          height: double.infinity,
-                          margin: const EdgeInsets.all(10),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20, right: 20),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: TextFieldWithIcon(
+                                controller: TextEditingController(
+                                    text: controller.getTitle()),
+                                onChanged: (value) {
+                                  controller.setTitle(
+                                      value); // Update the local state
+                                },
+                                hintText: 'Title',
+                                icon: CupertinoIcons.pencil,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.only(left: 25.0, top: 20),
+                      child: Text(
+                        'Image',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        // Open gallery, select image, and save it
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 20.0),
+                        child: Container(
+                          width: MediaQuery.of(context).size.width - 40,
+                          height: 200,
                           decoration: BoxDecoration(
-                            color: Colors.grey[300],
+                            color: Colors.grey[200],
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          child: Hero(
-                            tag: singleItemHeroTag(_id),
-                            child: controller.getImage(),
+                          child: Stack(
+                            children: [
+                              Container(
+                                height: double.infinity,
+                                margin: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[300],
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Hero(
+                                  tag: singleItemHeroTag(_id),
+                                  child: controller.getImage(),
+                                ),
+                              ),
+                              Positioned(
+                                right: 10,
+                                top: 80,
+                                child: CupertinoButton(
+                                  onPressed: () {
+                                    // Edit icon button action
+                                  },
+                                  padding: EdgeInsets.zero,
+                                  child: const Icon(CupertinoIcons.pencil),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        Positioned(
-                          right: 10,
-                          top: 80,
-                          child: CupertinoButton(
-                            onPressed: () {
-                              // Edit icon button action
-                            },
-                            padding: EdgeInsets.zero,
-                            child: const Icon(CupertinoIcons.pencil),
-                          ),
+                      ),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.only(left: 25.0, top: 20),
+                      child: Text(
+                        'Description',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
                         ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          bottom: 20, left: 20, right: 20),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                        child: TextFieldWithIcon(
+                          controller: TextEditingController(
+                              text: controller.getDescription()),
+                          onChanged: (value) {
+                            controller.setDescription(
+                                value); // Update the local state
+                          },
+                          hintText: 'Description',
+                          icon: CupertinoIcons.pencil,
+                        ),
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        CalendarButton(
+                            id: _id), // Pass the ID to the button widget
+                        ListEventButton(
+                            id: _id), // Pass the ID to the button widget
                       ],
                     ),
-                  ),
+                  ],
                 ),
-              ),
-              const Padding(
-                padding: EdgeInsets.only(left: 25.0, top: 20),
-                child: Text(
-                  'Description',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 20, left: 20, right: 20),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                  child: TextFieldWithIcon(
-                    controller: TextEditingController(
-                        text: controller.getDescription()),
-                    onChanged: (value) {
-                      controller
-                          .setDescription(value); // Update the local state
-                    },
-                    hintText: 'Description',
-                    icon: CupertinoIcons.pencil,
-                  ),
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  CalendarButton(id: _id), // Pass the ID to the button widget
-                  ListEventButton(id: _id), // Pass the ID to the button widget
-                ],
               ),
             ],
           ),
