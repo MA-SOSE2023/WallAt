@@ -16,19 +16,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoApp(
-        home: Scaffold(
-      body: const SingleItemPage(id: "1"),
-      bottomNavigationBar: CupertinoTabBar(
-        iconSize: 30,
-        onTap: (index) => {},
-        currentIndex: 0,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.favorite), label: "Favorites"),
+    return const CupertinoApp(
+        localizationsDelegates: [
+          DefaultCupertinoLocalizations.delegate,
+          DefaultMaterialLocalizations.delegate,
+          DefaultWidgetsLocalizations.delegate,
         ],
-      ),
-    ));
+        home: CupertinoPageScaffold(
+          child: SingleItemPage(id: "1"),
+        ));
   }
 }
