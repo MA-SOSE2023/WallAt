@@ -96,7 +96,10 @@ class EditSingleItemPage extends ConsumerWidget {
                             color: Colors.grey[300],
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          child: controller.getImage(),
+                          child: Hero(
+                            tag: singleItemHeroTag(_id),
+                            child: controller.getImage(),
+                          ),
                         ),
                         Positioned(
                           right: 10,

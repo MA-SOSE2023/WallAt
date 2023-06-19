@@ -1,14 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:photo_view/photo_view.dart';
-import '../../common/provider.dart';
-import 'model/single_item.dart';
+import 'single_item_view.dart';
 
 class FullScreenImagePage extends StatelessWidget {
-  const FullScreenImagePage({Key? key, required this.imageProvider})
-      : super(key: key);
+  const FullScreenImagePage({
+    Key? key,
+    required this.itemId,
+    required this.imageProvider,
+  }) : super(key: key);
 
+  final String itemId;
   final ImageProvider imageProvider;
 
   @override
@@ -18,6 +20,8 @@ class FullScreenImagePage extends StatelessWidget {
       backgroundColor: Colors.black,
       child: SafeArea(
         child: PhotoView(
+          heroAttributes:
+              PhotoViewHeroAttributes(tag: singleItemHeroTag(itemId)),
           imageProvider: imageProvider,
           backgroundDecoration: const BoxDecoration(
             color: Colors.transparent,

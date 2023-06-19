@@ -7,6 +7,10 @@ import 'model/single_item.dart';
 import 'edit_single_item_view.dart';
 import 'model/item_event.dart';
 
+String singleItemHeroTag(String id) {
+  return "single_item_image$id";
+}
+
 class SingleItemPage extends ConsumerWidget {
   const SingleItemPage({required String id, Key? key})
       : _id = id,
@@ -32,18 +36,22 @@ class SingleItemPage extends ConsumerWidget {
             SizedBox(
               height: MediaQuery.of(context).size.height *
                   0.6, // Set the height to half the screen height
-              child: PictureContainer(
-                image: controller.getImage().image,
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                      builder: (context) => FullScreenImagePage(
-                        imageProvider: controller.getImage().image,
+              child: Hero(
+                tag: singleItemHeroTag(_id),
+                child: PictureContainer(
+                  image: controller.getImage().image,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                        builder: (context) => FullScreenImagePage(
+                          itemId: _id,
+                          imageProvider: controller.getImage().image,
+                        ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
             ),
             Expanded(
@@ -103,9 +111,9 @@ class PictureContainer extends StatelessWidget {
                 color: Colors.black.withOpacity(0.5),
                 borderRadius: BorderRadius.circular(20),
               ),
-              child: IconButton(
+              child: CupertinoButton(
                 onPressed: onTap,
-                icon: Icon(
+                child: const Icon(
                   CupertinoIcons.search,
                   color: Colors.white,
                 ),
