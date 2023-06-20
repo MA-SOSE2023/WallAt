@@ -2,7 +2,6 @@ import 'package:beamer/beamer.dart';
 import 'package:flutter/cupertino.dart';
 
 import '/common/custom_widgets/bottom_nav_bar/bottom_nav_bar_view.dart';
-import '/router/router.dart';
 
 class GlobalLocation extends BeamLocation<BeamState> {
   // The previous location needs to be handled manually, because otherwise
