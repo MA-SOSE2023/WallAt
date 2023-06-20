@@ -1,6 +1,7 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:gruppe4/pages/home/home_view.dart';
+
+import '/pages/home/home_view.dart';
 
 class HomeLocation extends BeamLocation<BeamState> {
   @override

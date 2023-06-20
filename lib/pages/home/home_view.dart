@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../router/router.dart';
+import '/common/custom_widgets/camera_button_hero_destination/camera_button_hero_destination_view.dart';
+import '/router/router.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -20,6 +21,7 @@ class HomeScreen extends StatelessWidget {
             backgroundColor: CupertinoTheme.of(context).primaryColor,
             onPressed: () =>
                 Routers.globalRouterDelegate.beamToNamed('/camera'),
+            heroTag: cameraButtonHeroTag,
             child: const Icon(
               CupertinoIcons.camera,
               size: 30,
