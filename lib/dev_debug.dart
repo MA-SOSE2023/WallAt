@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '/common/custom_widgets/event_card/event_card_view.dart';
+import 'common/custom_widgets/event_card_view.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
