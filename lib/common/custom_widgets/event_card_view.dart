@@ -1,14 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gruppe4/pages/single_item/model/item_event.dart';
 
 class EventCard extends StatelessWidget {
-  const EventCard({required this.date, required this.title, super.key});
+  const EventCard({required this.event, super.key});
 
-  final DateTime date;
-  final String title;
+  final ItemEvent event;
 
   @override
   Widget build(BuildContext context) {
+    final DateTime date = event.date;
+    final String description = event.description;
     return Column(
       children: [
         CupertinoListSection.insetGrouped(
@@ -50,7 +52,7 @@ class EventCard extends StatelessWidget {
             ),
             CupertinoListTile.notched(
               title: Text(
-                title,
+                description,
                 style: CupertinoTheme.of(context).textTheme.pickerTextStyle,
               ),
               backgroundColor: CupertinoDynamicColor.resolve(
