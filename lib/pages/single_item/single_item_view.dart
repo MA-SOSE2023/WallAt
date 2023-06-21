@@ -37,19 +37,23 @@ class SingleItemPage extends ConsumerWidget {
                 SizedBox(
                   height: MediaQuery.of(context).size.height /
                       2, // Set the height to half the screen height
-                  child: PictureContainer(
-                    image: controller.getImage().image,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        CupertinoPageRoute(
-                          builder: (context) => FullScreenImagePage(
-                            itemId: _id,
-                            imageProvider: controller.getImage().image,
+                  child: Hero(
+                    tag: singleItemHeroTag(_id),
+                    child: PictureContainer(
+                      image: controller.getImage().image,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          CupertinoPageRoute(
+                            builder: (context) => FullScreenImagePage(
+                              itemId: _id,
+                              imageProvider: controller.getImage().image,
+                            ),
+                            fullscreenDialog: true,
                           ),
-                        ),
-                      );
-                    },
+                        );
+                      },
+                    ),
                   ),
                 ),
                 SizedBox(
