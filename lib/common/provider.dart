@@ -1,7 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gruppe4/pages/home/home_model.dart';
-import 'package:gruppe4/pages/home/home_view.dart';
 
 // Single Item
 import '/pages/single_item/single_item_view.dart';
@@ -10,7 +8,12 @@ import '/pages/single_item/edit_single_item_controller.dart';
 import '/pages/single_item/edit_single_item_view.dart';
 import '/pages/single_item/model/single_item.dart';
 // Home
+import '/pages/home/home_view.dart';
 import '/pages/home/home_controller.dart';
+import '/pages/home/home_model.dart';
+// Favorites
+import '/pages/favorites/favorites_view.dart';
+import '/pages/favorites/favorites_controller.dart';
 
 import 'custom_widgets/all_custom_widgets.dart';
 
@@ -39,6 +42,15 @@ class Providers {
       homeControllerProvider =
       StateNotifierProvider<HomeController, HomeModel>((ref) {
     return HomeControllerMock();
+  });
+
+  /// Provider for [FavoritesScreen]
+  /// - Provides a [FavoritesController] for a List<String> containing ids
+  ///  of [SingleItem]s
+  static final StateNotifierProvider<FavoritesController, List<String>>
+      favoritesControllerProvider =
+      StateNotifierProvider<FavoritesController, List<String>>((ref) {
+    return FavoritesControllerMock();
   });
 
   /// Provider for [CustomBottomNavBar]

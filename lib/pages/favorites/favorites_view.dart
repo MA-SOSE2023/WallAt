@@ -1,23 +1,17 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '/common/provider.dart';
 import '/common/custom_widgets/all_custom_widgets.dart'
     show DocumentCardContainerList, CameraButtonHeroDestination;
 
-class FavoritesScren extends StatelessWidget {
-  const FavoritesScren({super.key});
+class FavoritesScreen extends ConsumerWidget {
+  const FavoritesScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final List<String> itemIds = <String>[
-      '1',
-      '2',
-      '3',
-      '4',
-      '5',
-      '6',
-      '7',
-      '8'
-    ];
+  Widget build(BuildContext context, WidgetRef ref) {
+    final List<String> itemIds =
+        ref.watch(Providers.favoritesControllerProvider);
     return CupertinoPageScaffold(
       navigationBar: const CupertinoNavigationBar(
         middle: Text('Favorites'),
@@ -62,4 +56,10 @@ class FavoritesScren extends StatelessWidget {
       ),
     );
   }
+}
+
+abstract class FavoritesController extends StateNotifier<List<String>> {
+  FavoritesController(List<String> state) : super(state);
+
+  List<String> get favorites;
 }

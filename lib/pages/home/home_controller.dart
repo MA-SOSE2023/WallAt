@@ -1,5 +1,5 @@
 import 'home_model.dart';
-import '/pages/home/home_view.dart';
+import 'home_view.dart';
 import '/pages/single_item/model/item_event.dart';
 
 List<ItemEvent> mockEvents = [
