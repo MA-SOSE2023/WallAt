@@ -29,6 +29,7 @@ class HomeScreen extends ConsumerWidget {
       appBar: const CupertinoNavigationBar(
         middle: Text('Home'),
       ),
+      backgroundColor: CupertinoTheme.of(context).scaffoldBackgroundColor,
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 15.0, right: 10.0),
@@ -66,7 +67,7 @@ class HomeScreen extends ConsumerWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
               child: CupertinoListSection.insetGrouped(
                 header: Text(
                   'Frequently Used',

@@ -14,6 +14,6 @@ List<ItemEvent> mockEvents = [
 
 class HomeControllerMock extends HomeController {
   HomeControllerMock()
-      : super(
-            HomeModel(events: mockEvents, itemIds: ['1', '2', '3', '4', '5']));
+      : super(HomeModel(
+            events: mockEvents, itemIds: ['1', '2', '3', '4', '5', '6']));
 }
