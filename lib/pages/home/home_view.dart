@@ -46,7 +46,7 @@ class HomeScreen extends ConsumerWidget {
       body: Padding(
         padding: const EdgeInsets.only(top: 10.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             FlutterCarousel(
               items: eventCards,
@@ -65,8 +65,19 @@ class HomeScreen extends ConsumerWidget {
                 height: MediaQuery.of(context).size.height / 5,
               ),
             ),
-            const SizedBox(
-              height: 250,
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: CupertinoListSection.insetGrouped(
+                header: Text(
+                  'Frequently Used',
+                  style: CupertinoTheme.of(context).textTheme.textStyle,
+                ),
+                decoration: BoxDecoration(
+                  color: CupertinoTheme.of(context).scaffoldBackgroundColor,
+                  borderRadius: BorderRadius.circular(25),
+                ),
+                children: documentCards,
+              ),
             ),
           ],
         ),
