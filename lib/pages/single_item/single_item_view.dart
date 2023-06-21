@@ -8,6 +8,10 @@ import 'edit_single_item_view.dart';
 import 'model/item_event.dart';
 import '../../common/custom_widgets/all_custom_widgets.dart';
 
+String singleItemHeroTag(String id) {
+  return "single_item_image$id";
+}
+
 class SingleItemPage extends ConsumerWidget {
   const SingleItemPage({required String id, Key? key})
       : _id = id,
@@ -40,6 +44,7 @@ class SingleItemPage extends ConsumerWidget {
                         context,
                         CupertinoPageRoute(
                           builder: (context) => FullScreenImagePage(
+                            itemId: _id,
                             imageProvider: controller.getImage().image,
                           ),
                         ),
@@ -62,8 +67,7 @@ class SingleItemPage extends ConsumerWidget {
                           color: Colors.grey[200],
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child: EventsContainer(
-                            controller: controller, editable: false))),
+                        child: EventsContainer(id: _id, editable: false))),
               ],
             ),
             Align(
@@ -144,7 +148,7 @@ class InfoContainer extends StatelessWidget {
   }
 }
 
-class ActionButtons extends StatelessWidget {
+class ActionButtons extends ConsumerWidget {
   const ActionButtons(
       {Key? key, required this.itemId, required this.controller})
       : super(key: key);
@@ -153,7 +157,7 @@ class ActionButtons extends StatelessWidget {
   final SingleItemController controller;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -165,14 +169,14 @@ class ActionButtons extends StatelessWidget {
         ),
         _buildActionButton(
           onPressed: () {
-            Navigator.push(
-              context,
-              CupertinoPageRoute(
-                builder: (context) => EditSingleItemPage(id: itemId),
-              ),
+            showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              backgroundColor: Colors.transparent,
+              builder: (context) => EditSingleItemPage(id: itemId),
             );
           },
-          icon: CupertinoIcons.pencil_circle, // Use the Cupertino icon
+          icon: CupertinoIcons.slider_horizontal_3, // Use the Cupertino icon
         ),
         _buildActionButton(
           onPressed: () {
@@ -205,10 +209,6 @@ class ActionButtons extends StatelessWidget {
 
 abstract class SingleItemController extends StateNotifier<SingleItem> {
   SingleItemController(SingleItem state) : super(state);
-
-  DateTime? getSelectedDate();
-
-  void setSelectedDate(DateTime date);
 
   Image getImage();
 

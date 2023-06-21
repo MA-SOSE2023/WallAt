@@ -1,28 +1,37 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gruppe4/pages/single_item/single_item_view.dart';
-
 import 'model/single_item.dart';
+import 'edit_single_item_view.dart';
+import 'single_item_controller.dart';
 import 'model/item_event.dart';
+import '/common/provider.dart';
 
-var mockSingleItem = SingleItem(
-  title: 'Example Title',
-  description: 'Example Description',
-  image: 'assets/dev_debug_images/hampter1.jpg',
-  isFavorite: false,
-  events: [
-    ItemEvent(description: "Example Event", date: DateTime.now()),
-    ItemEvent(description: "Example Event", date: DateTime.now()),
-    ItemEvent(description: "Example Event", date: DateTime.now())
-  ],
-  currentSelectedDate: null,
-);
-
-class SingleItemControllerMock extends SingleItemController {
-  SingleItemControllerMock({required String id, SingleItem? model})
+class EditSingleItemControllerMock extends EditSingleItemController {
+  EditSingleItemControllerMock({required String id, SingleItem? model})
       : _id = id,
         super(model ?? mockSingleItem);
 
   final String _id;
+  DateTime? _selectedDate;
+
+  @override
+  DateTime? getSelectedDate() {
+    return _selectedDate;
+  }
+
+  @override
+  void setSelectedDate(DateTime? date) {
+    _selectedDate = date;
+  }
+
+  @override
+  void saveChanges(WidgetRef ref) {
+    SingleItemController singleItemController =
+        ref.read(Providers.singleItemControllerProvider(_id).notifier);
+    singleItemController.state = state;
+  }
 
   @override
   Image getImage() {

@@ -4,7 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 // Single Item
 import '../pages/single_item/single_item_view.dart';
 import '../pages/single_item/single_item_controller.dart';
+import '../pages/single_item/edit_single_item_controller.dart';
 import '../pages/single_item/model/single_item.dart';
+import '../pages/single_item/edit_single_item_view.dart';
 import 'custom_widgets/all_custom_widgets.dart';
 
 import 'custom_widgets/bottom_nav_bar/bottom_nav_bar_controller.dart';
@@ -17,6 +19,15 @@ class Providers {
           SingleItem, String> singleItemControllerProvider =
       StateNotifierProvider.autoDispose.family((ref, id) {
     return SingleItemControllerMock(id: id);
+  });
+
+  /// Provider for [EditSingleItemPage]
+  /// - Provides a [EditSingleItemController] for a [SingleItem]
+  static final AutoDisposeStateNotifierProviderFamily<EditSingleItemController,
+          SingleItem, String> editSingleItemControllerProvider =
+      StateNotifierProvider.autoDispose.family((ref, id) {
+    return EditSingleItemControllerMock(
+        id: id, model: ref.read(singleItemControllerProvider(id)));
   });
 
   /// Provider for [CustomBottomNavBar]

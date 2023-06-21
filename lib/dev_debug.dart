@@ -17,8 +17,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const CupertinoApp(
-        home: Scaffold(
-      body: SingleItemPage(id: "1"),
-    ));
+        localizationsDelegates: [
+          DefaultCupertinoLocalizations.delegate,
+          DefaultMaterialLocalizations.delegate,
+          DefaultWidgetsLocalizations.delegate,
+        ],
+        home: CupertinoPageScaffold(
+          child: SingleItemPage(id: "1"),
+        ));
   }
 }
