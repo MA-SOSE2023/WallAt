@@ -51,9 +51,13 @@ class EventCard extends StatelessWidget {
               onTap: () {},
             ),
             CupertinoListTile.notched(
-              title: Text(
-                description,
-                style: CupertinoTheme.of(context).textTheme.pickerTextStyle,
+              title: SizedBox(
+                height: MediaQuery.of(context).size.height / 15,
+                child: Text(
+                  description,
+                  maxLines: 2,
+                  style: CupertinoTheme.of(context).textTheme.pickerTextStyle,
+                ),
               ),
               backgroundColor: CupertinoDynamicColor.resolve(
                   CupertinoColors.systemGroupedBackground, context),
