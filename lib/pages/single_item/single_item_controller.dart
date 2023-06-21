@@ -4,12 +4,16 @@ import 'model/single_item.dart';
 import 'model/item_event.dart';
 import 'single_item_view.dart';
 
-const mockSingleItem = SingleItem(
+var mockSingleItem = SingleItem(
   title: 'Example Title',
   description: 'Example Description',
   image: 'assets/dev_debug_images/example_document.png',
   isFavorite: false,
-  events: [],
+  events: [
+    ItemEvent(description: "Example Event", date: DateTime.now()),
+    ItemEvent(description: "Example Event", date: DateTime.now()),
+    ItemEvent(description: "Example Event", date: DateTime.now())
+  ],
   currentSelectedDate: null,
 );
 
@@ -85,5 +89,15 @@ class SingleItemControllerMock extends SingleItemController {
   @override
   DateTime? getCurrentDate() {
     return state.currentSelectedDate;
+  }
+
+  @override
+  bool getFavorite() {
+    return state.isFavorite;
+  }
+
+  @override
+  void setFavorite() {
+    state = state.copyWith(isFavorite: getFavorite() ? false : true);
   }
 }

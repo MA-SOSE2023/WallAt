@@ -6,6 +6,8 @@ import '../../common/provider.dart';
 import 'model/single_item.dart';
 import 'model/item_event.dart';
 
+import '../../common/custom_widgets/all_custom_widgets.dart';
+
 class EditSingleItemPage extends ConsumerWidget {
   const EditSingleItemPage({required String id, Key? key})
       : _id = id,
@@ -15,6 +17,8 @@ class EditSingleItemPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final SingleItem item =
+        ref.watch(Providers.singleItemControllerProvider(_id));
     final SingleItemController controller =
         ref.read(Providers.singleItemControllerProvider(_id).notifier);
 
@@ -50,8 +54,7 @@ class EditSingleItemPage extends ConsumerWidget {
                     children: [
                       Expanded(
                         child: TextFieldWithIcon(
-                          controller: TextEditingController(
-                              text: controller.getTitle()),
+                          controller: TextEditingController(text: item.title),
                           onChanged: (value) {
                             controller
                                 .setTitle(value); // Update the local state
@@ -80,36 +83,30 @@ class EditSingleItemPage extends ConsumerWidget {
                 },
                 child: Padding(
                   padding: const EdgeInsets.only(left: 20.0),
-                  child: Container(
-                    width: MediaQuery.of(context).size.width - 40,
-                    height: 200,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Stack(
-                      children: [
-                        Container(
-                          height: double.infinity,
-                          margin: EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: Colors.grey[300],
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: controller.getImage(),
+                  child: SizedBox(
+                    height: 150,
+                    width: 150,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey[200],
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Stack(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                image: DecorationImage(
+                                  image: controller.getImage().image,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                        Positioned(
-                          right: 10,
-                          top: 80,
-                          child: CupertinoButton(
-                            onPressed: () {
-                              // Edit icon button action
-                            },
-                            padding: EdgeInsets.zero,
-                            child: const Icon(CupertinoIcons.pencil),
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                   ),
                 ),
@@ -133,8 +130,7 @@ class EditSingleItemPage extends ConsumerWidget {
                   ),
                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
                   child: TextFieldWithIcon(
-                    controller: TextEditingController(
-                        text: controller.getDescription()),
+                    controller: TextEditingController(text: item.description),
                     onChanged: (value) {
                       controller
                           .setDescription(value); // Update the local state
@@ -144,13 +140,16 @@ class EditSingleItemPage extends ConsumerWidget {
                   ),
                 ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  CalendarButton(id: _id), // Pass the ID to the button widget
-                  ListEventButton(id: _id), // Pass the ID to the button widget
-                ],
-              ),
+              Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey[200],
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: EventsContainer(
+                          controller: controller, editable: true))),
+              CalendarButton(id: _id), // Pass the ID to the button widget
             ],
           ),
         ),
@@ -188,19 +187,26 @@ class _CalendarButtonState extends ConsumerState<CalendarButton> {
                           builder: (BuildContext context) {
                             return SizedBox(
                               height: 216,
-                              child: CupertinoDatePicker(
-                                mode: CupertinoDatePickerMode.date,
-                                initialDateTime: DateTime.now(),
-                                minimumDate: DateTime(1900),
-                                maximumDate: DateTime(2100),
-                                onDateTimeChanged: (DateTime? dateTime) {
-                                  ref
-                                      .read(Providers
-                                              .singleItemControllerProvider(
-                                                  widget.id)
-                                          .notifier)
-                                      .setCurrentDate(dateTime!);
-                                },
+                              child: Container(
+                                decoration: const BoxDecoration(
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(10),
+                                        topRight: Radius.circular(10)),
+                                    color: Colors.white),
+                                child: CupertinoDatePicker(
+                                  mode: CupertinoDatePickerMode.date,
+                                  initialDateTime: DateTime.now(),
+                                  minimumDate: DateTime(1900),
+                                  maximumDate: DateTime(2100),
+                                  onDateTimeChanged: (DateTime? dateTime) {
+                                    ref
+                                        .read(Providers
+                                                .singleItemControllerProvider(
+                                                    widget.id)
+                                            .notifier)
+                                        .setCurrentDate(dateTime!);
+                                  },
+                                ),
                               ),
                             );
                           },
@@ -368,12 +374,7 @@ class TextFieldWithIcon extends StatelessWidget {
             padding: EdgeInsets.symmetric(vertical: 12, horizontal: 10),
           ),
         ),
-        CupertinoButton(
-          onPressed: () {
-            // Edit icon button action
-          },
-          child: Icon(icon),
-        ),
+        Icon(icon),
       ],
     );
   }

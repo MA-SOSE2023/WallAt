@@ -6,6 +6,7 @@ import 'full_screen_image_view.dart';
 import 'model/single_item.dart';
 import 'edit_single_item_view.dart';
 import 'model/item_event.dart';
+import '../../common/custom_widgets/all_custom_widgets.dart';
 
 class SingleItemPage extends ConsumerWidget {
   const SingleItemPage({required String id, Key? key})
@@ -24,43 +25,53 @@ class SingleItemPage extends ConsumerWidget {
       navigationBar: CupertinoNavigationBar(
         middle: Text(item.title),
       ),
-      backgroundColor: Colors.grey[100],
       child: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+        child: Stack(
           children: [
-            SizedBox(
-              height: MediaQuery.of(context).size.height *
-                  0.6, // Set the height to half the screen height
-              child: PictureContainer(
-                image: controller.getImage().image,
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                      builder: (context) => FullScreenImagePage(
-                        imageProvider: controller.getImage().image,
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(20.0),
+            ListView(
+              children: [
+                SizedBox(
+                  height: MediaQuery.of(context).size.height /
+                      2, // Set the height to half the screen height
+                  child: PictureContainer(
+                    image: controller.getImage().image,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        CupertinoPageRoute(
+                          builder: (context) => FullScreenImagePage(
+                            imageProvider: controller.getImage().image,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                SizedBox(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 20, right: 20),
                     child: InfoContainer(
                       text: item.description,
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 20, right: 20),
-                    child: ActionButtons(itemId: _id),
-                  ),
-                ],
+                ),
+                Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: EventsContainer(
+                            controller: controller, editable: false))),
+              ],
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                color: CupertinoTheme.of(context).barBackgroundColor,
+                padding: const EdgeInsets.only(left: 20, right: 20),
+                child: ActionButtons(itemId: _id, controller: controller),
               ),
             ),
           ],
@@ -84,35 +95,18 @@ class PictureContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(20.0),
-      child: Stack(
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              image: DecorationImage(
-                image: image,
-                fit: BoxFit.cover,
-              ),
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border.all(color: CupertinoTheme.of(context).primaryColor),
+            borderRadius: BorderRadius.circular(10),
+            image: DecorationImage(
+              image: image,
+              fit: BoxFit.cover,
             ),
           ),
-          Positioned(
-            bottom: 16.0,
-            right: 16.0,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.5),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: IconButton(
-                onPressed: onTap,
-                icon: Icon(
-                  CupertinoIcons.search,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -151,48 +145,51 @@ class InfoContainer extends StatelessWidget {
 }
 
 class ActionButtons extends StatelessWidget {
-  const ActionButtons({Key? key, required this.itemId}) : super(key: key);
+  const ActionButtons(
+      {Key? key, required this.itemId, required this.controller})
+      : super(key: key);
 
   final String itemId;
+  final SingleItemController controller;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-        padding: const EdgeInsets.only(bottom: 20),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            _buildActionButton(
-              onPressed: () {
-                // Handle share button logic
-              },
-              icon: CupertinoIcons.share, // Use the Cupertino icon
-            ),
-            _buildActionButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  CupertinoPageRoute(
-                    builder: (context) => EditSingleItemPage(id: itemId),
-                  ),
-                );
-              },
-              icon: CupertinoIcons.pencil_circle, // Use the Cupertino icon
-            ),
-            _buildActionButton(
-              onPressed: () {
-                // Handle delete button logic
-              },
-              icon: CupertinoIcons.delete, // Use the Cupertino icon
-            ),
-            _buildActionButton(
-              onPressed: () {
-                // Handle favorite button logic
-              },
-              icon: CupertinoIcons.heart, // Use the Cupertino icon
-            ),
-          ],
-        ));
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        _buildActionButton(
+          onPressed: () {
+            // Handle share button logic
+          },
+          icon: CupertinoIcons.share, // Use the Cupertino icon
+        ),
+        _buildActionButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              CupertinoPageRoute(
+                builder: (context) => EditSingleItemPage(id: itemId),
+              ),
+            );
+          },
+          icon: CupertinoIcons.pencil_circle, // Use the Cupertino icon
+        ),
+        _buildActionButton(
+          onPressed: () {
+            // Handle delete button logic
+          },
+          icon: CupertinoIcons.delete, // Use the Cupertino icon
+        ),
+        _buildActionButton(
+          onPressed: () {
+            controller.setFavorite();
+          },
+          icon: controller.getFavorite()
+              ? CupertinoIcons.heart_fill
+              : CupertinoIcons.heart, // Use the Cupertino icon
+        ),
+      ],
+    );
   }
 
   Widget _buildActionButton({
@@ -234,4 +231,8 @@ abstract class SingleItemController extends StateNotifier<SingleItem> {
   void setCurrentDate(DateTime date);
 
   DateTime? getCurrentDate();
+
+  bool getFavorite();
+
+  void setFavorite();
 }
