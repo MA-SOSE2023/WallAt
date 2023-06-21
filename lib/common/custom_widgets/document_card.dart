@@ -25,7 +25,7 @@ class DocumentCard extends ConsumerWidget {
           decoration: BoxDecoration(
             border: Border.all(
               color: CupertinoDynamicColor.resolve(
-                  CupertinoColors.systemGroupedBackground, context),
+                  CupertinoColors.systemGrey3, context),
               width: 2,
             ),
             borderRadius: BorderRadius.circular(25),
@@ -59,8 +59,11 @@ class DocumentCard extends ConsumerWidget {
                 margin: const EdgeInsets.all(5),
                 child: FittedBox(
                   fit: BoxFit.cover,
-                  child: Image(
-                    image: controller.getImage().image,
+                  child: Hero(
+                    tag: singleItemHeroTag(_id),
+                    child: Image(
+                      image: controller.getImage().image,
+                    ),
                   ),
                 ),
               ),
