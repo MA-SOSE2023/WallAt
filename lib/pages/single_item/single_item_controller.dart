@@ -10,9 +10,11 @@ var mockSingleItem = SingleItem(
   image: 'assets/dev_debug_images/hampter1.jpg',
   isFavorite: false,
   events: [
-    ItemEvent(description: "Example Event", date: DateTime.now()),
-    ItemEvent(description: "Example Event", date: DateTime.now()),
-    ItemEvent(description: "Example Event", date: DateTime.now())
+    ItemEvent(
+        description: "Example Event", date: DateTime.now(), parentId: '1'),
+    ItemEvent(
+        description: "Example Event", date: DateTime.now(), parentId: '1'),
+    ItemEvent(description: "Example Event", date: DateTime.now(), parentId: '1')
   ],
   currentSelectedDate: null,
 );

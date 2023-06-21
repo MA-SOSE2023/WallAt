@@ -1,8 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gruppe4/pages/single_item/model/item_event.dart';
 
 import '/common/custom_widgets/camera_button_hero_destination.dart';
 import '/router/router.dart';
+import 'home_model.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -30,4 +33,10 @@ class HomeScreen extends StatelessWidget {
         ),
         body: const Placeholder());
   }
+}
+
+abstract class HomeController extends StateNotifier<HomeModel> {
+  HomeController(HomeModel state) : super(state);
+
+  List<ItemEvent> get events => state.events;
 }

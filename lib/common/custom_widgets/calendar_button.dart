@@ -92,6 +92,7 @@ class _CalendarButtonState extends ConsumerState<CalendarButton> {
                       ItemEvent newEvent = ItemEvent(
                         date: currentDate,
                         description: description,
+                        parentId: widget.id,
                       );
 
                       ref
