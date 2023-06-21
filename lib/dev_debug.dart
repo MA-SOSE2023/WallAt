@@ -15,7 +15,10 @@ class App extends StatelessWidget {
           alignment: Alignment.center,
           child: Center(
             child: SafeArea(
-                child: EventCard(date: DateTime.now(), description: 'Event 1')),
+                child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: EventCard(date: DateTime.now(), title: 'Event 1'),
+            )),
           ),
         ),
       ),

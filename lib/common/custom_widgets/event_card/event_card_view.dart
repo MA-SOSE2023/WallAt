@@ -1,73 +1,95 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class EventCard extends StatelessWidget {
-  const EventCard({required this.date, required this.description, super.key});
+  const EventCard({required this.date, required this.title, super.key});
 
   final DateTime date;
-  final String description;
+  final String title;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 30.0, right: 30.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: CupertinoColors.label,
-                width: 2,
-              ),
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(20),
-              ),
+    return Column(
+      children: [
+        CupertinoListSection.insetGrouped(
+          margin: EdgeInsets.zero,
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: CupertinoDynamicColor.resolve(
+                  CupertinoColors.systemGroupedBackground, context),
+              width: 2,
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              textDirection: TextDirection.ltr,
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: CupertinoColors.label,
-                      width: 2,
-                    ),
-                    borderRadius: BorderRadius.circular(12),
-                    color: CupertinoColors.lightBackgroundGray,
-                  ),
-                  padding: const EdgeInsets.all(5),
-                  margin: const EdgeInsets.fromLTRB(15, 10, 25, 10),
-                  child: const Icon(
-                    CupertinoIcons.alarm,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          backgroundColor: Colors.transparent,
+          children: [
+            CupertinoListTile.notched(
+              title: Text(
+                  '${date.day}/${date.month}/${date.year}  -  ${date.hour}:${date.minute}'),
+              leading: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(
                     color: CupertinoColors.label,
+                    width: 2,
                   ),
+                  borderRadius: BorderRadius.circular(12),
+                  color: CupertinoColors.lightBackgroundGray,
                 ),
-                Text(
-                  '${date.day}/${date.month}/${date.year}  -  ${date.hour}:${date.minute}',
+                padding: const EdgeInsets.all(5),
+                child: const Icon(
+                  CupertinoIcons.alarm,
+                  color: CupertinoColors.label,
+                  size: 24,
                 ),
-              ],
-            ),
-          ),
-          Container(
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: CupertinoColors.label,
-                width: 2,
               ),
-              borderRadius: const BorderRadius.vertical(
-                bottom: Radius.circular(20),
+              trailing: const Icon(
+                CupertinoIcons.forward,
               ),
-              color: CupertinoColors.systemGrey,
+              leadingSize: 36,
+              onTap: () {},
             ),
-            padding: const EdgeInsets.all(15),
-            child: Text(
-              description,
-              style: CupertinoTheme.of(context).textTheme.pickerTextStyle,
+            CupertinoListTile.notched(
+              title: Text(
+                title,
+                style: CupertinoTheme.of(context).textTheme.pickerTextStyle,
+              ),
+              backgroundColor: CupertinoDynamicColor.resolve(
+                  CupertinoColors.systemGroupedBackground, context),
             ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class PrefixWidget extends StatelessWidget {
+  const PrefixWidget({
+    super.key,
+    required this.icon,
+    required this.title,
+    required this.color,
+  });
+
+  final IconData icon;
+  final String title;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: <Widget>[
+        Container(
+          padding: const EdgeInsets.all(4.0),
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: BorderRadius.circular(4.0),
           ),
-        ],
-      ),
+          child: Icon(icon, color: CupertinoColors.label),
+        ),
+        const SizedBox(width: 15),
+        Text(title)
+      ],
     );
   }
 }
