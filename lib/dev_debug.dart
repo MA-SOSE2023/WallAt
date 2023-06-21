@@ -1,29 +1,29 @@
+import 'package:beamer/beamer.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:gruppe4/common/custom_widgets/all_custom_widgets.dart';
+import 'package:gruppe4/router/router.dart';
 
-import 'common/custom_widgets/event_card_view.dart';
+import 'pages/single_item/single_item_view.dart';
+import 'pages/single_item/edit_single_item_view.dart';
 
-class App extends StatelessWidget {
-  const App({super.key});
+void main() => runApp(const ProviderScope(child: MyApp()));
+
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoApp(
-      home: CupertinoPageScaffold(
-        navigationBar: const CupertinoNavigationBar(),
-        child: Align(
-          alignment: Alignment.center,
-          child: Center(
-            child: SafeArea(
-                child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: EventCard(date: DateTime.now(), title: 'Event 1'),
-            )),
-          ),
-        ),
-      ),
-    );
+    return const CupertinoApp(
+        localizationsDelegates: [
+          DefaultCupertinoLocalizations.delegate,
+          DefaultMaterialLocalizations.delegate,
+          DefaultWidgetsLocalizations.delegate,
+        ],
+        home: CupertinoPageScaffold(
+          child: SingleItemPage(id: "1"),
+        ));
   }
 }
-
-void main() => runApp(const ProviderScope(child: App()));
