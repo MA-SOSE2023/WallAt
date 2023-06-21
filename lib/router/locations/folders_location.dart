@@ -1,6 +1,8 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/cupertino.dart';
 
+import '/pages/folders/folders_view.dart';
+
 class FoldersLocation extends BeamLocation<BeamState> {
   @override
   List<String> get pathPatterns => ['/folders'];
@@ -11,7 +13,7 @@ class FoldersLocation extends BeamLocation<BeamState> {
           key: ValueKey('folders'),
           title: 'Folders',
           type: BeamPageType.noTransition,
-          child: Placeholder(), // TODO: Folder Screen
+          child: FoldersScren(),
         ),
       ];
 }

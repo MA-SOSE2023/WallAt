@@ -24,7 +24,7 @@ class CustomBottomNavBarControllerImpl extends CustomBottomNavBarController {
     double heightIconPadding = (mediaQueryData.size.height - iconSize) / 2;
 
     CustomBottomNavBarModel updatedState = state.copyWith(
-      currentIndex: index,
+      currentIndex: index == 3 ? state.currentIndex : index,
       iconPadding: EdgeInsets.only(
         left: widthIconPadding,
         right: widthIconPadding,
