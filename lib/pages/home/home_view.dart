@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '/common/custom_widgets/camera_button_hero_destination/camera_button_hero_destination_view.dart';
+import '/common/custom_widgets/camera_button_hero_destination.dart';
 import '/router/router.dart';
 
 class HomeScreen extends StatelessWidget {
