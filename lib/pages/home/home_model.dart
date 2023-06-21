@@ -1,7 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '/pages/single_item/model/item_event.dart';
-import '/pages/single_item/model/single_item.dart';
 
 part 'home_model.freezed.dart';
 

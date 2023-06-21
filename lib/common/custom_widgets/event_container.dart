@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '/pages/single_item/single_item_view.dart';
-import '/common/custom_widgets/calendar_button.dart';
+import 'calendar_button.dart';
 import '/common/provider.dart';
+import '/pages/single_item/single_item_view.dart';
 
 class EventsContainer extends ConsumerWidget {
   const EventsContainer({Key? key, required this.id, required this.editable})

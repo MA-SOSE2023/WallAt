@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '/pages/single_item/model/single_item.dart';
-import '/common/provider.dart';
 import 'document_card.dart';
+import '/common/provider.dart';
+import '/pages/single_item/model/single_item.dart';
 
 class DocumentCardContainer extends ConsumerWidget {
   const DocumentCardContainer({required String id, super.key}) : _id = id;

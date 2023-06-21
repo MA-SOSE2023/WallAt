@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
-import 'package:gruppe4/pages/single_item/single_item_view.dart';
-import 'package:gruppe4/router/router.dart';
 
 import 'model/single_item.dart';
 import 'model/item_event.dart';
+import '/pages/single_item/single_item_view.dart';
+import '/router/router.dart';
 
 var mockSingleItem = SingleItem(
   title: 'Example Title',

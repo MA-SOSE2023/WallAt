@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '/pages/single_item/single_item_view.dart';
 import '/common/provider.dart';
+import '/pages/single_item/single_item_view.dart';
 
 class DocumentCard extends ConsumerWidget {
   const DocumentCard({

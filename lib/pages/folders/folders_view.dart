@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
-import '/common/custom_widgets/camera_button_hero_destination.dart';
+import '/common/custom_widgets/all_custom_widgets.dart'
+    show CameraButtonHeroDestination;
 
 class FoldersScren extends StatelessWidget {
   const FoldersScren({super.key});
