@@ -17,6 +17,7 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$HomeModel {
   List<ItemEvent> get events => throw _privateConstructorUsedError;
+  List<String> get itemIds => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $HomeModelCopyWith<HomeModel> get copyWith =>
@@ -28,7 +29,7 @@ abstract class $HomeModelCopyWith<$Res> {
   factory $HomeModelCopyWith(HomeModel value, $Res Function(HomeModel) then) =
       _$HomeModelCopyWithImpl<$Res, HomeModel>;
   @useResult
-  $Res call({List<ItemEvent> events});
+  $Res call({List<ItemEvent> events, List<String> itemIds});
 }
 
 /// @nodoc
@@ -45,12 +46,17 @@ class _$HomeModelCopyWithImpl<$Res, $Val extends HomeModel>
   @override
   $Res call({
     Object? events = null,
+    Object? itemIds = null,
   }) {
     return _then(_value.copyWith(
       events: null == events
           ? _value.events
           : events // ignore: cast_nullable_to_non_nullable
               as List<ItemEvent>,
+      itemIds: null == itemIds
+          ? _value.itemIds
+          : itemIds // ignore: cast_nullable_to_non_nullable
+              as List<String>,
     ) as $Val);
   }
 }
@@ -62,7 +68,7 @@ abstract class _$$_HomeModelCopyWith<$Res> implements $HomeModelCopyWith<$Res> {
       __$$_HomeModelCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({List<ItemEvent> events});
+  $Res call({List<ItemEvent> events, List<String> itemIds});
 }
 
 /// @nodoc
@@ -77,12 +83,17 @@ class __$$_HomeModelCopyWithImpl<$Res>
   @override
   $Res call({
     Object? events = null,
+    Object? itemIds = null,
   }) {
     return _then(_$_HomeModel(
       events: null == events
           ? _value._events
           : events // ignore: cast_nullable_to_non_nullable
               as List<ItemEvent>,
+      itemIds: null == itemIds
+          ? _value._itemIds
+          : itemIds // ignore: cast_nullable_to_non_nullable
+              as List<String>,
     ));
   }
 }
@@ -90,8 +101,11 @@ class __$$_HomeModelCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_HomeModel implements _HomeModel {
-  const _$_HomeModel({required final List<ItemEvent> events})
-      : _events = events;
+  const _$_HomeModel(
+      {required final List<ItemEvent> events,
+      required final List<String> itemIds})
+      : _events = events,
+        _itemIds = itemIds;
 
   final List<ItemEvent> _events;
   @override
@@ -101,9 +115,17 @@ class _$_HomeModel implements _HomeModel {
     return EqualUnmodifiableListView(_events);
   }
 
+  final List<String> _itemIds;
+  @override
+  List<String> get itemIds {
+    if (_itemIds is EqualUnmodifiableListView) return _itemIds;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_itemIds);
+  }
+
   @override
   String toString() {
-    return 'HomeModel(events: $events)';
+    return 'HomeModel(events: $events, itemIds: $itemIds)';
   }
 
   @override
@@ -111,12 +133,15 @@ class _$_HomeModel implements _HomeModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_HomeModel &&
-            const DeepCollectionEquality().equals(other._events, _events));
+            const DeepCollectionEquality().equals(other._events, _events) &&
+            const DeepCollectionEquality().equals(other._itemIds, _itemIds));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(_events));
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(_events),
+      const DeepCollectionEquality().hash(_itemIds));
 
   @JsonKey(ignore: true)
   @override
@@ -126,11 +151,14 @@ class _$_HomeModel implements _HomeModel {
 }
 
 abstract class _HomeModel implements HomeModel {
-  const factory _HomeModel({required final List<ItemEvent> events}) =
-      _$_HomeModel;
+  const factory _HomeModel(
+      {required final List<ItemEvent> events,
+      required final List<String> itemIds}) = _$_HomeModel;
 
   @override
   List<ItemEvent> get events;
+  @override
+  List<String> get itemIds;
   @override
   @JsonKey(ignore: true)
   _$$_HomeModelCopyWith<_$_HomeModel> get copyWith =>

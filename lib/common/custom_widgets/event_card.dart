@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:gruppe4/pages/single_item/model/item_event.dart';
+
+import '/pages/single_item/model/item_event.dart';
 
 class EventCard extends StatelessWidget {
   const EventCard({required this.event, super.key});

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
+import 'package:gruppe4/common/custom_widgets/document_card.dart';
 
 import 'home_model.dart';
 import '/common/provider.dart';
@@ -9,6 +10,7 @@ import '/common/custom_widgets/all_custom_widgets.dart'
     show EventCard, cameraButtonHeroTag;
 import '/router/router.dart';
 import '/pages/single_item/model/item_event.dart';
+import '/pages/single_item/model/single_item.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -21,6 +23,8 @@ class HomeScreen extends ConsumerWidget {
               event: event,
             ))
         .toList();
+    final List<DocumentCard> documentCards =
+        model.itemIds.map((id) => DocumentCard(id: id)).toList();
     return Scaffold(
       appBar: const CupertinoNavigationBar(
         middle: Text('Home'),
@@ -39,29 +43,33 @@ class HomeScreen extends ConsumerWidget {
           ),
         ),
       ),
-      body: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height / 4,
-            child: FlutterCarousel(
+      body: Padding(
+        padding: const EdgeInsets.only(top: 10.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            FlutterCarousel(
               items: eventCards,
               options: CarouselOptions(
-                  initialPage: 0,
-                  enableInfiniteScroll: true,
-                  enlargeCenterPage: true,
-                  showIndicator: true,
-                  slideIndicator: CircularWaveSlideIndicator(
-                    currentIndicatorColor: CupertinoDynamicColor.resolve(
-                        CupertinoColors.activeBlue, context),
-                    indicatorBackgroundColor: CupertinoDynamicColor.resolve(
-                        CupertinoColors.systemGrey3, context),
-                  ),
-                  viewportFraction: 0.85),
+                initialPage: 0,
+                enableInfiniteScroll: true,
+                enlargeCenterPage: true,
+                showIndicator: true,
+                slideIndicator: CircularWaveSlideIndicator(
+                  currentIndicatorColor: CupertinoDynamicColor.resolve(
+                      CupertinoColors.activeBlue, context),
+                  indicatorBackgroundColor: CupertinoDynamicColor.resolve(
+                      CupertinoColors.systemGrey3, context),
+                ),
+                viewportFraction: 0.85,
+                height: MediaQuery.of(context).size.height / 5,
+              ),
             ),
-          ),
-        ],
+            const SizedBox(
+              height: 250,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -71,4 +79,5 @@ abstract class HomeController extends StateNotifier<HomeModel> {
   HomeController(HomeModel state) : super(state);
 
   List<ItemEvent> get events => state.events;
+  List<String> get itemIds => state.itemIds;
 }

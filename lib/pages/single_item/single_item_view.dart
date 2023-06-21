@@ -235,4 +235,6 @@ abstract class SingleItemController extends StateNotifier<SingleItem> {
   bool getFavorite();
 
   void setFavorite();
+
+  void navigateToThisItem();
 }

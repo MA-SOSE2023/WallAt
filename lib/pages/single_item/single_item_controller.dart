@@ -91,4 +91,9 @@ class SingleItemControllerMock extends SingleItemController {
   void setFavorite() {
     state = state.copyWith(isFavorite: getFavorite() ? false : true);
   }
+
+  @override
+  void navigateToThisItem() {
+    print('Navigating to item with id: $_id');
+  }
 }

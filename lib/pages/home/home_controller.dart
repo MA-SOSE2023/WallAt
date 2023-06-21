@@ -1,3 +1,5 @@
+import 'package:gruppe4/pages/single_item/model/single_item.dart';
+
 import 'home_model.dart';
 import '/pages/home/home_view.dart';
 import '/pages/single_item/model/item_event.dart';
@@ -13,5 +15,5 @@ List<ItemEvent> mockEvents = [
 ];
 
 class HomeControllerMock extends HomeController {
-  HomeControllerMock() : super(HomeModel(events: mockEvents));
+  HomeControllerMock() : super(HomeModel(events: mockEvents, itemIds: ['1']));
 }
