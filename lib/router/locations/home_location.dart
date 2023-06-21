@@ -10,9 +10,10 @@ class HomeLocation extends BeamLocation<BeamState> {
   @override
   List<BeamPage> buildPages(BuildContext context, BeamState state) => [
         const BeamPage(
-            key: ValueKey('home'),
-            title: 'Home',
-            type: BeamPageType.noTransition,
-            child: HomeScreen()),
+          key: ValueKey('home'),
+          title: 'Home',
+          type: BeamPageType.noTransition,
+          child: HomeScreen(),
+        ),
       ];
 }

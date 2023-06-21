@@ -18,6 +18,11 @@ dependencies:
   json_annotation: ^4.8.1
   intl: ^0.18.1
   beamer: ^1.5.5
+  photo_view: ^0.14.0
+  image_picker: ^0.8.8
+  font_awesome_flutter: ^10.4.0
+  share_plus: ^7.0.2
+  flutter_carousel_widget: ^2.0.4
 
 dev_dependencies:
   flutter_test:
@@ -28,4 +33,6 @@ dev_dependencies:
   json_serializable: ^6.6.2
 
 flutter:
+  assets:
+    - assets/dev_debug_images/
   uses-material-design: true
