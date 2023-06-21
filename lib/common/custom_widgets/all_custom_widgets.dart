@@ -5,3 +5,6 @@ export '/common/custom_widgets/event_container.dart';
 export '/common/custom_widgets/camera_button_hero_destination.dart';
 export '/common/custom_widgets/event_card.dart';
 export '/common/custom_widgets/calendar_button.dart';
+export '/common/custom_widgets/document_card/document_card.dart';
+export '/common/custom_widgets/document_card/document_card_container.dart';
+export '/common/custom_widgets/document_card/document_card_container_list.dart';

@@ -2,12 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
-import 'package:gruppe4/common/custom_widgets/document_card.dart';
 
 import 'home_model.dart';
 import '/common/provider.dart';
 import '/common/custom_widgets/all_custom_widgets.dart'
-    show EventCard, cameraButtonHeroTag;
+    show EventCard, DocumentCard, cameraButtonHeroTag;
 import '/router/router.dart';
 import '/pages/single_item/model/item_event.dart';
 
