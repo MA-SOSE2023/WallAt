@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gruppe4/pages/home/home_model.dart';
+import 'package:gruppe4/pages/home/home_view.dart';
 
 // Single Item
 import '../pages/single_item/single_item_view.dart';
@@ -7,6 +9,7 @@ import '../pages/single_item/single_item_controller.dart';
 import '../pages/single_item/edit_single_item_controller.dart';
 import '../pages/single_item/model/single_item.dart';
 import '../pages/single_item/edit_single_item_view.dart';
+import '../pages/home/home_controller.dart';
 import 'custom_widgets/all_custom_widgets.dart';
 
 import 'custom_widgets/bottom_nav_bar/bottom_nav_bar_controller.dart';
@@ -28,6 +31,12 @@ class Providers {
       StateNotifierProvider.autoDispose.family((ref, id) {
     return EditSingleItemControllerMock(
         id: id, model: ref.read(singleItemControllerProvider(id)));
+  });
+
+  static final StateNotifierProvider<HomeController, HomeModel>
+      homeControllerProvider =
+      StateNotifierProvider<HomeController, HomeModel>((ref) {
+    return HomeControllerMock();
   });
 
   /// Provider for [CustomBottomNavBar]

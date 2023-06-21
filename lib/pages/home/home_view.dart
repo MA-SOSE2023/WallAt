@@ -1,17 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gruppe4/pages/single_item/model/item_event.dart';
 
+import 'home_model.dart';
+import '/common/provider.dart';
 import '/common/custom_widgets/camera_button_hero_destination.dart';
 import '/router/router.dart';
-import 'home_model.dart';
+import '/pages/single_item/model/item_event.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    HomeModel model = ref.watch(Providers.homeControllerProvider);
     return Scaffold(
         appBar: const CupertinoNavigationBar(
           middle: Text('Home'),
