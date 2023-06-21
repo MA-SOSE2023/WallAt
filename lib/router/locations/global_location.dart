@@ -7,7 +7,7 @@ import '/common/custom_widgets/bottom_nav_bar/bottom_nav_bar_view.dart';
 class GlobalLocation extends BeamLocation<BeamState> {
   // The previous location needs to be handled manually, because otherwise
   // beaming to the camera or settings will not persist the previous location.
-  String? prevNavBarLocation;
+  String? prevNavBarLocation = '/home';
 
   @override
   List<String> get pathPatterns => [

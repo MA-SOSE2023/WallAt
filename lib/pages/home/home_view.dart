@@ -76,7 +76,33 @@ class HomeScreen extends ConsumerWidget {
                   color: CupertinoTheme.of(context).scaffoldBackgroundColor,
                   borderRadius: BorderRadius.circular(25),
                 ),
-                children: documentCards,
+                children: [
+                  ConstrainedBox(
+                    constraints: BoxConstraints(
+                        maxHeight: MediaQuery.of(context).size.height / 2),
+                    child: ListView(
+                      children: [
+                        ...documentCards
+                            .sublist(0, documentCards.length - 1)
+                            .map(
+                          (card) {
+                            return Column(
+                              children: [
+                                card,
+                                const Divider(
+                                  height: 0,
+                                  thickness: 1,
+                                  indent: 64,
+                                ),
+                              ],
+                            );
+                          },
+                        ).toList(),
+                        documentCards.last,
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
           ],

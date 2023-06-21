@@ -23,11 +23,6 @@ class DocumentCard extends ConsumerWidget {
         CupertinoListSection.insetGrouped(
           margin: EdgeInsets.zero,
           decoration: BoxDecoration(
-            border: Border.all(
-              color: CupertinoDynamicColor.resolve(
-                  CupertinoColors.systemGrey3, context),
-              width: 2,
-            ),
             borderRadius: BorderRadius.circular(25),
           ),
           backgroundColor: Colors.transparent,
