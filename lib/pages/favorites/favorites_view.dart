@@ -7,13 +7,14 @@ import '/common/custom_widgets/all_custom_widgets.dart'
         DocumentCardContainerList,
         CameraButtonHeroDestination,
         SearchBarContainer;
+import '/pages/single_item/model/single_item.dart';
 
 class FavoritesScreen extends ConsumerWidget {
   const FavoritesScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final List<String> itemIds =
+    final List<SingleItem> favorites =
         ref.watch(Providers.favoritesControllerProvider);
     return CupertinoPageScaffold(
       navigationBar: const CupertinoNavigationBar(
@@ -29,7 +30,7 @@ class FavoritesScreen extends ConsumerWidget {
               ),
               child: Column(
                 children: [
-                  DocumentCardContainerList(itemIds: itemIds),
+                  DocumentCardContainerList(items: favorites),
                   // Search bar for filtering items
                   SearchBarContainer(onChanged: (value) {}),
                 ],
@@ -42,8 +43,8 @@ class FavoritesScreen extends ConsumerWidget {
   }
 }
 
-abstract class FavoritesController extends StateNotifier<List<String>> {
-  FavoritesController(List<String> state) : super(state);
+abstract class FavoritesController extends StateNotifier<List<SingleItem>> {
+  FavoritesController(List<SingleItem> state) : super(state);
 
-  List<String> get favorites;
+  List<SingleItem> get favorites;
 }

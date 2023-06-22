@@ -1,22 +1,23 @@
 import 'package:flutter/cupertino.dart';
 
 import 'document_card_container.dart';
+import '/pages/single_item/model/single_item.dart';
 
 class DocumentCardContainerList extends StatelessWidget {
-  const DocumentCardContainerList({required itemIds, super.key})
-      : _itemIds = itemIds;
+  const DocumentCardContainerList({required List<SingleItem> items, super.key})
+      : _items = items;
 
-  final List<String> _itemIds;
+  final List<SingleItem> _items;
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: ListView(
-        children: _itemIds
+        children: _items
             .map(
-              (String id) => Padding(
+              (SingleItem item) => Padding(
                 padding: const EdgeInsets.fromLTRB(20.0, 8.0, 20.0, 8.0),
-                child: DocumentCardContainer(id: id),
+                child: DocumentCardContainer(item: item),
               ),
             )
             .toList(),

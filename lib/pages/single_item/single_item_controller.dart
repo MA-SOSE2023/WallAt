@@ -6,6 +6,7 @@ import '/pages/single_item/single_item_view.dart';
 import '/router/router.dart';
 
 var mockSingleItem = SingleItem(
+  id: '1',
   title: 'Example Title',
   description: 'Example Description',
   image: 'assets/dev_debug_images/hampter1.jpg',

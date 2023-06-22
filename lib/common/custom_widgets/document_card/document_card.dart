@@ -4,20 +4,20 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '/common/provider.dart';
 import '/pages/single_item/single_item_view.dart';
+import '/pages/single_item/model/single_item.dart';
 
 class DocumentCard extends ConsumerWidget {
   const DocumentCard({
-    required String id,
+    required SingleItem item,
     super.key,
-  }) : _id = id;
+  }) : _item = item;
 
-  final String _id;
+  final SingleItem _item;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    SingleItemController controller = ref.watch(
-      Providers.singleItemControllerProvider(_id).notifier,
-    );
+    SingleItemController controller =
+        ref.watch(Providers.singleItemControllerProvider(_item.id).notifier);
     return CupertinoListSection.insetGrouped(
       margin: const EdgeInsets.all(0),
       backgroundColor: Colors.transparent,
@@ -29,13 +29,13 @@ class DocumentCard extends ConsumerWidget {
           title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(controller.getTitle(),
+              Text(_item.title,
                   style: CupertinoTheme.of(context)
                       .textTheme
                       .navActionTextStyle
                       .copyWith(fontSize: 20)),
               Text(
-                controller.getDescription(),
+                _item.description,
                 maxLines: 2,
                 style: CupertinoTheme.of(context).textTheme.tabLabelTextStyle,
               ),
@@ -52,7 +52,7 @@ class DocumentCard extends ConsumerWidget {
             child: FittedBox(
               fit: BoxFit.cover,
               child: Hero(
-                tag: singleItemHeroTag(_id),
+                tag: singleItemHeroTag(_item.id),
                 child: Image(
                   image: controller.getImage().image,
                 ),

@@ -6,6 +6,7 @@ part 'single_item.freezed.dart';
 @freezed
 class SingleItem with _$SingleItem {
   const factory SingleItem({
+    required String id,
     required String title,
     required String description,
     required String image,

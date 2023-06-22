@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '/pages/single_item/model/single_item.dart';
 import '/pages/single_item/model/item_event.dart';
 
 part 'home_model.freezed.dart';
@@ -8,6 +9,6 @@ part 'home_model.freezed.dart';
 class HomeModel with _$HomeModel {
   const factory HomeModel({
     required List<ItemEvent> events,
-    required List<String> itemIds,
+    required List<SingleItem> recentItems,
   }) = _HomeModel;
 }

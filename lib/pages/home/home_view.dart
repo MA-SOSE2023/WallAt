@@ -8,6 +8,7 @@ import '/common/provider.dart';
 import '/common/custom_widgets/all_custom_widgets.dart'
     show EventCard, DocumentCard, cameraButtonHeroTag;
 import '/router/router.dart';
+import '/pages/single_item/model/single_item.dart';
 import '/pages/single_item/model/item_event.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -22,7 +23,7 @@ class HomeScreen extends ConsumerWidget {
             ))
         .toList();
     final List<DocumentCard> documentCards =
-        model.itemIds.map((id) => DocumentCard(id: id)).toList();
+        model.recentItems.map((item) => DocumentCard(item: item)).toList();
     return Scaffold(
       appBar: const CupertinoNavigationBar(
         middle: Text('Home'),
@@ -142,5 +143,5 @@ abstract class HomeController extends StateNotifier<HomeModel> {
   HomeController(HomeModel state) : super(state);
 
   List<ItemEvent> get events => state.events;
-  List<String> get itemIds => state.itemIds;
+  List<SingleItem> get recentItems => state.recentItems;
 }

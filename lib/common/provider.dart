@@ -45,11 +45,10 @@ class Providers {
   });
 
   /// Provider for [FavoritesScreen]
-  /// - Provides a [FavoritesController] for a List<String> containing ids
-  ///  of [SingleItem]s
-  static final StateNotifierProvider<FavoritesController, List<String>>
+  /// - Provides a [FavoritesController] for a List of [SingleItem]s
+  static final StateNotifierProvider<FavoritesController, List<SingleItem>>
       favoritesControllerProvider =
-      StateNotifierProvider<FavoritesController, List<String>>((ref) {
+      StateNotifierProvider<FavoritesController, List<SingleItem>>((ref) {
     return FavoritesControllerMock();
   });
 

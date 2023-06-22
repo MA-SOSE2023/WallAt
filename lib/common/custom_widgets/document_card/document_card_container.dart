@@ -6,15 +6,13 @@ import '/common/provider.dart';
 import '/pages/single_item/model/single_item.dart';
 
 class DocumentCardContainer extends ConsumerWidget {
-  const DocumentCardContainer({required String id, super.key}) : _id = id;
+  const DocumentCardContainer({required SingleItem item, super.key})
+      : _item = item;
 
-  final String _id;
+  final SingleItem _item;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    SingleItem doc = ref.watch(
-      Providers.singleItemControllerProvider(_id),
-    );
     return Container(
       decoration: BoxDecoration(
         color: CupertinoTheme.of(context).scaffoldBackgroundColor,
@@ -26,12 +24,12 @@ class DocumentCardContainer extends ConsumerWidget {
       ),
       child: Row(
         children: [
-          Expanded(child: DocumentCard(id: _id)),
+          Expanded(child: DocumentCard(item: _item)),
           CupertinoButton(
             onPressed: ref
-                .read(Providers.singleItemControllerProvider(_id).notifier)
+                .read(Providers.singleItemControllerProvider(_item.id).notifier)
                 .setFavorite,
-            child: Icon(doc.isFavorite
+            child: Icon(_item.isFavorite
                 ? CupertinoIcons.heart_fill
                 : CupertinoIcons.heart),
           ),
