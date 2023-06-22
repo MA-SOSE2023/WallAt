@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gruppe4/pages/single_item/single_item_view.dart';
 import '../../common/provider.dart';
-import 'model/item_event.dart';
 
 import '../../common/custom_widgets/all_custom_widgets.dart';
 import 'model/single_item.dart';

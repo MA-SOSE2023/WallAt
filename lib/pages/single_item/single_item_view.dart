@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_share/social_share.dart';
+
 import '../../common/provider.dart';
 import 'full_screen_image_view.dart';
 import 'model/single_item.dart';
@@ -163,7 +165,10 @@ class ActionButtons extends ConsumerWidget {
       children: [
         _buildActionButton(
           onPressed: () {
-            // Handle share button logic
+            SocialShare.shareOptions(
+              "Hello world",
+              //@TODO: add the correct image path
+            );
           },
           icon: CupertinoIcons.share, // Use the Cupertino icon
         ),
