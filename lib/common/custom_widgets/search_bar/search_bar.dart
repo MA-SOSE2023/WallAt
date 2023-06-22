@@ -46,6 +46,7 @@ class _SearchBarState extends State<SearchBar> {
             setState(() {
               _searching = false;
               _controller?.clear();
+              widget._onChanged('');
               FocusManager.instance.primaryFocus?.unfocus();
             });
           } else {
