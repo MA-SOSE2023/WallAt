@@ -18,7 +18,7 @@ class SearchBar extends StatefulWidget {
 
 class _SearchBarState extends State<SearchBar> {
   late bool _searching;
-  late final TextEditingController? _controller;
+  late final TextEditingController _controller;
   late final FocusNode _textFieldFocusNode;
 
   @override
@@ -45,11 +45,11 @@ class _SearchBarState extends State<SearchBar> {
           if (_searching) {
             setState(() {
               _searching = false;
-              _controller?.clear();
+              _controller.clear();
               widget._onChanged('');
               FocusManager.instance.primaryFocus?.unfocus();
             });
-          } else {
+          } else if (!_textFieldFocusNode.hasFocus) {
             setState(() {
               FocusManager.instance.primaryFocus
                   ?.requestFocus(_textFieldFocusNode);
@@ -73,7 +73,7 @@ class _SearchBarState extends State<SearchBar> {
         color: Colors.transparent,
       ),
       onChanged: (text) {
-        if (!_searching && text.isEmpty) {
+        if (_searching && text.isEmpty) {
           setState(() {
             _searching = false;
           });

@@ -46,10 +46,10 @@ class Providers {
 
   /// Provider for [FavoritesScreen]
   /// - Provides a [FavoritesController] for a List of [SingleItem]s
-  static final StateNotifierProvider<FavoritesController, List<SingleItem>>
-      favoritesControllerProvider =
-      StateNotifierProvider<FavoritesController, List<SingleItem>>((ref) {
-    return FavoritesControllerMock();
+  static final FutureProvider<List<SingleItem>> favoritesControllerProvider =
+      FutureProvider<List<SingleItem>>((ref) async {
+    return Future.delayed(
+        const Duration(seconds: 1), () => FavoritesControllerMock().favorites);
   });
 
   /// Provider for [CustomBottomNavBar]

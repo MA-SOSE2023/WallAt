@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
           DefaultWidgetsLocalizations.delegate,
         ],
         home: CupertinoPageScaffold(
-          child: Center(child: DocumentCardContainer(id: '1')),
+          child: Center(child: Text('')),
         ));
   }
 }
