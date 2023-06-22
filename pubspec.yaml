@@ -18,14 +18,7 @@ dependencies:
   json_annotation: ^4.8.1
   intl: ^0.18.1
   beamer: ^1.5.5
-  
-  # --------------------------------------------- Camera dependencies
-  # Provides tools to work with the cameras on the device.
-  camera: ^0.10.5+2
-  # Finds the correct paths to store images. @TODO: Remove if not needed
-  path_provider: ^2.0.15
-  # Creates paths that work on any platform. @TODO Remove if not needed
-  path: ^1.8.0
+  cunning_document_scanner: ^1.1.2
 
 dev_dependencies:
   flutter_test:

@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:camera/camera.dart';
+import 'package:cunning_document_scanner/cunning_document_scanner.dart';
 import 'package:flutter/cupertino.dart';
 
 
@@ -14,115 +14,62 @@ class TakePictureScreen extends StatefulWidget {
 }
 
 class TakePictureScreenState extends State<TakePictureScreen> {
-  late CameraController _controller;
-  late Future<void> _initializeControllerFuture;
-  late CameraDescription _camera;
-  bool _isLoading = true;
+  List<String> _pictures = [];
 
   @override
   void initState() {
     super.initState();
-    _initializeCamera();
-  }
-
-  Future<void> _initializeCamera() async {
-    final cameras = await availableCameras();
-    _camera = cameras.first;
-    _controller = CameraController(
-      _camera,
-      ResolutionPreset.medium,
-    );
-    _initializeControllerFuture = _controller.initialize();
-    setState(() {
-      _isLoading = false;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      takePicture();
     });
   }
 
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
+  void takePicture() async {
+    List<String> pictures;
+    try {
+      pictures = await CunningDocumentScanner.getPictures() ?? [];
+      setState(() {
+        _pictures = pictures;
+        Navigator.of(context).push(
+          CupertinoPageRoute(
+            builder: (_) => DisplayPicturesScreen(pictures: _pictures),
+          ),
+        );
+      });
+    } catch (exception) {
+      // Handle exception here
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_isLoading) {
-      return const CupertinoPageScaffold(
-        child: Center(
-          child: CupertinoActivityIndicator(),
-        ),
-      );
-    }
-
-    return CupertinoPageScaffold(
-      navigationBar: const CupertinoNavigationBar(
+    return const CupertinoPageScaffold(
+      navigationBar: CupertinoNavigationBar(
         middle: Text('Take a picture'),
       ),
-      child: Stack(
-        children: [
-          Positioned.fill(
-            child: FutureBuilder<void>(
-              future: _initializeControllerFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  return CameraPreview(_controller);
-                } else {
-                  return const Center(child: CupertinoActivityIndicator());
-                }
-              },
-            ),
-          ),
-          Positioned(
-            bottom: 18,
-            right: 18,
-            child: SafeArea(
-              child: CupertinoButton(
-                onPressed: () async {
-                  try {
-                    await _initializeControllerFuture;
-
-                    final image = await _controller.takePicture();
-
-                    if (!mounted) return;
-
-                    await Navigator.of(context).push(
-                      CupertinoPageRoute(
-                        builder: (context) => DisplayPictureScreen(
-                          imagePath: image.path,
-                        ),
-                      ),
-                    );
-                  } catch (e) {
-                    print(e);
-                  }
-                },
-                color: CupertinoColors.activeBlue,
-                borderRadius: BorderRadius.circular(25),
-                padding: const EdgeInsets.all(20),
-                child: const Icon(CupertinoIcons.camera, color: CupertinoColors.white),
-              ),
-            ),
-          ),
-        ],
-      ),
+      child: CupertinoActivityIndicator(),
     );
   }
 }
 
-class DisplayPictureScreen extends StatelessWidget {
-  final String imagePath;
+class DisplayPicturesScreen extends StatelessWidget {
+  final List<String> pictures;
 
-  const DisplayPictureScreen({Key? key, required this.imagePath})
+  const DisplayPicturesScreen({Key? key, required this.pictures})
       : super(key: key);
-      
+
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: const CupertinoNavigationBar(
-        middle: Text('Display the Picture'),
+        middle: Text('Captured Pictures'),
       ),
-      child: SafeArea(
-        child: Image.file(File(imagePath)),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            for (var picture in pictures) Image.file(File(picture)),
+          ],
+        ),
       ),
     );
   }
