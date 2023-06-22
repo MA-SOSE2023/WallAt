@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 
 class SearchBar extends StatefulWidget {
   const SearchBar(
-      {required ValueChanged<String> onChanged, autoFillHints, super.key})
+      {required ValueChanged<String> onChanged,
+      Iterable<String>? autoFillHints,
+      super.key})
       : _onChanged = onChanged,
         _autoFillHints = autoFillHints;
 

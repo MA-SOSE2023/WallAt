@@ -3,10 +3,15 @@ import 'package:flutter/cupertino.dart';
 import 'search_bar.dart';
 
 class SearchBarContainer extends StatelessWidget {
-  const SearchBarContainer({required ValueChanged<String> onChanged, super.key})
-      : _onChanged = onChanged;
+  const SearchBarContainer(
+      {required ValueChanged<String> onChanged,
+      Iterable<String>? autoFillHints,
+      super.key})
+      : _onChanged = onChanged,
+        _autoFillHints = autoFillHints;
 
   final ValueChanged<String> _onChanged;
+  final Iterable<String>? _autoFillHints;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +29,10 @@ class SearchBarContainer extends StatelessWidget {
           color:
               CupertinoTheme.of(context).scaffoldBackgroundColor.withAlpha(200),
         ),
-        child: SearchBar(onChanged: _onChanged),
+        child: SearchBar(
+          onChanged: _onChanged,
+          autoFillHints: _autoFillHints,
+        ),
       ),
     );
   }
