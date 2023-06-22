@@ -3,7 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '/common/provider.dart';
 import '/common/custom_widgets/all_custom_widgets.dart'
-    show DocumentCardContainerList, CameraButtonHeroDestination;
+    show
+        DocumentCardContainerList,
+        CameraButtonHeroDestination,
+        SearchBarContainer;
 
 class FavoritesScreen extends ConsumerWidget {
   const FavoritesScreen({super.key});
@@ -28,26 +31,7 @@ class FavoritesScreen extends ConsumerWidget {
                 children: [
                   DocumentCardContainerList(itemIds: itemIds),
                   // Search bar for filtering items
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(20.0, 8.0, 20.0, 8.0),
-                    child: SizedBox(
-                      height: 50,
-                      child: CupertinoTextField(
-                        placeholder: 'Search',
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: CupertinoTheme.of(context)
-                              .scaffoldBackgroundColor,
-                          borderRadius: BorderRadius.circular(25),
-                          border: Border.all(
-                            color: CupertinoDynamicColor.resolve(
-                                CupertinoColors.label, context),
-                            width: 1,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+                  SearchBarContainer(onChanged: (value) {}),
                 ],
               ),
             ),

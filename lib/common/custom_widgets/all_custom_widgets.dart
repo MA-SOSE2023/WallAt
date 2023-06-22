@@ -1,10 +1,12 @@
 /// Exports all custom widgets
 
-export '/common/custom_widgets/bottom_nav_bar/bottom_nav_bar_view.dart';
-export '/common/custom_widgets/event_container.dart';
-export '/common/custom_widgets/camera_button_hero_destination.dart';
-export '/common/custom_widgets/event_card.dart';
-export '/common/custom_widgets/calendar_button.dart';
-export '/common/custom_widgets/document_card/document_card.dart';
-export '/common/custom_widgets/document_card/document_card_container.dart';
-export '/common/custom_widgets/document_card/document_card_container_list.dart';
+export 'bottom_nav_bar/bottom_nav_bar_view.dart';
+export 'event_container.dart';
+export 'camera_button_hero_destination.dart';
+export 'event_card.dart';
+export 'calendar_button.dart';
+export 'document_card/document_card.dart';
+export 'document_card/document_card_container.dart';
+export 'document_card/document_card_container_list.dart';
+export 'search_bar/search_bar.dart';
+export 'search_bar/search_bar_container.dart';
