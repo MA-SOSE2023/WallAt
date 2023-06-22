@@ -98,4 +98,9 @@ class EditSingleItemControllerMock extends EditSingleItemController {
   void setFavorite() {
     state = state.copyWith(isFavorite: getFavorite() ? false : true);
   }
+
+  @override
+  void navigateToThisItem() {
+    throw UnimplementedError('Cannot navigate to items used in edit view');
+  }
 }

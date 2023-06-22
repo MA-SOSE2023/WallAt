@@ -24,6 +24,8 @@ dependencies:
   social_share: ^2.3.1
   device_calendar: ^4.3.1
   add_2_calendar: ^2.1.2
+  share_plus: ^7.0.2
+  flutter_carousel_widget: ^2.0.4
 
 dev_dependencies:
   flutter_test:

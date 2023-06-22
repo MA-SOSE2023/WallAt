@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
-import '/common/custom_widgets/camera_button_hero_destination/camera_button_hero_destination_view.dart';
+import '/common/custom_widgets/camera_button_hero_destination.dart';
 
 class FavoritesScren extends StatelessWidget {
   const FavoritesScren({super.key});

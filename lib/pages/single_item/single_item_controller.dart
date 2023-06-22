@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:gruppe4/pages/single_item/single_item_view.dart';
+import 'package:gruppe4/router/router.dart';
 
 import 'model/single_item.dart';
 import 'model/item_event.dart';
@@ -10,9 +11,11 @@ var mockSingleItem = SingleItem(
   image: 'assets/dev_debug_images/hampter1.jpg',
   isFavorite: false,
   events: [
-    ItemEvent(description: "Example Event", date: DateTime.now()),
-    ItemEvent(description: "Example Event", date: DateTime.now()),
-    ItemEvent(description: "Example Event", date: DateTime.now())
+    ItemEvent(
+        description: "Example Event", date: DateTime.now(), parentId: '1'),
+    ItemEvent(
+        description: "Example Event", date: DateTime.now(), parentId: '1'),
+    ItemEvent(description: "Example Event", date: DateTime.now(), parentId: '1')
   ],
   currentSelectedDate: null,
 );
@@ -88,5 +91,10 @@ class SingleItemControllerMock extends SingleItemController {
   @override
   void setFavorite() {
     state = state.copyWith(isFavorite: getFavorite() ? false : true);
+  }
+
+  @override
+  void navigateToThisItem() {
+    Routers.globalRouterDelegate.beamToNamed('/item/$_id');
   }
 }

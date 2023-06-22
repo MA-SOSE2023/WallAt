@@ -1,14 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class EventCard extends StatelessWidget {
-  const EventCard({required this.date, required this.title, super.key});
+import '/common/provider.dart';
+import '/pages/single_item/model/item_event.dart';
 
-  final DateTime date;
-  final String title;
+class EventCard extends ConsumerWidget {
+  const EventCard({required this.event, super.key});
+
+  final ItemEvent event;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final DateTime date = event.date;
+    final String description = event.description;
     return Column(
       children: [
         CupertinoListSection.insetGrouped(
@@ -46,12 +51,21 @@ class EventCard extends StatelessWidget {
                 CupertinoIcons.forward,
               ),
               leadingSize: 36,
-              onTap: () {},
+              onTap: () {
+                ref
+                    .read(Providers.singleItemControllerProvider(event.parentId)
+                        .notifier)
+                    .navigateToThisItem();
+              },
             ),
             CupertinoListTile.notched(
-              title: Text(
-                title,
-                style: CupertinoTheme.of(context).textTheme.pickerTextStyle,
+              title: SizedBox(
+                height: MediaQuery.of(context).size.height / 15,
+                child: Text(
+                  description,
+                  maxLines: 2,
+                  style: CupertinoTheme.of(context).textTheme.pickerTextStyle,
+                ),
               ),
               backgroundColor: CupertinoDynamicColor.resolve(
                   CupertinoColors.systemGroupedBackground, context),

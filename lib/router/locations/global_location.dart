@@ -1,22 +1,31 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:gruppe4/pages/single_item/single_item_view.dart';
 
 import '/common/custom_widgets/bottom_nav_bar/bottom_nav_bar_view.dart';
 
 class GlobalLocation extends BeamLocation<BeamState> {
   // The previous location needs to be handled manually, because otherwise
   // beaming to the camera or settings will not persist the previous location.
-  String? prevNavBarLocation;
+  String? prevNavBarLocation = '/home';
 
   @override
-  List<String> get pathPatterns =>
-      ['/home', '/favorites', '/folders', '/camera', '/settings', '/profiles'];
+  List<String> get pathPatterns => [
+        '/home',
+        '/favorites',
+        '/folders',
+        '/camera',
+        '/settings',
+        '/profiles',
+        '/item/:id',
+      ];
 
   @override
   void updateState(RouteInformation routeInformation) {
     if (routeInformation.location != '/settings' &&
         routeInformation.location != '/camera' &&
-        routeInformation.location != '/profiles') {
+        routeInformation.location != '/profiles' &&
+        !(routeInformation.location ?? '').startsWith('/item')) {
       prevNavBarLocation = routeInformation.location;
     }
     super.updateState(routeInformation);
@@ -52,6 +61,14 @@ class GlobalLocation extends BeamLocation<BeamState> {
             type: BeamPageType.cupertino,
             popToNamed: prevNavBarLocation,
             child: Placeholder(), // TODO: Profiles Screen
+          ),
+        if ((state.routeInformation.location ?? '').startsWith('/item'))
+          BeamPage(
+            key: const ValueKey('item'),
+            title: 'Item',
+            type: BeamPageType.cupertino,
+            popToNamed: prevNavBarLocation,
+            child: SingleItemPage(id: state.pathParameters['id']!),
           ),
       ];
 }

@@ -7,5 +7,6 @@ class ItemEvent with _$ItemEvent {
   const factory ItemEvent({
     required String description,
     required DateTime date,
+    required String parentId,
   }) = _ItemEvent;
 }
