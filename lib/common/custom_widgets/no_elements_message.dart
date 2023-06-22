@@ -13,6 +13,7 @@ class NoElementsMessage extends StatelessWidget {
       child: Center(
         child: Text(
           _message,
+          textAlign: TextAlign.center,
           style: TextStyle(
             color: CupertinoDynamicColor.resolve(
               CupertinoColors.inactiveGray,
