@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gruppe4/pages/single_item/model/single_item.dart';
 
@@ -6,7 +7,7 @@ import 'folder_model.dart';
 import 'folder_item.dart';
 import '/common/provider.dart';
 import '/common/custom_widgets/all_custom_widgets.dart'
-    show CameraButtonHeroDestination;
+    show DocumentCardContainer, CameraButtonHeroDestination;
 
 class FoldersScreen extends ConsumerWidget {
   const FoldersScreen({super.key});
@@ -35,40 +36,61 @@ class FoldersScreen extends ConsumerWidget {
                 largeTitle: Text('Folders'),
               ),
               // SliverGrid to display root level folders
-              SliverGrid.builder(
+              SliverGrid(
                 gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                   maxCrossAxisExtent: MediaQuery.of(context).size.width / 2,
                   mainAxisSpacing: 10.0,
                   crossAxisSpacing: 10.0,
                 ),
-                itemBuilder: (BuildContext context, int index) {
-                  if (index < 10) {
-                    return Container(
-                      color: CupertinoTheme.of(context).primaryColor,
-                      child: const Text('Folder'),
-                    );
-                  } else {
-                    return null;
-                  }
-                },
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) => Container(
+                    color: CupertinoTheme.of(context).primaryColor,
+                    child: Text(
+                        '${folders[index].title}: ${folders[index].contents.length} items'),
+                  ),
+                  childCount: folders.length,
+                ),
               ),
               SliverPrototypeExtentList(
-                  delegate: SliverChildBuilderDelegate(
-                    (BuildContext context, int index) {
-                      if (index < 10) {
-                        return Container(
-                          color: CupertinoTheme.of(context).primaryColor,
-                          child: const Text('Folder'),
-                        );
-                      } else {
-                        return null;
-                      }
-                    },
+                delegate: SliverChildBuilderDelegate(
+                  (BuildContext context, int index) => Padding(
+                    padding: const EdgeInsets.only(top: 16.0),
+                    child: Column(
+                      children: [
+                        Divider(
+                            height: 16.0,
+                            thickness: 0.75,
+                            indent: 64.0,
+                            color: CupertinoDynamicColor.resolve(
+                                CupertinoColors.inactiveGray, context)),
+                        DocumentCardContainer.borderless(item: items[index]),
+                      ],
+                    ),
                   ),
-                  prototypeItem: Container(
-                    color: CupertinoTheme.of(context).primaryColor,
-                    child: const Text('Folder'),
-                  ))
+                  childCount: items.length,
+                ),
+                prototypeItem: Padding(
+                  padding: const EdgeInsets.only(top: 16.0),
+                  child: Column(
+                    children: [
+                      DocumentCardContainer.borderless(
+                        item: SingleItem(
+                          description: 'prototype',
+                          id: 'prototype',
+                          title: 'prototype',
+                          events: [],
+                          image: '',
+                          isFavorite: false,
+                        ),
+                      ),
+                      const Divider(
+                        height: 16.0,
+                        thickness: 0.75,
+                      )
+                    ],
+                  ),
+                ),
+              ),
             ],
           ),
           const CameraButtonHeroDestination(),

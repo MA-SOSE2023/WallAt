@@ -36,6 +36,8 @@ class DocumentCardContainer extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final SingleItem item =
+        ref.watch(Providers.singleItemControllerProvider(_item.id));
     return DecoratedBox(
       decoration: _containerDeco ??
           BoxDecoration(
@@ -50,14 +52,14 @@ class DocumentCardContainer extends ConsumerWidget {
           ),
       child: Row(
         children: [
-          Expanded(child: DocumentCard(item: _item)),
+          Expanded(child: DocumentCard(item: item)),
           if (_showFavoriteButton)
             CupertinoButton(
               onPressed: ref
                   .read(
-                      Providers.singleItemControllerProvider(_item.id).notifier)
+                      Providers.singleItemControllerProvider(item.id).notifier)
                   .setFavorite,
-              child: Icon(_item.isFavorite
+              child: Icon(item.isFavorite
                   ? CupertinoIcons.heart_fill
                   : CupertinoIcons.heart),
             ),

@@ -19,7 +19,7 @@ var mockSingleItem = SingleItem(
 class SingleItemControllerMock extends SingleItemController {
   SingleItemControllerMock({required String id, SingleItem? model})
       : _id = id,
-        super(model ?? mockSingleItem);
+        super(model ?? mockSingleItem.copyWith(id: id));
 
   final String _id;
 

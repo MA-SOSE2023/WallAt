@@ -21,6 +21,15 @@ class SingleItem with _$SingleItem implements FolderItem {
     DateTime? currentSelectedDate,
   }) = _SingleItem;
 
+  factory SingleItem.prototype() => SingleItem(
+        id: 'prototype',
+        title: 'prototype',
+        description: 'prototype',
+        image: 'assets/dev_debug_images/hampter1.jpg',
+        isFavorite: false,
+        events: [],
+      );
+
   @override
   SingleItem? get maybeItem => this;
   @override

@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '/common/provider.dart';
@@ -54,6 +55,8 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
       },
     );
 
+    const EdgeInsets specialPadding = EdgeInsets.only(top: 40.0);
+
     final Widget body = filterFavoritesFuture.when(
       error: (object, stackTrace) => favoritesFuture.hasError
           ? const ErrorMessage()
@@ -63,33 +66,44 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
           ? DocumentCardContainerList(
               items: filteredFavorites,
               borderlessCards: widget._borderlessCards)
-          : NoElementsMessage(message: emptyListMessage),
+          : SliverSafeArea(
+              sliver: SliverToBoxAdapter(
+                child: Padding(
+                    padding: specialPadding,
+                    child: NoElementsMessage(
+                      message: emptyListMessage,
+                    )),
+              ),
+            ),
     );
 
     return CupertinoPageScaffold(
-      navigationBar: const CupertinoNavigationBar(
-        middle: Text('Favorites'),
-      ),
       child: Stack(
         children: [
-          SafeArea(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                maxHeight: MediaQuery.of(context).size.height,
+          CustomScrollView(
+            slivers: [
+              const CupertinoSliverNavigationBar(
+                largeTitle: Text('Favorites'),
               ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(child: filterFavoritesFuture.hasValue ? body : body),
-                  // Search bar for filtering items
-                  SearchBarContainer(onChanged: (text) {
-                    setState(() {
-                      searchString = text;
-                    });
-                  }),
-                ],
+              SliverAppBar(
+                flexibleSpace: SearchBarContainer(onChanged: (text) {
+                  setState(() {
+                    searchString = text;
+                  });
+                }),
+                toolbarHeight: 35.0,
               ),
-            ),
+              filterFavoritesFuture.hasValue
+                  ? body
+                  : SliverSafeArea(
+                      sliver: SliverToBoxAdapter(
+                        child: Padding(
+                          padding: specialPadding,
+                          child: body,
+                        ),
+                      ),
+                    )
+            ],
           ),
           const CameraButtonHeroDestination(),
         ],

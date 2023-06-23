@@ -23,37 +23,40 @@ class DocumentCardContainerList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: _items
-          .map(
-            (SingleItem item) => Padding(
-              padding: _borderlessCards
-                  ? const EdgeInsets.all(0.0)
-                  : EdgeInsets.fromLTRB(
-                      20.0, _itemMargin / 2, 20.0, _itemMargin / 2),
-              child: _borderlessCards
-                  ? Column(
-                      children: [
-                        DocumentCardContainer.borderless(
-                          item: item,
-                          showFavoriteButton: _showFavoriteButton,
-                        ),
-                        Divider(
-                          color: CupertinoDynamicColor.resolve(
-                              CupertinoColors.inactiveGray, context),
-                          thickness: 0.8,
-                          indent: 64,
-                          height: _itemMargin,
-                        ),
-                      ],
-                    )
-                  : DocumentCardContainer(
+    Widget documentCardContainerListTile(SingleItem item) => Padding(
+          padding: _borderlessCards
+              ? const EdgeInsets.all(0.0)
+              : EdgeInsets.fromLTRB(
+                  20.0, _itemMargin / 2, 20.0, _itemMargin / 2),
+          child: _borderlessCards
+              ? Column(
+                  children: [
+                    DocumentCardContainer.borderless(
                       item: item,
                       showFavoriteButton: _showFavoriteButton,
                     ),
-            ),
-          )
-          .toList(),
+                    Divider(
+                      color: CupertinoDynamicColor.resolve(
+                          CupertinoColors.inactiveGray, context),
+                      thickness: 1,
+                      indent: 64,
+                      height: _itemMargin,
+                    ),
+                  ],
+                )
+              : DocumentCardContainer(
+                  item: item,
+                  showFavoriteButton: _showFavoriteButton,
+                ),
+        );
+
+    return SliverPrototypeExtentList(
+      delegate: SliverChildBuilderDelegate(
+        (BuildContext context, int index) =>
+            documentCardContainerListTile(_items[index]),
+        childCount: _items.length,
+      ),
+      prototypeItem: documentCardContainerListTile(SingleItem.prototype()),
     );
   }
 }
