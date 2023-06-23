@@ -4,13 +4,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '/pages/single_item/single_item_view.dart';
 import '/common/custom_widgets/calendar_button.dart';
-import 'package:device_calendar/device_calendar.dart';
 import 'package:intl/intl.dart';
 
 import 'package:timezone/data/latest.dart' as tz;
 
 import '/common/provider.dart';
-import '/pages/single_item/single_item_view.dart';
 
 class EventsContainer extends ConsumerWidget {
   const EventsContainer({Key? key, required this.id, required this.editable})
@@ -27,7 +25,7 @@ class EventsContainer extends ConsumerWidget {
     return CupertinoListSection.insetGrouped(
       backgroundColor: Colors.transparent,
       header: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        Text("Events"),
+        const Text("Events"),
         if (editable) CalendarButton(id: id),
       ]),
       children: [

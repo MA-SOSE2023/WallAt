@@ -1,9 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../provider.dart';
-import '/pages/single_item/single_item_view.dart';
 
 import 'package:device_calendar/device_calendar.dart';
 import 'package:timezone/data/latest.dart' as tz;
@@ -64,8 +62,8 @@ class _CalendarButtonState extends ConsumerState<CalendarButton> {
                     title: const Text('Select Calendar'),
                     content: Column(
                       children: [
-                        Text('Select a calendar to add the event to:'),
-                        SizedBox(height: 16),
+                        const Text('Select a calendar to add the event to:'),
+                        const SizedBox(height: 16),
                         Column(
                           children: usableCalendars.map((calendar) {
                             return CupertinoListSection(
@@ -112,7 +110,7 @@ class _CalendarButtonState extends ConsumerState<CalendarButton> {
                 } else if (snapshot.hasError) {
                   return CupertinoAlertDialog(
                     title: const Text('Error'),
-                    content: Text('Failed to retrieve calendars.'),
+                    content: const Text('Failed to retrieve calendars.'),
                     actions: <Widget>[
                       CupertinoDialogAction(
                         child: const Text('OK'),
@@ -123,8 +121,8 @@ class _CalendarButtonState extends ConsumerState<CalendarButton> {
                     ],
                   );
                 } else {
-                  return CupertinoAlertDialog(
-                    title: const Text('Loading'),
+                  return const CupertinoAlertDialog(
+                    title: Text('Loading'),
                     content: CircularProgressIndicator(),
                   );
                 }
@@ -141,7 +139,7 @@ class _CalendarButtonState extends ConsumerState<CalendarButton> {
     DeviceCalendarPlugin deviceCalendarPlugin,
   ) {
     DateTime startDate = DateTime.now();
-    DateTime endDate = DateTime.now().add(Duration(hours: 1));
+    DateTime endDate = DateTime.now().add(const Duration(hours: 1));
     String title = 'Test Event';
     String description = '';
 
@@ -162,7 +160,7 @@ class _CalendarButtonState extends ConsumerState<CalendarButton> {
                       });
                     },
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   CupertinoTextField(
                     placeholder: 'Event Description',
                     onChanged: (value) {

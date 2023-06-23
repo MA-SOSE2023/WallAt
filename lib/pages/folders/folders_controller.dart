@@ -73,8 +73,27 @@ final Folder rootFolder = Folder(
   ],
 );
 
-class FoldersControllerMock extends FoldersControler {
-  FoldersControllerMock(String id) : super(rootFolder.copyWith(id: id));
+Folder _mockFolderItem(String id) {
+  switch (id) {
+    case '0':
+      return rootFolder;
+    case '1':
+      return rootFolder.contents[0].folder;
+    case '2':
+      return rootFolder.contents[1].folder;
+    case '3':
+      return rootFolder.contents[2].folder;
+    case '4':
+      return rootFolder.contents[0].contents[0].folder;
+    case '5':
+      return rootFolder.contents[0].contents[1].folder;
+    default:
+      throw UnsupportedError('Unknown id: $id');
+  }
+}
+
+class FoldersControllerMock extends FoldersController {
+  FoldersControllerMock(String id) : super(_mockFolderItem(id));
 
   @override
   List<FolderItem> get contents => state.contents;

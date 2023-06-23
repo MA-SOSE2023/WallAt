@@ -6,8 +6,6 @@ import 'model/item_event.dart';
 import '/pages/single_item/single_item_view.dart';
 import '/router/router.dart';
 
-import 'package:timezone/data/latest.dart' as tz;
-
 var mockSingleItem = SingleItem(
   id: '1',
   title: 'Example Title',

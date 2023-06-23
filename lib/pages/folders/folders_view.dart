@@ -1,16 +1,31 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gruppe4/pages/single_item/model/single_item.dart';
 
 import 'folder_model.dart';
 import 'folder_item.dart';
+import '/common/provider.dart';
 import '/common/custom_widgets/all_custom_widgets.dart'
     show CameraButtonHeroDestination;
 
-class FoldersScren extends StatelessWidget {
-  const FoldersScren({super.key});
+class FoldersScreen extends ConsumerWidget {
+  const FoldersScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final Folder rootFolder =
+        ref.watch(Providers.foldersControllerProvider('0'));
+
+    final List<Folder> folders = rootFolder.contents
+        .where((element) => element.isFolder)
+        .map((e) => e as Folder)
+        .toList();
+
+    final List<SingleItem> items = rootFolder.contents
+        .where((element) => element.isLeaf)
+        .map((e) => e as SingleItem)
+        .toList();
+
     return CupertinoPageScaffold(
       child: Stack(
         children: [
@@ -63,8 +78,8 @@ class FoldersScren extends StatelessWidget {
   }
 }
 
-abstract class FoldersControler extends StateNotifier<Folder> {
-  FoldersControler(Folder state) : super(state);
+abstract class FoldersController extends StateNotifier<Folder> {
+  FoldersController(Folder state) : super(state);
 
   void delete();
 
