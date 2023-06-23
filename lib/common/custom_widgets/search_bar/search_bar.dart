@@ -56,8 +56,7 @@ class _SearchBarState extends State<SearchBar> {
             });
           }
         },
-        color:
-            CupertinoDynamicColor.resolve(CupertinoColors.systemGrey, context),
+        color: CupertinoColors.systemGrey,
         splashColor: CupertinoDynamicColor.resolve(
             CupertinoColors.systemGrey3.withOpacity(0.5), context),
         icon: Icon(

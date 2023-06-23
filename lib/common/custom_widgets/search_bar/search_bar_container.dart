@@ -22,12 +22,13 @@ class SearchBarContainer extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
           border: Border.all(
-            color:
-                CupertinoDynamicColor.resolve(CupertinoColors.label, context),
+            color: CupertinoDynamicColor.resolve(
+                CupertinoColors.systemGrey2, context),
             width: 1,
           ),
-          color:
-              CupertinoTheme.of(context).scaffoldBackgroundColor.withAlpha(200),
+          color: CupertinoTheme.of(context)
+              .scaffoldBackgroundColor
+              .withOpacity(0.75),
         ),
         child: SearchBar(
           onChanged: _onChanged,
