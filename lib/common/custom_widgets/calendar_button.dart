@@ -162,20 +162,6 @@ class _CalendarButtonState extends ConsumerState<CalendarButton> {
                       });
                     },
                   ),
-                  const SizedBox(height: 16),
-                  const Text('Reminder (minutes)'),
-                  CupertinoTextField(
-                    placeholder: 'Enter reminder minutes',
-                    keyboardType: TextInputType.number,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedReminder = Reminder(minutes: int.parse(value));
-                      });
-                    },
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.digitsOnly
-                    ],
-                  ),
                   SizedBox(height: 16),
                   CupertinoTextField(
                     placeholder: 'Event Description',
@@ -184,6 +170,19 @@ class _CalendarButtonState extends ConsumerState<CalendarButton> {
                         description = value;
                       });
                     },
+                  ),
+                  const SizedBox(height: 16),
+                  CupertinoTextField(
+                    placeholder: 'Enter reminder minutes',
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) {
+                      setState(() {
+                        selectedReminder = Reminder(minutes: int.parse(value));
+                      });
+                    },
+                    // inputFormatters: <TextInputFormatter>[
+                    //   FilteringTextInputFormatter.digitsOnly
+                    // ],
                   ),
                   const SizedBox(height: 16),
                   const Text('Recurrence'),
