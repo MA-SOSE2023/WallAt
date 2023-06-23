@@ -72,7 +72,6 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
       ),
       child: Stack(
         children: [
-          const CameraButtonHeroDestination(),
           SafeArea(
             child: ConstrainedBox(
               constraints: BoxConstraints(
@@ -92,6 +91,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
               ),
             ),
           ),
+          const CameraButtonHeroDestination(),
         ],
       ),
     );

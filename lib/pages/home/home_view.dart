@@ -30,7 +30,7 @@ class HomeScreen extends ConsumerWidget {
       backgroundColor: CupertinoTheme.of(context).scaffoldBackgroundColor,
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: Padding(
-        padding: const EdgeInsets.only(right: 10.0),
+        padding: const EdgeInsets.only(right: 10.0, bottom: 15.0),
         child: FloatingActionButton(
           foregroundColor: CupertinoTheme.of(context).primaryContrastingColor,
           backgroundColor: CupertinoTheme.of(context).primaryColor,
