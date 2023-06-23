@@ -21,7 +21,7 @@ class EventCard extends ConsumerWidget {
           decoration: BoxDecoration(
             border: Border.all(
               color: CupertinoDynamicColor.resolve(
-                  CupertinoColors.systemGroupedBackground, context),
+                  CupertinoColors.systemGrey5, context),
               width: 2,
             ),
             borderRadius: BorderRadius.circular(10),
@@ -34,16 +34,19 @@ class EventCard extends ConsumerWidget {
               leading: Container(
                 decoration: BoxDecoration(
                   border: Border.all(
-                    color: CupertinoColors.label,
+                    color: CupertinoDynamicColor.resolve(
+                        CupertinoColors.secondaryLabel, context),
                     width: 2,
                   ),
                   borderRadius: BorderRadius.circular(12),
-                  color: CupertinoColors.lightBackgroundGray,
+                  color: CupertinoDynamicColor.resolve(
+                      CupertinoColors.systemGrey6, context),
                 ),
                 padding: const EdgeInsets.all(5),
-                child: const Icon(
+                child: Icon(
                   CupertinoIcons.alarm,
-                  color: CupertinoColors.label,
+                  color: CupertinoDynamicColor.resolve(
+                      CupertinoColors.systemTeal, context),
                   size: 24,
                 ),
               ),
@@ -68,7 +71,7 @@ class EventCard extends ConsumerWidget {
                 ),
               ),
               backgroundColor: CupertinoDynamicColor.resolve(
-                  CupertinoColors.systemGroupedBackground, context),
+                  CupertinoColors.systemGrey5, context),
             ),
           ],
         ),

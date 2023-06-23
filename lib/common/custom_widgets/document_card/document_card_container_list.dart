@@ -41,6 +41,7 @@ class DocumentCardContainerList extends StatelessWidget {
                         Divider(
                           color: CupertinoDynamicColor.resolve(
                               CupertinoColors.inactiveGray, context),
+                          thickness: 0.8,
                           indent: 64,
                           height: _itemMargin,
                         ),
