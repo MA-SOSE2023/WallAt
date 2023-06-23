@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'folder_model.dart';
+import 'folder_item.dart';
 import '/common/custom_widgets/all_custom_widgets.dart'
     show CameraButtonHeroDestination;
 

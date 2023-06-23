@@ -108,12 +108,13 @@ class __$$_FolderCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_Folder implements _Folder {
-  const _$_Folder(
+class _$_Folder extends _Folder {
+  _$_Folder(
       {required this.id,
       required this.title,
       required final List<FolderItem> contents})
-      : _contents = contents;
+      : _contents = contents,
+        super._();
 
   @override
   final String id;
@@ -153,11 +154,12 @@ class _$_Folder implements _Folder {
       __$$_FolderCopyWithImpl<_$_Folder>(this, _$identity);
 }
 
-abstract class _Folder implements Folder {
-  const factory _Folder(
+abstract class _Folder extends Folder implements FolderItem {
+  factory _Folder(
       {required final String id,
       required final String title,
       required final List<FolderItem> contents}) = _$_Folder;
+  _Folder._() : super._();
 
   @override
   String get id;

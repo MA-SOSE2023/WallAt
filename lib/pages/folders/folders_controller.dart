@@ -1,6 +1,7 @@
-import '../single_item/model/item_event.dart';
-import '../single_item/model/single_item.dart';
+import '/pages/single_item/model/item_event.dart';
+import '/pages/single_item/model/single_item.dart';
 
+import 'folder_item.dart';
 import 'folder_model.dart';
 import 'folders_view.dart';
 
@@ -20,26 +21,14 @@ SingleItem _mockSingleItem(int id) => SingleItem(
       description: 'Example Description',
       image: 'assets/dev_debug_images/hampter1.jpg',
       isFavorite: true,
-      events: [
-        ItemEvent(
-            description: "Example Event",
-            date: DateTime.now(),
-            parentId: '$id'),
-        ItemEvent(
-            description: "Example Event",
-            date: DateTime.now(),
-            parentId: '$id'),
-        ItemEvent(
-            description: "Example Event",
-            date: DateTime.now(),
-            parentId: '$id'),
-      ],
+      events:
+          _mockEvents.map((event) => event.copyWith(parentId: '$id')).toList(),
       currentSelectedDate: null,
     );
 
 var _id = 0;
 
-List<SingleItem> _mockItems = [
+List<FolderItem> _mockItems = [
   _mockSingleItem(_id++),
   _mockSingleItem(_id++).copyWith(title: 'Another Title'),
   _mockSingleItem(_id++).copyWith(title: 'Yet Another Title'),

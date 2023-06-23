@@ -1,22 +1,32 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import 'folder_item.dart';
+import '/pages/single_item/model/single_item.dart';
+
 part 'folder_model.freezed.dart';
 
 @freezed
-class Folder extends FolderItem with _$Folder {
-  const factory Folder({
+class Folder with _$Folder implements FolderItem {
+  Folder._();
+
+  @Implements<FolderItem>()
+  factory Folder({
     required String id,
     required String title,
     required List<FolderItem> contents,
   }) = _Folder;
-}
 
-abstract class FolderItem {
-  const FolderItem({
-    required String id,
-    required String title,
-  });
+  @override
+  SingleItem? get maybeItem => null;
+  @override
+  Folder? get maybeFolder => this;
+  @override
+  SingleItem get item => throw UnsupportedError('Not an item');
+  @override
+  Folder get folder => this;
 
-  String get id;
-  String get title;
+  @override
+  bool get isLeaf => false;
+  @override
+  bool get isFolder => true;
 }
