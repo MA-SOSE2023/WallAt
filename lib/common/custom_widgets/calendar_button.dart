@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../provider.dart';
 import '/pages/single_item/single_item_view.dart';
@@ -22,6 +23,16 @@ class CalendarButton extends ConsumerStatefulWidget {
 class _CalendarButtonState extends ConsumerState<CalendarButton> {
   String? selectedCalendarId;
   String description = '';
+  int selectedRecurrenceIndex = 0;
+  Reminder selectedReminder = Reminder(minutes: 0);
+
+  final Map<RecurrenceRule, String> recurrenceOptions = {
+    RecurrenceRule(null): 'None',
+    RecurrenceRule(RecurrenceFrequency.Daily): 'Daily',
+    RecurrenceRule(RecurrenceFrequency.Weekly): 'Weekly',
+    RecurrenceRule(RecurrenceFrequency.Monthly): 'Monthly',
+    RecurrenceRule(RecurrenceFrequency.Yearly): 'Yearly',
+  };
 
   @override
   void initState() {
@@ -151,6 +162,20 @@ class _CalendarButtonState extends ConsumerState<CalendarButton> {
                       });
                     },
                   ),
+                  const SizedBox(height: 16),
+                  const Text('Reminder (minutes)'),
+                  CupertinoTextField(
+                    placeholder: 'Enter reminder minutes',
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) {
+                      setState(() {
+                        selectedReminder = Reminder(minutes: int.parse(value));
+                      });
+                    },
+                    inputFormatters: <TextInputFormatter>[
+                      FilteringTextInputFormatter.digitsOnly
+                    ],
+                  ),
                   SizedBox(height: 16),
                   CupertinoTextField(
                     placeholder: 'Event Description',
@@ -160,11 +185,29 @@ class _CalendarButtonState extends ConsumerState<CalendarButton> {
                       });
                     },
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
+                  const Text('Recurrence'),
+                  CupertinoSlidingSegmentedControl<int>(
+                    groupValue: selectedRecurrenceIndex,
+                    children: {
+                      for (int i = 0; i < recurrenceOptions.length; i++)
+                        i: Text(
+                            style: const TextStyle(
+                              fontSize: 10,
+                            ),
+                            recurrenceOptions.values.elementAt(i)),
+                    },
+                    onValueChanged: (int? value) {
+                      setState(() {
+                        selectedRecurrenceIndex = value!;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 16),
                   Row(
                     children: [
-                      Text('Start Time:'),
-                      SizedBox(width: 8),
+                      const Text('Start Time:'),
+                      const SizedBox(width: 8),
                       Expanded(
                         child: GestureDetector(
                           onTap: () async {
@@ -173,7 +216,7 @@ class _CalendarButtonState extends ConsumerState<CalendarButton> {
                               context: context,
                               builder: (BuildContext context) {
                                 return Container(
-                                  decoration: BoxDecoration(
+                                  decoration: const BoxDecoration(
                                     color: CupertinoColors.white,
                                   ),
                                   height: 216,
@@ -208,11 +251,11 @@ class _CalendarButtonState extends ConsumerState<CalendarButton> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   Row(
                     children: [
-                      Text('End Time:'),
-                      SizedBox(width: 16),
+                      const Text('End Time:'),
+                      const SizedBox(width: 16),
                       Expanded(
                         child: GestureDetector(
                           onTap: () async {
@@ -221,7 +264,7 @@ class _CalendarButtonState extends ConsumerState<CalendarButton> {
                               context: context,
                               builder: (BuildContext context) {
                                 return Container(
-                                  decoration: BoxDecoration(
+                                  decoration: const BoxDecoration(
                                     color: CupertinoColors.white,
                                   ),
                                   height: 216,
@@ -247,7 +290,7 @@ class _CalendarButtonState extends ConsumerState<CalendarButton> {
                           },
                           child: Text(
                             formatDate(endDate),
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: CupertinoColors.systemBlue,
                               fontWeight: FontWeight.bold,
                             ),
@@ -269,14 +312,21 @@ class _CalendarButtonState extends ConsumerState<CalendarButton> {
                   child: const Text('Add Event'),
                   onPressed: () async {
                     final local = tz.local; // Get local time zone
-                    final Event newEvent = Event(
-                      selectedCalendarId!,
-                      eventId: null,
-                      start: tz.TZDateTime.from(startDate, local),
-                      end: tz.TZDateTime.from(endDate, local),
-                      title: title,
-                      description: description,
-                    );
+                    // Retrieve the selected recurrence and notification values
+                    RecurrenceRule? selectedRecurrence;
+                    if (selectedRecurrenceIndex != 0) {
+                      selectedRecurrence = recurrenceOptions.keys
+                          .elementAt(selectedRecurrenceIndex);
+                    }
+
+                    final Event newEvent = Event(selectedCalendarId!,
+                        eventId: null,
+                        start: tz.TZDateTime.from(startDate, local),
+                        end: tz.TZDateTime.from(endDate, local),
+                        title: title,
+                        description: description,
+                        recurrenceRule: selectedRecurrence,
+                        reminders: [selectedReminder]);
                     var result = await deviceCalendarPlugin
                         .createOrUpdateEvent(newEvent);
                     newEvent.eventId = result?.data!;
