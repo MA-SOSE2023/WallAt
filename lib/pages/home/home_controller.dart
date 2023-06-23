@@ -1,15 +1,34 @@
+import 'package:device_calendar/device_calendar.dart';
+
 import 'home_model.dart';
 import '/pages/home/home_view.dart';
 import '/pages/single_item/model/item_event.dart';
 
 List<ItemEvent> mockEvents = [
-  ItemEvent(
-      description:
-          "Example Event with very long text that will surely overflow the screen",
-      date: DateTime.now(),
-      parentId: '1'),
-  ItemEvent(description: "Example Event", date: DateTime.now(), parentId: '1'),
-  ItemEvent(description: "Example Event", date: DateTime.now(), parentId: '1')
+  // ItemEvent(
+  //     event: Event("1",
+  //         eventId: null,
+  //         title: 'Example Event',
+  //         description: 'Example Description',
+  //         start: TZDateTime.now(local),
+  //         end: TZDateTime.now(local)),
+  //     parentId: "1"),
+  // ItemEvent(
+  //     event: Event("1",
+  //         eventId: null,
+  //         title: 'Example Event',
+  //         description: 'Example Description',
+  //         start: TZDateTime.now(local),
+  //         end: TZDateTime.now(local)),
+  //     parentId: "1"),
+  // ItemEvent(
+  //     event: Event("1",
+  //         eventId: null,
+  //         title: 'Example Event',
+  //         description: 'Example Description',
+  //         start: TZDateTime.now(local),
+  //         end: TZDateTime.now(local)),
+  //     parentId: "1"),
 ];
 
 class HomeControllerMock extends HomeController {

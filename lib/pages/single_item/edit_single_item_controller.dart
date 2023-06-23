@@ -2,10 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gruppe4/pages/single_item/single_item_view.dart';
+import 'package:device_calendar/device_calendar.dart';
 import 'model/single_item.dart';
 import 'edit_single_item_view.dart';
 import 'single_item_controller.dart';
 import 'model/item_event.dart';
+
 import '/common/provider.dart';
 
 class EditSingleItemControllerMock extends EditSingleItemController {
@@ -70,6 +72,13 @@ class EditSingleItemControllerMock extends EditSingleItemController {
 
   @override
   void removeEvent(ItemEvent event) {
+    print("EventID" + event.event.eventId!);
+    print("CalendarID" + event.event.calendarId!);
+    DeviceCalendarPlugin deviceCalendarPlugin = DeviceCalendarPlugin();
+    var res = deviceCalendarPlugin.deleteEvent(
+        event.event.calendarId!, event.event.eventId!);
+    print(res);
+
     state = state.copyWith(
         events: List<ItemEvent>.from(state.events)..remove(event));
   }

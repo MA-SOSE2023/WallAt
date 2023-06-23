@@ -8,8 +8,10 @@ import 'package:gruppe4/router/router.dart';
 
 import 'pages/single_item/single_item_view.dart';
 import 'pages/single_item/edit_single_item_view.dart';
+import 'package:timezone/data/latest.dart' as tz;
 
-void main() => runApp(const ProviderScope(child: MyApp()));
+void main() =>
+    {tz.initializeTimeZones(), runApp(const ProviderScope(child: MyApp()))};
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);

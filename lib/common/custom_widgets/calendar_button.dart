@@ -1,11 +1,14 @@
-import 'dart:collection';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../provider.dart';
+import '/pages/single_item/single_item_view.dart';
+
 import 'package:device_calendar/device_calendar.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:intl/intl.dart';
+import '/pages/single_item/model/item_event.dart';
 
 class CalendarButton extends ConsumerStatefulWidget {
   const CalendarButton({required this.id, Key? key}) : super(key: key);
@@ -276,10 +279,15 @@ class _CalendarButtonState extends ConsumerState<CalendarButton> {
                     );
                     var result = await deviceCalendarPlugin
                         .createOrUpdateEvent(newEvent);
-
                     newEvent.eventId = result?.data!;
 
-                    print("I am here");
+                    ref
+                        .read(Providers.editSingleItemControllerProvider(
+                                widget.id)
+                            .notifier)
+                        .addEvent(
+                            ItemEvent(event: newEvent, parentId: widget.id));
+
                     Navigator.pop(context);
                     // Event added successfully
                   },
