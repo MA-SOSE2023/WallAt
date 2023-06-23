@@ -17,7 +17,7 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$HomeModel {
   List<ItemEvent> get events => throw _privateConstructorUsedError;
-  List<String> get itemIds => throw _privateConstructorUsedError;
+  List<SingleItem> get recentItems => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $HomeModelCopyWith<HomeModel> get copyWith =>
@@ -29,7 +29,7 @@ abstract class $HomeModelCopyWith<$Res> {
   factory $HomeModelCopyWith(HomeModel value, $Res Function(HomeModel) then) =
       _$HomeModelCopyWithImpl<$Res, HomeModel>;
   @useResult
-  $Res call({List<ItemEvent> events, List<String> itemIds});
+  $Res call({List<ItemEvent> events, List<SingleItem> recentItems});
 }
 
 /// @nodoc
@@ -46,17 +46,17 @@ class _$HomeModelCopyWithImpl<$Res, $Val extends HomeModel>
   @override
   $Res call({
     Object? events = null,
-    Object? itemIds = null,
+    Object? recentItems = null,
   }) {
     return _then(_value.copyWith(
       events: null == events
           ? _value.events
           : events // ignore: cast_nullable_to_non_nullable
               as List<ItemEvent>,
-      itemIds: null == itemIds
-          ? _value.itemIds
-          : itemIds // ignore: cast_nullable_to_non_nullable
-              as List<String>,
+      recentItems: null == recentItems
+          ? _value.recentItems
+          : recentItems // ignore: cast_nullable_to_non_nullable
+              as List<SingleItem>,
     ) as $Val);
   }
 }
@@ -68,7 +68,7 @@ abstract class _$$_HomeModelCopyWith<$Res> implements $HomeModelCopyWith<$Res> {
       __$$_HomeModelCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({List<ItemEvent> events, List<String> itemIds});
+  $Res call({List<ItemEvent> events, List<SingleItem> recentItems});
 }
 
 /// @nodoc
@@ -83,17 +83,17 @@ class __$$_HomeModelCopyWithImpl<$Res>
   @override
   $Res call({
     Object? events = null,
-    Object? itemIds = null,
+    Object? recentItems = null,
   }) {
     return _then(_$_HomeModel(
       events: null == events
           ? _value._events
           : events // ignore: cast_nullable_to_non_nullable
               as List<ItemEvent>,
-      itemIds: null == itemIds
-          ? _value._itemIds
-          : itemIds // ignore: cast_nullable_to_non_nullable
-              as List<String>,
+      recentItems: null == recentItems
+          ? _value._recentItems
+          : recentItems // ignore: cast_nullable_to_non_nullable
+              as List<SingleItem>,
     ));
   }
 }
@@ -103,9 +103,9 @@ class __$$_HomeModelCopyWithImpl<$Res>
 class _$_HomeModel implements _HomeModel {
   const _$_HomeModel(
       {required final List<ItemEvent> events,
-      required final List<String> itemIds})
+      required final List<SingleItem> recentItems})
       : _events = events,
-        _itemIds = itemIds;
+        _recentItems = recentItems;
 
   final List<ItemEvent> _events;
   @override
@@ -115,17 +115,17 @@ class _$_HomeModel implements _HomeModel {
     return EqualUnmodifiableListView(_events);
   }
 
-  final List<String> _itemIds;
+  final List<SingleItem> _recentItems;
   @override
-  List<String> get itemIds {
-    if (_itemIds is EqualUnmodifiableListView) return _itemIds;
+  List<SingleItem> get recentItems {
+    if (_recentItems is EqualUnmodifiableListView) return _recentItems;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_itemIds);
+    return EqualUnmodifiableListView(_recentItems);
   }
 
   @override
   String toString() {
-    return 'HomeModel(events: $events, itemIds: $itemIds)';
+    return 'HomeModel(events: $events, recentItems: $recentItems)';
   }
 
   @override
@@ -134,14 +134,15 @@ class _$_HomeModel implements _HomeModel {
         (other.runtimeType == runtimeType &&
             other is _$_HomeModel &&
             const DeepCollectionEquality().equals(other._events, _events) &&
-            const DeepCollectionEquality().equals(other._itemIds, _itemIds));
+            const DeepCollectionEquality()
+                .equals(other._recentItems, _recentItems));
   }
 
   @override
   int get hashCode => Object.hash(
       runtimeType,
       const DeepCollectionEquality().hash(_events),
-      const DeepCollectionEquality().hash(_itemIds));
+      const DeepCollectionEquality().hash(_recentItems));
 
   @JsonKey(ignore: true)
   @override
@@ -153,12 +154,12 @@ class _$_HomeModel implements _HomeModel {
 abstract class _HomeModel implements HomeModel {
   const factory _HomeModel(
       {required final List<ItemEvent> events,
-      required final List<String> itemIds}) = _$_HomeModel;
+      required final List<SingleItem> recentItems}) = _$_HomeModel;
 
   @override
   List<ItemEvent> get events;
   @override
-  List<String> get itemIds;
+  List<SingleItem> get recentItems;
   @override
   @JsonKey(ignore: true)
   _$$_HomeModelCopyWith<_$_HomeModel> get copyWith =>

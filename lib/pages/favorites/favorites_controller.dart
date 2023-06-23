@@ -1,17 +1,8 @@
-import 'home_model.dart';
-import 'home_view.dart';
-import '/pages/single_item/model/single_item.dart';
-import '/pages/single_item/model/item_event.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-List<ItemEvent> _mockEvents = [
-  ItemEvent(
-      description:
-          "Example Event with very long text that will surely overflow the screen",
-      date: DateTime.now(),
-      parentId: '1'),
-  ItemEvent(description: "Example Event", date: DateTime.now(), parentId: '1'),
-  ItemEvent(description: "Example Event", date: DateTime.now(), parentId: '1')
-];
+import 'favorites_view.dart';
+import '/pages/single_item/model/item_event.dart';
+import '/pages/single_item/model/single_item.dart';
 
 SingleItem _mockSingleItem(int id) => SingleItem(
       id: '$id',
@@ -50,7 +41,9 @@ List<SingleItem> _mockItems = [
   _mockSingleItem(_id++).copyWith(title: 'Sorry, one more'),
 ];
 
-class HomeControllerMock extends HomeController {
-  HomeControllerMock()
-      : super(HomeModel(events: _mockEvents, recentItems: _mockItems));
+class FavoritesControllerMock extends FavoritesController {
+  FavoritesControllerMock() : super(_mockItems);
+
+  @override
+  List<SingleItem> get favorites => state;
 }

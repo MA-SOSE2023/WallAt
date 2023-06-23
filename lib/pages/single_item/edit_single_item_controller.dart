@@ -1,12 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gruppe4/pages/single_item/single_item_view.dart';
-import 'model/single_item.dart';
+
 import 'edit_single_item_view.dart';
 import 'single_item_controller.dart';
+import 'model/single_item.dart';
 import 'model/item_event.dart';
 import '/common/provider.dart';
+import '/pages/single_item/single_item_view.dart';
 
 class EditSingleItemControllerMock extends EditSingleItemController {
   EditSingleItemControllerMock({required String id, SingleItem? model})

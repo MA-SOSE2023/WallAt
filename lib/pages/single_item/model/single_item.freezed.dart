@@ -16,6 +16,7 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$SingleItem {
+  String get id => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
   String get description => throw _privateConstructorUsedError;
   String get image => throw _privateConstructorUsedError;
@@ -35,7 +36,8 @@ abstract class $SingleItemCopyWith<$Res> {
       _$SingleItemCopyWithImpl<$Res, SingleItem>;
   @useResult
   $Res call(
-      {String title,
+      {String id,
+      String title,
       String description,
       String image,
       bool isFavorite,
@@ -56,6 +58,7 @@ class _$SingleItemCopyWithImpl<$Res, $Val extends SingleItem>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = null,
     Object? title = null,
     Object? description = null,
     Object? image = null,
@@ -64,6 +67,10 @@ class _$SingleItemCopyWithImpl<$Res, $Val extends SingleItem>
     Object? currentSelectedDate = freezed,
   }) {
     return _then(_value.copyWith(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
       title: null == title
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
@@ -101,7 +108,8 @@ abstract class _$$_SingleItemCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String title,
+      {String id,
+      String title,
       String description,
       String image,
       bool isFavorite,
@@ -120,6 +128,7 @@ class __$$_SingleItemCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = null,
     Object? title = null,
     Object? description = null,
     Object? image = null,
@@ -128,6 +137,10 @@ class __$$_SingleItemCopyWithImpl<$Res>
     Object? currentSelectedDate = freezed,
   }) {
     return _then(_$_SingleItem(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
       title: null == title
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
@@ -160,7 +173,8 @@ class __$$_SingleItemCopyWithImpl<$Res>
 
 class _$_SingleItem implements _SingleItem {
   const _$_SingleItem(
-      {required this.title,
+      {required this.id,
+      required this.title,
       required this.description,
       required this.image,
       required this.isFavorite,
@@ -168,6 +182,8 @@ class _$_SingleItem implements _SingleItem {
       this.currentSelectedDate})
       : _events = events;
 
+  @override
+  final String id;
   @override
   final String title;
   @override
@@ -189,7 +205,7 @@ class _$_SingleItem implements _SingleItem {
 
   @override
   String toString() {
-    return 'SingleItem(title: $title, description: $description, image: $image, isFavorite: $isFavorite, events: $events, currentSelectedDate: $currentSelectedDate)';
+    return 'SingleItem(id: $id, title: $title, description: $description, image: $image, isFavorite: $isFavorite, events: $events, currentSelectedDate: $currentSelectedDate)';
   }
 
   @override
@@ -197,6 +213,7 @@ class _$_SingleItem implements _SingleItem {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_SingleItem &&
+            (identical(other.id, id) || other.id == id) &&
             (identical(other.title, title) || other.title == title) &&
             (identical(other.description, description) ||
                 other.description == description) &&
@@ -211,6 +228,7 @@ class _$_SingleItem implements _SingleItem {
   @override
   int get hashCode => Object.hash(
       runtimeType,
+      id,
       title,
       description,
       image,
@@ -227,13 +245,16 @@ class _$_SingleItem implements _SingleItem {
 
 abstract class _SingleItem implements SingleItem {
   const factory _SingleItem(
-      {required final String title,
+      {required final String id,
+      required final String title,
       required final String description,
       required final String image,
       required final bool isFavorite,
       required final List<ItemEvent> events,
       final DateTime? currentSelectedDate}) = _$_SingleItem;
 
+  @override
+  String get id;
   @override
   String get title;
   @override

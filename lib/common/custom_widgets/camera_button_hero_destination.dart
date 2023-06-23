@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '/common/custom_widgets/bottom_nav_bar/bottom_nav_bar_model.dart';
+import 'bottom_nav_bar/bottom_nav_bar_model.dart';
 import '/common/provider.dart';
 
 const String cameraButtonHeroTag = 'cameraFloatingActionButtonHero';
