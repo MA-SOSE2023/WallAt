@@ -15,7 +15,7 @@ List<ItemEvent> _mockEvents = [
           end: TZDateTime.now(local)),
       parentId: "1"),
   ItemEvent(
-      event: Event("1",
+      event: Event("2",
           eventId: null,
           title: 'Example Event',
           description: 'Example Description',
@@ -23,7 +23,7 @@ List<ItemEvent> _mockEvents = [
           end: TZDateTime.now(local)),
       parentId: "1"),
   ItemEvent(
-      event: Event("1",
+      event: Event("3",
           eventId: null,
           title: 'Example Event',
           description: 'Example Description',
@@ -38,7 +38,7 @@ SingleItem _mockSingleItem(int id) => SingleItem(
       description: 'Example Description',
       image: 'assets/dev_debug_images/hampter1.jpg',
       isFavorite: true,
-      events: _mockEvents,
+      events: _mockEvents.map((e) => e.copyWith(parentId: '$id')).toList(),
       currentSelectedDate: null,
     );
 

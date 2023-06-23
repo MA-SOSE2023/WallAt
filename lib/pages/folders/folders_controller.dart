@@ -1,3 +1,5 @@
+import 'package:device_calendar/device_calendar.dart';
+
 import '/pages/single_item/model/item_event.dart';
 import '/pages/single_item/model/single_item.dart';
 
@@ -7,12 +9,29 @@ import 'folders_view.dart';
 
 List<ItemEvent> _mockEvents = [
   ItemEvent(
-      description:
-          "Example Event with very long text that will surely overflow the screen",
-      date: DateTime.now(),
-      parentId: '1'),
-  ItemEvent(description: "Example Event", date: DateTime.now(), parentId: '1'),
-  ItemEvent(description: "Example Event", date: DateTime.now(), parentId: '1')
+      event: Event("1",
+          eventId: null,
+          title: 'Example Event',
+          description: 'Example Description',
+          start: TZDateTime.now(local),
+          end: TZDateTime.now(local)),
+      parentId: "1"),
+  ItemEvent(
+      event: Event("2",
+          eventId: null,
+          title: 'Example Event',
+          description: 'Example Description',
+          start: TZDateTime.now(local),
+          end: TZDateTime.now(local)),
+      parentId: "1"),
+  ItemEvent(
+      event: Event("3",
+          eventId: null,
+          title: 'Example Event',
+          description: 'Example Description',
+          start: TZDateTime.now(local),
+          end: TZDateTime.now(local)),
+      parentId: "1"),
 ];
 
 SingleItem _mockSingleItem(int id) => SingleItem(
@@ -21,8 +40,7 @@ SingleItem _mockSingleItem(int id) => SingleItem(
       description: 'Example Description',
       image: 'assets/dev_debug_images/hampter1.jpg',
       isFavorite: true,
-      events:
-          _mockEvents.map((event) => event.copyWith(parentId: '$id')).toList(),
+      events: _mockEvents.map((e) => e.copyWith(parentId: '$id')).toList(),
       currentSelectedDate: null,
     );
 
