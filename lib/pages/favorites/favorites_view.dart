@@ -12,7 +12,10 @@ import '/common/custom_widgets/all_custom_widgets.dart'
 import '/pages/single_item/model/single_item.dart';
 
 class FavoritesScreen extends ConsumerStatefulWidget {
-  const FavoritesScreen({super.key});
+  const FavoritesScreen({bool borderlessCards = true, super.key})
+      : _borderlessCards = borderlessCards;
+
+  final bool _borderlessCards;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -57,7 +60,9 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
           : const ErrorMessage(message: 'Filter could not be applied'),
       loading: () => const CupertinoActivityIndicator(),
       data: (filteredFavorites) => filteredFavorites.isNotEmpty
-          ? DocumentCardContainerList(items: filteredFavorites)
+          ? DocumentCardContainerList(
+              items: filteredFavorites,
+              borderlessCards: widget._borderlessCards)
           : Expanded(child: NoElementsMessage(message: emptyListMessage)),
     );
 
