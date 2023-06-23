@@ -5,10 +5,11 @@ import 'package:social_share/social_share.dart';
 
 import '../../common/provider.dart';
 import 'full_screen_image_view.dart';
-import 'model/single_item.dart';
 import 'edit_single_item_view.dart';
+import 'model/single_item.dart';
 import 'model/item_event.dart';
-import '../../common/custom_widgets/all_custom_widgets.dart';
+import '/common/provider.dart';
+import '/common/custom_widgets/all_custom_widgets.dart' show EventsContainer;
 
 String singleItemHeroTag(String id) {
   return "single_item_image$id";

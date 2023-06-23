@@ -1,8 +1,9 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:gruppe4/pages/single_item/single_item_view.dart';
 
-import '/common/custom_widgets/bottom_nav_bar/bottom_nav_bar_view.dart';
+import '/pages/single_item/single_item_view.dart';
+import '/common/custom_widgets/all_custom_widgets.dart'
+    show CustomBottomNavBarScreen;
 
 class GlobalLocation extends BeamLocation<BeamState> {
   // The previous location needs to be handled manually, because otherwise

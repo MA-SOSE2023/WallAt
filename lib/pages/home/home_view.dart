@@ -2,15 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
-import 'package:gruppe4/common/custom_widgets/document_card.dart';
 
 import 'home_model.dart';
 import '/common/provider.dart';
 import '/common/custom_widgets/all_custom_widgets.dart'
-    show EventCard, cameraButtonHeroTag;
+    show EventCard, DocumentCardContainerList, cameraButtonHeroTag;
 import '/router/router.dart';
-import '/pages/single_item/model/item_event.dart';
 import '/pages/single_item/model/single_item.dart';
+import '/pages/single_item/model/item_event.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -23,8 +22,7 @@ class HomeScreen extends ConsumerWidget {
               event: event,
             ))
         .toList();
-    final List<DocumentCard> documentCards =
-        model.itemIds.map((id) => DocumentCard(id: id)).toList();
+    final List<SingleItem> documentCards = model.recentItems;
     return Scaffold(
       appBar: const CupertinoNavigationBar(
         middle: Text('Home'),
@@ -32,7 +30,7 @@ class HomeScreen extends ConsumerWidget {
       backgroundColor: CupertinoTheme.of(context).scaffoldBackgroundColor,
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 15.0, right: 10.0),
+        padding: const EdgeInsets.only(right: 10.0, bottom: 15.0),
         child: FloatingActionButton(
           foregroundColor: CupertinoTheme.of(context).primaryContrastingColor,
           backgroundColor: CupertinoTheme.of(context).primaryColor,
@@ -44,66 +42,69 @@ class HomeScreen extends ConsumerWidget {
           ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.only(top: 10.0),
+      body: SafeArea(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            FlutterCarousel(
-              items: eventCards,
-              options: CarouselOptions(
-                initialPage: 0,
-                enableInfiniteScroll: true,
-                enlargeCenterPage: true,
-                showIndicator: true,
-                slideIndicator: CircularWaveSlideIndicator(
-                  currentIndicatorColor: CupertinoDynamicColor.resolve(
-                      CupertinoColors.activeBlue, context),
-                  indicatorBackgroundColor: CupertinoDynamicColor.resolve(
-                      CupertinoColors.systemGrey3, context),
+            ConstrainedBox(
+              constraints: BoxConstraints(
+                  maxHeight: MediaQuery.of(context).size.height / 4),
+              child: Padding(
+                padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+                child: FlutterCarousel(
+                  items: eventCards,
+                  options: CarouselOptions(
+                    initialPage: 0,
+                    enableInfiniteScroll: true,
+                    enlargeCenterPage: true,
+                    showIndicator: true,
+                    slideIndicator: CircularWaveSlideIndicator(
+                      currentIndicatorColor: CupertinoDynamicColor.resolve(
+                          CupertinoColors.activeBlue, context),
+                      indicatorBackgroundColor: CupertinoDynamicColor.resolve(
+                          CupertinoColors.systemGrey3, context),
+                    ),
+                    viewportFraction: 0.85,
+                    height: double.infinity,
+                  ),
                 ),
-                viewportFraction: 0.85,
-                height: MediaQuery.of(context).size.height / 5,
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
-              child: CupertinoListSection.insetGrouped(
-                header: Text(
-                  'Frequently Used',
-                  style: CupertinoTheme.of(context).textTheme.textStyle,
-                ),
+            Expanded(
+              child: DecoratedBox(
                 decoration: BoxDecoration(
-                  color: CupertinoTheme.of(context).scaffoldBackgroundColor,
-                  borderRadius: BorderRadius.circular(25),
+                  color: CupertinoDynamicColor.resolve(
+                      CupertinoColors.systemGrey6, context),
                 ),
-                children: [
-                  ConstrainedBox(
-                    constraints: BoxConstraints(
-                        maxHeight: MediaQuery.of(context).size.height / 2),
-                    child: ListView(
-                      children: [
-                        ...documentCards
-                            .sublist(0, documentCards.length - 1)
-                            .map(
-                          (card) {
-                            return Column(
-                              children: [
-                                card,
-                                const Divider(
-                                  height: 0,
-                                  thickness: 1,
-                                  indent: 64,
-                                ),
-                              ],
-                            );
-                          },
-                        ).toList(),
-                        documentCards.last,
-                      ],
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Padding(
+                      padding:
+                          EdgeInsets.only(left: 20.0, top: 20.0, bottom: 5.0),
+                      child: Text(
+                        'Frequently Used',
+                        style: TextStyle(
+                            fontSize: 16, color: CupertinoColors.systemGrey),
+                      ),
                     ),
-                  ),
-                ],
+                    Expanded(
+                      child: Container(
+                        margin: const EdgeInsets.only(
+                            left: 20.0, right: 20.0, bottom: 10),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(25),
+                          color: CupertinoTheme.of(context)
+                              .scaffoldBackgroundColor,
+                        ),
+                        child: DocumentCardContainerList(
+                          items: documentCards,
+                          showFavoriteButton: false,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
@@ -117,5 +118,5 @@ abstract class HomeController extends StateNotifier<HomeModel> {
   HomeController(HomeModel state) : super(state);
 
   List<ItemEvent> get events => state.events;
-  List<String> get itemIds => state.itemIds;
+  List<SingleItem> get recentItems => state.recentItems;
 }

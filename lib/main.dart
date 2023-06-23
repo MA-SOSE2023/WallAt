@@ -11,6 +11,9 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CupertinoApp.router(
+      theme: const CupertinoThemeData(
+        brightness: Brightness.dark,
+      ),
       localizationsDelegates: const [
         DefaultCupertinoLocalizations.delegate,
         DefaultMaterialLocalizations.delegate,

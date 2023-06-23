@@ -3,11 +3,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'bottom_nav_bar_model.dart';
 import '/common/provider.dart';
 import '/router/router.dart';
 
-import 'bottom_nav_bar_model.dart';
 export 'bottom_nav_bar_model.dart';
+export 'bottom_nav_bar_controller.dart';
 
 class CustomBottomNavBarScreen extends StatelessWidget {
   const CustomBottomNavBarScreen({super.key});

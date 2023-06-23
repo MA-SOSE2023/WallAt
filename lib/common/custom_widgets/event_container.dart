@@ -10,6 +10,7 @@ import 'package:intl/intl.dart';
 import 'package:timezone/data/latest.dart' as tz;
 
 import '/common/provider.dart';
+import '/pages/single_item/single_item_view.dart';
 
 class EventsContainer extends ConsumerWidget {
   const EventsContainer({Key? key, required this.id, required this.editable})

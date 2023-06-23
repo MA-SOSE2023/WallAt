@@ -13,7 +13,7 @@ class FavoritesLocation extends BeamLocation<BeamState> {
           key: ValueKey('favorites'),
           title: 'Favorites',
           type: BeamPageType.noTransition,
-          child: FavoritesScren(),
+          child: FavoritesScreen(),
         ),
       ];
 }

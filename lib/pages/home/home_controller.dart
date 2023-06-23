@@ -1,38 +1,62 @@
 import 'package:device_calendar/device_calendar.dart';
 
 import 'home_model.dart';
-import '/pages/home/home_view.dart';
+import 'home_view.dart';
+import '/pages/single_item/model/single_item.dart';
 import '/pages/single_item/model/item_event.dart';
 
-List<ItemEvent> mockEvents = [
-  // ItemEvent(
-  //     event: Event("1",
-  //         eventId: null,
-  //         title: 'Example Event',
-  //         description: 'Example Description',
-  //         start: TZDateTime.now(local),
-  //         end: TZDateTime.now(local)),
-  //     parentId: "1"),
-  // ItemEvent(
-  //     event: Event("1",
-  //         eventId: null,
-  //         title: 'Example Event',
-  //         description: 'Example Description',
-  //         start: TZDateTime.now(local),
-  //         end: TZDateTime.now(local)),
-  //     parentId: "1"),
-  // ItemEvent(
-  //     event: Event("1",
-  //         eventId: null,
-  //         title: 'Example Event',
-  //         description: 'Example Description',
-  //         start: TZDateTime.now(local),
-  //         end: TZDateTime.now(local)),
-  //     parentId: "1"),
+List<ItemEvent> _mockEvents = [
+  ItemEvent(
+      event: Event("1",
+          eventId: null,
+          title: 'Example Event',
+          description: 'Example Description',
+          start: TZDateTime.now(local),
+          end: TZDateTime.now(local)),
+      parentId: "1"),
+  ItemEvent(
+      event: Event("1",
+          eventId: null,
+          title: 'Example Event',
+          description: 'Example Description',
+          start: TZDateTime.now(local),
+          end: TZDateTime.now(local)),
+      parentId: "1"),
+  ItemEvent(
+      event: Event("1",
+          eventId: null,
+          title: 'Example Event',
+          description: 'Example Description',
+          start: TZDateTime.now(local),
+          end: TZDateTime.now(local)),
+      parentId: "1"),
+];
+
+SingleItem _mockSingleItem(int id) => SingleItem(
+      id: '$id',
+      title: 'Example Title',
+      description: 'Example Description',
+      image: 'assets/dev_debug_images/hampter1.jpg',
+      isFavorite: true,
+      events: _mockEvents,
+      currentSelectedDate: null,
+    );
+
+var _id = 0;
+
+List<SingleItem> _mockItems = [
+  _mockSingleItem(_id++),
+  _mockSingleItem(_id++).copyWith(title: 'Another Title'),
+  _mockSingleItem(_id++).copyWith(title: 'Yet Another Title'),
+  _mockSingleItem(_id++).copyWith(title: 'One More Title'),
+  _mockSingleItem(_id++).copyWith(title: 'Last Title'),
+  _mockSingleItem(_id++).copyWith(title: 'Last Last Title'),
+  _mockSingleItem(_id++).copyWith(title: 'Last One For Sure'),
+  _mockSingleItem(_id++).copyWith(title: 'Promise, this is the last'),
+  _mockSingleItem(_id++).copyWith(title: 'Sorry, one more'),
 ];
 
 class HomeControllerMock extends HomeController {
   HomeControllerMock()
-      : super(HomeModel(
-            events: mockEvents, itemIds: ['1', '2', '3', '4', '5', '6']));
+      : super(HomeModel(events: _mockEvents, recentItems: _mockItems));
 }
