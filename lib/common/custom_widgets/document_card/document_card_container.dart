@@ -10,28 +10,33 @@ class DocumentCardContainer extends ConsumerWidget {
     required SingleItem item,
     BoxDecoration? containerDeco,
     Color? backgroundColor,
+    bool? showFavoriteButton,
     super.key,
   })  : _item = item,
         _containerDeco = containerDeco,
-        _backgroundColor = backgroundColor;
+        _backgroundColor = backgroundColor,
+        _showFavoriteButton = showFavoriteButton ?? true;
 
   DocumentCardContainer.borderless({
     required SingleItem item,
     Color? backgroundColor,
+    bool? showFavoriteButton,
     super.key,
   })  : _item = item,
         _containerDeco = BoxDecoration(
           color: backgroundColor,
         ),
-        _backgroundColor = backgroundColor;
+        _backgroundColor = backgroundColor,
+        _showFavoriteButton = showFavoriteButton ?? true;
 
   final SingleItem _item;
   final BoxDecoration? _containerDeco;
   final Color? _backgroundColor;
+  final bool _showFavoriteButton;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Container(
+    return DecoratedBox(
       decoration: _containerDeco ??
           BoxDecoration(
             color: _backgroundColor ??
@@ -46,14 +51,16 @@ class DocumentCardContainer extends ConsumerWidget {
       child: Row(
         children: [
           Expanded(child: DocumentCard(item: _item)),
-          CupertinoButton(
-            onPressed: ref
-                .read(Providers.singleItemControllerProvider(_item.id).notifier)
-                .setFavorite,
-            child: Icon(_item.isFavorite
-                ? CupertinoIcons.heart_fill
-                : CupertinoIcons.heart),
-          ),
+          if (_showFavoriteButton)
+            CupertinoButton(
+              onPressed: ref
+                  .read(
+                      Providers.singleItemControllerProvider(_item.id).notifier)
+                  .setFavorite,
+              child: Icon(_item.isFavorite
+                  ? CupertinoIcons.heart_fill
+                  : CupertinoIcons.heart),
+            ),
         ],
       ),
     );

@@ -63,7 +63,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
           ? DocumentCardContainerList(
               items: filteredFavorites,
               borderlessCards: widget._borderlessCards)
-          : Expanded(child: NoElementsMessage(message: emptyListMessage)),
+          : NoElementsMessage(message: emptyListMessage),
     );
 
     return CupertinoPageScaffold(
@@ -81,7 +81,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  filterFavoritesFuture.hasValue ? body : Expanded(child: body),
+                  Expanded(child: filterFavoritesFuture.hasValue ? body : body),
                   // Search bar for filtering items
                   SearchBarContainer(onChanged: (text) {
                     setState(() {
