@@ -22,7 +22,6 @@ class DatePicker extends ConsumerWidget {
           child: GestureDetector(
             onTap: () {
               showCupertinoModalPopup<DateTime>(
-                //@TODO: move this into own wrapper class
                 context: context,
                 builder: (BuildContext context) {
                   return Container(

@@ -93,7 +93,6 @@ class SingleItemPage extends ConsumerWidget {
   }
 }
 
-//@TODO: move to custom widgets
 class PictureContainer extends StatelessWidget {
   const PictureContainer({
     Key? key,
@@ -171,16 +170,16 @@ class ActionButtons extends ConsumerWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        _buildActionButton(
+        CupertinoButton(
           onPressed: () {
             SocialShare.shareOptions(
               "Hello world",
               //@TODO: add the correct image path
             );
           },
-          icon: CupertinoIcons.share, // Use the Cupertino icon
+          child: const Icon(CupertinoIcons.share),
         ),
-        _buildActionButton(
+        CupertinoButton(
           onPressed: () {
             showModalBottomSheet(
               context: context,
@@ -189,34 +188,24 @@ class ActionButtons extends ConsumerWidget {
               builder: (context) => EditSingleItemPage(id: itemId),
             );
           },
-          icon: CupertinoIcons.slider_horizontal_3, // Use the Cupertino icon
+          child: const Icon(
+              CupertinoIcons.slider_horizontal_3), // Use the Cupertino icon
         ),
-        _buildActionButton(
+        CupertinoButton(
           onPressed: () {
             // Handle delete button logic
           },
-          icon: CupertinoIcons.delete, // Use the Cupertino icon
+          child: const Icon(CupertinoIcons.delete), // Use the Cupertino icon
         ),
-        _buildActionButton(
+        CupertinoButton(
           onPressed: () {
             controller.setFavorite();
           },
-          icon: controller.getFavorite()
+          child: Icon(controller.getFavorite()
               ? CupertinoIcons.heart_fill
-              : CupertinoIcons.heart, // Use the Cupertino icon
+              : CupertinoIcons.heart), // Use the Cupertino icon
         ),
       ],
-    );
-  }
-
-  //@TODO: remove
-  Widget _buildActionButton({
-    required VoidCallback onPressed,
-    required IconData icon,
-  }) {
-    return CupertinoButton(
-      onPressed: onPressed,
-      child: Icon(icon),
     );
   }
 }

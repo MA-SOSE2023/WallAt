@@ -96,7 +96,6 @@ class EditSingleItemPage extends ConsumerWidget {
                                               .getDescription()
                                               .length))),
                               decoration: BoxDecoration(
-                                //@TODO: make to variables
                                 border: Border.all(
                                   color: Colors.transparent,
                                 ),
