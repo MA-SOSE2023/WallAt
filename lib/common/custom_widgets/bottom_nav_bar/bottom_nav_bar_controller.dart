@@ -6,13 +6,44 @@ import 'bottom_nav_bar_view.dart';
 class CustomBottomNavBarControllerImpl extends CustomBottomNavBarController {
   CustomBottomNavBarControllerImpl() : super();
 
+  static const List<CustomBottomNavBarItem> _baseItems = [
+    CustomBottomNavBarItem(
+      icon: Icon(Icons.home),
+      activeIcon: Icon(Icons.home),
+      label: 'HOME',
+      initialLocation: '/home',
+    ),
+    CustomBottomNavBarItem(
+      icon: Icon(Icons.favorite_outline),
+      activeIcon: Icon(Icons.favorite),
+      label: 'FAVORITES',
+      initialLocation: '/favorites',
+    ),
+    CustomBottomNavBarItem(
+      icon: Icon(Icons.folder_open),
+      activeIcon: Icon(Icons.folder),
+      label: 'FOLDERS',
+      initialLocation: '/folders',
+    ),
+  ];
+
+  static const CustomBottomNavBarItem _cameraItem = CustomBottomNavBarItem(
+    icon: Icon(Icons.camera_alt_outlined),
+    activeIcon: Icon(Icons.camera_alt),
+    label: 'CAMERA',
+    initialLocation: '/camera',
+  );
+
+  static const CustomBottomNavBarItem _settingsItem = CustomBottomNavBarItem(
+    icon: Icon(Icons.settings_outlined),
+    activeIcon: Icon(Icons.settings),
+    label: 'SETTINGS',
+    initialLocation: '/settings',
+  );
+
   @override
-  List<CustomBottomNavBarItem> getNavBarItems() => [
-        ...CustomBottomNavBar.baseItems,
-        state.currentIndex == 0
-            ? CustomBottomNavBar.settingsItem
-            : CustomBottomNavBar.cameraItem
-      ];
+  List<CustomBottomNavBarItem> getNavBarItems() =>
+      [..._baseItems, state.currentIndex == 0 ? _settingsItem : _cameraItem];
 
   @override
   void goToOtherPage(int index, BuildContext context) {
