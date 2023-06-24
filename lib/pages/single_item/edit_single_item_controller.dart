@@ -17,6 +17,8 @@ class EditSingleItemControllerMock extends EditSingleItemController {
       : _id = id,
         super(model ?? mockSingleItem);
 
+  List<ItemEvent> newEvents = [];
+  List<ItemEvent> deletedEvents = [];
   final String _id;
   DateTime? _selectedDate;
 
@@ -32,6 +34,10 @@ class EditSingleItemControllerMock extends EditSingleItemController {
 
   @override
   void saveChanges(WidgetRef ref) {
+    removeEventsFromCalendar();
+    addEventsToCalendar();
+    state = state.copyWith(events: [...state.events, ...newEvents]);
+
     SingleItemController singleItemController =
         ref.read(Providers.singleItemControllerProvider(_id).notifier);
     singleItemController.state = state;
@@ -69,18 +75,17 @@ class EditSingleItemControllerMock extends EditSingleItemController {
 
   @override
   void addEvent(ItemEvent event) async {
-    DeviceCalendarPlugin deviceCalendarPlugin = DeviceCalendarPlugin();
-    var eventId = await deviceCalendarPlugin.createOrUpdateEvent(event.event);
-    event.event.eventId = eventId?.data!;
-
-    state = state.copyWith(events: [...state.events, event]);
+    newEvents.add(event);
+    state = state.copyWith(events: [...state.events]);
   }
 
   @override
   void removeEvent(ItemEvent event) {
-    DeviceCalendarPlugin deviceCalendarPlugin = DeviceCalendarPlugin();
-    deviceCalendarPlugin.deleteEvent(
-        event.event.calendarId!, event.event.eventId!);
+    if (event.event.eventId == null) {
+      newEvents.remove(event);
+    } else {
+      deletedEvents.add(event);
+    }
 
     state = state.copyWith(
         events: List<ItemEvent>.from(state.events)..remove(event));
@@ -88,7 +93,7 @@ class EditSingleItemControllerMock extends EditSingleItemController {
 
   @override
   List<ItemEvent> getEvents() {
-    return List<ItemEvent>.from(state.events);
+    return List<ItemEvent>.from(state.events + newEvents);
   }
 
   @override
@@ -109,6 +114,22 @@ class EditSingleItemControllerMock extends EditSingleItemController {
   @override
   void setFavorite() {
     state = state.copyWith(isFavorite: getFavorite() ? false : true);
+  }
+
+  void addEventsToCalendar() {
+    DeviceCalendarPlugin deviceCalendarPlugin = DeviceCalendarPlugin();
+    newEvents.forEach((event) async {
+      var eventId = await deviceCalendarPlugin.createOrUpdateEvent(event.event);
+      event.event.eventId = eventId?.data!;
+    });
+  }
+
+  void removeEventsFromCalendar() {
+    DeviceCalendarPlugin deviceCalendarPlugin = DeviceCalendarPlugin();
+    deletedEvents.forEach((event) async {
+      var res = await deviceCalendarPlugin.deleteEvent(
+          event.event.calendarId!, event.event.eventId!);
+    });
   }
 
   @override
