@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'folder_item.dart';
@@ -29,4 +30,7 @@ class Folder with _$Folder implements FolderItem {
   bool get isLeaf => false;
   @override
   bool get isFolder => true;
+
+  @override
+  get thumbnail => const Icon(CupertinoIcons.folder);
 }

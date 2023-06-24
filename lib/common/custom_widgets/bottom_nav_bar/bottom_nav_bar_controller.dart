@@ -1,4 +1,5 @@
 import 'package:beamer/beamer.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'bottom_nav_bar_view.dart';
@@ -8,13 +9,13 @@ class CustomBottomNavBarControllerImpl extends CustomBottomNavBarController {
 
   static const List<CustomBottomNavBarItem> _baseItems = [
     CustomBottomNavBarItem(
-      icon: Icon(Icons.home),
+      icon: Icon(Icons.home_outlined),
       activeIcon: Icon(Icons.home),
       label: 'HOME',
       initialLocation: '/home',
     ),
     CustomBottomNavBarItem(
-      icon: Icon(Icons.favorite_outline),
+      icon: Icon(CupertinoIcons.heart),
       activeIcon: Icon(Icons.favorite),
       label: 'FAVORITES',
       initialLocation: '/favorites',

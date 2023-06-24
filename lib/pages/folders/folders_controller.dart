@@ -1,4 +1,5 @@
 import 'package:device_calendar/device_calendar.dart';
+import 'package:flutter/cupertino.dart';
 
 import '/pages/single_item/model/item_event.dart';
 import '/pages/single_item/model/single_item.dart';
@@ -38,7 +39,7 @@ SingleItem _mockSingleItem(int id) => SingleItem(
       id: '$id',
       title: 'Example Title',
       description: 'Example Description',
-      image: 'assets/dev_debug_images/hampter1.jpg',
+      image: const AssetImage('assets/dev_debug_images/hampter1.jpg'),
       isFavorite: true,
       events: _mockEvents.map((e) => e.copyWith(parentId: '$id')).toList(),
       currentSelectedDate: null,
@@ -65,10 +66,13 @@ final Folder rootFolder = Folder(
     Folder(id: '1', title: 'Example Folder', contents: [
       Folder(id: '4', title: 'Example Subfolder', contents: _mockItems),
       Folder(id: '5', title: 'Another Subfolder', contents: _mockItems),
-      ..._mockItems,
+      ..._mockItems.take(2),
     ]),
     Folder(id: '2', title: 'Another Folder', contents: _mockItems),
-    Folder(id: '3', title: 'Yet Another Folder', contents: _mockItems),
+    Folder(
+        id: '3',
+        title: 'Yet Another Folder',
+        contents: _mockItems.take(7).toList()),
     ..._mockItems,
   ],
 );

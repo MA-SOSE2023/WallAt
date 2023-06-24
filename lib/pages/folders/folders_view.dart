@@ -1,13 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gruppe4/pages/single_item/model/single_item.dart';
 
 import 'folder_model.dart';
 import 'folder_item.dart';
 import '/common/provider.dart';
 import '/common/custom_widgets/all_custom_widgets.dart'
-    show DocumentCardContainer, CameraButtonHeroDestination;
+    show
+        FolderBubbleGrid,
+        DocumentCardContainerList,
+        CameraButtonHeroDestination;
+import '/pages/single_item/model/single_item.dart';
 
 class FoldersScreen extends ConsumerWidget {
   const FoldersScreen({super.key});
@@ -35,62 +38,29 @@ class FoldersScreen extends ConsumerWidget {
               const CupertinoSliverNavigationBar(
                 largeTitle: Text('Folders'),
               ),
-              // SliverGrid to display root level folders
-              SliverGrid(
-                gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: MediaQuery.of(context).size.width / 2,
-                  mainAxisSpacing: 10.0,
-                  crossAxisSpacing: 10.0,
-                ),
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) => Container(
-                    color: CupertinoTheme.of(context).primaryColor,
-                    child: Text(
-                        '${folders[index].title}: ${folders[index].contents.length} items'),
-                  ),
-                  childCount: folders.length,
-                ),
-              ),
-              SliverPrototypeExtentList(
-                delegate: SliverChildBuilderDelegate(
-                  (BuildContext context, int index) => Padding(
-                    padding: const EdgeInsets.only(top: 16.0),
-                    child: Column(
-                      children: [
-                        Divider(
-                            height: 16.0,
-                            thickness: 0.75,
-                            indent: 64.0,
-                            color: CupertinoDynamicColor.resolve(
-                                CupertinoColors.inactiveGray, context)),
-                        DocumentCardContainer.borderless(item: items[index]),
-                      ],
+              FolderBubbleGrid(folder: folders),
+              SliverPadding(
+                padding: const EdgeInsets.only(top: 20.0, bottom: 10.0),
+                sliver: SliverAppBar(
+                  automaticallyImplyLeading: false,
+                  pinned: false,
+                  toolbarHeight: 0.0,
+                  backgroundColor: CupertinoDynamicColor.resolve(
+                      CupertinoColors.systemGrey6, context),
+                  flexibleSpace: FlexibleSpaceBar(
+                    titlePadding: const EdgeInsets.only(bottom: 12),
+                    title: Divider(
+                      height: 0.75,
+                      thickness: 1,
+                      indent: 24,
+                      endIndent: 24,
+                      color: CupertinoDynamicColor.resolve(
+                          CupertinoColors.systemGrey, context),
                     ),
                   ),
-                  childCount: items.length,
-                ),
-                prototypeItem: Padding(
-                  padding: const EdgeInsets.only(top: 16.0),
-                  child: Column(
-                    children: [
-                      DocumentCardContainer.borderless(
-                        item: SingleItem(
-                          description: 'prototype',
-                          id: 'prototype',
-                          title: 'prototype',
-                          events: [],
-                          image: '',
-                          isFavorite: false,
-                        ),
-                      ),
-                      const Divider(
-                        height: 16.0,
-                        thickness: 0.75,
-                      )
-                    ],
-                  ),
                 ),
               ),
+              DocumentCardContainerList(items: items)
             ],
           ),
           const CameraButtonHeroDestination(),

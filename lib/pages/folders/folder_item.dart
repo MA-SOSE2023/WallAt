@@ -1,3 +1,5 @@
+import 'package:flutter/widgets.dart';
+
 import 'folder_model.dart';
 import '/pages/single_item/model/single_item.dart';
 
@@ -24,6 +26,8 @@ abstract class FolderItem {
   Folder? get maybeFolder => _folder;
   SingleItem get item => _item!;
   Folder get folder => _folder!;
+
+  Widget get thumbnail;
 
   bool get isLeaf => _isLeaf;
   bool get isFolder => !_isLeaf;

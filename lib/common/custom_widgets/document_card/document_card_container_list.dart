@@ -9,7 +9,7 @@ class DocumentCardContainerList extends StatelessWidget {
     required List<SingleItem> items,
     bool borderlessCards = true,
     bool showFavoriteButton = true,
-    double itemMargin = 16.0,
+    double itemMargin = 20.0,
     super.key,
   })  : _items = items,
         _borderlessCards = borderlessCards,
