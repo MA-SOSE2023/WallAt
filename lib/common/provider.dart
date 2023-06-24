@@ -15,7 +15,10 @@ import '/pages/home/home_model.dart';
 import '/pages/favorites/favorites_view.dart';
 import '/pages/favorites/favorites_controller.dart';
 
-// CalendarButton
+// Settings
+import '/pages/settings/settings_view.dart';
+import '/pages/settings/settings_controller.dart';
+import '/pages/settings/settings_model.dart';
 
 import 'custom_widgets/all_custom_widgets.dart';
 
@@ -67,10 +70,18 @@ class Providers {
   });
 
   /// Provider for [CalendarButton]
-  /// - Provides a [CalendarButtonController] for a [CalendarButton]
+  /// - Provides a [CalendarButtonController] for a [CalendarModel]
   static final StateNotifierProvider<CalendarButtonController, CalendarModel>
       calendarButtonControllerProvider =
       StateNotifierProvider<CalendarButtonController, CalendarModel>((ref) {
     return CalendarButtonControllerImpl();
+  });
+
+  /// Provider for [SettingsScreen]
+  /// - Provides a [SettingsController] for a [SettingsModel]
+  static final StateNotifierProvider<SettingsController, SettingsModel>
+      settingsControllerProvider =
+      StateNotifierProvider<SettingsController, SettingsModel>((ref) {
+    return SettingsControllerImpl();
   });
 }

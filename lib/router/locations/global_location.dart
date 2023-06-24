@@ -1,5 +1,6 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:gruppe4/pages/settings/settings_view.dart';
 
 import '/pages/single_item/single_item_view.dart';
 import '/common/custom_widgets/all_custom_widgets.dart'
@@ -45,7 +46,7 @@ class GlobalLocation extends BeamLocation<BeamState> {
             title: 'Settings',
             type: BeamPageType.cupertino,
             popToNamed: prevNavBarLocation,
-            child: Placeholder(), // TODO: Settings Screen
+            child: SettingsPage(), // TODO: Settings Screen
           ),
         if (state.routeInformation.location == '/camera')
           BeamPage(
