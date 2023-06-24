@@ -13,13 +13,10 @@ import '/common/custom_widgets/all_custom_widgets.dart'
 import '/pages/single_item/model/single_item.dart';
 
 class FoldersScreen extends ConsumerWidget {
-  const FoldersScreen(
-      {String folderId = '0', String? parentFolderName, super.key})
-      : _folderId = folderId,
-        _parentFolderName = parentFolderName;
+  const FoldersScreen({String folderId = '0', super.key})
+      : _folderId = folderId;
 
   final String _folderId;
-  final String? _parentFolderName;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -42,7 +39,6 @@ class FoldersScreen extends ConsumerWidget {
           CustomScrollView(
             slivers: [
               CupertinoSliverNavigationBar(
-                previousPageTitle: _parentFolderName,
                 largeTitle: Text(rootFolder.title),
               ),
               FolderBubbleGrid(folder: folders),

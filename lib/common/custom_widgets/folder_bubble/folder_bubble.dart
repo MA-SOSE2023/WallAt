@@ -19,8 +19,11 @@ class FolderBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget gridItem(FolderItem item,
-            {double padding = 4.0, VoidCallback? onTapped}) =>
+    Widget gridItem(
+      FolderItem item, {
+      double padding = 4.0,
+      VoidCallback? onTapped,
+    }) =>
         GestureDetector(
           onTap: onTapped ?? FolderItem.navigateTo(item, context),
           child: Container(
