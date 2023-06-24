@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:gruppe4/pages/single_item/single_item_view.dart';
 
 import 'item_event.dart';
 import '/pages/folders/folder_item.dart';
-import '/pages/folders/folder_model.dart';
 
 part 'single_item.freezed.dart';
 
@@ -39,6 +39,9 @@ class SingleItem extends FolderItem with _$SingleItem {
 
   @override
   get thumbnail => Image(image: image);
+
+  @override
+  get heroTag => singleItemHeroTag(id);
 
   @override
   List<FolderItem> get contents => throw UnsupportedError('Not a folder');

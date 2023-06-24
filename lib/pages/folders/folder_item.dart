@@ -1,9 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'folder_model.dart';
 import 'folders_view.dart';
 import '/pages/single_item/model/single_item.dart';
+import '/common/provider.dart';
 import '/router/router.dart';
 
 abstract class FolderItem {
@@ -31,19 +32,24 @@ abstract class FolderItem {
   List<FolderItem> get contents => maybeFolder!.contents;
 
   String get heroTag =>
-      isLeaf ? 'folderItem-item-$id' : 'folderItem-folder-$id';
+      isLeaf ? 'folderItem-itemHeroTag-$id' : 'folderItem-folderHeroTag-$id';
 
-  static VoidCallback navigateTo(FolderItem item, BuildContext context) {
+  static VoidCallback navigateTo(
+      FolderItem item, BuildContext context, WidgetRef ref) {
     if (item.isLeaf) {
       return () => Routers.globalRouterDelegate.beamToNamed(
             '/item/${item.id}',
           );
     } else {
-      return () => Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => FoldersScreen(folderId: item.id),
-            ),
-          );
+      return () => {
+            ref.read(Providers.enableHeroAnimationProvider.notifier).state =
+                true,
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => FoldersScreen(folderId: item.id),
+              ),
+            )
+          };
     }
   }
 }

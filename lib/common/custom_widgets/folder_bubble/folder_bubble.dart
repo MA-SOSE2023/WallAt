@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '/pages/folders/folder_item.dart';
 import '/pages/folders/folder_model.dart';
+import '/common/provider.dart';
 
-class FolderBubble extends StatelessWidget {
+class FolderBubble extends ConsumerWidget {
   const FolderBubble({required Folder folder, super.key}) : _folder = folder;
 
   final Folder _folder;
@@ -18,14 +20,16 @@ class FolderBubble extends StatelessWidget {
       );
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    ref.watch(Providers.enableHeroAnimationProvider);
+
     Widget gridItem(
       FolderItem item, {
       double padding = 4.0,
       VoidCallback? onTapped,
     }) =>
         GestureDetector(
-          onTap: onTapped ?? FolderItem.navigateTo(item, context),
+          onTap: onTapped ?? FolderItem.navigateTo(item, context, ref),
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(15.0),
@@ -37,7 +41,7 @@ class FolderBubble extends StatelessWidget {
               child: FittedBox(
                 fit: BoxFit.cover,
                 clipBehavior: Clip.hardEdge,
-                child: item.thumbnail,
+                child: Hero(tag: item.heroTag, child: item.thumbnail),
               ),
             ),
           ),
@@ -47,7 +51,9 @@ class FolderBubble extends StatelessWidget {
         items.take(3).map((item) => gridItem(item)).toList();
 
     Widget secondaryGrid() {
-      final VoidCallback onTapped = FolderItem.navigateTo(_folder, context);
+      final VoidCallback onTapped =
+          FolderItem.navigateTo(_folder, context, ref);
+
       if (_folder.contents.length > 7) {
         return GestureDetector(
             onTap: onTapped,

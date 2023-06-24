@@ -76,7 +76,7 @@ class Providers {
     return GlobalKey<NavigatorState>();
   });
 
-  static final enabelHeroAnimationProvider = StateProvider<bool>((ref) {
+  static final enableHeroAnimationProvider = StateProvider<bool>((ref) {
     return true;
   });
 }

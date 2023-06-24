@@ -47,33 +47,33 @@ SingleItem _mockSingleItem(int id) => SingleItem(
 
 var _id = 0;
 
-List<FolderItem> _mockItems = [
-  _mockSingleItem(_id++),
-  _mockSingleItem(_id++).copyWith(title: 'Another Title'),
-  _mockSingleItem(_id++).copyWith(title: 'Yet Another Title'),
-  _mockSingleItem(_id++).copyWith(title: 'One More Title'),
-  _mockSingleItem(_id++).copyWith(title: 'Last Title'),
-  _mockSingleItem(_id++).copyWith(title: 'Last Last Title'),
-  _mockSingleItem(_id++).copyWith(title: 'Last One For Sure'),
-  _mockSingleItem(_id++).copyWith(title: 'Promise, this is the last'),
-  _mockSingleItem(_id++).copyWith(title: 'Sorry, one more'),
-];
+List<FolderItem> _mockItems() => [
+      _mockSingleItem(_id++),
+      _mockSingleItem(_id++).copyWith(title: 'Another Title'),
+      _mockSingleItem(_id++).copyWith(title: 'Yet Another Title'),
+      _mockSingleItem(_id++).copyWith(title: 'One More Title'),
+      _mockSingleItem(_id++).copyWith(title: 'Last Title'),
+      _mockSingleItem(_id++).copyWith(title: 'Last Last Title'),
+      _mockSingleItem(_id++).copyWith(title: 'Last One For Sure'),
+      _mockSingleItem(_id++).copyWith(title: 'Promise, this is the last'),
+      _mockSingleItem(_id++).copyWith(title: 'Sorry, one more'),
+    ];
 
 final Folder rootFolder = Folder(
   id: '0',
   title: 'Folders',
   contents: [
     Folder(id: '1', title: 'Example Folder', contents: [
-      Folder(id: '4', title: 'Example Subfolder', contents: _mockItems),
-      Folder(id: '5', title: 'Another Subfolder', contents: _mockItems),
-      ..._mockItems.take(2),
+      Folder(id: '4', title: 'Example Subfolder', contents: _mockItems()),
+      Folder(id: '5', title: 'Another Subfolder', contents: _mockItems()),
+      ..._mockItems().take(2),
     ]),
-    Folder(id: '2', title: 'Another Folder', contents: _mockItems),
+    Folder(id: '2', title: 'Another Folder', contents: _mockItems()),
     Folder(
         id: '3',
         title: 'Yet Another Folder',
-        contents: _mockItems.take(7).toList()),
-    ..._mockItems,
+        contents: _mockItems().take(7).toList()),
+    ..._mockItems(),
   ],
 );
 
