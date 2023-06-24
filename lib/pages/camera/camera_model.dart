@@ -1,14 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+part 'camera_model.freezed.dart';
 
-class TakePictureModel extends ChangeNotifier {
-  List<String> _pictures = [];
-
-  List<String> get pictures => _pictures;
-
-  void setPictures(List<String> pictures) {
-    _pictures = pictures;
-    notifyListeners();
-  }
+@freezed
+class TakePictureModel with _$TakePictureModel {
+  const factory TakePictureModel({
+    required List<String> pictures,
+  }) = _TakePictureModel;
 }
