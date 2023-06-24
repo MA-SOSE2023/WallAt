@@ -1,48 +1,34 @@
-import 'dart:async';
 import 'dart:io';
 
-import 'package:cunning_document_scanner/cunning_document_scanner.dart';
 import 'package:flutter/cupertino.dart';
+import '/pages/camera/camera_controller.dart';
+import '/pages/camera/camera_model.dart';
 
-
-class TakePictureScreen extends StatefulWidget {
+class TakePictureScreen extends StatelessWidget {
   
   const TakePictureScreen({Key? key}) : super(key: key);
 
   @override
-  TakePictureScreenState createState() => TakePictureScreenState();
-}
+  Widget build(BuildContext context) {
+    final controller = TakePictureController();
+    final model = TakePictureModel();
 
-class TakePictureScreenState extends State<TakePictureScreen> {
-  List<String> _pictures = [];
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      takePicture();
-    });
-  }
-
-  void takePicture() async {
-    List<String> pictures;
-    try {
-      pictures = await CunningDocumentScanner.getPictures() ?? [];
-      setState(() {
-        _pictures = pictures;
+    Future<void> initPlatformState() async {
+      final pictures = await controller.takePicture();
+      if (pictures != null) {
+        model.setPictures(pictures);
         Navigator.of(context).push(
           CupertinoPageRoute(
-            builder: (_) => DisplayPicturesScreen(pictures: _pictures),
+            builder: (_) => DisplayPicturesScreen(model: model),
           ),
         );
-      });
-    } catch (exception) {
-      // Handle exception here
+      }
     }
-  }
 
-  @override
-  Widget build(BuildContext context) {
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      initPlatformState();
+    });
+
     return const CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
         middle: Text('Take a picture'),
@@ -53,10 +39,10 @@ class TakePictureScreenState extends State<TakePictureScreen> {
 }
 
 class DisplayPicturesScreen extends StatelessWidget {
-  final List<String> pictures;
+  
+  final TakePictureModel model;
 
-  const DisplayPicturesScreen({Key? key, required this.pictures})
-      : super(key: key);
+  const DisplayPicturesScreen({Key? key, required this.model}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -64,13 +50,22 @@ class DisplayPicturesScreen extends StatelessWidget {
       navigationBar: const CupertinoNavigationBar(
         middle: Text('Captured Pictures'),
       ),
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            for (var picture in pictures) Image.file(File(picture)),
-          ],
+      child: Center(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              for (var picture in model.pictures)
+                Align(
+                  alignment: Alignment.center,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 100),
+                    child: Image.file(File(picture)),
+                  ),
+                ),
+            ],
+          ),
         ),
-      ),
+      )
     );
   }
 }
