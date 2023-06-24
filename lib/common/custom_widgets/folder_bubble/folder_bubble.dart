@@ -19,18 +19,23 @@ class FolderBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget gridItem(FolderItem item, {double padding = 4.0}) => Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15.0),
-            color: CupertinoDynamicColor.resolve(
-                CupertinoColors.systemGrey6, context),
-          ),
-          child: Padding(
-            padding: EdgeInsets.all(padding),
-            child: FittedBox(
-              fit: BoxFit.cover,
-              clipBehavior: Clip.hardEdge,
-              child: item.thumbnail,
+    Widget gridItem(FolderItem item,
+            {double padding = 4.0, VoidCallback? onTapped}) =>
+        GestureDetector(
+          onTap: onTapped ?? FolderItem.navigateTo(item, context),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15.0),
+              color: CupertinoDynamicColor.resolve(
+                  CupertinoColors.systemGrey6, context),
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(padding),
+              child: FittedBox(
+                fit: BoxFit.cover,
+                clipBehavior: Clip.hardEdge,
+                child: item.thumbnail,
+              ),
             ),
           ),
         );
@@ -38,20 +43,28 @@ class FolderBubble extends StatelessWidget {
     List<Widget> threeMainItems(List<FolderItem> items) =>
         items.take(3).map((item) => gridItem(item)).toList();
 
-    List<Widget> secondaryItems() {
+    Widget secondaryGrid() {
+      final VoidCallback onTapped = FolderItem.navigateTo(_folder, context);
       if (_folder.contents.length > 7) {
-        return [
+        return itemGrid([
           ..._folder.contents
               .sublist(3, 6)
-              .map((item) => gridItem(item, padding: 0.0))
+              .map((item) => gridItem(item, padding: 0.0, onTapped: onTapped))
               .toList(),
-          const Icon(CupertinoIcons.ellipsis, color: CupertinoColors.systemGrey)
-        ];
+          GestureDetector(
+            onTap: onTapped,
+            child: const Icon(CupertinoIcons.ellipsis,
+                color: CupertinoColors.systemGrey),
+          )
+        ]);
       } else {
-        return _folder.contents
-            .sublist(3)
-            .map((item) => gridItem(item, padding: 0.0))
-            .toList();
+        return GestureDetector(
+          onTap: onTapped,
+          child: itemGrid(_folder.contents
+              .sublist(3)
+              .map((item) => gridItem(item, padding: 0.0, onTapped: onTapped))
+              .toList()),
+        );
       }
     }
 
@@ -68,7 +81,7 @@ class FolderBubble extends StatelessWidget {
             child: itemGrid(
               [
                 ...threeMainItems(_folder.contents),
-                if (_folder.contents.length > 3) itemGrid(secondaryItems()),
+                secondaryGrid(),
               ],
             ),
           ),

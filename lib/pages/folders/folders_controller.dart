@@ -61,7 +61,7 @@ List<FolderItem> _mockItems = [
 
 final Folder rootFolder = Folder(
   id: '0',
-  title: 'Root',
+  title: 'Folders',
   contents: [
     Folder(id: '1', title: 'Example Folder', contents: [
       Folder(id: '4', title: 'Example Subfolder', contents: _mockItems),

@@ -1,7 +1,9 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/cupertino.dart';
 
 import 'folder_model.dart';
+import 'folders_view.dart';
 import '/pages/single_item/model/single_item.dart';
+import '/router/router.dart';
 
 abstract class FolderItem {
   FolderItem({
@@ -36,4 +38,18 @@ abstract class FolderItem {
   String get title => maybeItem?.title ?? maybeFolder!.title;
 
   List<FolderItem> get contents => maybeFolder!.contents;
+
+  static VoidCallback navigateTo(FolderItem item, BuildContext context) {
+    if (item.isLeaf) {
+      return () => Routers.globalRouterDelegate.beamToNamed(
+            '/item/${item.id}',
+          );
+    } else {
+      return () => Navigator.of(context).push(
+            CupertinoPageRoute(
+              builder: (context) => FoldersScreen(folderId: item.id),
+            ),
+          );
+    }
+  }
 }
