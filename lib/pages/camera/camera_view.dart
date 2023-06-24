@@ -1,3 +1,4 @@
+import 'package:beamer/beamer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gruppe4/common/provider.dart';
@@ -17,15 +18,7 @@ class TakePictureScreen extends ConsumerWidget {
         ref.read(Providers.takePictureControllerProvider.notifier);
 
     Future<void> initPlatformState() async {
-      final pictures = await controller.takePicture();
-      if (pictures != null) {
-        controller.setPictures(pictures);
-        Navigator.of(context).push(
-          CupertinoPageRoute(
-            builder: (_) => DisplayPicturesScreen(model: model),
-          ),
-        );
-      }
+      controller.takePicture();
     }
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -41,16 +34,21 @@ class TakePictureScreen extends ConsumerWidget {
   }
 }
 
-class DisplayPicturesScreen extends StatelessWidget {
+class DisplayPicturesScreen extends ConsumerWidget {
   final TakePictureModel model;
 
   const DisplayPicturesScreen({Key? key, required this.model})
       : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return CupertinoPageScaffold(
-        navigationBar: const CupertinoNavigationBar(
+        navigationBar: CupertinoNavigationBar(
+          leading: CupertinoNavigationBarBackButton(onPressed: () {
+            ref
+                .read(Providers.takePictureControllerProvider.notifier)
+                .setPictures([]);
+          }),
           middle: Text('Captured Pictures'),
         ),
         child: Center(
@@ -75,6 +73,6 @@ class DisplayPicturesScreen extends StatelessWidget {
 abstract class TakePictureController extends StateNotifier<TakePictureModel> {
   TakePictureController(TakePictureModel state) : super(state);
 
-  Future<List<String>?> takePicture();
+  void takePicture();
   void setPictures(List<String> pictures);
 }
