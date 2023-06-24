@@ -1,8 +1,10 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'bottom_nav_bar_view.dart';
+import '/common/provider.dart';
 
 class CustomBottomNavBarControllerImpl extends CustomBottomNavBarController {
   CustomBottomNavBarControllerImpl() : super();
@@ -47,7 +49,7 @@ class CustomBottomNavBarControllerImpl extends CustomBottomNavBarController {
       [..._baseItems, state.currentIndex == 0 ? _settingsItem : _cameraItem];
 
   @override
-  void goToOtherPage(int index, BuildContext context) {
+  void goToOtherPage(int index, BuildContext context, WidgetRef ref) {
     double iconSize = state.iconSize;
 
     MediaQueryData mediaQueryData = MediaQuery.of(context);
@@ -65,6 +67,7 @@ class CustomBottomNavBarControllerImpl extends CustomBottomNavBarController {
       ),
     );
 
+    ref.read(Providers.enabelHeroAnimationProvider.notifier).state = false;
     context.beamToNamed(getNavBarItems()[index].initialLocation);
 
     if (state != updatedState) {

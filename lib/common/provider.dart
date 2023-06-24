@@ -75,4 +75,8 @@ class Providers {
       Provider<GlobalKey<NavigatorState>>((ref) {
     return GlobalKey<NavigatorState>();
   });
+
+  static final enabelHeroAnimationProvider = StateProvider<bool>((ref) {
+    return true;
+  });
 }

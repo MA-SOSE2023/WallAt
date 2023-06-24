@@ -18,6 +18,7 @@ class DocumentCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final SingleItem item =
         ref.watch(Providers.singleItemControllerProvider(_item.id));
+    final bool heroEnabled = ref.watch(Providers.enabelHeroAnimationProvider);
     final SingleItemController controller =
         ref.watch(Providers.singleItemControllerProvider(_item.id).notifier);
     return CupertinoListSection.insetGrouped(
@@ -54,16 +55,21 @@ class DocumentCard extends ConsumerWidget {
             margin: const EdgeInsets.all(5),
             child: FittedBox(
               fit: BoxFit.cover,
-              child: Hero(
-                tag: singleItemHeroTag(item.id),
-                child: Image(
-                  image: controller.getImage().image,
+              child: HeroMode(
+                enabled: heroEnabled,
+                child: Hero(
+                  tag: singleItemHeroTag(item.id),
+                  child: Image(
+                    image: controller.getImage().image,
+                  ),
                 ),
               ),
             ),
           ),
           leadingSize: 80,
           onTap: () {
+            ref.read(Providers.enabelHeroAnimationProvider.notifier).state =
+                true;
             controller.navigateToThisItem();
           },
         ),

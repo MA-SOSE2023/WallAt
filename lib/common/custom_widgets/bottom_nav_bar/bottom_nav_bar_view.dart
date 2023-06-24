@@ -10,11 +10,12 @@ import '/router/router.dart';
 export 'bottom_nav_bar_model.dart';
 export 'bottom_nav_bar_controller.dart';
 
-class CustomBottomNavBarScreen extends StatelessWidget {
+class CustomBottomNavBarScreen extends ConsumerWidget {
   const CustomBottomNavBarScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    ref.watch(Providers.enabelHeroAnimationProvider);
     return Scaffold(
       body: Beamer(
         key: Routers.bottomNavRouterBeamerKey,
@@ -59,7 +60,7 @@ class _CustomBottomNavBarState extends ConsumerState<CustomBottomNavBar> {
 
     return CupertinoTabBar(
       iconSize: state.iconSize,
-      onTap: (index) => controller.goToOtherPage(index, context),
+      onTap: (index) => controller.goToOtherPage(index, context, ref),
       currentIndex: state.currentIndex,
       items: controller.getNavBarItems(),
     );
@@ -88,5 +89,5 @@ abstract class CustomBottomNavBarController
   CustomBottomNavBarController() : super(const CustomBottomNavBarModel());
 
   List<CustomBottomNavBarItem> getNavBarItems();
-  void goToOtherPage(int index, BuildContext context);
+  void goToOtherPage(int index, BuildContext context, WidgetRef ref);
 }
