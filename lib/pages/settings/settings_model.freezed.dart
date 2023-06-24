@@ -16,7 +16,7 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$SettingsModel {
-  String? get calendarId => throw _privateConstructorUsedError;
+  Calendar? get calendar => throw _privateConstructorUsedError;
   Brightness get brightness => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -30,7 +30,7 @@ abstract class $SettingsModelCopyWith<$Res> {
           SettingsModel value, $Res Function(SettingsModel) then) =
       _$SettingsModelCopyWithImpl<$Res, SettingsModel>;
   @useResult
-  $Res call({String? calendarId, Brightness brightness});
+  $Res call({Calendar? calendar, Brightness brightness});
 }
 
 /// @nodoc
@@ -46,14 +46,14 @@ class _$SettingsModelCopyWithImpl<$Res, $Val extends SettingsModel>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? calendarId = freezed,
+    Object? calendar = freezed,
     Object? brightness = null,
   }) {
     return _then(_value.copyWith(
-      calendarId: freezed == calendarId
-          ? _value.calendarId
-          : calendarId // ignore: cast_nullable_to_non_nullable
-              as String?,
+      calendar: freezed == calendar
+          ? _value.calendar
+          : calendar // ignore: cast_nullable_to_non_nullable
+              as Calendar?,
       brightness: null == brightness
           ? _value.brightness
           : brightness // ignore: cast_nullable_to_non_nullable
@@ -70,7 +70,7 @@ abstract class _$$_SettingsModelCopyWith<$Res>
       __$$_SettingsModelCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String? calendarId, Brightness brightness});
+  $Res call({Calendar? calendar, Brightness brightness});
 }
 
 /// @nodoc
@@ -84,14 +84,14 @@ class __$$_SettingsModelCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? calendarId = freezed,
+    Object? calendar = freezed,
     Object? brightness = null,
   }) {
     return _then(_$_SettingsModel(
-      calendarId: freezed == calendarId
-          ? _value.calendarId
-          : calendarId // ignore: cast_nullable_to_non_nullable
-              as String?,
+      calendar: freezed == calendar
+          ? _value.calendar
+          : calendar // ignore: cast_nullable_to_non_nullable
+              as Calendar?,
       brightness: null == brightness
           ? _value.brightness
           : brightness // ignore: cast_nullable_to_non_nullable
@@ -103,16 +103,16 @@ class __$$_SettingsModelCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_SettingsModel implements _SettingsModel {
-  const _$_SettingsModel({this.calendarId, required this.brightness});
+  const _$_SettingsModel({this.calendar, required this.brightness});
 
   @override
-  final String? calendarId;
+  final Calendar? calendar;
   @override
   final Brightness brightness;
 
   @override
   String toString() {
-    return 'SettingsModel(calendarId: $calendarId, brightness: $brightness)';
+    return 'SettingsModel(calendar: $calendar, brightness: $brightness)';
   }
 
   @override
@@ -120,14 +120,14 @@ class _$_SettingsModel implements _SettingsModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_SettingsModel &&
-            (identical(other.calendarId, calendarId) ||
-                other.calendarId == calendarId) &&
+            (identical(other.calendar, calendar) ||
+                other.calendar == calendar) &&
             (identical(other.brightness, brightness) ||
                 other.brightness == brightness));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, calendarId, brightness);
+  int get hashCode => Object.hash(runtimeType, calendar, brightness);
 
   @JsonKey(ignore: true)
   @override
@@ -138,11 +138,11 @@ class _$_SettingsModel implements _SettingsModel {
 
 abstract class _SettingsModel implements SettingsModel {
   const factory _SettingsModel(
-      {final String? calendarId,
+      {final Calendar? calendar,
       required final Brightness brightness}) = _$_SettingsModel;
 
   @override
-  String? get calendarId;
+  Calendar? get calendar;
   @override
   Brightness get brightness;
   @override

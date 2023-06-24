@@ -1,10 +1,12 @@
 import 'dart:ui';
 
+import 'package:device_calendar/device_calendar.dart';
+
 import 'settings_model.dart';
 import 'settings_view.dart';
 
 var settings = SettingsModel(
-  calendarId: null,
+  calendar: null,
   brightness: Brightness.light,
 );
 
@@ -14,6 +16,11 @@ class SettingsControllerImpl extends SettingsController {
   @override
   bool isDarkMode() {
     return state.brightness == Brightness.dark;
+  }
+
+  @override
+  void setUsedCalendar(Calendar calendar) {
+    state = state.copyWith(calendar: calendar);
   }
 
   @override
