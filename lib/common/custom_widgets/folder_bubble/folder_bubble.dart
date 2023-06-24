@@ -45,7 +45,9 @@ class FolderBubble extends StatelessWidget {
 
     Widget secondaryGrid() {
       final VoidCallback onTapped = FolderItem.navigateTo(_folder, context);
-      if (_folder.contents.length > 7) {
+      if (_folder.contents.length == 4) {
+        return gridItem(_folder.contents[3]);
+      } else if (_folder.contents.length > 7) {
         return itemGrid([
           ..._folder.contents
               .sublist(3, 6)
