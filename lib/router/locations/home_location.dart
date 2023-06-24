@@ -1,6 +1,8 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/cupertino.dart';
 
+import '/pages/home/home_view.dart';
+
 class HomeLocation extends BeamLocation<BeamState> {
   @override
   List<String> get pathPatterns => ['/home'];
@@ -11,7 +13,7 @@ class HomeLocation extends BeamLocation<BeamState> {
           key: ValueKey('home'),
           title: 'Home',
           type: BeamPageType.noTransition,
-          child: Placeholder(), // TODO: Home Screen
+          child: HomeScreen(),
         ),
       ];
 }
