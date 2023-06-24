@@ -79,9 +79,9 @@ class CalendarButtonControllerImpl extends CalendarButtonController {
   }
 
   @override
-  Event getEvent() {
+  Event getEvent(String? calendarId) {
     return Event(
-      '5', //@TODO: change to get from the settings controller
+      calendarId, //@TODO: change to get from the settings controller
       eventId: null,
       title: getTitle(),
       description: getDescription(),
