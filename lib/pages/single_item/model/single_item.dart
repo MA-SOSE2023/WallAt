@@ -8,8 +8,14 @@ import '/pages/folders/folder_model.dart';
 part 'single_item.freezed.dart';
 
 @freezed
-class SingleItem with _$SingleItem implements FolderItem {
-  SingleItem._();
+class SingleItem extends FolderItem with _$SingleItem {
+  SingleItem._()
+      : super(
+          isLeaf: true,
+        ) {
+    maybeItem = this;
+    maybeFolder = null;
+  }
 
   @Implements<FolderItem>()
   factory SingleItem({
@@ -31,19 +37,6 @@ class SingleItem with _$SingleItem implements FolderItem {
         events: [],
       );
 
-  @override
-  SingleItem? get maybeItem => this;
-  @override
-  Folder? get maybeFolder => null;
-  @override
-  SingleItem get item => this;
-  @override
-  Folder get folder => throw UnsupportedError('Not a folder');
-
-  @override
-  bool get isLeaf => true;
-  @override
-  bool get isFolder => false;
   @override
   get thumbnail => Image(image: image);
 

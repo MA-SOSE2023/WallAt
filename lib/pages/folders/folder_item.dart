@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 import 'folder_model.dart';
 import 'folders_view.dart';
@@ -8,26 +9,16 @@ import '/router/router.dart';
 abstract class FolderItem {
   FolderItem({
     required bool isLeaf,
-    Folder? folder,
-    SingleItem? item,
-  })  : _folder = folder,
-        _item = item,
-        _isLeaf = isLeaf {
-    if (isLeaf) {
-      assert(item != null);
-    } else {
-      assert(folder != null);
-    }
-  }
+    this.maybeFolder,
+    this.maybeItem,
+  }) : _isLeaf = isLeaf;
 
   final bool _isLeaf;
-  final SingleItem? _item;
-  final Folder? _folder;
 
-  SingleItem? get maybeItem => _item;
-  Folder? get maybeFolder => _folder;
-  SingleItem get item => _item!;
-  Folder get folder => _folder!;
+  SingleItem? maybeItem;
+  Folder? maybeFolder;
+  SingleItem get item => maybeItem!;
+  Folder get folder => maybeFolder!;
 
   Widget get thumbnail;
 
@@ -39,6 +30,9 @@ abstract class FolderItem {
 
   List<FolderItem> get contents => maybeFolder!.contents;
 
+  String get heroTag =>
+      isLeaf ? 'folderItem-item-$id' : 'folderItem-folder-$id';
+
   static VoidCallback navigateTo(FolderItem item, BuildContext context) {
     if (item.isLeaf) {
       return () => Routers.globalRouterDelegate.beamToNamed(
@@ -46,7 +40,7 @@ abstract class FolderItem {
           );
     } else {
       return () => Navigator.of(context).push(
-            CupertinoPageRoute(
+            MaterialPageRoute(
               builder: (context) => FoldersScreen(folderId: item.id),
             ),
           );
