@@ -58,11 +58,16 @@ class EditSingleItemPage extends ConsumerWidget {
                     padding: const EdgeInsets.all(20.0),
                     child: Container(
                       decoration: BoxDecoration(
-                        color: Colors.grey[200],
+                        color: CupertinoDynamicColor.resolve(
+                            CupertinoColors.systemGrey5, context),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: CupertinoFormSection.insetGrouped(
-                          margin: EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: CupertinoDynamicColor.resolve(
+                                  CupertinoColors.systemBackground, context)),
+                          margin: EdgeInsets.all(10),
                           backgroundColor: Colors.transparent,
                           children: [
                             CupertinoTextField(
@@ -115,13 +120,13 @@ class EditSingleItemPage extends ConsumerWidget {
                         decoration: BoxDecoration(
                           color: CupertinoDynamicColor.resolve(
                               CupertinoColors.systemGrey5, context),
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(10),
                         ),
                         child: Container(
                           margin: const EdgeInsets.all(8.0),
                           height: MediaQuery.of(context).size.height / 6,
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
+                            borderRadius: BorderRadius.circular(10),
                             image: DecorationImage(
                               image: controller.getImage().image,
                               fit: BoxFit.fitWidth,
@@ -135,7 +140,8 @@ class EditSingleItemPage extends ConsumerWidget {
                       padding: const EdgeInsets.all(20.0),
                       child: Container(
                           decoration: BoxDecoration(
-                            color: Colors.grey[200],
+                            color: CupertinoDynamicColor.resolve(
+                                CupertinoColors.systemGrey5, context),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: EventsContainer(id: _id, editable: true))),
@@ -161,7 +167,11 @@ class EditSingleItemPage extends ConsumerWidget {
                           Navigator.of(context).pop();
                         },
                       ),
-                      const Text('Edit Item', style: TextStyle(fontSize: 18)),
+                      Text('Edit Item',
+                          style: TextStyle(
+                              color: CupertinoDynamicColor.resolve(
+                                  CupertinoColors.label, context),
+                              fontSize: 18)),
                       CupertinoButton(
                           child: const Text('Save',
                               style: TextStyle(fontSize: 14)),

@@ -21,7 +21,11 @@ class EventsContainer extends ConsumerWidget {
         ? ref.watch(Providers.editSingleItemControllerProvider(id).notifier)
         : ref.watch(Providers.singleItemControllerProvider(id).notifier);
     return CupertinoListSection.insetGrouped(
+      margin: const EdgeInsets.all(8),
       backgroundColor: Colors.transparent,
+      decoration: BoxDecoration(
+          color: CupertinoDynamicColor.resolve(
+              CupertinoColors.systemBackground, context)),
       header: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         Text("Events"),
         if (editable) CalendarButton(id: id),
@@ -51,9 +55,14 @@ class EventsContainer extends ConsumerWidget {
             );
           }).toList()
         else
-          const Padding(
+          Padding(
             padding: EdgeInsets.all(8.0),
-            child: Text(style: TextStyle(fontSize: 14), 'No events'),
+            child: Text(
+                style: TextStyle(
+                    color: CupertinoDynamicColor.resolve(
+                        CupertinoColors.label, context),
+                    fontSize: 14),
+                'No events'),
           ),
       ],
     );

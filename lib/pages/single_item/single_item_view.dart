@@ -70,7 +70,8 @@ class SingleItemPage extends ConsumerWidget {
                     padding: const EdgeInsets.all(20.0),
                     child: Container(
                         decoration: BoxDecoration(
-                          color: Colors.grey[200],
+                          color: CupertinoDynamicColor.resolve(
+                              CupertinoColors.systemGrey5, context),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: EventsContainer(id: _id, editable: false))),
@@ -79,7 +80,8 @@ class SingleItemPage extends ConsumerWidget {
             Align(
               alignment: Alignment.bottomCenter,
               child: Container(
-                color: CupertinoTheme.of(context).barBackgroundColor,
+                color: CupertinoDynamicColor.resolve(
+                    CupertinoColors.systemGrey5, context),
                 padding: const EdgeInsets.only(left: 20, right: 20),
                 child: ActionButtons(itemId: _id, controller: controller),
               ),
@@ -133,7 +135,8 @@ class InfoContainer extends StatelessWidget {
     return Container(
       height: MediaQuery.of(context).size.height / 12,
       decoration: BoxDecoration(
-        color: Colors.grey[200],
+        color:
+            CupertinoDynamicColor.resolve(CupertinoColors.systemGrey5, context),
         borderRadius: BorderRadius.circular(10),
       ),
       padding: const EdgeInsets.all(10.0),
