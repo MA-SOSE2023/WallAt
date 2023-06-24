@@ -18,6 +18,6 @@ class TakePictureControllerImpl extends TakePictureController {
 
   @override
   void setPictures(List<String> pictures) {
-    // TODO: implement setPictures
+    state = state.copyWith(pictures: pictures);
   }
 }
