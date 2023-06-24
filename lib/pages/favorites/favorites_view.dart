@@ -58,24 +58,23 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
     const EdgeInsets specialPadding = EdgeInsets.only(top: 40.0);
 
     final Widget body = filterFavoritesFuture.when(
-      error: (object, stackTrace) => favoritesFuture.hasError
-          ? const ErrorMessage()
-          : const ErrorMessage(message: 'Filter could not be applied'),
-      loading: () => const CupertinoActivityIndicator(),
-      data: (filteredFavorites) => filteredFavorites.isNotEmpty
-          ? DocumentCardContainerList(
-              items: filteredFavorites,
-              borderlessCards: widget._borderlessCards)
-          : SliverSafeArea(
-              sliver: SliverToBoxAdapter(
-                child: Padding(
-                    padding: specialPadding,
-                    child: NoElementsMessage(
-                      message: emptyListMessage,
-                    )),
-              ),
-            ),
-    );
+        error: (object, stackTrace) => favoritesFuture.hasError
+            ? const ErrorMessage()
+            : const ErrorMessage(message: 'Filter could not be applied'),
+        loading: () => const CupertinoActivityIndicator(),
+        data: (filteredFavorites) => filteredFavorites.isNotEmpty
+            ? DocumentCardContainerList(
+                items: filteredFavorites,
+                borderlessCards: widget._borderlessCards)
+            : SliverSafeArea(
+                sliver: SliverToBoxAdapter(
+                  child: Padding(
+                      padding: specialPadding,
+                      child: NoElementsMessage(
+                        message: emptyListMessage,
+                      )),
+                ),
+              ));
 
     return CupertinoPageScaffold(
       child: Stack(
@@ -86,11 +85,16 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
                 largeTitle: Text('Favorites'),
               ),
               SliverAppBar(
-                flexibleSpace: SearchBarContainer(onChanged: (text) {
-                  setState(() {
-                    searchString = text;
-                  });
-                }),
+                pinned: true,
+                flexibleSpace: FlexibleSpaceBar(
+                  background: SearchBarContainer(
+                    onChanged: (text) {
+                      setState(() {
+                        searchString = text;
+                      });
+                    },
+                  ),
+                ),
                 toolbarHeight: 35.0,
               ),
               filterFavoritesFuture.hasValue
