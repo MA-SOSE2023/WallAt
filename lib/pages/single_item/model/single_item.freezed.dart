@@ -171,8 +171,8 @@ class __$$_SingleItemCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_SingleItem implements _SingleItem {
-  const _$_SingleItem(
+class _$_SingleItem extends _SingleItem {
+  _$_SingleItem(
       {required this.id,
       required this.title,
       required this.description,
@@ -180,7 +180,8 @@ class _$_SingleItem implements _SingleItem {
       required this.isFavorite,
       required final List<ItemEvent> events,
       this.currentSelectedDate})
-      : _events = events;
+      : _events = events,
+        super._();
 
   @override
   final String id;
@@ -243,8 +244,8 @@ class _$_SingleItem implements _SingleItem {
       __$$_SingleItemCopyWithImpl<_$_SingleItem>(this, _$identity);
 }
 
-abstract class _SingleItem implements SingleItem {
-  const factory _SingleItem(
+abstract class _SingleItem extends SingleItem implements FolderItem {
+  factory _SingleItem(
       {required final String id,
       required final String title,
       required final String description,
@@ -252,6 +253,7 @@ abstract class _SingleItem implements SingleItem {
       required final bool isFavorite,
       required final List<ItemEvent> events,
       final DateTime? currentSelectedDate}) = _$_SingleItem;
+  _SingleItem._() : super._();
 
   @override
   String get id;

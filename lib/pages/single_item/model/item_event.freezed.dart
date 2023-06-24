@@ -16,8 +16,7 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$ItemEvent {
-  String get description => throw _privateConstructorUsedError;
-  DateTime get date => throw _privateConstructorUsedError;
+  Event get event => throw _privateConstructorUsedError;
   String get parentId => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -30,7 +29,7 @@ abstract class $ItemEventCopyWith<$Res> {
   factory $ItemEventCopyWith(ItemEvent value, $Res Function(ItemEvent) then) =
       _$ItemEventCopyWithImpl<$Res, ItemEvent>;
   @useResult
-  $Res call({String description, DateTime date, String parentId});
+  $Res call({Event event, String parentId});
 }
 
 /// @nodoc
@@ -46,19 +45,14 @@ class _$ItemEventCopyWithImpl<$Res, $Val extends ItemEvent>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? description = null,
-    Object? date = null,
+    Object? event = null,
     Object? parentId = null,
   }) {
     return _then(_value.copyWith(
-      description: null == description
-          ? _value.description
-          : description // ignore: cast_nullable_to_non_nullable
-              as String,
-      date: null == date
-          ? _value.date
-          : date // ignore: cast_nullable_to_non_nullable
-              as DateTime,
+      event: null == event
+          ? _value.event
+          : event // ignore: cast_nullable_to_non_nullable
+              as Event,
       parentId: null == parentId
           ? _value.parentId
           : parentId // ignore: cast_nullable_to_non_nullable
@@ -74,7 +68,7 @@ abstract class _$$_ItemEventCopyWith<$Res> implements $ItemEventCopyWith<$Res> {
       __$$_ItemEventCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String description, DateTime date, String parentId});
+  $Res call({Event event, String parentId});
 }
 
 /// @nodoc
@@ -88,19 +82,14 @@ class __$$_ItemEventCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? description = null,
-    Object? date = null,
+    Object? event = null,
     Object? parentId = null,
   }) {
     return _then(_$_ItemEvent(
-      description: null == description
-          ? _value.description
-          : description // ignore: cast_nullable_to_non_nullable
-              as String,
-      date: null == date
-          ? _value.date
-          : date // ignore: cast_nullable_to_non_nullable
-              as DateTime,
+      event: null == event
+          ? _value.event
+          : event // ignore: cast_nullable_to_non_nullable
+              as Event,
       parentId: null == parentId
           ? _value.parentId
           : parentId // ignore: cast_nullable_to_non_nullable
@@ -112,19 +101,16 @@ class __$$_ItemEventCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_ItemEvent implements _ItemEvent {
-  const _$_ItemEvent(
-      {required this.description, required this.date, required this.parentId});
+  const _$_ItemEvent({required this.event, required this.parentId});
 
   @override
-  final String description;
-  @override
-  final DateTime date;
+  final Event event;
   @override
   final String parentId;
 
   @override
   String toString() {
-    return 'ItemEvent(description: $description, date: $date, parentId: $parentId)';
+    return 'ItemEvent(event: $event, parentId: $parentId)';
   }
 
   @override
@@ -132,15 +118,13 @@ class _$_ItemEvent implements _ItemEvent {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_ItemEvent &&
-            (identical(other.description, description) ||
-                other.description == description) &&
-            (identical(other.date, date) || other.date == date) &&
+            (identical(other.event, event) || other.event == event) &&
             (identical(other.parentId, parentId) ||
                 other.parentId == parentId));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, description, date, parentId);
+  int get hashCode => Object.hash(runtimeType, event, parentId);
 
   @JsonKey(ignore: true)
   @override
@@ -151,14 +135,11 @@ class _$_ItemEvent implements _ItemEvent {
 
 abstract class _ItemEvent implements ItemEvent {
   const factory _ItemEvent(
-      {required final String description,
-      required final DateTime date,
+      {required final Event event,
       required final String parentId}) = _$_ItemEvent;
 
   @override
-  String get description;
-  @override
-  DateTime get date;
+  Event get event;
   @override
   String get parentId;
   @override

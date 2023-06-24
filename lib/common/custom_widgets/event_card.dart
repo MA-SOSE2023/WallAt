@@ -1,3 +1,4 @@
+import 'package:device_calendar/device_calendar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,8 +13,8 @@ class EventCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final DateTime date = event.date;
-    final String description = event.description;
+    final TZDateTime date = event.event.start!;
+    final String description = event.event.description ?? '';
     return Column(
       children: [
         CupertinoListSection.insetGrouped(

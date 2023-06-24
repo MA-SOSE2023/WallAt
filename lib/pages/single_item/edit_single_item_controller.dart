@@ -1,11 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
+import 'package:gruppe4/pages/single_item/single_item_view.dart';
+import 'package:device_calendar/device_calendar.dart';
+import 'model/single_item.dart';
 import 'edit_single_item_view.dart';
 import 'single_item_controller.dart';
 import 'model/single_item.dart';
 import 'model/item_event.dart';
+
 import '/common/provider.dart';
 import '/pages/single_item/single_item_view.dart';
 
@@ -14,6 +17,8 @@ class EditSingleItemControllerMock extends EditSingleItemController {
       : _id = id,
         super(model ?? mockSingleItem);
 
+  List<ItemEvent> newEvents = [];
+  List<ItemEvent> deletedEvents = [];
   final String _id;
   DateTime? _selectedDate;
 
@@ -29,6 +34,10 @@ class EditSingleItemControllerMock extends EditSingleItemController {
 
   @override
   void saveChanges(WidgetRef ref) {
+    removeEventsFromCalendar();
+    addEventsToCalendar();
+    state = state.copyWith(events: [...state.events, ...newEvents]);
+
     SingleItemController singleItemController =
         ref.read(Providers.singleItemControllerProvider(_id).notifier);
     singleItemController.state = state;
@@ -65,19 +74,26 @@ class EditSingleItemControllerMock extends EditSingleItemController {
   }
 
   @override
-  void addEvent(ItemEvent event) {
-    state = state.copyWith(events: [...state.events, event]);
+  void addEvent(ItemEvent event) async {
+    newEvents.add(event);
+    state = state.copyWith(events: [...state.events]);
   }
 
   @override
   void removeEvent(ItemEvent event) {
+    if (event.event.eventId == null) {
+      newEvents.remove(event);
+    } else {
+      deletedEvents.add(event);
+    }
+
     state = state.copyWith(
         events: List<ItemEvent>.from(state.events)..remove(event));
   }
 
   @override
   List<ItemEvent> getEvents() {
-    return List<ItemEvent>.from(state.events);
+    return List<ItemEvent>.from(state.events + newEvents);
   }
 
   @override
@@ -98,6 +114,22 @@ class EditSingleItemControllerMock extends EditSingleItemController {
   @override
   void setFavorite() {
     state = state.copyWith(isFavorite: getFavorite() ? false : true);
+  }
+
+  void addEventsToCalendar() {
+    DeviceCalendarPlugin deviceCalendarPlugin = DeviceCalendarPlugin();
+    newEvents.forEach((event) async {
+      var eventId = await deviceCalendarPlugin.createOrUpdateEvent(event.event);
+      event.event.eventId = eventId?.data!;
+    });
+  }
+
+  void removeEventsFromCalendar() {
+    DeviceCalendarPlugin deviceCalendarPlugin = DeviceCalendarPlugin();
+    deletedEvents.forEach((event) async {
+      var res = await deviceCalendarPlugin.deleteEvent(
+          event.event.calendarId!, event.event.eventId!);
+    });
   }
 
   @override

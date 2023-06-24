@@ -1,18 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
+import 'package:social_share/social_share.dart';
+import '../../common/provider.dart';
 import 'full_screen_image_view.dart';
 import 'edit_single_item_view.dart';
 import 'model/single_item.dart';
 import 'model/item_event.dart';
-import '/common/provider.dart';
 import '/common/custom_widgets/all_custom_widgets.dart' show EventsContainer;
 
 String singleItemHeroTag(String id) {
   return "single_item_image$id";
 }
 
+//@TODO: maybe use CustomScrollView with SliverAppbar instead of CupertinoPageScaffold
 class SingleItemPage extends ConsumerWidget {
   const SingleItemPage({required String id, Key? key})
       : _id = id,
@@ -69,7 +70,8 @@ class SingleItemPage extends ConsumerWidget {
                     padding: const EdgeInsets.all(20.0),
                     child: Container(
                         decoration: BoxDecoration(
-                          color: Colors.grey[200],
+                          color: CupertinoDynamicColor.resolve(
+                              CupertinoColors.systemGrey5, context),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: EventsContainer(id: _id, editable: false))),
@@ -78,7 +80,8 @@ class SingleItemPage extends ConsumerWidget {
             Align(
               alignment: Alignment.bottomCenter,
               child: Container(
-                color: CupertinoTheme.of(context).barBackgroundColor,
+                color: CupertinoDynamicColor.resolve(
+                    CupertinoColors.systemGrey5, context),
                 padding: const EdgeInsets.only(left: 20, right: 20),
                 child: ActionButtons(itemId: _id, controller: controller),
               ),
@@ -131,7 +134,8 @@ class InfoContainer extends StatelessWidget {
     return Container(
       height: MediaQuery.of(context).size.height / 12,
       decoration: BoxDecoration(
-        color: Colors.grey[200],
+        color:
+            CupertinoDynamicColor.resolve(CupertinoColors.systemGrey5, context),
         borderRadius: BorderRadius.circular(10),
       ),
       padding: const EdgeInsets.all(10.0),
@@ -159,20 +163,23 @@ class ActionButtons extends ConsumerWidget {
       : super(key: key);
 
   final String itemId;
-  final SingleItemController controller;
+  final SingleItemController controller; //TODO: remove, call via ref
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        _buildActionButton(
+        CupertinoButton(
           onPressed: () {
-            // Handle share button logic
+            SocialShare.shareOptions(
+              "Hello world",
+              //@TODO: add the correct image path
+            );
           },
-          icon: CupertinoIcons.share, // Use the Cupertino icon
+          child: const Icon(CupertinoIcons.share),
         ),
-        _buildActionButton(
+        CupertinoButton(
           onPressed: () {
             showModalBottomSheet(
               context: context,
@@ -181,33 +188,24 @@ class ActionButtons extends ConsumerWidget {
               builder: (context) => EditSingleItemPage(id: itemId),
             );
           },
-          icon: CupertinoIcons.slider_horizontal_3, // Use the Cupertino icon
+          child: const Icon(
+              CupertinoIcons.slider_horizontal_3), // Use the Cupertino icon
         ),
-        _buildActionButton(
+        CupertinoButton(
           onPressed: () {
             // Handle delete button logic
           },
-          icon: CupertinoIcons.delete, // Use the Cupertino icon
+          child: const Icon(CupertinoIcons.delete), // Use the Cupertino icon
         ),
-        _buildActionButton(
+        CupertinoButton(
           onPressed: () {
             controller.setFavorite();
           },
-          icon: controller.getFavorite()
+          child: Icon(controller.getFavorite()
               ? CupertinoIcons.heart_fill
-              : CupertinoIcons.heart, // Use the Cupertino icon
+              : CupertinoIcons.heart), // Use the Cupertino icon
         ),
       ],
-    );
-  }
-
-  Widget _buildActionButton({
-    required VoidCallback onPressed,
-    required IconData icon,
-  }) {
-    return CupertinoButton(
-      onPressed: onPressed,
-      child: Icon(icon),
     );
   }
 }

@@ -18,7 +18,7 @@ class FullScreenImagePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: const CupertinoNavigationBar(),
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.transparent,
       child: SafeArea(
         child: PhotoView(
           heroAttributes:
