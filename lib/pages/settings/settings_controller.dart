@@ -10,4 +10,18 @@ var settings = SettingsModel(
 
 class SettingsControllerImpl extends SettingsController {
   SettingsControllerImpl({SettingsModel? model}) : super(model ?? settings);
+
+  @override
+  bool isDarkMode() {
+    return state.brightness == Brightness.dark;
+  }
+
+  @override
+  void toggleColorTheme(bool value) {
+    if (value) {
+      state = state.copyWith(brightness: Brightness.dark);
+    } else {
+      state = state.copyWith(brightness: Brightness.light);
+    }
+  }
 }

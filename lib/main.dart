@@ -4,16 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:timezone/data/latest.dart' as tz;
 
+import '/common/provider.dart';
+import '/pages/settings/settings_model.dart';
 import 'router/router.dart';
 
-class App extends StatelessWidget {
+class App extends ConsumerWidget {
   const App({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    SettingsModel settings = ref.watch(Providers.settingsControllerProvider);
     return CupertinoApp.router(
-      theme: const CupertinoThemeData(
-        brightness: Brightness.dark,
+      theme: CupertinoThemeData(
+        brightness: settings.brightness,
       ),
       localizationsDelegates: const [
         DefaultCupertinoLocalizations.delegate,
