@@ -68,18 +68,19 @@ class EditSingleItemControllerMock extends EditSingleItemController {
   }
 
   @override
-  void addEvent(ItemEvent event) {
+  void addEvent(ItemEvent event) async {
+    DeviceCalendarPlugin deviceCalendarPlugin = DeviceCalendarPlugin();
+    var eventId = await deviceCalendarPlugin.createOrUpdateEvent(event.event);
+    event.event.eventId = eventId?.data!;
+
     state = state.copyWith(events: [...state.events, event]);
   }
 
   @override
   void removeEvent(ItemEvent event) {
-    print("EventID" + event.event.eventId!);
-    print("CalendarID" + event.event.calendarId!);
     DeviceCalendarPlugin deviceCalendarPlugin = DeviceCalendarPlugin();
-    var res = deviceCalendarPlugin.deleteEvent(
+    deviceCalendarPlugin.deleteEvent(
         event.event.calendarId!, event.event.eventId!);
-    print(res);
 
     state = state.copyWith(
         events: List<ItemEvent>.from(state.events)..remove(event));

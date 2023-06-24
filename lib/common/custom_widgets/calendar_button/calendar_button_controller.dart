@@ -3,6 +3,7 @@ import 'package:device_calendar/device_calendar.dart';
 import '/pages/single_item/model/item_event.dart';
 import '/common/custom_widgets/calendar_button/calendar_model.dart';
 import '/common/custom_widgets/calendar_button/calendar_button.dart';
+import 'package:timezone/data/latest.dart' as tz;
 
 var calendarModelMock = CalendarModel(
   title: 'title',
@@ -86,7 +87,7 @@ class CalendarButtonControllerImpl extends CalendarButtonController {
       description: getDescription(),
       start: TZDateTime.from(getStartDate()!, local),
       end: TZDateTime.from(getEndDate()!, local),
-      recurrenceRule: recurrenceOptions.keys.toList()[getRecurrenceIndex()],
+      recurrenceRule: recurrenceOptions.keys.elementAt(getRecurrenceIndex()),
       reminders: [
         Reminder(minutes: getReminderMinutes()),
       ],

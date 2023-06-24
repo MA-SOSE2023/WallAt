@@ -4,13 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '/pages/single_item/single_item_view.dart';
 import 'calendar_button/calendar_button.dart';
-import 'package:device_calendar/device_calendar.dart';
 import 'package:intl/intl.dart';
-
 import 'package:timezone/data/latest.dart' as tz;
-
 import '/common/provider.dart';
-import '/pages/single_item/single_item_view.dart';
 
 class EventsContainer extends ConsumerWidget {
   const EventsContainer({Key? key, required this.id, required this.editable})
@@ -43,13 +39,14 @@ class EventsContainer extends ConsumerWidget {
                     )
                   : null,
               title: Text(
-                itemEvent.event.description!,
+                itemEvent.event.title!,
                 style: const TextStyle(
                   fontSize: 12,
                 ),
               ),
               subtitle: Text(
-                'from ${DateFormat('dd/MM/yyyy - HH:mm').format(itemEvent.event.start!)} to ${DateFormat('dd/MM/yyyy - HH:mm').format(itemEvent.event.end!)}',
+                'from: ${DateFormat('dd/MM/yyyy - HH:mm').format(itemEvent.event.start!)}\nto: ${DateFormat('dd/MM/yyyy - HH:mm').format(itemEvent.event.end!)}',
+                maxLines: 2,
               ),
             );
           }).toList()
