@@ -10,7 +10,7 @@ var mockSingleItem = SingleItem(
   id: '1',
   title: 'Example Title',
   description: 'Example Description',
-  image: 'assets/dev_debug_images/hampter1.jpg',
+  image: const AssetImage('assets/dev_debug_images/hampter1.jpg'),
   isFavorite: false,
   events: [],
   currentSelectedDate: null,
@@ -25,12 +25,12 @@ class SingleItemControllerMock extends SingleItemController {
 
   @override
   Image getImage() {
-    return Image.asset(state.image);
+    return Image(image: state.image);
   }
 
   @override
   void setImage(Image image) {
-    state = state.copyWith(image: image.toString());
+    state = state.copyWith(image: image.image);
   }
 
   @override
@@ -63,7 +63,6 @@ class SingleItemControllerMock extends SingleItemController {
     DeviceCalendarPlugin deviceCalendarPlugin = DeviceCalendarPlugin();
     var res = deviceCalendarPlugin.deleteEvent(
         event.event.calendarId!, event.event.eventId!);
-    print(res);
 
     state = state.copyWith(
         events: List<ItemEvent>.from(state.events)..remove(event));

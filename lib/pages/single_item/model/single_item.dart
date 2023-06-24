@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'item_event.dart';
@@ -15,7 +16,7 @@ class SingleItem with _$SingleItem implements FolderItem {
     required String id,
     required String title,
     required String description,
-    required String image,
+    required ImageProvider image,
     required bool isFavorite,
     required List<ItemEvent> events,
     DateTime? currentSelectedDate,
@@ -25,7 +26,7 @@ class SingleItem with _$SingleItem implements FolderItem {
         id: 'prototype',
         title: 'prototype',
         description: 'prototype',
-        image: 'assets/dev_debug_images/hampter1.jpg',
+        image: const AssetImage('assets/dev_debug_images/hampter1.jpg'),
         isFavorite: false,
         events: [],
       );
@@ -43,6 +44,8 @@ class SingleItem with _$SingleItem implements FolderItem {
   bool get isLeaf => true;
   @override
   bool get isFolder => false;
+  @override
+  get thumbnail => Image(image: image);
 
   @override
   List<FolderItem> get contents => throw UnsupportedError('Not a folder');

@@ -37,12 +37,12 @@ class EditSingleItemControllerMock extends EditSingleItemController {
 
   @override
   Image getImage() {
-    return Image.asset(state.image);
+    return Image(image: state.image);
   }
 
   @override
   void setImage(Image image) {
-    state = state.copyWith(image: image.toString());
+    state = state.copyWith(image: image.image);
   }
 
   @override
@@ -72,12 +72,9 @@ class EditSingleItemControllerMock extends EditSingleItemController {
 
   @override
   void removeEvent(ItemEvent event) {
-    print("EventID" + event.event.eventId!);
-    print("CalendarID" + event.event.calendarId!);
     DeviceCalendarPlugin deviceCalendarPlugin = DeviceCalendarPlugin();
     var res = deviceCalendarPlugin.deleteEvent(
         event.event.calendarId!, event.event.eventId!);
-    print(res);
 
     state = state.copyWith(
         events: List<ItemEvent>.from(state.events)..remove(event));

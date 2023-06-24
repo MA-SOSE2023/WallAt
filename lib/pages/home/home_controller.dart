@@ -1,4 +1,5 @@
 import 'package:device_calendar/device_calendar.dart';
+import 'package:flutter/cupertino.dart';
 
 import 'home_model.dart';
 import 'home_view.dart';
@@ -36,7 +37,7 @@ SingleItem _mockSingleItem(int id) => SingleItem(
       id: '$id',
       title: 'Example Title',
       description: 'Example Description',
-      image: 'assets/dev_debug_images/hampter1.jpg',
+      image: const AssetImage('assets/dev_debug_images/hampter1.jpg'),
       isFavorite: true,
       events: _mockEvents.map((e) => e.copyWith(parentId: '$id')).toList(),
       currentSelectedDate: null,
