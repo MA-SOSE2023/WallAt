@@ -48,17 +48,17 @@ class FolderBubble extends StatelessWidget {
       if (_folder.contents.length == 4) {
         return gridItem(_folder.contents[3]);
       } else if (_folder.contents.length > 7) {
-        return itemGrid([
-          ..._folder.contents
-              .sublist(3, 6)
-              .map((item) => gridItem(item, padding: 0.0, onTapped: onTapped))
-              .toList(),
-          GestureDetector(
+        return GestureDetector(
             onTap: onTapped,
-            child: const Icon(CupertinoIcons.ellipsis,
-                color: CupertinoColors.systemGrey),
-          )
-        ]);
+            child: itemGrid([
+              ..._folder.contents
+                  .sublist(3, 6)
+                  .map((item) =>
+                      gridItem(item, padding: 0.0, onTapped: onTapped))
+                  .toList(),
+              const Icon(CupertinoIcons.ellipsis,
+                  color: CupertinoColors.systemGrey),
+            ]));
       } else {
         return GestureDetector(
           onTap: onTapped,

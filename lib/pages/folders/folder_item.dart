@@ -47,7 +47,8 @@ abstract class FolderItem {
     } else {
       return () => Navigator.of(context).push(
             CupertinoPageRoute(
-              builder: (context) => FoldersScreen(folderId: item.id),
+              builder: (context) => FoldersScreen(
+                  folderId: item.id, parentFolderName: item.title),
             ),
           );
     }
