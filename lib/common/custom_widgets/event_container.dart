@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '/pages/single_item/single_item_view.dart';
-import '/common/custom_widgets/calendar_button.dart';
+import 'calendar_button/calendar_button.dart';
 import 'package:device_calendar/device_calendar.dart';
 import 'package:intl/intl.dart';
 
@@ -43,7 +43,7 @@ class EventsContainer extends ConsumerWidget {
                     )
                   : null,
               title: Text(
-                itemEvent.event.description ?? 'TEST',
+                itemEvent.event.description!,
                 style: const TextStyle(
                   fontSize: 12,
                 ),

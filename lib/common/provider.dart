@@ -15,6 +15,8 @@ import '/pages/home/home_model.dart';
 import '/pages/favorites/favorites_view.dart';
 import '/pages/favorites/favorites_controller.dart';
 
+// CalendarButton
+
 import 'custom_widgets/all_custom_widgets.dart';
 
 /// Flutter Riverpod providers
@@ -62,5 +64,13 @@ class Providers {
   static final navigatorKeyProvider =
       Provider<GlobalKey<NavigatorState>>((ref) {
     return GlobalKey<NavigatorState>();
+  });
+
+  /// Provider for [CalendarButton]
+  /// - Provides a [CalendarButtonController] for a [CalendarButton]
+  static final StateNotifierProvider<CalendarButtonController, CalendarModel>
+      calendarButtonControllerProvider =
+      StateNotifierProvider<CalendarButtonController, CalendarModel>((ref) {
+    return CalendarButtonControllerImpl();
   });
 }

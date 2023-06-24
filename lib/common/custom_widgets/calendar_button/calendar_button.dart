@@ -1,9 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import '/common/custom_widgets/calendar_button/calendar_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../provider.dart';
-import '/pages/single_item/single_item_view.dart';
+import '../../provider.dart';
 
 import 'package:device_calendar/device_calendar.dart';
 import 'package:timezone/data/latest.dart' as tz;
@@ -22,12 +21,11 @@ class CalendarButton extends ConsumerStatefulWidget {
 
 class _CalendarButtonState extends ConsumerState<CalendarButton> {
   String? selectedCalendarId;
-  String description = '';
   int selectedRecurrenceIndex = 0;
   Reminder selectedReminder = Reminder(minutes: 0);
 
-  final Map<RecurrenceRule, String> recurrenceOptions = {
-    RecurrenceRule(null): 'None',
+  final Map<RecurrenceRule?, String> recurrenceOptions = {
+    null: 'None',
     RecurrenceRule(RecurrenceFrequency.Daily): 'Daily',
     RecurrenceRule(RecurrenceFrequency.Weekly): 'Weekly',
     RecurrenceRule(RecurrenceFrequency.Monthly): 'Monthly',
@@ -51,7 +49,8 @@ class _CalendarButtonState extends ConsumerState<CalendarButton> {
             DeviceCalendarPlugin deviceCalendarPlugin = DeviceCalendarPlugin();
 
             return FutureBuilder<Result<List<Calendar>>?>(
-              future: deviceCalendarPlugin.retrieveCalendars(),
+              future: deviceCalendarPlugin
+                  .retrieveCalendars(), //@TODO: move this into own wrapper class
               builder: (BuildContext context,
                   AsyncSnapshot<Result<List<Calendar>>?> snapshot) {
                 if (snapshot.hasData && snapshot.data != null) {
@@ -136,6 +135,7 @@ class _CalendarButtonState extends ConsumerState<CalendarButton> {
     );
   }
 
+  //@TODO: move this into the upper class
   void _showAddEventDialog(
     BuildContext context,
     DeviceCalendarPlugin deviceCalendarPlugin,
@@ -162,16 +162,18 @@ class _CalendarButtonState extends ConsumerState<CalendarButton> {
                       });
                     },
                   ),
-                  SizedBox(height: 16),
-                  CupertinoTextField(
-                    placeholder: 'Event Description',
-                    onChanged: (value) {
-                      setState(() {
-                        description = value;
-                      });
-                    },
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 16),
+                    child: CupertinoTextField(
+                      placeholder: 'Event Description',
+                      onChanged: (value) {
+                        setState(() {
+                          description = value;
+                        });
+                      },
+                    ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 16), //@TODO: replace by paddding
                   CupertinoTextField(
                     placeholder: 'Enter reminder minutes',
                     keyboardType: TextInputType.number,
@@ -212,6 +214,7 @@ class _CalendarButtonState extends ConsumerState<CalendarButton> {
                           onTap: () async {
                             final selectedDateTime =
                                 await showCupertinoModalPopup<DateTime>(
+                              //@TODO: move this into own wrapper class
                               context: context,
                               builder: (BuildContext context) {
                                 return Container(
@@ -310,18 +313,14 @@ class _CalendarButtonState extends ConsumerState<CalendarButton> {
                 CupertinoDialogAction(
                   child: const Text('Add Event'),
                   onPressed: () async {
-                    final local = tz.local; // Get local time zone
                     // Retrieve the selected recurrence and notification values
-                    RecurrenceRule? selectedRecurrence;
-                    if (selectedRecurrenceIndex != 0) {
-                      selectedRecurrence = recurrenceOptions.keys
-                          .elementAt(selectedRecurrenceIndex);
-                    }
+                    RecurrenceRule? selectedRecurrence = recurrenceOptions.keys
+                        .elementAt(selectedRecurrenceIndex);
 
                     final Event newEvent = Event(selectedCalendarId!,
                         eventId: null,
-                        start: tz.TZDateTime.from(startDate, local),
-                        end: tz.TZDateTime.from(endDate, local),
+                        start: tz.TZDateTime.from(startDate, tz.local),
+                        end: tz.TZDateTime.from(endDate, tz.local),
                         title: title,
                         description: description,
                         recurrenceRule: selectedRecurrence,
@@ -356,4 +355,34 @@ class _CalendarButtonState extends ConsumerState<CalendarButton> {
     final formattedDate = dateFormat.format(dateTime);
     return '$formattedDate, $formattedTime';
   }
+}
+
+abstract class CalendarButtonController extends StateNotifier<CalendarModel> {
+  CalendarButtonController(CalendarModel state) : super(state);
+
+  void setTitle(String title);
+
+  void setDescription(String description);
+
+  void setStartDate(DateTime? date);
+
+  void setEndDate(DateTime? date);
+
+  void setRecurrenceIndex(int index);
+
+  void setReminderMinutes(int minutes);
+
+  String getTitle();
+
+  String getDescription();
+
+  DateTime? getStartDate();
+
+  DateTime? getEndDate();
+
+  int getRecurrenceIndex();
+
+  int getReminderMinutes();
+
+  Event getEvent();
 }

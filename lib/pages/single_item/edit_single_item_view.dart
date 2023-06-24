@@ -91,6 +91,7 @@ class EditSingleItemPage extends ConsumerWidget {
                                               .getDescription()
                                               .length))),
                               decoration: BoxDecoration(
+                                //@TODO: make to variables
                                 border: Border.all(
                                   color: Colors.transparent,
                                 ),
@@ -106,30 +107,25 @@ class EditSingleItemPage extends ConsumerWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      // Open gallery, select image, and save it
+                      // @TODO: add functionality
                     },
                     child: Padding(
                       padding: const EdgeInsets.only(left: 20.0, right: 20),
                       child: Container(
                         decoration: BoxDecoration(
-                          color: Colors.grey[200],
+                          color: CupertinoDynamicColor.resolve(
+                              CupertinoColors.systemGrey5, context),
                           borderRadius: BorderRadius.circular(20),
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Stack(
-                            children: [
-                              Container(
-                                height: MediaQuery.of(context).size.height / 6,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  image: DecorationImage(
-                                    image: controller.getImage().image,
-                                    fit: BoxFit.fitWidth,
-                                  ),
-                                ),
-                              ),
-                            ],
+                        child: Container(
+                          margin: const EdgeInsets.all(8.0),
+                          height: MediaQuery.of(context).size.height / 6,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            image: DecorationImage(
+                              image: controller.getImage().image,
+                              fit: BoxFit.fitWidth,
+                            ),
                           ),
                         ),
                       ),
@@ -182,38 +178,6 @@ class EditSingleItemPage extends ConsumerWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class TextFieldWithIcon extends StatelessWidget {
-  const TextFieldWithIcon({
-    Key? key,
-    required this.controller,
-    required this.onChanged,
-    required this.hintText,
-    required this.icon,
-  }) : super(key: key);
-
-  final TextEditingController controller;
-  final Function(String) onChanged;
-  final String hintText;
-  final IconData icon;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: CupertinoTextField(
-            controller: controller,
-            onChanged: onChanged,
-            placeholder: hintText,
-            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
-          ),
-        ),
-        Icon(icon),
-      ],
     );
   }
 }

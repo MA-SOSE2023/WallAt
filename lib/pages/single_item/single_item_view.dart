@@ -2,19 +2,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_share/social_share.dart';
-
 import '../../common/provider.dart';
 import 'full_screen_image_view.dart';
 import 'edit_single_item_view.dart';
 import 'model/single_item.dart';
 import 'model/item_event.dart';
-import '/common/provider.dart';
 import '/common/custom_widgets/all_custom_widgets.dart' show EventsContainer;
 
 String singleItemHeroTag(String id) {
   return "single_item_image$id";
 }
 
+//@TODO: maybe use CustomScrollView with SliverAppbar instead of CupertinoPageScaffold
 class SingleItemPage extends ConsumerWidget {
   const SingleItemPage({required String id, Key? key})
       : _id = id,
@@ -92,6 +91,7 @@ class SingleItemPage extends ConsumerWidget {
   }
 }
 
+//@TODO: move to custom widgets
 class PictureContainer extends StatelessWidget {
   const PictureContainer({
     Key? key,
@@ -161,7 +161,7 @@ class ActionButtons extends ConsumerWidget {
       : super(key: key);
 
   final String itemId;
-  final SingleItemController controller;
+  final SingleItemController controller; //TODO: remove, call via ref
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -206,6 +206,7 @@ class ActionButtons extends ConsumerWidget {
     );
   }
 
+  //@TODO: remove
   Widget _buildActionButton({
     required VoidCallback onPressed,
     required IconData icon,
