@@ -19,6 +19,8 @@ import '/pages/folders/folders_view.dart';
 import '/pages/folders/folders_controller.dart';
 import '/pages/folders/folder_model.dart';
 
+// CalendarButton
+
 import 'custom_widgets/all_custom_widgets.dart';
 
 /// Flutter Riverpod providers
@@ -78,5 +80,13 @@ class Providers {
 
   static final enableHeroAnimationProvider = StateProvider<bool>((ref) {
     return true;
+  });
+
+  /// Provider for [CalendarButton]
+  /// - Provides a [CalendarButtonController] for a [CalendarButton]
+  static final StateNotifierProvider<CalendarButtonController, CalendarModel>
+      calendarButtonControllerProvider =
+      StateNotifierProvider<CalendarButtonController, CalendarModel>((ref) {
+    return CalendarButtonControllerImpl();
   });
 }
