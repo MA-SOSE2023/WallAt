@@ -10,6 +10,7 @@ import 'folders_view.dart';
 
 List<ItemEvent> _mockEvents = [
   ItemEvent(
+      id: '0',
       event: Event("1",
           eventId: null,
           title: 'Example Event',
@@ -18,6 +19,7 @@ List<ItemEvent> _mockEvents = [
           end: TZDateTime.now(local)),
       parentId: "1"),
   ItemEvent(
+      id: '1',
       event: Event("2",
           eventId: null,
           title: 'Example Event',
@@ -26,6 +28,7 @@ List<ItemEvent> _mockEvents = [
           end: TZDateTime.now(local)),
       parentId: "1"),
   ItemEvent(
+      id: '2',
       event: Event("3",
           eventId: null,
           title: 'Example Event',
