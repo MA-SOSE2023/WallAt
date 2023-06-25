@@ -16,6 +16,7 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$ItemEvent {
+  String get id => throw _privateConstructorUsedError;
   Event get event => throw _privateConstructorUsedError;
   String get parentId => throw _privateConstructorUsedError;
 
@@ -29,7 +30,7 @@ abstract class $ItemEventCopyWith<$Res> {
   factory $ItemEventCopyWith(ItemEvent value, $Res Function(ItemEvent) then) =
       _$ItemEventCopyWithImpl<$Res, ItemEvent>;
   @useResult
-  $Res call({Event event, String parentId});
+  $Res call({String id, Event event, String parentId});
 }
 
 /// @nodoc
@@ -45,10 +46,15 @@ class _$ItemEventCopyWithImpl<$Res, $Val extends ItemEvent>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = null,
     Object? event = null,
     Object? parentId = null,
   }) {
     return _then(_value.copyWith(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
       event: null == event
           ? _value.event
           : event // ignore: cast_nullable_to_non_nullable
@@ -68,7 +74,7 @@ abstract class _$$_ItemEventCopyWith<$Res> implements $ItemEventCopyWith<$Res> {
       __$$_ItemEventCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({Event event, String parentId});
+  $Res call({String id, Event event, String parentId});
 }
 
 /// @nodoc
@@ -82,10 +88,15 @@ class __$$_ItemEventCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = null,
     Object? event = null,
     Object? parentId = null,
   }) {
     return _then(_$_ItemEvent(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
       event: null == event
           ? _value.event
           : event // ignore: cast_nullable_to_non_nullable
@@ -101,8 +112,11 @@ class __$$_ItemEventCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_ItemEvent implements _ItemEvent {
-  const _$_ItemEvent({required this.event, required this.parentId});
+  const _$_ItemEvent(
+      {required this.id, required this.event, required this.parentId});
 
+  @override
+  final String id;
   @override
   final Event event;
   @override
@@ -110,7 +124,7 @@ class _$_ItemEvent implements _ItemEvent {
 
   @override
   String toString() {
-    return 'ItemEvent(event: $event, parentId: $parentId)';
+    return 'ItemEvent(id: $id, event: $event, parentId: $parentId)';
   }
 
   @override
@@ -118,13 +132,14 @@ class _$_ItemEvent implements _ItemEvent {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_ItemEvent &&
+            (identical(other.id, id) || other.id == id) &&
             (identical(other.event, event) || other.event == event) &&
             (identical(other.parentId, parentId) ||
                 other.parentId == parentId));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, event, parentId);
+  int get hashCode => Object.hash(runtimeType, id, event, parentId);
 
   @JsonKey(ignore: true)
   @override
@@ -135,9 +150,12 @@ class _$_ItemEvent implements _ItemEvent {
 
 abstract class _ItemEvent implements ItemEvent {
   const factory _ItemEvent(
-      {required final Event event,
+      {required final String id,
+      required final Event event,
       required final String parentId}) = _$_ItemEvent;
 
+  @override
+  String get id;
   @override
   Event get event;
   @override

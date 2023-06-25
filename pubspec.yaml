@@ -9,6 +9,11 @@ version: 1.0.0+1
 environment:
   sdk: '>=2.19.6 <3.0.0'
 
+global_options:
+  freezed:freezed:
+    runs_before:
+      - isar_generator:isar_generator
+
 dependencies:
   flutter:
     sdk: flutter
