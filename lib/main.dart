@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:timezone/data/latest.dart' as tz;
 
 import 'router/router.dart';
+import 'common/theme.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -12,9 +13,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CupertinoApp.router(
-      theme: const CupertinoThemeData(
-        brightness: Brightness.dark,
-      ),
+      theme: AppCupertinoTheme.darkTheme,
       localizationsDelegates: const [
         DefaultCupertinoLocalizations.delegate,
         DefaultMaterialLocalizations.delegate,
