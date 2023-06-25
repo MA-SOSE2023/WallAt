@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gruppe4/pages/single_item/single_item_view.dart';
+import '../../common/provider.dart';
 
-import '/pages/single_item/single_item_view.dart';
 import 'model/single_item.dart';
-import '/common/provider.dart';
 import '/common/custom_widgets/all_custom_widgets.dart' show EventsContainer;
 
 Widget makeDismissable(
@@ -56,11 +56,16 @@ class EditSingleItemPage extends ConsumerWidget {
                     padding: const EdgeInsets.all(20.0),
                     child: Container(
                       decoration: BoxDecoration(
-                        color: Colors.grey[200],
+                        color: CupertinoDynamicColor.resolve(
+                            CupertinoColors.systemGrey5, context),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: CupertinoFormSection.insetGrouped(
-                          margin: EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: CupertinoDynamicColor.resolve(
+                                  CupertinoColors.systemBackground, context)),
+                          margin: const EdgeInsets.all(10),
                           backgroundColor: Colors.transparent,
                           children: [
                             CupertinoTextField(
@@ -104,30 +109,25 @@ class EditSingleItemPage extends ConsumerWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      // Open gallery, select image, and save it
+                      // @TODO: add functionality
                     },
                     child: Padding(
                       padding: const EdgeInsets.only(left: 20.0, right: 20),
                       child: Container(
                         decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          borderRadius: BorderRadius.circular(20),
+                          color: CupertinoDynamicColor.resolve(
+                              CupertinoColors.systemGrey5, context),
+                          borderRadius: BorderRadius.circular(10),
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Stack(
-                            children: [
-                              Container(
-                                height: MediaQuery.of(context).size.height / 6,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  image: DecorationImage(
-                                    image: controller.getImage().image,
-                                    fit: BoxFit.fitWidth,
-                                  ),
-                                ),
-                              ),
-                            ],
+                        child: Container(
+                          margin: const EdgeInsets.all(8.0),
+                          height: MediaQuery.of(context).size.height / 6,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            image: DecorationImage(
+                              image: controller.getImage().image,
+                              fit: BoxFit.fitWidth,
+                            ),
                           ),
                         ),
                       ),
@@ -137,7 +137,8 @@ class EditSingleItemPage extends ConsumerWidget {
                       padding: const EdgeInsets.all(20.0),
                       child: Container(
                           decoration: BoxDecoration(
-                            color: Colors.grey[200],
+                            color: CupertinoDynamicColor.resolve(
+                                CupertinoColors.systemGrey5, context),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: EventsContainer(id: _id, editable: true))),
@@ -163,7 +164,11 @@ class EditSingleItemPage extends ConsumerWidget {
                           Navigator.of(context).pop();
                         },
                       ),
-                      const Text('Edit Item', style: TextStyle(fontSize: 18)),
+                      Text('Edit Item',
+                          style: TextStyle(
+                              color: CupertinoDynamicColor.resolve(
+                                  CupertinoColors.label, context),
+                              fontSize: 18)),
                       CupertinoButton(
                           child: const Text('Save',
                               style: TextStyle(fontSize: 14)),
@@ -180,38 +185,6 @@ class EditSingleItemPage extends ConsumerWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class TextFieldWithIcon extends StatelessWidget {
-  const TextFieldWithIcon({
-    Key? key,
-    required this.controller,
-    required this.onChanged,
-    required this.hintText,
-    required this.icon,
-  }) : super(key: key);
-
-  final TextEditingController controller;
-  final Function(String) onChanged;
-  final String hintText;
-  final IconData icon;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: CupertinoTextField(
-            controller: controller,
-            onChanged: onChanged,
-            placeholder: hintText,
-            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
-          ),
-        ),
-        Icon(icon),
-      ],
     );
   }
 }

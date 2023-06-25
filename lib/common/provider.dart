@@ -14,6 +14,12 @@ import '/pages/home/home_model.dart';
 // Favorites
 import '/pages/favorites/favorites_view.dart';
 import '/pages/favorites/favorites_controller.dart';
+// Folders
+import '/pages/folders/folders_view.dart';
+import '/pages/folders/folders_controller.dart';
+import '/pages/folders/folder_model.dart';
+
+// CalendarButton
 
 import 'custom_widgets/all_custom_widgets.dart';
 
@@ -58,6 +64,14 @@ class Providers {
         const Duration(seconds: 1), () => FavoritesControllerMock().favorites);
   });
 
+  /// Provider for [FoldersScreen]
+  /// - Provides a [FoldersController] for a [Folder]
+  static final AutoDisposeStateNotifierProviderFamily<FoldersController, Folder,
+          String> foldersControllerProvider =
+      StateNotifierProvider.autoDispose.family((ref, id) {
+    return FoldersControllerMock(id);
+  });
+
   /// Provider for [CustomBottomNavBar]
   /// - Provides a [CustomBottomNavBarController] for a [CustomBottomNavBarModel]
   static final StateNotifierProvider<CustomBottomNavBarController,
@@ -74,5 +88,17 @@ class Providers {
   static final navigatorKeyProvider =
       Provider<GlobalKey<NavigatorState>>((ref) {
     return GlobalKey<NavigatorState>();
+  });
+
+  static final enableHeroAnimationProvider = StateProvider<bool>((ref) {
+    return true;
+  });
+
+  /// Provider for [CalendarButton]
+  /// - Provides a [CalendarButtonController] for a [CalendarButton]
+  static final StateNotifierProvider<CalendarButtonController, CalendarModel>
+      calendarButtonControllerProvider =
+      StateNotifierProvider<CalendarButtonController, CalendarModel>((ref) {
+    return CalendarButtonControllerImpl();
   });
 }

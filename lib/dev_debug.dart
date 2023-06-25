@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gruppe4/common/custom_widgets/all_custom_widgets.dart';
+import 'package:timezone/data/latest.dart' as tz;
 
-void main() => runApp(const ProviderScope(child: MyApp()));
+void main() =>
+    {tz.initializeTimeZones(), runApp(const ProviderScope(child: MyApp()))};
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);

@@ -1,3 +1,4 @@
+import 'package:device_calendar/device_calendar.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'model/single_item.dart';
@@ -9,33 +10,27 @@ var mockSingleItem = SingleItem(
   id: '1',
   title: 'Example Title',
   description: 'Example Description',
-  image: 'assets/dev_debug_images/hampter1.jpg',
+  image: const AssetImage('assets/dev_debug_images/hampter1.jpg'),
   isFavorite: false,
-  events: [
-    ItemEvent(
-        description: "Example Event", date: DateTime.now(), parentId: '1'),
-    ItemEvent(
-        description: "Example Event", date: DateTime.now(), parentId: '1'),
-    ItemEvent(description: "Example Event", date: DateTime.now(), parentId: '1')
-  ],
+  events: [],
   currentSelectedDate: null,
 );
 
 class SingleItemControllerMock extends SingleItemController {
   SingleItemControllerMock({required String id, SingleItem? model})
       : _id = id,
-        super(model ?? mockSingleItem);
+        super(model ?? mockSingleItem.copyWith(id: id));
 
   final String _id;
 
   @override
   Image getImage() {
-    return Image.asset(state.image);
+    return Image(image: state.image);
   }
 
   @override
   void setImage(Image image) {
-    state = state.copyWith(image: image.toString());
+    state = state.copyWith(image: image.image);
   }
 
   @override
@@ -65,6 +60,10 @@ class SingleItemControllerMock extends SingleItemController {
 
   @override
   void removeEvent(ItemEvent event) {
+    DeviceCalendarPlugin deviceCalendarPlugin = DeviceCalendarPlugin();
+    var res = deviceCalendarPlugin.deleteEvent(
+        event.event.calendarId!, event.event.eventId!);
+
     state = state.copyWith(
         events: List<ItemEvent>.from(state.events)..remove(event));
   }

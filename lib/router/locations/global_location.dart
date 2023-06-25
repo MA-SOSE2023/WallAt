@@ -47,7 +47,7 @@ class GlobalLocation extends BeamLocation<BeamState> {
             title: 'Settings',
             type: BeamPageType.cupertino,
             popToNamed: prevNavBarLocation,
-            child: Placeholder(), // TODO: Settings Screen
+            child: const Placeholder(), // TODO: Settings Screen
           ),
         if (state.routeInformation.location == '/profiles')
           BeamPage(
@@ -55,7 +55,7 @@ class GlobalLocation extends BeamLocation<BeamState> {
             title: 'Profiles',
             type: BeamPageType.cupertino,
             popToNamed: prevNavBarLocation,
-            child: Placeholder(), // TODO: Profiles Screen
+            child: const Placeholder(), // TODO: Profiles Screen
           ),
         if (state.routeInformation.location == '/camera/view')
           BeamPage(

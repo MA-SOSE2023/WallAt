@@ -19,7 +19,7 @@ mixin _$SingleItem {
   String get id => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
   String get description => throw _privateConstructorUsedError;
-  String get image => throw _privateConstructorUsedError;
+  ImageProvider<Object> get image => throw _privateConstructorUsedError;
   bool get isFavorite => throw _privateConstructorUsedError;
   List<ItemEvent> get events => throw _privateConstructorUsedError;
   DateTime? get currentSelectedDate => throw _privateConstructorUsedError;
@@ -39,7 +39,7 @@ abstract class $SingleItemCopyWith<$Res> {
       {String id,
       String title,
       String description,
-      String image,
+      ImageProvider<Object> image,
       bool isFavorite,
       List<ItemEvent> events,
       DateTime? currentSelectedDate});
@@ -82,7 +82,7 @@ class _$SingleItemCopyWithImpl<$Res, $Val extends SingleItem>
       image: null == image
           ? _value.image
           : image // ignore: cast_nullable_to_non_nullable
-              as String,
+              as ImageProvider<Object>,
       isFavorite: null == isFavorite
           ? _value.isFavorite
           : isFavorite // ignore: cast_nullable_to_non_nullable
@@ -111,7 +111,7 @@ abstract class _$$_SingleItemCopyWith<$Res>
       {String id,
       String title,
       String description,
-      String image,
+      ImageProvider<Object> image,
       bool isFavorite,
       List<ItemEvent> events,
       DateTime? currentSelectedDate});
@@ -152,7 +152,7 @@ class __$$_SingleItemCopyWithImpl<$Res>
       image: null == image
           ? _value.image
           : image // ignore: cast_nullable_to_non_nullable
-              as String,
+              as ImageProvider<Object>,
       isFavorite: null == isFavorite
           ? _value.isFavorite
           : isFavorite // ignore: cast_nullable_to_non_nullable
@@ -171,8 +171,8 @@ class __$$_SingleItemCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_SingleItem implements _SingleItem {
-  const _$_SingleItem(
+class _$_SingleItem extends _SingleItem {
+  _$_SingleItem(
       {required this.id,
       required this.title,
       required this.description,
@@ -180,7 +180,8 @@ class _$_SingleItem implements _SingleItem {
       required this.isFavorite,
       required final List<ItemEvent> events,
       this.currentSelectedDate})
-      : _events = events;
+      : _events = events,
+        super._();
 
   @override
   final String id;
@@ -189,7 +190,7 @@ class _$_SingleItem implements _SingleItem {
   @override
   final String description;
   @override
-  final String image;
+  final ImageProvider<Object> image;
   @override
   final bool isFavorite;
   final List<ItemEvent> _events;
@@ -243,15 +244,16 @@ class _$_SingleItem implements _SingleItem {
       __$$_SingleItemCopyWithImpl<_$_SingleItem>(this, _$identity);
 }
 
-abstract class _SingleItem implements SingleItem {
-  const factory _SingleItem(
+abstract class _SingleItem extends SingleItem implements FolderItem {
+  factory _SingleItem(
       {required final String id,
       required final String title,
       required final String description,
-      required final String image,
+      required final ImageProvider<Object> image,
       required final bool isFavorite,
       required final List<ItemEvent> events,
       final DateTime? currentSelectedDate}) = _$_SingleItem;
+  _SingleItem._() : super._();
 
   @override
   String get id;
@@ -260,7 +262,7 @@ abstract class _SingleItem implements SingleItem {
   @override
   String get description;
   @override
-  String get image;
+  ImageProvider<Object> get image;
   @override
   bool get isFavorite;
   @override
