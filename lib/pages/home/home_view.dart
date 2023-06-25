@@ -31,7 +31,9 @@ class HomeScreen extends ConsumerWidget {
         child: FloatingActionButton(
           foregroundColor: CupertinoTheme.of(context).primaryContrastingColor,
           backgroundColor: CupertinoTheme.of(context).primaryColor,
-          onPressed: () => Routers.globalRouterDelegate.beamToNamed('/camera'),
+          onPressed: () => ref
+              .read(Providers.takePictureControllerProvider.notifier)
+              .takePicture(),
           heroTag: cameraButtonHeroTag,
           child: const Icon(
             CupertinoIcons.camera,
