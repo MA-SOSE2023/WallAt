@@ -10,11 +10,12 @@ import '/router/router.dart';
 export 'bottom_nav_bar_model.dart';
 export 'bottom_nav_bar_controller.dart';
 
-class CustomBottomNavBarScreen extends StatelessWidget {
+class CustomBottomNavBarScreen extends ConsumerWidget {
   const CustomBottomNavBarScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    ref.watch(Providers.enableHeroAnimationProvider);
     return Scaffold(
       body: Beamer(
         key: Routers.bottomNavRouterBeamerKey,
@@ -33,41 +34,6 @@ class CustomBottomNavBar extends ConsumerStatefulWidget {
   final GlobalKey<BeamerState> beamerKey;
 
   static const double iconSize = 30.0;
-
-  static const List<CustomBottomNavBarItem> baseItems = [
-    CustomBottomNavBarItem(
-      icon: Icon(Icons.home),
-      activeIcon: Icon(Icons.home),
-      label: 'HOME',
-      initialLocation: '/home',
-    ),
-    CustomBottomNavBarItem(
-      icon: Icon(Icons.favorite_outline),
-      activeIcon: Icon(Icons.favorite),
-      label: 'FAVORITES',
-      initialLocation: '/favorites',
-    ),
-    CustomBottomNavBarItem(
-      icon: Icon(Icons.folder_open),
-      activeIcon: Icon(Icons.folder),
-      label: 'FOLDERS',
-      initialLocation: '/folders',
-    ),
-  ];
-
-  static const CustomBottomNavBarItem cameraItem = CustomBottomNavBarItem(
-    icon: Icon(Icons.camera_alt_outlined),
-    activeIcon: Icon(Icons.camera_alt),
-    label: 'CAMERA',
-    initialLocation: '/camera',
-  );
-
-  static const CustomBottomNavBarItem settingsItem = CustomBottomNavBarItem(
-    icon: Icon(Icons.settings_outlined),
-    activeIcon: Icon(Icons.settings),
-    label: 'SETTINGS',
-    initialLocation: '/settings',
-  );
 
   @override
   ConsumerState<CustomBottomNavBar> createState() => _CustomBottomNavBarState();
@@ -94,7 +60,7 @@ class _CustomBottomNavBarState extends ConsumerState<CustomBottomNavBar> {
 
     return CupertinoTabBar(
       iconSize: state.iconSize,
-      onTap: (index) => controller.goToOtherPage(index, context),
+      onTap: (index) => controller.goToOtherPage(index, context, ref),
       currentIndex: state.currentIndex,
       items: controller.getNavBarItems(),
     );
@@ -123,5 +89,5 @@ abstract class CustomBottomNavBarController
   CustomBottomNavBarController() : super(const CustomBottomNavBarModel());
 
   List<CustomBottomNavBarItem> getNavBarItems();
-  void goToOtherPage(int index, BuildContext context);
+  void goToOtherPage(int index, BuildContext context, WidgetRef ref);
 }

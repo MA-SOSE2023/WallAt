@@ -6,13 +6,11 @@ import 'model/item_event.dart';
 import '/pages/single_item/single_item_view.dart';
 import '/router/router.dart';
 
-import 'package:timezone/data/latest.dart' as tz;
-
 var mockSingleItem = SingleItem(
   id: '1',
   title: 'Example Title',
   description: 'Example Description',
-  image: 'assets/dev_debug_images/hampter1.jpg',
+  image: const AssetImage('assets/dev_debug_images/hampter1.jpg'),
   isFavorite: false,
   events: [],
   currentSelectedDate: null,
@@ -21,18 +19,18 @@ var mockSingleItem = SingleItem(
 class SingleItemControllerMock extends SingleItemController {
   SingleItemControllerMock({required String id, SingleItem? model})
       : _id = id,
-        super(model ?? mockSingleItem);
+        super(model ?? mockSingleItem.copyWith(id: id));
 
   final String _id;
 
   @override
   Image getImage() {
-    return Image.asset(state.image);
+    return Image(image: state.image);
   }
 
   @override
   void setImage(Image image) {
-    state = state.copyWith(image: image.toString());
+    state = state.copyWith(image: image.image);
   }
 
   @override
@@ -65,7 +63,6 @@ class SingleItemControllerMock extends SingleItemController {
     DeviceCalendarPlugin deviceCalendarPlugin = DeviceCalendarPlugin();
     var res = deviceCalendarPlugin.deleteEvent(
         event.event.calendarId!, event.event.eventId!);
-    print(res);
 
     state = state.copyWith(
         events: List<ItemEvent>.from(state.events)..remove(event));

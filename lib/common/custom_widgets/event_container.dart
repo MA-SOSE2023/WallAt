@@ -27,7 +27,7 @@ class EventsContainer extends ConsumerWidget {
           color: CupertinoDynamicColor.resolve(
               CupertinoColors.systemBackground, context)),
       header: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        Text("Events"),
+        const Text("Events"),
         if (editable) CalendarButton(id: id),
       ]),
       children: [

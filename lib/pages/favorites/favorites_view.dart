@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '/common/provider.dart';
@@ -54,42 +55,59 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
       },
     );
 
+    const EdgeInsets specialPadding = EdgeInsets.only(top: 40.0);
+
     final Widget body = filterFavoritesFuture.when(
-      error: (object, stackTrace) => favoritesFuture.hasError
-          ? const ErrorMessage()
-          : const ErrorMessage(message: 'Filter could not be applied'),
-      loading: () => const CupertinoActivityIndicator(),
-      data: (filteredFavorites) => filteredFavorites.isNotEmpty
-          ? DocumentCardContainerList(
-              items: filteredFavorites,
-              borderlessCards: widget._borderlessCards)
-          : NoElementsMessage(message: emptyListMessage),
-    );
+        error: (object, stackTrace) => favoritesFuture.hasError
+            ? const ErrorMessage()
+            : const ErrorMessage(message: 'Filter could not be applied'),
+        loading: () => const CupertinoActivityIndicator(),
+        data: (filteredFavorites) => filteredFavorites.isNotEmpty
+            ? DocumentCardContainerList(
+                items: filteredFavorites,
+                borderlessCards: widget._borderlessCards)
+            : SliverSafeArea(
+                sliver: SliverToBoxAdapter(
+                  child: Padding(
+                      padding: specialPadding,
+                      child: NoElementsMessage(
+                        message: emptyListMessage,
+                      )),
+                ),
+              ));
 
     return CupertinoPageScaffold(
-      navigationBar: const CupertinoNavigationBar(
-        middle: Text('Favorites'),
-      ),
       child: Stack(
         children: [
-          SafeArea(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                maxHeight: MediaQuery.of(context).size.height,
+          CustomScrollView(
+            slivers: [
+              const CupertinoSliverNavigationBar(
+                largeTitle: Text('Favorites'),
               ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(child: filterFavoritesFuture.hasValue ? body : body),
-                  // Search bar for filtering items
-                  SearchBarContainer(onChanged: (text) {
-                    setState(() {
-                      searchString = text;
-                    });
-                  }),
-                ],
+              SliverAppBar(
+                pinned: true,
+                flexibleSpace: FlexibleSpaceBar(
+                  background: SearchBarContainer(
+                    onChanged: (text) {
+                      setState(() {
+                        searchString = text;
+                      });
+                    },
+                  ),
+                ),
+                toolbarHeight: 35.0,
               ),
-            ),
+              filterFavoritesFuture.hasValue
+                  ? body
+                  : SliverSafeArea(
+                      sliver: SliverToBoxAdapter(
+                        child: Padding(
+                          padding: specialPadding,
+                          child: body,
+                        ),
+                      ),
+                    )
+            ],
           ),
           const CameraButtonHeroDestination(),
         ],

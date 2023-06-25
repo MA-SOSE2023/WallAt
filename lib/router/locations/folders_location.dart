@@ -13,7 +13,7 @@ class FoldersLocation extends BeamLocation<BeamState> {
           key: ValueKey('folders'),
           title: 'Folders',
           type: BeamPageType.noTransition,
-          child: FoldersScren(),
+          child: FoldersScreen(),
         ),
       ];
 }
