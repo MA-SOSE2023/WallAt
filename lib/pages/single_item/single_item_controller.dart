@@ -54,8 +54,11 @@ class SingleItemControllerMock extends SingleItemController {
   }
 
   @override
-  void addEvent(ItemEvent event) {
-    state = state.copyWith(events: [...state.events, event]);
+  void addEvent({required Event event, required String parentId}) {
+    state = state.copyWith(events: [
+      ...state.events,
+      ItemEvent(id: '0', event: event, parentId: parentId)
+    ]);
   }
 
   @override

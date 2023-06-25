@@ -9,6 +9,7 @@ import '/pages/folders/folder_model.dart';
 import '/pages/single_item/model/single_item.dart';
 import '/pages/single_item/model/item_event.dart';
 
+/*
 /// App service for accessing and modifying persistent data
 class PersistenceService {
   PersistenceService({
@@ -134,3 +135,4 @@ abstract class EventDio extends Dio<ItemEventEntry, ItemEvent> {
   Future<List<ItemEvent>> readAll();
   Future<List<ItemEvent>> readAllSoon();
 }
+*/

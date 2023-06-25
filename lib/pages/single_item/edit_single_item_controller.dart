@@ -72,8 +72,8 @@ class EditSingleItemControllerMock extends EditSingleItemController {
   }
 
   @override
-  void addEvent(ItemEvent event) async {
-    newEvents.add(event);
+  void addEvent({required Event event, required String parentId}) async {
+    newEvents.add(ItemEvent(id: '0', event: event, parentId: parentId));
     state = state.copyWith(events: [...state.events]);
   }
 

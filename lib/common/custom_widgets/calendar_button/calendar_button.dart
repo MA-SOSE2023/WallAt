@@ -122,7 +122,7 @@ class CalendarButton extends StatelessWidget {
                         ref
                             .read(Providers.editSingleItemControllerProvider(id)
                                 .notifier)
-                            .addEvent(ItemEvent(event: newEvent, parentId: id));
+                            .addEvent(event: newEvent, parentId: id);
 
                         Navigator.pop(context);
                         // Event added successfully

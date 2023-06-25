@@ -1,3 +1,4 @@
+import 'package:device_calendar/device_calendar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -225,7 +226,7 @@ abstract class SingleItemController extends StateNotifier<SingleItem> {
 
   void setTitle(String title);
 
-  void addEvent(ItemEvent event);
+  void addEvent({required Event event, required String parentId});
 
   List<ItemEvent> getEvents();
 
