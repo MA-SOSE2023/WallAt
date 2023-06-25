@@ -1,30 +1,48 @@
 import 'package:device_calendar/device_calendar.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:isar/isar.dart';
 
-import 'schemas/folder_entry.dart';
-import 'schemas/item_event_entry.dart';
-import 'schemas/single_item_entry.dart';
+import 'isar/schemas/isar_folder.dart';
+import 'isar/schemas/isar_single_item.dart';
+import 'isar/schemas/isar_item_event.dart';
 
 import '/pages/folders/folder_model.dart';
 import '/pages/single_item/model/single_item.dart';
 import '/pages/single_item/model/item_event.dart';
 
-/*
 /// App service for accessing and modifying persistent data
 class PersistenceService {
+  late Future<Isar> db;
+
+  late final SingleItemDio _singleItemDio;
+  late final FolderDio _folderDio;
+  late final ItemEventDio _eventDio;
+
   PersistenceService({
     required SingleItemDio singleItemDio,
     required FolderDio folderDio,
-    required EventDio eventDio,
-  })  : _singleItemDio = singleItemDio,
-        _folderDio = folderDio,
-        _eventDio = eventDio;
+    required ItemEventDio eventDio,
+  }) {
+    _singleItemDio = singleItemDio;
+    _folderDio = folderDio;
+    _eventDio = eventDio;
+    db = openDb();
+  }
 
-  final SingleItemDio _singleItemDio;
-  final FolderDio _folderDio;
-  final EventDio _eventDio;
+  Future<Isar> openDb() async {
+    if (Isar.instanceNames.isEmpty) {
+      return await Isar.open(
+        [IsarSingleItemSchema, IsarFolderSchema, IsarItemEventSchema],
+        directory: (await getApplicationDocumentsDirectory()).path,
+        inspector: true, // Inspector allows real-time insight into the database
+        // we might want to disable this in production
+      );
+    }
 
-  static const Id rootFolderId = 1;
+    return Future.value(Isar.getInstance());
+  }
+
+  static const int rootFolderId = 0;
 
   // ====================== CREATION ====================== //
 
@@ -33,41 +51,39 @@ class PersistenceService {
     required String imagePath,
     String description = '',
     bool isFavorite = false,
-    List<ItemEvent> events = const [],
-    Id? parentFolderId,
+    int? parentFolderId,
   }) =>
-      _singleItemDio.create(SingleItemSchema(
+      _singleItemDio.create(
         title: title,
         imagePath: imagePath,
         description: description,
         isFavorite: isFavorite,
-        events: events,
         parentFolderId: parentFolderId ?? rootFolderId,
-      ));
+      );
 
   Future<Folder> createFolder({
     required String title,
-    Id? parentFolderId,
+    int? parentFolderId,
   }) =>
-      _folderDio.create(FolderSchema(
+      _folderDio.create(
         title: title,
         parentFolderId: parentFolderId ?? rootFolderId,
-      ));
+      );
 
   Future<ItemEvent> createEvent({
     required Event event,
-    required Id parentItemId,
+    required int parentItemId,
   }) =>
-      _eventDio.create(ItemEventSchema(
+      _eventDio.create(
         event: event,
         parentItemId: parentItemId,
-      ));
+      );
 
   // ====================== GETTERS ====================== //
 
   /// Returns the [SingleItme] with the given [itemId].
   /// Returns null if no item with the given [itemId] exists
-  Future<SingleItem?> getSingleItem(Id itemId) => _singleItemDio.read(itemId);
+  Future<SingleItem?> getSingleItem(int itemId) => _singleItemDio.read(itemId);
 
   Future<List<SingleItem>> getItemsMatching(String query) =>
       _singleItemDio.readAllMatching(query);
@@ -82,11 +98,11 @@ class PersistenceService {
 
   /// Returns the [Folder] with the given [folderId].
   /// Returns null if no folder with the given [folderId] exists
-  Future<Folder?> getFolder(Id folderId) => _folderDio.read(folderId);
+  Future<Folder?> getFolder(int folderId) => _folderDio.read(folderId);
 
   /// Returns the [ItemEvent] with the given [eventId].
   /// Returns null if no event with the given [eventId] exists
-  Future<ItemEvent?> getEvent(Id eventId) => _eventDio.read(eventId);
+  Future<ItemEvent?> getEvent(int eventId) => _eventDio.read(eventId);
 
   Future<List<ItemEvent>> getAllEvents() => _eventDio.readAll();
 
@@ -112,14 +128,21 @@ class PersistenceService {
       _eventDio.delete(int.parse(event.id));
 }
 
-abstract class Dio<T, R> {
-  Future<R> create(T item);
-  Future<void> update(R item);
+abstract class Dio<T> {
+  Future<void> update(T item);
   Future<void> delete(Id id);
-  Future<R> read(Id id);
+  Future<T> read(Id id);
 }
 
-abstract class SingleItemDio extends Dio<SingleItemEntry, SingleItem> {
+abstract class SingleItemDio extends Dio<SingleItem> {
+  Future<SingleItem> create({
+    required String title,
+    required String imagePath,
+    required String description,
+    required bool isFavorite,
+    required int parentFolderId,
+  });
+
   Future<List<SingleItem>> readAll();
   Future<List<SingleItem>> readAllMatching(String query);
   Future<List<SingleItem>> readAllFavorites();
@@ -127,12 +150,21 @@ abstract class SingleItemDio extends Dio<SingleItemEntry, SingleItem> {
   Future<List<SingleItem>> readAllRecent();
 }
 
-abstract class FolderDio extends Dio<FolderEntry, Folder> {
+abstract class FolderDio extends Dio<Folder> {
+  Future<int> get rootFolderId;
+
+  Future<Folder> create({
+    required String title,
+    required int parentFolderId,
+  });
   Future<List<Folder>> readAll();
 }
 
-abstract class EventDio extends Dio<ItemEventEntry, ItemEvent> {
+abstract class ItemEventDio extends Dio<ItemEvent> {
+  Future<ItemEvent> create({
+    required Event event,
+    required int parentItemId,
+  });
   Future<List<ItemEvent>> readAll();
   Future<List<ItemEvent>> readAllSoon();
 }
-*/
