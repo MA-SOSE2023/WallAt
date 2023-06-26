@@ -1,15 +1,12 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../../pages/settings/settings_model.dart';
-import '/common/custom_widgets/calendar_button/calendar_model.dart';
+import '../../../pages/settings/settings_view.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../provider.dart';
 
 import '/common/custom_widgets/all_custom_widgets.dart';
 import 'package:device_calendar/device_calendar.dart';
-import 'package:timezone/data/latest.dart' as tz;
-import 'package:timezone/timezone.dart' as tz;
 import 'package:intl/intl.dart';
 import '/pages/single_item/model/item_event.dart';
 
@@ -22,6 +19,8 @@ class CalendarButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer(
       builder: (BuildContext context, WidgetRef ref, Widget? child) {
+        SettingsController controller =
+            ref.read(Providers.settingsControllerProvider.notifier);
         void _showAddEventDialog(
           BuildContext context,
         ) {
@@ -29,30 +28,12 @@ class CalendarButton extends StatelessWidget {
 
           if (settings.calendar == null) {
             showCupertinoDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return CupertinoAlertDialog(
-                  title: const Text('No Calendar Selected'),
-                  content:
-                      const Text('Please select a calendar in the settings.'),
-                  actions: <Widget>[
-                    CupertinoDialogAction(
-                      child: const Text('Cancel'),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    ),
-                    CupertinoDialogAction(
-                      child: const Text('Go to Settings'),
-                      onPressed: () {
-                        Navigator.pop(context); // Close the current dialog
-                        //@TODO: Beam to settings page
-                      },
-                    ),
-                  ],
-                );
-              },
-            );
+                context: context,
+                builder: (BuildContext context) {
+                  return SelectCalendarPopup(onCalendarSelected: (calendar) {
+                    controller.setUsedCalendar(calendar);
+                  });
+                });
           } else {
             showCupertinoDialog(
               context: context,
