@@ -74,8 +74,10 @@ class IsarFolderDio extends FolderDio {
   @override
   Future<void> update(Folder item) async {
     final isar = await _db;
-    IsarFolder isarFolder = (await _isarRead(item.id))!;
-    isar.isarFolders.put(isarFolder..title = item.title);
+    IsarFolder? isarFolder = (await _isarRead(item.id));
+    if (isarFolder != null) {
+      isar.isarFolders.put(isarFolder..title = item.title);
+    }
   }
 
   @override
