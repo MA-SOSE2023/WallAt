@@ -60,17 +60,17 @@ const IsarSingleItemSchema = CollectionSchema(
   },
   links: {
     r'parentFolder': LinkSchema(
-      id: -5239634118904737877,
+      id: 6017535076117925542,
       name: r'parentFolder',
       target: r'IsarFolder',
       single: true,
+      linkName: r'items',
     ),
     r'events': LinkSchema(
-      id: 81121562930136161,
+      id: 7143933037020689846,
       name: r'events',
       target: r'IsarItemEvent',
       single: false,
-      linkName: r'parentItem',
     )
   },
   embeddedSchemas: {},

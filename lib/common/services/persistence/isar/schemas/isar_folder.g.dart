@@ -17,8 +17,13 @@ const IsarFolderSchema = CollectionSchema(
   name: r'IsarFolder',
   id: -7805229368695537870,
   properties: {
-    r'title': PropertySchema(
+    r'isRoot': PropertySchema(
       id: 0,
+      name: r'isRoot',
+      type: IsarType.bool,
+    ),
+    r'title': PropertySchema(
+      id: 1,
       name: r'title',
       type: IsarType.string,
     )
@@ -58,11 +63,10 @@ const IsarFolderSchema = CollectionSchema(
       linkName: r'folders',
     ),
     r'items': LinkSchema(
-      id: 1914190953661692724,
+      id: -4924808400924372778,
       name: r'items',
       target: r'IsarSingleItem',
       single: false,
-      linkName: r'parentFolder',
     )
   },
   embeddedSchemas: {},
@@ -88,7 +92,8 @@ void _isarFolderSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeString(offsets[0], object.title);
+  writer.writeBool(offsets[0], object.isRoot);
+  writer.writeString(offsets[1], object.title);
 }
 
 IsarFolder _isarFolderDeserialize(
@@ -99,7 +104,8 @@ IsarFolder _isarFolderDeserialize(
 ) {
   final object = IsarFolder();
   object.id = id;
-  object.title = reader.readString(offsets[0]);
+  object.isRoot = reader.readBool(offsets[0]);
+  object.title = reader.readString(offsets[1]);
   return object;
 }
 
@@ -111,6 +117,8 @@ P _isarFolderDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
+      return (reader.readBool(offset)) as P;
+    case 1:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -409,6 +417,16 @@ extension IsarFolderQueryFilter
     });
   }
 
+  QueryBuilder<IsarFolder, IsarFolder, QAfterFilterCondition> isRootEqualTo(
+      bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'isRoot',
+        value: value,
+      ));
+    });
+  }
+
   QueryBuilder<IsarFolder, IsarFolder, QAfterFilterCondition> titleEqualTo(
     String value, {
     bool caseSensitive = true,
@@ -683,6 +701,18 @@ extension IsarFolderQueryLinks
 
 extension IsarFolderQuerySortBy
     on QueryBuilder<IsarFolder, IsarFolder, QSortBy> {
+  QueryBuilder<IsarFolder, IsarFolder, QAfterSortBy> sortByIsRoot() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isRoot', Sort.asc);
+    });
+  }
+
+  QueryBuilder<IsarFolder, IsarFolder, QAfterSortBy> sortByIsRootDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isRoot', Sort.desc);
+    });
+  }
+
   QueryBuilder<IsarFolder, IsarFolder, QAfterSortBy> sortByTitle() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'title', Sort.asc);
@@ -710,6 +740,18 @@ extension IsarFolderQuerySortThenBy
     });
   }
 
+  QueryBuilder<IsarFolder, IsarFolder, QAfterSortBy> thenByIsRoot() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isRoot', Sort.asc);
+    });
+  }
+
+  QueryBuilder<IsarFolder, IsarFolder, QAfterSortBy> thenByIsRootDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isRoot', Sort.desc);
+    });
+  }
+
   QueryBuilder<IsarFolder, IsarFolder, QAfterSortBy> thenByTitle() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'title', Sort.asc);
@@ -725,6 +767,12 @@ extension IsarFolderQuerySortThenBy
 
 extension IsarFolderQueryWhereDistinct
     on QueryBuilder<IsarFolder, IsarFolder, QDistinct> {
+  QueryBuilder<IsarFolder, IsarFolder, QDistinct> distinctByIsRoot() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'isRoot');
+    });
+  }
+
   QueryBuilder<IsarFolder, IsarFolder, QDistinct> distinctByTitle(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -738,6 +786,12 @@ extension IsarFolderQueryProperty
   QueryBuilder<IsarFolder, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
+    });
+  }
+
+  QueryBuilder<IsarFolder, bool, QQueryOperations> isRootProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'isRoot');
     });
   }
 

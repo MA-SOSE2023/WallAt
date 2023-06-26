@@ -56,10 +56,11 @@ const IsarItemEventSchema = CollectionSchema(
   indexes: {},
   links: {
     r'parentItem': LinkSchema(
-      id: 6706956575295304487,
+      id: -4370852904202348094,
       name: r'parentItem',
       target: r'IsarSingleItem',
       single: true,
+      linkName: r'events',
     )
   },
   embeddedSchemas: {},
