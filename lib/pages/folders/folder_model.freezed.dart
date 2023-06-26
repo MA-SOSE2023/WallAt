@@ -18,7 +18,7 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$Folder {
   int get id => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
-  List<FolderItem> get contents => throw _privateConstructorUsedError;
+  List<FolderItem>? get contents => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $FolderCopyWith<Folder> get copyWith => throw _privateConstructorUsedError;
@@ -29,7 +29,7 @@ abstract class $FolderCopyWith<$Res> {
   factory $FolderCopyWith(Folder value, $Res Function(Folder) then) =
       _$FolderCopyWithImpl<$Res, Folder>;
   @useResult
-  $Res call({int id, String title, List<FolderItem> contents});
+  $Res call({int id, String title, List<FolderItem>? contents});
 }
 
 /// @nodoc
@@ -47,7 +47,7 @@ class _$FolderCopyWithImpl<$Res, $Val extends Folder>
   $Res call({
     Object? id = null,
     Object? title = null,
-    Object? contents = null,
+    Object? contents = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -58,10 +58,10 @@ class _$FolderCopyWithImpl<$Res, $Val extends Folder>
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
               as String,
-      contents: null == contents
+      contents: freezed == contents
           ? _value.contents
           : contents // ignore: cast_nullable_to_non_nullable
-              as List<FolderItem>,
+              as List<FolderItem>?,
     ) as $Val);
   }
 }
@@ -72,7 +72,7 @@ abstract class _$$_FolderCopyWith<$Res> implements $FolderCopyWith<$Res> {
       __$$_FolderCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int id, String title, List<FolderItem> contents});
+  $Res call({int id, String title, List<FolderItem>? contents});
 }
 
 /// @nodoc
@@ -87,7 +87,7 @@ class __$$_FolderCopyWithImpl<$Res>
   $Res call({
     Object? id = null,
     Object? title = null,
-    Object? contents = null,
+    Object? contents = freezed,
   }) {
     return _then(_$_Folder(
       id: null == id
@@ -98,10 +98,10 @@ class __$$_FolderCopyWithImpl<$Res>
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
               as String,
-      contents: null == contents
+      contents: freezed == contents
           ? _value._contents
           : contents // ignore: cast_nullable_to_non_nullable
-              as List<FolderItem>,
+              as List<FolderItem>?,
     ));
   }
 }
@@ -112,7 +112,7 @@ class _$_Folder extends _Folder {
   _$_Folder(
       {required this.id,
       required this.title,
-      required final List<FolderItem> contents})
+      required final List<FolderItem>? contents})
       : _contents = contents,
         super._();
 
@@ -120,12 +120,14 @@ class _$_Folder extends _Folder {
   final int id;
   @override
   final String title;
-  final List<FolderItem> _contents;
+  final List<FolderItem>? _contents;
   @override
-  List<FolderItem> get contents {
+  List<FolderItem>? get contents {
+    final value = _contents;
+    if (value == null) return null;
     if (_contents is EqualUnmodifiableListView) return _contents;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_contents);
+    return EqualUnmodifiableListView(value);
   }
 
   @override
@@ -158,7 +160,7 @@ abstract class _Folder extends Folder implements FolderItem {
   factory _Folder(
       {required final int id,
       required final String title,
-      required final List<FolderItem> contents}) = _$_Folder;
+      required final List<FolderItem>? contents}) = _$_Folder;
   _Folder._() : super._();
 
   @override
@@ -166,7 +168,7 @@ abstract class _Folder extends Folder implements FolderItem {
   @override
   String get title;
   @override
-  List<FolderItem> get contents;
+  List<FolderItem>? get contents;
   @override
   @JsonKey(ignore: true)
   _$$_FolderCopyWith<_$_Folder> get copyWith =>

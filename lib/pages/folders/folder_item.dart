@@ -29,7 +29,7 @@ abstract class FolderItem {
   int get id => maybeItem?.id ?? maybeFolder!.id;
   String get title => maybeItem?.title ?? maybeFolder!.title;
 
-  List<FolderItem> get contents => maybeFolder!.contents;
+  List<FolderItem>? get contents => maybeFolder!.contents;
 
   String get heroTag =>
       isLeaf ? 'folderItem-itemHeroTag-$id' : 'folderItem-folderHeroTag-$id';

@@ -18,7 +18,7 @@ class Folder extends FolderItem with _$Folder {
   factory Folder({
     required int id,
     required String title,
-    required List<FolderItem> contents,
+    required List<FolderItem>? contents,
   }) = _Folder;
 
   @override
