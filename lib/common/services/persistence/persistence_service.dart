@@ -84,7 +84,8 @@ class PersistenceService {
 
   Future<List<ItemEvent>> getAllEvents() => _eventDio.readAll();
 
-  Future<List<ItemEvent>> getSoonEvents() => _eventDio.readAllSoon();
+  Future<List<ItemEvent>> getSoonEvents() =>
+      _eventDio.readAllSoon(const Duration(days: 7));
 
   // ====================== SETTERS ====================== //
 
@@ -142,7 +143,7 @@ abstract class ItemEventDio extends Dio<ItemEvent> {
     required int parentItemId,
   });
   Future<List<ItemEvent>> readAll();
-  Future<List<ItemEvent>> readAllSoon();
+  Future<List<ItemEvent>> readAllSoon(Duration soonDuration);
 }
 
 typedef Db = Future<dynamic>;
