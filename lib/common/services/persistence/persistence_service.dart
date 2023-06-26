@@ -99,16 +99,15 @@ class PersistenceService {
   Future<void> deleteSingleItem(SingleItem item) =>
       _singleItemDio.delete(item.id);
 
-  Future<void> deleteFolder(Folder folder) async =>
-      _folderDio.delete(folder.id);
+  Future<void> deleteFolder(Folder folder) => _folderDio.delete(folder.id);
 
-  Future<void> deleteEvent(ItemEvent event) async => _eventDio.delete(event.id);
+  Future<void> deleteEvent(ItemEvent event) => _eventDio.delete(event.id);
 }
 
 abstract class Dio<T> {
   Future<void> update(T item);
-  Future<void> delete(int id);
-  Future<T> read(int id);
+  Future<bool> delete(int id);
+  Future<T?> read(int id);
 }
 
 abstract class SingleItemDio extends Dio<SingleItem> {
@@ -132,6 +131,8 @@ abstract class FolderDio extends Dio<Folder> {
     required String title,
     int? parentFolderId,
   });
+  Future<int> createOrFindRoot();
+  Future<void> move(Folder folder, Folder newParent);
   Future<List<Folder>> readAll();
 }
 

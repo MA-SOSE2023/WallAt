@@ -21,16 +21,12 @@ class FoldersScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final Folder rootFolder =
         ref.watch(Providers.foldersControllerProvider(_folderId));
+    final FoldersController controller =
+        ref.read(Providers.foldersControllerProvider(_folderId).notifier);
 
-    final List<Folder> folders = rootFolder.contents
-        .where((element) => element.isFolder)
-        .map((e) => e as Folder)
-        .toList();
+    final List<Folder> folders = controller.folders;
 
-    final List<SingleItem> items = rootFolder.contents
-        .where((element) => element.isLeaf)
-        .map((e) => e as SingleItem)
-        .toList();
+    final List<SingleItem> items = controller.items;
 
     return CupertinoPageScaffold(
       child: Stack(
@@ -72,8 +68,8 @@ class FoldersScreen extends ConsumerWidget {
   }
 }
 
-abstract class FoldersController extends StateNotifier<Folder> {
-  FoldersController(Folder state) : super(state);
+abstract class FoldersController extends StateNotifier<Future<Folder?>> {
+  FoldersController(Future<Folder?> state) : super(state);
 
   void delete();
 
@@ -86,8 +82,4 @@ abstract class FoldersController extends StateNotifier<Folder> {
   void removeItem(FolderItem item);
 
   void moveItem(FolderItem item, Folder newParent);
-
-  List<FolderItem> get contents;
-  String get title;
-  int get id;
 }

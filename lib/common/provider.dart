@@ -70,10 +70,10 @@ class Providers {
 
   /// Provider for [FoldersScreen]
   /// - Provides a [FoldersController] for a [Folder]
-  static final AutoDisposeStateNotifierProviderFamily<FoldersController, Folder,
-          int> foldersControllerProvider =
+  static final AutoDisposeStateNotifierProviderFamily<FoldersController,
+          Future<Folder?>, int> foldersControllerProvider =
       StateNotifierProvider.autoDispose.family((ref, id) {
-    return FoldersControllerMock(id);
+    return FoldersControllerImpl(id, ref.read(persistenceServiceProvider)());
   });
 
   /// Provider for [CustomBottomNavBar]
@@ -112,5 +112,19 @@ class Providers {
     DbController dbController = IsarController();
     dbController.openDb();
     return dbController;
+  });
+
+  static final Provider<Future<PersistenceService> Function()>
+      persistenceServiceProvider =
+      Provider<Future<PersistenceService> Function()>((ref) {
+    final DbController dbController = ref.read(dbControllerProvider.notifier);
+
+    return () => dbController.singleItemDio.then((singleItemDio) =>
+        dbController.folderDio.then((folderDio) =>
+            dbController.eventDio.then((eventDio) => PersistenceService(
+                  singleItemDio: singleItemDio,
+                  folderDio: folderDio,
+                  eventDio: eventDio,
+                ))));
   });
 }
