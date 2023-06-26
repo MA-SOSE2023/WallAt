@@ -31,8 +31,7 @@ class IsarController extends DbController {
     FolderDio folderDio = IsarFolderDio(db: db);
     ItemEventDio eventDio = IsarItemEventDio(db: db);
 
-    int rootFolderId = state.rootFolderId ??
-        (await folderDio.create(title: 'Folders', parentFolderId: null)).id;
+    Id rootFolderId = (await folderDio.createOrFindRoot());
 
     state = state.copyWith(
         db: db,
