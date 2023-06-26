@@ -135,7 +135,7 @@ abstract class SingleItemDio extends Dio<SingleItem> {
     required String imagePath,
     required String description,
     required bool isFavorite,
-    int parentFolderId,
+    required int parentFolderId,
   });
 
   Future<List<SingleItem>> readAll();
