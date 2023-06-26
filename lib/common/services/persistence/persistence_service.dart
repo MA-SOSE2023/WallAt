@@ -8,19 +8,20 @@ import 'db_model.dart';
 
 /// App service for accessing and modifying persistent data
 class PersistenceService {
-  late final SingleItemDio _singleItemDio;
-  late final FolderDio _folderDio;
-  late final ItemEventDio _eventDio;
+  final DbController _controller;
 
   PersistenceService({
-    required SingleItemDio singleItemDio,
-    required FolderDio folderDio,
-    required ItemEventDio eventDio,
-  }) {
-    _singleItemDio = singleItemDio;
-    _folderDio = folderDio;
-    _eventDio = eventDio;
-  }
+    required DbController controller,
+  }) : _controller = controller;
+
+  Future<R> _singleItemDio<R>(Future<R> Function(SingleItemDio) callback) =>
+      _controller.singleItemDio.then(callback);
+
+  Future<R> _folderDio<R>(Future<R> Function(FolderDio) callback) =>
+      _controller.folderDio.then(callback);
+
+  Future<R> _eventDio<R>(Future<R> Function(ItemEventDio) callback) =>
+      _controller.eventDio.then(callback);
 
   // ====================== CREATION ====================== //
 
@@ -31,78 +32,95 @@ class PersistenceService {
     bool isFavorite = false,
     int? parentFolderId,
   }) =>
-      _singleItemDio.create(
-        title: title,
-        imagePath: imagePath,
-        description: description,
-        isFavorite: isFavorite,
-        parentFolderId: parentFolderId,
+      _controller.rootFolderId.then(
+        (rootId) => _singleItemDio(
+          (dio) => dio.create(
+            title: title,
+            imagePath: imagePath,
+            description: description,
+            isFavorite: isFavorite,
+            parentFolderId: parentFolderId ?? rootId,
+          ),
+        ),
       );
 
   Future<Folder> createFolder({
     required String title,
     int? parentFolderId,
   }) =>
-      _folderDio.create(
-        title: title,
-        parentFolderId: parentFolderId,
+      _folderDio(
+        (dio) => dio.create(
+          title: title,
+          parentFolderId: parentFolderId,
+        ),
       );
 
   Future<ItemEvent> createEvent({
     required Event event,
     required int parentItemId,
   }) =>
-      _eventDio.create(
-        event: event,
-        parentItemId: parentItemId,
+      _eventDio(
+        (dio) => dio.create(
+          event: event,
+          parentItemId: parentItemId,
+        ),
       );
 
   // ====================== GETTERS ====================== //
 
   /// Returns the [SingleItme] with the given [itemId].
   /// Returns null if no item with the given [itemId] exists
-  Future<SingleItem?> getSingleItem(int itemId) => _singleItemDio.read(itemId);
+  Future<SingleItem?> getSingleItem(int itemId) =>
+      _singleItemDio((dio) => dio.read(itemId));
 
   Future<List<SingleItem>> getItemsMatching(String query) =>
-      _singleItemDio.readAllMatching(query);
+      _singleItemDio((dio) => dio.readAllMatching(query));
 
   Future<List<SingleItem>> getFavoriteItems() =>
-      _singleItemDio.readAllFavorites();
+      _singleItemDio((dio) => dio.readAllFavorites());
 
   Future<List<SingleItem>> getFavoriteItemsMatching(String query) =>
-      _singleItemDio.readAllFavoritesMatching(query);
+      _singleItemDio((dio) => dio.readAllFavoritesMatching(query));
 
-  Future<List<SingleItem>> getRecentItems() => _singleItemDio.readAllRecent();
+  Future<List<SingleItem>> getRecentItems() =>
+      _singleItemDio((dio) => dio.readAllRecent());
 
   /// Returns the [Folder] with the given [folderId].
   /// Returns null if no folder with the given [folderId] exists
-  Future<Folder?> getFolder(int folderId) => _folderDio.read(folderId);
+  Future<Folder?> getFolder(int folderId) =>
+      _folderDio((dio) => dio.read(folderId));
 
   /// Returns the [ItemEvent] with the given [eventId].
   /// Returns null if no event with the given [eventId] exists
-  Future<ItemEvent?> getEvent(int eventId) => _eventDio.read(eventId);
+  Future<ItemEvent?> getEvent(int eventId) =>
+      _eventDio((dio) => dio.read(eventId));
 
-  Future<List<ItemEvent>> getAllEvents() => _eventDio.readAll();
+  Future<List<ItemEvent>> getAllEvents() => _eventDio((dio) => dio.readAll());
 
   Future<List<ItemEvent>> getSoonEvents() =>
-      _eventDio.readAllSoon(const Duration(days: 7));
+      _eventDio((dio) => dio.readAllSoon(const Duration(days: 7)));
 
   // ====================== SETTERS ====================== //
 
-  Future<void> updateSingleItem(SingleItem item) => _singleItemDio.update(item);
+  Future<void> updateSingleItem(SingleItem item) =>
+      _singleItemDio((dio) => dio.update(item));
 
-  Future<void> updateFolder(Folder folder) => _folderDio.update(folder);
+  Future<void> updateFolder(Folder folder) =>
+      _folderDio((dio) => dio.update(folder));
 
-  Future<void> updateEvent(ItemEvent event) => _eventDio.update(event);
+  Future<void> updateEvent(ItemEvent event) =>
+      _eventDio((dio) => dio.update(event));
 
   // ====================== DELETION ====================== //
 
   Future<void> deleteSingleItem(SingleItem item) =>
-      _singleItemDio.delete(item.id);
+      _singleItemDio((dio) => dio.delete(item.id));
 
-  Future<void> deleteFolder(Folder folder) => _folderDio.delete(folder.id);
+  Future<void> deleteFolder(Folder folder) =>
+      _folderDio((dio) => dio.delete(folder.id));
 
-  Future<void> deleteEvent(ItemEvent event) => _eventDio.delete(event.id);
+  Future<void> deleteEvent(ItemEvent event) =>
+      _eventDio((dio) => dio.delete(event.id));
 }
 
 abstract class Dio<T> {
@@ -117,7 +135,7 @@ abstract class SingleItemDio extends Dio<SingleItem> {
     required String imagePath,
     required String description,
     required bool isFavorite,
-    int? parentFolderId,
+    int parentFolderId,
   });
 
   Future<List<SingleItem>> readAll();

@@ -7,8 +7,8 @@ import 'folder_model.dart';
 import 'folders_view.dart';
 
 class FoldersControllerImpl extends FoldersController {
-  FoldersControllerImpl(int id, Future<PersistenceService> service)
-      : super(service.then((service) => service.getFolder(id)));
+  FoldersControllerImpl(int id, PersistenceService service)
+      : super(service.getFolder(id));
 
   @override
   void addItem(FolderItem item) {

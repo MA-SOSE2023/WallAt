@@ -73,7 +73,7 @@ class Providers {
   static final AutoDisposeStateNotifierProviderFamily<FoldersController,
           Future<Folder?>, int> foldersControllerProvider =
       StateNotifierProvider.autoDispose.family((ref, id) {
-    return FoldersControllerImpl(id, ref.read(persistenceServiceProvider)());
+    return FoldersControllerImpl(id, ref.read(persistenceServiceProvider));
   });
 
   /// Provider for [CustomBottomNavBar]
@@ -114,17 +114,10 @@ class Providers {
     return dbController;
   });
 
-  static final Provider<Future<PersistenceService> Function()>
-      persistenceServiceProvider =
-      Provider<Future<PersistenceService> Function()>((ref) {
+  static final Provider<PersistenceService> persistenceServiceProvider =
+      Provider<PersistenceService>((ref) {
     final DbController dbController = ref.read(dbControllerProvider.notifier);
 
-    return () => dbController.singleItemDio.then((singleItemDio) =>
-        dbController.folderDio.then((folderDio) =>
-            dbController.eventDio.then((eventDio) => PersistenceService(
-                  singleItemDio: singleItemDio,
-                  folderDio: folderDio,
-                  eventDio: eventDio,
-                ))));
+    return PersistenceService(controller: dbController);
   });
 }
