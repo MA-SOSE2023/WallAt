@@ -19,11 +19,11 @@ Widget makeDismissable(
     );
 
 class EditSingleItemPage extends ConsumerWidget {
-  const EditSingleItemPage({required String id, Key? key})
+  const EditSingleItemPage({required int id, Key? key})
       : _id = id,
         super(key: key);
 
-  final String _id;
+  final int _id;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

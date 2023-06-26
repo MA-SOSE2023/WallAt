@@ -16,11 +16,11 @@ String singleItemHeroTag(String id) {
 
 //@TODO: maybe use CustomScrollView with SliverAppbar instead of CupertinoPageScaffold
 class SingleItemPage extends ConsumerWidget {
-  const SingleItemPage({required String id, Key? key})
+  const SingleItemPage({required int id, Key? key})
       : _id = id,
         super(key: key);
 
-  final String _id;
+  final int _id;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -41,7 +41,7 @@ class SingleItemPage extends ConsumerWidget {
                   height: MediaQuery.of(context).size.height /
                       2, // Set the height to half the screen height
                   child: Hero(
-                    tag: singleItemHeroTag(_id),
+                    tag: singleItemHeroTag('$_id'),
                     child: PictureContainer(
                       image: controller.getImage().image,
                       onTap: () {
@@ -163,7 +163,7 @@ class ActionButtons extends ConsumerWidget {
       {Key? key, required this.itemId, required this.controller})
       : super(key: key);
 
-  final String itemId;
+  final int itemId;
   final SingleItemController controller; //TODO: remove, call via ref
 
   @override
@@ -226,7 +226,7 @@ abstract class SingleItemController extends StateNotifier<SingleItem> {
 
   void setTitle(String title);
 
-  void addEvent({required Event event, required String parentId});
+  void addEvent({required Event event, required int parentId});
 
   List<ItemEvent> getEvents();
 

@@ -1,5 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gruppe4/common/services/persistence/db_model.dart';
+import 'package:gruppe4/common/services/persistence/persistence_service.dart';
+import 'package:isar/isar.dart';
 
 // Single Item
 import '/pages/single_item/single_item_view.dart';
@@ -18,12 +21,13 @@ import '/pages/favorites/favorites_controller.dart';
 import '/pages/folders/folders_view.dart';
 import '/pages/folders/folders_controller.dart';
 import '/pages/folders/folder_model.dart';
+// Persistence
+import '/common/services/persistence/isar/isar_controller.dart';
 
 // CalendarButton
 
 import 'custom_widgets/all_custom_widgets.dart';
 
-import 'custom_widgets/bottom_nav_bar/bottom_nav_bar_controller.dart';
 // Camera
 import '/pages/camera/camera_view.dart';
 import '/pages/camera/camera_controller.dart';
@@ -34,7 +38,7 @@ class Providers {
   /// Provider for [SingleItemPage]
   /// - Provides a [SingleItemController] for a [SingleItem]
   static final AutoDisposeStateNotifierProviderFamily<SingleItemController,
-          SingleItem, String> singleItemControllerProvider =
+          SingleItem, int> singleItemControllerProvider =
       StateNotifierProvider.autoDispose.family((ref, id) {
     return SingleItemControllerMock(id: id);
   });
@@ -42,7 +46,7 @@ class Providers {
   /// Provider for [EditSingleItemPage]
   /// - Provides a [EditSingleItemController] for a [SingleItem]
   static final AutoDisposeStateNotifierProviderFamily<EditSingleItemController,
-          SingleItem, String> editSingleItemControllerProvider =
+          SingleItem, int> editSingleItemControllerProvider =
       StateNotifierProvider.autoDispose.family((ref, id) {
     return EditSingleItemControllerMock(
         id: id, model: ref.read(singleItemControllerProvider(id)));
@@ -67,7 +71,7 @@ class Providers {
   /// Provider for [FoldersScreen]
   /// - Provides a [FoldersController] for a [Folder]
   static final AutoDisposeStateNotifierProviderFamily<FoldersController, Folder,
-          String> foldersControllerProvider =
+          int> foldersControllerProvider =
       StateNotifierProvider.autoDispose.family((ref, id) {
     return FoldersControllerMock(id);
   });
@@ -100,5 +104,13 @@ class Providers {
       calendarButtonControllerProvider =
       StateNotifierProvider<CalendarButtonController, CalendarModel>((ref) {
     return CalendarButtonControllerImpl();
+  });
+
+  static final StateNotifierProvider<DbController, DbModel>
+      dbControllerProvider =
+      StateNotifierProvider<DbController, DbModel>((ref) {
+    DbController dbController = IsarController();
+    dbController.openDb();
+    return dbController;
   });
 }

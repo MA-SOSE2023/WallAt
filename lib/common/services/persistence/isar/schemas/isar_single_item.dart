@@ -18,8 +18,8 @@ class IsarSingleItem {
 
   late bool isFavorite;
 
+  @Backlink(to: "items")
   final parentFolder = IsarLink<IsarFolder>();
 
-  @Backlink(to: "parentItem")
   final events = IsarLinks<IsarItemEvent>();
 }

@@ -7,7 +7,7 @@ import '/pages/single_item/single_item_view.dart';
 import '/router/router.dart';
 
 var mockSingleItem = SingleItem(
-  id: '1',
+  id: 1,
   title: 'Example Title',
   description: 'Example Description',
   image: const AssetImage('assets/dev_debug_images/hampter1.jpg'),
@@ -17,11 +17,11 @@ var mockSingleItem = SingleItem(
 );
 
 class SingleItemControllerMock extends SingleItemController {
-  SingleItemControllerMock({required String id, SingleItem? model})
+  SingleItemControllerMock({required int id, SingleItem? model})
       : _id = id,
         super(model ?? mockSingleItem.copyWith(id: id));
 
-  final String _id;
+  final int _id;
 
   @override
   Image getImage() {
@@ -54,10 +54,10 @@ class SingleItemControllerMock extends SingleItemController {
   }
 
   @override
-  void addEvent({required Event event, required String parentId}) {
+  void addEvent({required Event event, required int parentId}) {
     state = state.copyWith(events: [
       ...state.events,
-      ItemEvent(id: '0', event: event, parentId: parentId)
+      ItemEvent(id: 0, event: event, parentId: parentId)
     ]);
   }
 

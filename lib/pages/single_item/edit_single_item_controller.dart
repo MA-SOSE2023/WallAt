@@ -11,13 +11,13 @@ import 'model/item_event.dart';
 import '/common/provider.dart';
 
 class EditSingleItemControllerMock extends EditSingleItemController {
-  EditSingleItemControllerMock({required String id, SingleItem? model})
+  EditSingleItemControllerMock({required int id, SingleItem? model})
       : _id = id,
         super(model ?? mockSingleItem);
 
   List<ItemEvent> newEvents = [];
   List<ItemEvent> deletedEvents = [];
-  final String _id;
+  final int _id;
   DateTime? _selectedDate;
 
   @override
@@ -72,8 +72,8 @@ class EditSingleItemControllerMock extends EditSingleItemController {
   }
 
   @override
-  void addEvent({required Event event, required String parentId}) async {
-    newEvents.add(ItemEvent(id: '0', event: event, parentId: parentId));
+  void addEvent({required Event event, required int parentId}) async {
+    newEvents.add(ItemEvent(id: 0, event: event, parentId: parentId));
     state = state.copyWith(events: [...state.events]);
   }
 

@@ -16,6 +16,5 @@ class IsarFolder {
   @Backlink(to: "folders")
   IsarLink<IsarFolder> parentFolder = IsarLink<IsarFolder>();
 
-  @Backlink(to: "parentFolder")
   IsarLinks<IsarSingleItem> items = IsarLinks<IsarSingleItem>();
 }

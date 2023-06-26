@@ -69,7 +69,7 @@ class GlobalLocation extends BeamLocation<BeamState> {
             title: 'Item',
             type: BeamPageType.cupertino,
             popToNamed: prevNavBarLocation,
-            child: SingleItemPage(id: state.pathParameters['id']!),
+            child: SingleItemPage(id: int.parse(state.pathParameters['id']!)),
           ),
       ];
 }

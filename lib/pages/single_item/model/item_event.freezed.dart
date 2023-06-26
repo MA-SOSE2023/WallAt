@@ -16,9 +16,9 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$ItemEvent {
-  String get id => throw _privateConstructorUsedError;
+  int get id => throw _privateConstructorUsedError;
   Event get event => throw _privateConstructorUsedError;
-  String get parentId => throw _privateConstructorUsedError;
+  int get parentId => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $ItemEventCopyWith<ItemEvent> get copyWith =>
@@ -30,7 +30,7 @@ abstract class $ItemEventCopyWith<$Res> {
   factory $ItemEventCopyWith(ItemEvent value, $Res Function(ItemEvent) then) =
       _$ItemEventCopyWithImpl<$Res, ItemEvent>;
   @useResult
-  $Res call({String id, Event event, String parentId});
+  $Res call({int id, Event event, int parentId});
 }
 
 /// @nodoc
@@ -54,7 +54,7 @@ class _$ItemEventCopyWithImpl<$Res, $Val extends ItemEvent>
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String,
+              as int,
       event: null == event
           ? _value.event
           : event // ignore: cast_nullable_to_non_nullable
@@ -62,7 +62,7 @@ class _$ItemEventCopyWithImpl<$Res, $Val extends ItemEvent>
       parentId: null == parentId
           ? _value.parentId
           : parentId // ignore: cast_nullable_to_non_nullable
-              as String,
+              as int,
     ) as $Val);
   }
 }
@@ -74,7 +74,7 @@ abstract class _$$_ItemEventCopyWith<$Res> implements $ItemEventCopyWith<$Res> {
       __$$_ItemEventCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String id, Event event, String parentId});
+  $Res call({int id, Event event, int parentId});
 }
 
 /// @nodoc
@@ -96,7 +96,7 @@ class __$$_ItemEventCopyWithImpl<$Res>
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String,
+              as int,
       event: null == event
           ? _value.event
           : event // ignore: cast_nullable_to_non_nullable
@@ -104,7 +104,7 @@ class __$$_ItemEventCopyWithImpl<$Res>
       parentId: null == parentId
           ? _value.parentId
           : parentId // ignore: cast_nullable_to_non_nullable
-              as String,
+              as int,
     ));
   }
 }
@@ -116,11 +116,11 @@ class _$_ItemEvent implements _ItemEvent {
       {required this.id, required this.event, required this.parentId});
 
   @override
-  final String id;
+  final int id;
   @override
   final Event event;
   @override
-  final String parentId;
+  final int parentId;
 
   @override
   String toString() {
@@ -150,16 +150,16 @@ class _$_ItemEvent implements _ItemEvent {
 
 abstract class _ItemEvent implements ItemEvent {
   const factory _ItemEvent(
-      {required final String id,
+      {required final int id,
       required final Event event,
-      required final String parentId}) = _$_ItemEvent;
+      required final int parentId}) = _$_ItemEvent;
 
   @override
-  String get id;
+  int get id;
   @override
   Event get event;
   @override
-  String get parentId;
+  int get parentId;
   @override
   @JsonKey(ignore: true)
   _$$_ItemEventCopyWith<_$_ItemEvent> get copyWith =>

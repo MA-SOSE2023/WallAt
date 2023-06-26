@@ -11,7 +11,7 @@ class FullScreenImagePage extends StatelessWidget {
     required this.imageProvider,
   }) : super(key: key);
 
-  final String itemId;
+  final int itemId;
   final ImageProvider imageProvider;
 
   @override
@@ -22,7 +22,7 @@ class FullScreenImagePage extends StatelessWidget {
       child: SafeArea(
         child: PhotoView(
           heroAttributes:
-              PhotoViewHeroAttributes(tag: singleItemHeroTag(itemId)),
+              PhotoViewHeroAttributes(tag: singleItemHeroTag('$itemId')),
           imageProvider: imageProvider,
           backgroundDecoration: const BoxDecoration(
             color: Colors.transparent,

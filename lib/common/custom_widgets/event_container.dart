@@ -12,7 +12,7 @@ class EventsContainer extends ConsumerWidget {
   const EventsContainer({Key? key, required this.id, required this.editable})
       : super(key: key);
 
-  final String id;
+  final int id;
   final bool editable;
   @override
   Widget build(BuildContext context, WidgetRef ref) {

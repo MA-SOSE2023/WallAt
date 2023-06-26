@@ -15,7 +15,7 @@ import '/pages/single_item/model/item_event.dart';
 class CalendarButton extends StatelessWidget {
   const CalendarButton({required this.id, Key? key}) : super(key: key);
 
-  final String id;
+  final int id;
 
   @override
   Widget build(BuildContext context) {

@@ -8,44 +8,44 @@ import '/pages/single_item/model/item_event.dart';
 
 List<ItemEvent> _mockEvents = [
   ItemEvent(
-    id: '0',
+    id: 0,
     event: Event("1",
         eventId: null,
         title: 'Example Event',
         description: 'Example Description',
         start: TZDateTime.now(local),
         end: TZDateTime.now(local)),
-    parentId: "1",
+    parentId: 1,
   ),
   ItemEvent(
-    id: '1',
+    id: 1,
     event: Event("2",
         eventId: null,
         title: 'Example Event',
         description: 'Example Description',
         start: TZDateTime.now(local),
         end: TZDateTime.now(local)),
-    parentId: "1",
+    parentId: 1,
   ),
   ItemEvent(
-    id: '2',
+    id: 2,
     event: Event("3",
         eventId: null,
         title: 'Example Event',
         description: 'Example Description',
         start: TZDateTime.now(local),
         end: TZDateTime.now(local)),
-    parentId: "1",
+    parentId: 1,
   ),
 ];
 
 SingleItem _mockSingleItem(int id) => SingleItem(
-      id: '$id',
+      id: id,
       title: 'Example Title',
       description: 'Example Description',
       image: const AssetImage('assets/dev_debug_images/hampter1.jpg'),
       isFavorite: true,
-      events: _mockEvents.map((e) => e.copyWith(parentId: '$id')).toList(),
+      events: _mockEvents.map((e) => e.copyWith(parentId: id)).toList(),
       currentSelectedDate: null,
     );
 

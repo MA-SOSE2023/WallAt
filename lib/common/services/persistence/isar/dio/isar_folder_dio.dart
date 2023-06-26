@@ -5,20 +5,22 @@ import '/common/services/persistence/isar/schemas/isar_folder.dart';
 import '/common/services/persistence/persistence_service.dart';
 
 class IsarFolderDio extends FolderDio {
-  IsarFolderDio({required Future<Isar> db}) : _db = db;
+  IsarFolderDio({required Future<Isar> db, required int rootFolderId})
+      : _db = db,
+        _rootFolderId = rootFolderId;
 
   final Future<Isar> _db;
+  final int _rootFolderId;
 
   @override
-  Future<Folder> create(
-      {required String title, required int parentFolderId}) async {
+  Future<Folder> create({required String title, int? parentFolderId}) async {
     final isar = await _db;
     return isar.writeTxnSync(() async {
       Id createdFolder = isar.isarFolders.putSync(IsarFolder()
         ..title = title
-        ..parentFolder.value = await _read(parentFolderId));
+        ..parentFolder.value = await _read(parentFolderId ?? _rootFolderId));
       return Folder(
-        id: createdFolder.toString(),
+        id: createdFolder,
         title: title,
         contents: [],
       );
@@ -53,8 +55,4 @@ class IsarFolderDio extends FolderDio {
     // TODO: implement update
     throw UnimplementedError();
   }
-
-  @override
-  // TODO: implement rootFolderId
-  Future<int> get rootFolderId => throw UnimplementedError();
 }

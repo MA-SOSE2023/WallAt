@@ -26,7 +26,7 @@ abstract class FolderItem {
   bool get isLeaf => _isLeaf;
   bool get isFolder => !_isLeaf;
 
-  String get id => maybeItem?.id ?? maybeFolder!.id;
+  int get id => maybeItem?.id ?? maybeFolder!.id;
   String get title => maybeItem?.title ?? maybeFolder!.title;
 
   List<FolderItem> get contents => maybeFolder!.contents;

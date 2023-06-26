@@ -13,10 +13,9 @@ import '/common/custom_widgets/all_custom_widgets.dart'
 import '/pages/single_item/model/single_item.dart';
 
 class FoldersScreen extends ConsumerWidget {
-  const FoldersScreen({String folderId = '0', super.key})
-      : _folderId = folderId;
+  const FoldersScreen({int folderId = 0, super.key}) : _folderId = folderId;
 
-  final String _folderId;
+  final int _folderId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -90,5 +89,5 @@ abstract class FoldersController extends StateNotifier<Folder> {
 
   List<FolderItem> get contents;
   String get title;
-  String get id;
+  int get id;
 }

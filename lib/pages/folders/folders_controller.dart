@@ -10,41 +10,41 @@ import 'folders_view.dart';
 
 List<ItemEvent> _mockEvents = [
   ItemEvent(
-      id: '0',
+      id: 0,
       event: Event("1",
           eventId: null,
           title: 'Example Event',
           description: 'Example Description',
           start: TZDateTime.now(local),
           end: TZDateTime.now(local)),
-      parentId: "1"),
+      parentId: 1),
   ItemEvent(
-      id: '1',
+      id: 1,
       event: Event("2",
           eventId: null,
           title: 'Example Event',
           description: 'Example Description',
           start: TZDateTime.now(local),
           end: TZDateTime.now(local)),
-      parentId: "1"),
+      parentId: 1),
   ItemEvent(
-      id: '2',
+      id: 2,
       event: Event("3",
           eventId: null,
           title: 'Example Event',
           description: 'Example Description',
           start: TZDateTime.now(local),
           end: TZDateTime.now(local)),
-      parentId: "1"),
+      parentId: 1),
 ];
 
 SingleItem _mockSingleItem(int id) => SingleItem(
-      id: '$id',
+      id: id,
       title: 'Example Title',
       description: 'Example Description',
       image: const AssetImage('assets/dev_debug_images/hampter1.jpg'),
       isFavorite: true,
-      events: _mockEvents.map((e) => e.copyWith(parentId: '$id')).toList(),
+      events: _mockEvents.map((e) => e.copyWith(parentId: id)).toList(),
       currentSelectedDate: null,
     );
 
@@ -63,36 +63,36 @@ List<FolderItem> _mockItems() => [
     ];
 
 final Folder rootFolder = Folder(
-  id: '0',
+  id: 0,
   title: 'Folders',
   contents: [
-    Folder(id: '1', title: 'Example Folder', contents: [
-      Folder(id: '4', title: 'Example Subfolder', contents: _mockItems()),
-      Folder(id: '5', title: 'Another Subfolder', contents: _mockItems()),
+    Folder(id: 1, title: 'Example Folder', contents: [
+      Folder(id: 4, title: 'Example Subfolder', contents: _mockItems()),
+      Folder(id: 5, title: 'Another Subfolder', contents: _mockItems()),
       ..._mockItems().take(2),
     ]),
-    Folder(id: '2', title: 'Another Folder', contents: _mockItems()),
+    Folder(id: 2, title: 'Another Folder', contents: _mockItems()),
     Folder(
-        id: '3',
+        id: 3,
         title: 'Yet Another Folder',
         contents: _mockItems().take(7).toList()),
     ..._mockItems(),
   ],
 );
 
-Folder _mockFolderItem(String id) {
+Folder _mockFolderItem(int id) {
   switch (id) {
-    case '0':
+    case 0:
       return rootFolder;
-    case '1':
+    case 1:
       return rootFolder.contents[0].folder;
-    case '2':
+    case 2:
       return rootFolder.contents[1].folder;
-    case '3':
+    case 3:
       return rootFolder.contents[2].folder;
-    case '4':
+    case 4:
       return rootFolder.contents[0].contents[0].folder;
-    case '5':
+    case 5:
       return rootFolder.contents[0].contents[1].folder;
     default:
       throw UnsupportedError('Unknown id: $id');
@@ -100,13 +100,13 @@ Folder _mockFolderItem(String id) {
 }
 
 class FoldersControllerMock extends FoldersController {
-  FoldersControllerMock(String id) : super(_mockFolderItem(id));
+  FoldersControllerMock(int id) : super(_mockFolderItem(id));
 
   @override
   List<FolderItem> get contents => state.contents;
 
   @override
-  String get id => state.id;
+  int get id => state.id;
 
   @override
   String get title => state.title;

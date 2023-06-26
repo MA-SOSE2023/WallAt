@@ -14,7 +14,7 @@ class IsarSingleItemDio extends SingleItemDio {
       required String imagePath,
       required String description,
       required bool isFavorite,
-      required int parentFolderId}) {
+      int? parentFolderId}) {
     // TODO: implement create
     throw UnimplementedError();
   }

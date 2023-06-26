@@ -1,19 +1,13 @@
 import 'package:device_calendar/device_calendar.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:isar/isar.dart';
-
-import 'isar/schemas/isar_folder.dart';
-import 'isar/schemas/isar_single_item.dart';
-import 'isar/schemas/isar_item_event.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '/pages/folders/folder_model.dart';
 import '/pages/single_item/model/single_item.dart';
 import '/pages/single_item/model/item_event.dart';
+import 'db_model.dart';
 
 /// App service for accessing and modifying persistent data
 class PersistenceService {
-  late Future<Isar> db;
-
   late final SingleItemDio _singleItemDio;
   late final FolderDio _folderDio;
   late final ItemEventDio _eventDio;
@@ -26,23 +20,7 @@ class PersistenceService {
     _singleItemDio = singleItemDio;
     _folderDio = folderDio;
     _eventDio = eventDio;
-    db = openDb();
   }
-
-  Future<Isar> openDb() async {
-    if (Isar.instanceNames.isEmpty) {
-      return await Isar.open(
-        [IsarSingleItemSchema, IsarFolderSchema, IsarItemEventSchema],
-        directory: (await getApplicationDocumentsDirectory()).path,
-        inspector: true, // Inspector allows real-time insight into the database
-        // we might want to disable this in production
-      );
-    }
-
-    return Future.value(Isar.getInstance());
-  }
-
-  static const int rootFolderId = 0;
 
   // ====================== CREATION ====================== //
 
@@ -58,7 +36,7 @@ class PersistenceService {
         imagePath: imagePath,
         description: description,
         isFavorite: isFavorite,
-        parentFolderId: parentFolderId ?? rootFolderId,
+        parentFolderId: parentFolderId,
       );
 
   Future<Folder> createFolder({
@@ -67,7 +45,7 @@ class PersistenceService {
   }) =>
       _folderDio.create(
         title: title,
-        parentFolderId: parentFolderId ?? rootFolderId,
+        parentFolderId: parentFolderId,
       );
 
   Future<ItemEvent> createEvent({
@@ -119,19 +97,18 @@ class PersistenceService {
   // ====================== DELETION ====================== //
 
   Future<void> deleteSingleItem(SingleItem item) =>
-      _singleItemDio.delete(int.parse(item.id));
+      _singleItemDio.delete(item.id);
 
   Future<void> deleteFolder(Folder folder) async =>
-      _folderDio.delete(int.parse(folder.id));
+      _folderDio.delete(folder.id);
 
-  Future<void> deleteEvent(ItemEvent event) async =>
-      _eventDio.delete(int.parse(event.id));
+  Future<void> deleteEvent(ItemEvent event) async => _eventDio.delete(event.id);
 }
 
 abstract class Dio<T> {
   Future<void> update(T item);
-  Future<void> delete(Id id);
-  Future<T> read(Id id);
+  Future<void> delete(int id);
+  Future<T> read(int id);
 }
 
 abstract class SingleItemDio extends Dio<SingleItem> {
@@ -140,7 +117,7 @@ abstract class SingleItemDio extends Dio<SingleItem> {
     required String imagePath,
     required String description,
     required bool isFavorite,
-    required int parentFolderId,
+    int? parentFolderId,
   });
 
   Future<List<SingleItem>> readAll();
@@ -151,11 +128,9 @@ abstract class SingleItemDio extends Dio<SingleItem> {
 }
 
 abstract class FolderDio extends Dio<Folder> {
-  Future<int> get rootFolderId;
-
   Future<Folder> create({
     required String title,
-    required int parentFolderId,
+    int? parentFolderId,
   });
   Future<List<Folder>> readAll();
 }
@@ -167,4 +142,18 @@ abstract class ItemEventDio extends Dio<ItemEvent> {
   });
   Future<List<ItemEvent>> readAll();
   Future<List<ItemEvent>> readAllSoon();
+}
+
+typedef Db = Future<dynamic>;
+
+abstract class DbController extends StateNotifier<DbModel> {
+  DbController(DbModel state) : super(state);
+
+  Future<void> openDb();
+
+  Future<SingleItemDio> get singleItemDio;
+  Future<FolderDio> get folderDio;
+  Future<ItemEventDio> get eventDio;
+
+  Future<int> get rootFolderId;
 }

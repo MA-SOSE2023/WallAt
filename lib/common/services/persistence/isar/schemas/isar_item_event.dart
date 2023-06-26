@@ -20,5 +20,6 @@ class IsarItemEvent {
 
   late DateTime end;
 
+  @Backlink(to: "events")
   final parentItem = IsarLink<IsarSingleItem>();
 }

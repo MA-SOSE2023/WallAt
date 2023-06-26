@@ -16,7 +16,7 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$Folder {
-  String get id => throw _privateConstructorUsedError;
+  int get id => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
   List<FolderItem> get contents => throw _privateConstructorUsedError;
 
@@ -29,7 +29,7 @@ abstract class $FolderCopyWith<$Res> {
   factory $FolderCopyWith(Folder value, $Res Function(Folder) then) =
       _$FolderCopyWithImpl<$Res, Folder>;
   @useResult
-  $Res call({String id, String title, List<FolderItem> contents});
+  $Res call({int id, String title, List<FolderItem> contents});
 }
 
 /// @nodoc
@@ -53,7 +53,7 @@ class _$FolderCopyWithImpl<$Res, $Val extends Folder>
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String,
+              as int,
       title: null == title
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
@@ -72,7 +72,7 @@ abstract class _$$_FolderCopyWith<$Res> implements $FolderCopyWith<$Res> {
       __$$_FolderCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String id, String title, List<FolderItem> contents});
+  $Res call({int id, String title, List<FolderItem> contents});
 }
 
 /// @nodoc
@@ -93,7 +93,7 @@ class __$$_FolderCopyWithImpl<$Res>
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String,
+              as int,
       title: null == title
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
@@ -117,7 +117,7 @@ class _$_Folder extends _Folder {
         super._();
 
   @override
-  final String id;
+  final int id;
   @override
   final String title;
   final List<FolderItem> _contents;
@@ -156,13 +156,13 @@ class _$_Folder extends _Folder {
 
 abstract class _Folder extends Folder implements FolderItem {
   factory _Folder(
-      {required final String id,
+      {required final int id,
       required final String title,
       required final List<FolderItem> contents}) = _$_Folder;
   _Folder._() : super._();
 
   @override
-  String get id;
+  int get id;
   @override
   String get title;
   @override

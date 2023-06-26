@@ -16,7 +16,7 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$SingleItem {
-  String get id => throw _privateConstructorUsedError;
+  int get id => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
   String get description => throw _privateConstructorUsedError;
   ImageProvider<Object> get image => throw _privateConstructorUsedError;
@@ -36,7 +36,7 @@ abstract class $SingleItemCopyWith<$Res> {
       _$SingleItemCopyWithImpl<$Res, SingleItem>;
   @useResult
   $Res call(
-      {String id,
+      {int id,
       String title,
       String description,
       ImageProvider<Object> image,
@@ -70,7 +70,7 @@ class _$SingleItemCopyWithImpl<$Res, $Val extends SingleItem>
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String,
+              as int,
       title: null == title
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
@@ -108,7 +108,7 @@ abstract class _$$_SingleItemCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String id,
+      {int id,
       String title,
       String description,
       ImageProvider<Object> image,
@@ -140,7 +140,7 @@ class __$$_SingleItemCopyWithImpl<$Res>
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String,
+              as int,
       title: null == title
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
@@ -184,7 +184,7 @@ class _$_SingleItem extends _SingleItem {
         super._();
 
   @override
-  final String id;
+  final int id;
   @override
   final String title;
   @override
@@ -246,7 +246,7 @@ class _$_SingleItem extends _SingleItem {
 
 abstract class _SingleItem extends SingleItem implements FolderItem {
   factory _SingleItem(
-      {required final String id,
+      {required final int id,
       required final String title,
       required final String description,
       required final ImageProvider<Object> image,
@@ -256,7 +256,7 @@ abstract class _SingleItem extends SingleItem implements FolderItem {
   _SingleItem._() : super._();
 
   @override
-  String get id;
+  int get id;
   @override
   String get title;
   @override
