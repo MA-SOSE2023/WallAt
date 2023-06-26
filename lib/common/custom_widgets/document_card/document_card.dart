@@ -16,7 +16,10 @@ class DocumentCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    SingleItemController controller =
+    final SingleItem item =
+        ref.watch(Providers.singleItemControllerProvider(_item.id));
+    final bool heroEnabled = ref.watch(Providers.enableHeroAnimationProvider);
+    final SingleItemController controller =
         ref.watch(Providers.singleItemControllerProvider(_item.id).notifier);
     return CupertinoListSection.insetGrouped(
       margin: const EdgeInsets.all(0),
@@ -29,16 +32,17 @@ class DocumentCard extends ConsumerWidget {
           title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(_item.title,
+              Text(item.title,
                   style: CupertinoTheme.of(context)
                       .textTheme
                       .navActionTextStyle
                       .copyWith(fontSize: 20)),
-              Text(
-                _item.description,
-                maxLines: 2,
-                style: CupertinoTheme.of(context).textTheme.tabLabelTextStyle,
-              ),
+              Text(item.description,
+                  maxLines: 2,
+                  style: CupertinoTheme.of(context)
+                      .textTheme
+                      .tabLabelTextStyle
+                      .copyWith(fontSize: 12)),
             ],
           ),
           leading: Container(
@@ -51,16 +55,21 @@ class DocumentCard extends ConsumerWidget {
             margin: const EdgeInsets.all(5),
             child: FittedBox(
               fit: BoxFit.cover,
-              child: Hero(
-                tag: singleItemHeroTag(_item.id),
-                child: Image(
-                  image: controller.getImage().image,
+              child: HeroMode(
+                enabled: heroEnabled,
+                child: Hero(
+                  tag: singleItemHeroTag(item.id),
+                  child: Image(
+                    image: controller.getImage().image,
+                  ),
                 ),
               ),
             ),
           ),
           leadingSize: 80,
           onTap: () {
+            ref.read(Providers.enableHeroAnimationProvider.notifier).state =
+                true;
             controller.navigateToThisItem();
           },
         ),

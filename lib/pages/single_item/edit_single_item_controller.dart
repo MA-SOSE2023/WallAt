@@ -6,11 +6,9 @@ import 'package:device_calendar/device_calendar.dart';
 import 'model/single_item.dart';
 import 'edit_single_item_view.dart';
 import 'single_item_controller.dart';
-import 'model/single_item.dart';
 import 'model/item_event.dart';
 
 import '/common/provider.dart';
-import '/pages/single_item/single_item_view.dart';
 
 class EditSingleItemControllerMock extends EditSingleItemController {
   EditSingleItemControllerMock({required String id, SingleItem? model})
@@ -45,12 +43,12 @@ class EditSingleItemControllerMock extends EditSingleItemController {
 
   @override
   Image getImage() {
-    return Image.asset(state.image);
+    return Image(image: state.image);
   }
 
   @override
   void setImage(Image image) {
-    state = state.copyWith(image: image.toString());
+    state = state.copyWith(image: image.image);
   }
 
   @override

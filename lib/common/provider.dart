@@ -14,6 +14,10 @@ import '/pages/home/home_model.dart';
 // Favorites
 import '/pages/favorites/favorites_view.dart';
 import '/pages/favorites/favorites_controller.dart';
+// Folders
+import '/pages/folders/folders_view.dart';
+import '/pages/folders/folders_controller.dart';
+import '/pages/folders/folder_model.dart';
 
 // Settings
 import '/pages/settings/settings_view.dart';
@@ -21,6 +25,12 @@ import '/pages/settings/settings_controller.dart';
 import '/pages/settings/settings_model.dart';
 
 import 'custom_widgets/all_custom_widgets.dart';
+
+import 'custom_widgets/bottom_nav_bar/bottom_nav_bar_controller.dart';
+// Camera
+import '/pages/camera/camera_view.dart';
+import '/pages/camera/camera_controller.dart';
+import '/pages/camera/camera_model.dart';
 
 /// Flutter Riverpod providers
 class Providers {
@@ -57,6 +67,14 @@ class Providers {
         const Duration(seconds: 1), () => FavoritesControllerMock().favorites);
   });
 
+  /// Provider for [FoldersScreen]
+  /// - Provides a [FoldersController] for a [Folder]
+  static final AutoDisposeStateNotifierProviderFamily<FoldersController, Folder,
+          String> foldersControllerProvider =
+      StateNotifierProvider.autoDispose.family((ref, id) {
+    return FoldersControllerMock(id);
+  });
+
   /// Provider for [CustomBottomNavBar]
   /// - Provides a [CustomBottomNavBarController] for a [CustomBottomNavBarModel]
   static final StateNotifierProvider<CustomBottomNavBarController,
@@ -64,9 +82,19 @@ class Providers {
       StateNotifierProvider<CustomBottomNavBarController,
           CustomBottomNavBarModel>((ref) => CustomBottomNavBarControllerImpl());
 
+  /// Provider for [TakePictureController]
+  /// - Provides a [TakePictureController] for a [TakePictureModel]
+  static final StateNotifierProvider<TakePictureController, TakePictureModel>
+      takePictureControllerProvider =
+      StateNotifierProvider<TakePictureController, TakePictureModel>(
+          (ref) => TakePictureControllerImpl());
   static final navigatorKeyProvider =
       Provider<GlobalKey<NavigatorState>>((ref) {
     return GlobalKey<NavigatorState>();
+  });
+
+  static final enableHeroAnimationProvider = StateProvider<bool>((ref) {
+    return true;
   });
 
   /// Provider for [CalendarButton]

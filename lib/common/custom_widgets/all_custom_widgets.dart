@@ -12,6 +12,8 @@ export 'search_bar/search_bar.dart';
 export 'search_bar/search_bar_container.dart';
 export 'no_elements_message.dart';
 export 'error_message.dart';
+export 'folder_bubble/folder_bubble.dart';
+export 'folder_bubble/folder_bubble_grid.dart';
 export 'calendar_button/calendar_model.dart';
 export 'calendar_button/calendar_button_controller.dart';
 export 'date_picker.dart';

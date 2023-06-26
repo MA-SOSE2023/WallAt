@@ -18,6 +18,7 @@ dependencies:
   json_annotation: ^4.8.1
   intl: ^0.18.1
   beamer: ^1.5.5
+  cunning_document_scanner: ^1.1.2
   photo_view: ^0.14.0
   image_picker: ^0.8.8
   font_awesome_flutter: ^10.4.0

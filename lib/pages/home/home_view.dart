@@ -24,9 +24,6 @@ class HomeScreen extends ConsumerWidget {
         .toList();
     final List<SingleItem> documentCards = model.recentItems;
     return Scaffold(
-      appBar: const CupertinoNavigationBar(
-        middle: Text('Home'),
-      ),
       backgroundColor: CupertinoTheme.of(context).scaffoldBackgroundColor,
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: Padding(
@@ -34,7 +31,9 @@ class HomeScreen extends ConsumerWidget {
         child: FloatingActionButton(
           foregroundColor: CupertinoTheme.of(context).primaryContrastingColor,
           backgroundColor: CupertinoTheme.of(context).primaryColor,
-          onPressed: () => Routers.globalRouterDelegate.beamToNamed('/camera'),
+          onPressed: () => ref
+              .read(Providers.takePictureControllerProvider.notifier)
+              .takePicture(),
           heroTag: cameraButtonHeroTag,
           child: const Icon(
             CupertinoIcons.camera,
@@ -42,11 +41,13 @@ class HomeScreen extends ConsumerWidget {
           ),
         ),
       ),
-      body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            ConstrainedBox(
+      body: CustomScrollView(
+        slivers: [
+          const CupertinoSliverNavigationBar(
+            largeTitle: Text('Home'),
+          ),
+          SliverToBoxAdapter(
+            child: ConstrainedBox(
               constraints: BoxConstraints(
                   maxHeight: MediaQuery.of(context).size.height / 4),
               child: Padding(
@@ -70,45 +71,28 @@ class HomeScreen extends ConsumerWidget {
                 ),
               ),
             ),
-            Expanded(
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  color: CupertinoDynamicColor.resolve(
-                      CupertinoColors.systemGrey6, context),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Padding(
-                      padding:
-                          EdgeInsets.only(left: 20.0, top: 20.0, bottom: 5.0),
-                      child: Text(
-                        'Frequently Used',
-                        style: TextStyle(
-                            fontSize: 16, color: CupertinoColors.systemGrey),
-                      ),
-                    ),
-                    Expanded(
-                      child: Container(
-                        margin: const EdgeInsets.only(
-                            left: 20.0, right: 20.0, bottom: 10),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(25),
-                          color: CupertinoTheme.of(context)
-                              .scaffoldBackgroundColor,
-                        ),
-                        child: DocumentCardContainerList(
-                          items: documentCards,
-                          showFavoriteButton: false,
-                        ),
-                      ),
-                    ),
-                  ],
+          ),
+          SliverAppBar(
+            pinned: true,
+            toolbarHeight: 30.0,
+            backgroundColor: CupertinoDynamicColor.resolve(
+                CupertinoColors.systemGrey6, context),
+            flexibleSpace: const FlexibleSpaceBar(
+              titlePadding: EdgeInsets.only(left: 20.0, bottom: 10.0),
+              title: Text(
+                'Frequently Used',
+                style: TextStyle(
+                  fontSize: 18,
+                  color: CupertinoColors.systemGrey,
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+          DocumentCardContainerList(
+            items: documentCards,
+            showFavoriteButton: false,
+          ),
+        ],
       ),
     );
   }

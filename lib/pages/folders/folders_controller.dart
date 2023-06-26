@@ -1,4 +1,5 @@
 import 'package:device_calendar/device_calendar.dart';
+import 'package:flutter/cupertino.dart';
 
 import '/pages/single_item/model/item_event.dart';
 import '/pages/single_item/model/single_item.dart';
@@ -38,7 +39,7 @@ SingleItem _mockSingleItem(int id) => SingleItem(
       id: '$id',
       title: 'Example Title',
       description: 'Example Description',
-      image: 'assets/dev_debug_images/hampter1.jpg',
+      image: const AssetImage('assets/dev_debug_images/hampter1.jpg'),
       isFavorite: true,
       events: _mockEvents.map((e) => e.copyWith(parentId: '$id')).toList(),
       currentSelectedDate: null,
@@ -46,35 +47,57 @@ SingleItem _mockSingleItem(int id) => SingleItem(
 
 var _id = 0;
 
-List<FolderItem> _mockItems = [
-  _mockSingleItem(_id++),
-  _mockSingleItem(_id++).copyWith(title: 'Another Title'),
-  _mockSingleItem(_id++).copyWith(title: 'Yet Another Title'),
-  _mockSingleItem(_id++).copyWith(title: 'One More Title'),
-  _mockSingleItem(_id++).copyWith(title: 'Last Title'),
-  _mockSingleItem(_id++).copyWith(title: 'Last Last Title'),
-  _mockSingleItem(_id++).copyWith(title: 'Last One For Sure'),
-  _mockSingleItem(_id++).copyWith(title: 'Promise, this is the last'),
-  _mockSingleItem(_id++).copyWith(title: 'Sorry, one more'),
-];
+List<FolderItem> _mockItems() => [
+      _mockSingleItem(_id++),
+      _mockSingleItem(_id++).copyWith(title: 'Another Title'),
+      _mockSingleItem(_id++).copyWith(title: 'Yet Another Title'),
+      _mockSingleItem(_id++).copyWith(title: 'One More Title'),
+      _mockSingleItem(_id++).copyWith(title: 'Last Title'),
+      _mockSingleItem(_id++).copyWith(title: 'Last Last Title'),
+      _mockSingleItem(_id++).copyWith(title: 'Last One For Sure'),
+      _mockSingleItem(_id++).copyWith(title: 'Promise, this is the last'),
+      _mockSingleItem(_id++).copyWith(title: 'Sorry, one more'),
+    ];
 
 final Folder rootFolder = Folder(
   id: '0',
-  title: 'Root',
+  title: 'Folders',
   contents: [
     Folder(id: '1', title: 'Example Folder', contents: [
-      Folder(id: '4', title: 'Example Subfolder', contents: _mockItems),
-      Folder(id: '5', title: 'Another Subfolder', contents: _mockItems),
-      ..._mockItems,
+      Folder(id: '4', title: 'Example Subfolder', contents: _mockItems()),
+      Folder(id: '5', title: 'Another Subfolder', contents: _mockItems()),
+      ..._mockItems().take(2),
     ]),
-    Folder(id: '2', title: 'Another Folder', contents: _mockItems),
-    Folder(id: '3', title: 'Yet Another Folder', contents: _mockItems),
-    ..._mockItems,
+    Folder(id: '2', title: 'Another Folder', contents: _mockItems()),
+    Folder(
+        id: '3',
+        title: 'Yet Another Folder',
+        contents: _mockItems().take(7).toList()),
+    ..._mockItems(),
   ],
 );
 
-class FoldersControllerMock extends FoldersControler {
-  FoldersControllerMock(String id) : super(rootFolder.copyWith(id: id));
+Folder _mockFolderItem(String id) {
+  switch (id) {
+    case '0':
+      return rootFolder;
+    case '1':
+      return rootFolder.contents[0].folder;
+    case '2':
+      return rootFolder.contents[1].folder;
+    case '3':
+      return rootFolder.contents[2].folder;
+    case '4':
+      return rootFolder.contents[0].contents[0].folder;
+    case '5':
+      return rootFolder.contents[0].contents[1].folder;
+    default:
+      throw UnsupportedError('Unknown id: $id');
+  }
+}
+
+class FoldersControllerMock extends FoldersController {
+  FoldersControllerMock(String id) : super(_mockFolderItem(id));
 
   @override
   List<FolderItem> get contents => state.contents;

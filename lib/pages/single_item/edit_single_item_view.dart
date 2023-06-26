@@ -4,9 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gruppe4/pages/single_item/single_item_view.dart';
 import '../../common/provider.dart';
 
-import '/pages/single_item/single_item_view.dart';
 import 'model/single_item.dart';
-import '/common/provider.dart';
 import '/common/custom_widgets/all_custom_widgets.dart' show EventsContainer;
 
 Widget makeDismissable(
@@ -67,7 +65,7 @@ class EditSingleItemPage extends ConsumerWidget {
                               borderRadius: BorderRadius.circular(10),
                               color: CupertinoDynamicColor.resolve(
                                   CupertinoColors.systemBackground, context)),
-                          margin: EdgeInsets.all(10),
+                          margin: const EdgeInsets.all(10),
                           backgroundColor: Colors.transparent,
                           children: [
                             CupertinoTextField(

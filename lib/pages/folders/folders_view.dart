@@ -1,59 +1,69 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'folder_model.dart';
 import 'folder_item.dart';
+import '/common/provider.dart';
 import '/common/custom_widgets/all_custom_widgets.dart'
-    show CameraButtonHeroDestination;
+    show
+        FolderBubbleGrid,
+        DocumentCardContainerList,
+        CameraButtonHeroDestination;
+import '/pages/single_item/model/single_item.dart';
 
-class FoldersScren extends StatelessWidget {
-  const FoldersScren({super.key});
+class FoldersScreen extends ConsumerWidget {
+  const FoldersScreen({String folderId = '0', super.key})
+      : _folderId = folderId;
+
+  final String _folderId;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final Folder rootFolder =
+        ref.watch(Providers.foldersControllerProvider(_folderId));
+
+    final List<Folder> folders = rootFolder.contents
+        .where((element) => element.isFolder)
+        .map((e) => e as Folder)
+        .toList();
+
+    final List<SingleItem> items = rootFolder.contents
+        .where((element) => element.isLeaf)
+        .map((e) => e as SingleItem)
+        .toList();
+
     return CupertinoPageScaffold(
       child: Stack(
         children: [
           CustomScrollView(
             slivers: [
-              const CupertinoSliverNavigationBar(
-                largeTitle: Text('Folders'),
+              CupertinoSliverNavigationBar(
+                largeTitle: Text(rootFolder.title),
               ),
-              // SliverGrid to display root level folders
-              SliverGrid.builder(
-                gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: MediaQuery.of(context).size.width / 2,
-                  mainAxisSpacing: 10.0,
-                  crossAxisSpacing: 10.0,
-                ),
-                itemBuilder: (BuildContext context, int index) {
-                  if (index < 10) {
-                    return Container(
-                      color: CupertinoTheme.of(context).primaryColor,
-                      child: const Text('Folder'),
-                    );
-                  } else {
-                    return null;
-                  }
-                },
-              ),
-              SliverPrototypeExtentList(
-                  delegate: SliverChildBuilderDelegate(
-                    (BuildContext context, int index) {
-                      if (index < 10) {
-                        return Container(
-                          color: CupertinoTheme.of(context).primaryColor,
-                          child: const Text('Folder'),
-                        );
-                      } else {
-                        return null;
-                      }
-                    },
+              FolderBubbleGrid(folder: folders),
+              SliverPadding(
+                padding: const EdgeInsets.only(top: 20.0, bottom: 10.0),
+                sliver: SliverAppBar(
+                  automaticallyImplyLeading: false,
+                  pinned: false,
+                  toolbarHeight: 0.0,
+                  backgroundColor: CupertinoDynamicColor.resolve(
+                      CupertinoColors.systemGrey6, context),
+                  flexibleSpace: FlexibleSpaceBar(
+                    titlePadding: const EdgeInsets.only(bottom: 12),
+                    title: Divider(
+                      height: 0.75,
+                      thickness: 1,
+                      indent: 24,
+                      endIndent: 24,
+                      color: CupertinoDynamicColor.resolve(
+                          CupertinoColors.systemGrey, context),
+                    ),
                   ),
-                  prototypeItem: Container(
-                    color: CupertinoTheme.of(context).primaryColor,
-                    child: const Text('Folder'),
-                  ))
+                ),
+              ),
+              DocumentCardContainerList(items: items)
             ],
           ),
           const CameraButtonHeroDestination(),
@@ -63,8 +73,8 @@ class FoldersScren extends StatelessWidget {
   }
 }
 
-abstract class FoldersControler extends StateNotifier<Folder> {
-  FoldersControler(Folder state) : super(state);
+abstract class FoldersController extends StateNotifier<Folder> {
+  FoldersController(Folder state) : super(state);
 
   void delete();
 

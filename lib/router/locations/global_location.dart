@@ -1,6 +1,8 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:gruppe4/pages/settings/settings_view.dart';
+import 'package:gruppe4/pages/camera/camera_model.dart';
+import 'package:gruppe4/pages/camera/camera_view.dart';
 
 import '/pages/single_item/single_item_view.dart';
 import '/common/custom_widgets/all_custom_widgets.dart'
@@ -16,7 +18,7 @@ class GlobalLocation extends BeamLocation<BeamState> {
         '/home',
         '/favorites',
         '/folders',
-        '/camera',
+        '/camera/view',
         '/settings',
         '/profiles',
         '/item/:id',
@@ -62,8 +64,14 @@ class GlobalLocation extends BeamLocation<BeamState> {
             title: 'Profiles',
             type: BeamPageType.cupertino,
             popToNamed: prevNavBarLocation,
-            child: Placeholder(), // TODO: Profiles Screen
+            child: const Placeholder(), // TODO: Profiles Screen
           ),
+        if (state.routeInformation.location == '/camera/view')
+          BeamPage(
+              key: const ValueKey('camera_view'),
+              title: 'Camera View',
+              type: BeamPageType.cupertino,
+              child: DisplayPicturesScreen(model: data as TakePictureModel)),
         if ((state.routeInformation.location ?? '').startsWith('/item'))
           BeamPage(
             key: const ValueKey('item'),
