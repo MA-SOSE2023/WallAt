@@ -44,7 +44,7 @@ class SelectCalendarPopup extends StatelessWidget {
             title: const Text('Select Calendar'),
             content: Column(
               children: [
-                Text('Select a calendar to add the event to:'),
+                const Text('Select a calendar to add the event to:'),
                 SizedBox(height: 16),
                 Column(
                   children: usableCalendars.map((calendar) {

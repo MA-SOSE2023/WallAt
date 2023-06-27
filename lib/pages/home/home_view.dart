@@ -28,8 +28,8 @@ class HomeScreen extends ConsumerWidget {
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(right: 10.0, bottom: 15.0),
         child: FloatingActionButton(
-          foregroundColor: CupertinoDynamicColor.resolve(CupertinoTheme.of(context).scaffoldBackgroundColor, context),
-          backgroundColor: CupertinoDynamicColor.resolve(CupertinoTheme.of(context).primaryContrastingColor, context),
+          foregroundColor: CupertinoTheme.of(context).primaryContrastingColor,
+          backgroundColor: CupertinoTheme.of(context).primaryColor,
           onPressed: () => ref
               .read(Providers.takePictureControllerProvider.notifier)
               .takePicture(),
@@ -60,7 +60,7 @@ class HomeScreen extends ConsumerWidget {
                     showIndicator: true,
                     slideIndicator: CircularWaveSlideIndicator(
                       currentIndicatorColor: CupertinoDynamicColor.resolve(
-                          CupertinoTheme.of(context).primaryContrastingColor, context),
+                          CupertinoColors.activeBlue, context),
                       indicatorBackgroundColor: CupertinoDynamicColor.resolve(
                           CupertinoTheme.of(context).primaryColor, context),
                     ),

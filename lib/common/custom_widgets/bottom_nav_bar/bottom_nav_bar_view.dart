@@ -56,11 +56,6 @@ class _CustomBottomNavBarState extends ConsumerState<CustomBottomNavBar> {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        if (accentColor == null) {
-          final CupertinoThemeData theme = CupertinoTheme.of(context);
-          accentColor = theme.primaryContrastingColor;
-        }
-
         CustomBottomNavBarModel state =
             ref.watch(Providers.customBottomNavBarControllerProvider);
         CustomBottomNavBarController controller =
@@ -71,7 +66,6 @@ class _CustomBottomNavBarState extends ConsumerState<CustomBottomNavBar> {
           onTap: (index) => controller.goToOtherPage(index, context, ref),
           currentIndex: state.currentIndex,
           items: controller.getNavBarItems(),
-          activeColor: accentColor,
         );
       },
     );

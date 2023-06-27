@@ -7,28 +7,19 @@ import 'settings_view.dart';
 
 var settings = SettingsModel(
   calendar: null,
-  brightness: Brightness.light,
+  selectedThemeIndex: 0,
 );
 
 class SettingsControllerImpl extends SettingsController {
   SettingsControllerImpl({SettingsModel? model}) : super(model ?? settings);
 
   @override
-  bool isDarkMode() {
-    return state.brightness == Brightness.dark;
-  }
-
-  @override
-  void setUsedCalendar(Calendar calendar) {
+  void setUsedCalendar(Calendar? calendar) {
     state = state.copyWith(calendar: calendar);
   }
 
   @override
-  void toggleColorTheme(bool value) {
-    if (value) {
-      state = state.copyWith(brightness: Brightness.dark);
-    } else {
-      state = state.copyWith(brightness: Brightness.light);
-    }
+  void changeThemeIndex(int index) {
+    state = state.copyWith(selectedThemeIndex: index);
   }
 }
