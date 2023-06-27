@@ -14,7 +14,7 @@ import '/common/custom_widgets/all_custom_widgets.dart'
         NoElementsMessage;
 
 class FoldersScreen extends ConsumerWidget {
-  const FoldersScreen({int folderId = 0, super.key}) : _folderId = folderId;
+  const FoldersScreen({int folderId = 1, super.key}) : _folderId = folderId;
 
   final int _folderId;
 
@@ -37,13 +37,18 @@ class FoldersScreen extends ConsumerWidget {
                       largeTitle: Text(snapshot.data?.title ?? 'Folders'),
                     ),
                     if (contents == null)
-                      const ErrorMessage(
-                        message:
-                            'No matching folder was found. Try restarting the app.',
+                      const SliverToBoxAdapter(
+                        child: ErrorMessage(
+                          message:
+                              'No matching folder was found. Try restarting the app.',
+                        ),
                       ),
                     if (contents != null && contents.isEmpty)
-                      const NoElementsMessage(
-                        message: 'This folder is empty. Try adding some items.',
+                      const SliverToBoxAdapter(
+                        child: NoElementsMessage(
+                          message:
+                              'This folder is empty. Try adding some items.',
+                        ),
                       ),
                     if (contents != null && contents.isNotEmpty) ...[
                       FolderBubbleGrid(

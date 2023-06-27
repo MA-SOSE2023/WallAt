@@ -12,6 +12,7 @@ class App extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Call to this provider should open the database
     ref.read(Providers.persistenceServiceProvider);
     return CupertinoApp.router(
       theme: const CupertinoThemeData(
