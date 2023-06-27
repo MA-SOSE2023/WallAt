@@ -23,6 +23,8 @@ class FolderBubble extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     ref.watch(Providers.enableHeroAnimationProvider);
 
+    final List<FolderItem> contents = _folder.contents ?? [];
+
     Widget gridItem(
       FolderItem item, {
       double padding = 4.0,
@@ -47,18 +49,18 @@ class FolderBubble extends ConsumerWidget {
           ),
         );
 
-    List<Widget> threeMainItems(List<FolderItem> items) =>
-        items.take(3).map((item) => gridItem(item)).toList();
+    List<Widget> threeMainItems() =>
+        contents.take(3).map((item) => gridItem(item)).toList();
 
     Widget secondaryGrid() {
       final VoidCallback onTapped =
           FolderItem.navigateTo(_folder, context, ref);
 
-      if (_folder.contents.length > 7) {
+      if (contents.length > 7) {
         return GestureDetector(
             onTap: onTapped,
             child: itemGrid([
-              ..._folder.contents
+              ...contents
                   .sublist(3, 6)
                   .map((item) =>
                       gridItem(item, padding: 0.0, onTapped: onTapped))
@@ -69,10 +71,12 @@ class FolderBubble extends ConsumerWidget {
       } else {
         return GestureDetector(
           onTap: onTapped,
-          child: itemGrid(_folder.contents
-              .sublist(3)
-              .map((item) => gridItem(item, padding: 0.0, onTapped: onTapped))
-              .toList()),
+          child: itemGrid(
+            contents
+                .sublist(3)
+                .map((item) => gridItem(item, padding: 0.0, onTapped: onTapped))
+                .toList(),
+          ),
         );
       }
     }
@@ -89,7 +93,7 @@ class FolderBubble extends ConsumerWidget {
             ),
             child: itemGrid(
               [
-                ...threeMainItems(_folder.contents),
+                ...threeMainItems(),
                 secondaryGrid(),
               ],
             ),

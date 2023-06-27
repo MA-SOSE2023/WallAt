@@ -9,8 +9,9 @@ import '/common/custom_widgets/all_custom_widgets.dart'
     show
         FolderBubbleGrid,
         DocumentCardContainerList,
-        CameraButtonHeroDestination;
-import '/pages/single_item/model/single_item.dart';
+        CameraButtonHeroDestination,
+        ErrorMessage,
+        NoElementsMessage;
 
 class FoldersScreen extends ConsumerWidget {
   const FoldersScreen({int folderId = 0, super.key}) : _folderId = folderId;
@@ -19,47 +20,75 @@ class FoldersScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final Folder rootFolder =
+    final Future<Folder?> rootFolder =
         ref.watch(Providers.foldersControllerProvider(_folderId));
-    final FoldersController controller =
-        ref.read(Providers.foldersControllerProvider(_folderId).notifier);
-
-    final List<Folder> folders = controller.folders;
-
-    final List<SingleItem> items = controller.items;
 
     return CupertinoPageScaffold(
       child: Stack(
         children: [
-          CustomScrollView(
-            slivers: [
-              CupertinoSliverNavigationBar(
-                largeTitle: Text(rootFolder.title),
-              ),
-              FolderBubbleGrid(folder: folders),
-              SliverPadding(
-                padding: const EdgeInsets.only(top: 20.0, bottom: 10.0),
-                sliver: SliverAppBar(
-                  automaticallyImplyLeading: false,
-                  pinned: false,
-                  toolbarHeight: 0.0,
-                  backgroundColor: CupertinoDynamicColor.resolve(
-                      CupertinoColors.systemGrey6, context),
-                  flexibleSpace: FlexibleSpaceBar(
-                    titlePadding: const EdgeInsets.only(bottom: 12),
-                    title: Divider(
-                      height: 0.75,
-                      thickness: 1,
-                      indent: 24,
-                      endIndent: 24,
-                      color: CupertinoDynamicColor.resolve(
-                          CupertinoColors.systemGrey, context),
+          FutureBuilder(
+            future: rootFolder,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                final List<FolderItem>? contents = snapshot.data?.contents;
+                return CustomScrollView(
+                  slivers: [
+                    CupertinoSliverNavigationBar(
+                      largeTitle: Text(snapshot.data?.title ?? 'Folders'),
                     ),
-                  ),
-                ),
-              ),
-              DocumentCardContainerList(items: items)
-            ],
+                    if (contents == null)
+                      const ErrorMessage(
+                        message:
+                            'No matching folder was found. Try restarting the app.',
+                      ),
+                    if (contents != null && contents.isEmpty)
+                      const NoElementsMessage(
+                        message: 'This folder is empty. Try adding some items.',
+                      ),
+                    if (contents != null && contents.isNotEmpty) ...[
+                      FolderBubbleGrid(
+                          folder: contents
+                              .where((item) => item.isFolder)
+                              .map((item) => item.folder)
+                              .toList()),
+                      SliverPadding(
+                        padding: const EdgeInsets.only(top: 20.0, bottom: 10.0),
+                        sliver: SliverAppBar(
+                          automaticallyImplyLeading: false,
+                          pinned: false,
+                          toolbarHeight: 0.0,
+                          backgroundColor: CupertinoDynamicColor.resolve(
+                              CupertinoColors.systemGrey6, context),
+                          flexibleSpace: FlexibleSpaceBar(
+                            titlePadding: const EdgeInsets.only(bottom: 12),
+                            title: Divider(
+                              height: 0.75,
+                              thickness: 1,
+                              indent: 24,
+                              endIndent: 24,
+                              color: CupertinoDynamicColor.resolve(
+                                  CupertinoColors.systemGrey, context),
+                            ),
+                          ),
+                        ),
+                      ),
+                      DocumentCardContainerList(
+                        items: contents
+                            .where((item) => item.isLeaf)
+                            .map((item) => item.item)
+                            .toList(),
+                      ),
+                    ]
+                  ],
+                );
+              } else if (snapshot.hasError) {
+                return const ErrorMessage(
+                  message: 'An error occurred while loading the folder.',
+                );
+              } else {
+                return const Center(child: CupertinoActivityIndicator());
+              }
+            },
           ),
           const CameraButtonHeroDestination(),
         ],

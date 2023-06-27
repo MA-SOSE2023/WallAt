@@ -58,7 +58,7 @@ class DocumentCard extends ConsumerWidget {
               child: HeroMode(
                 enabled: heroEnabled,
                 child: Hero(
-                  tag: singleItemHeroTag(item.id),
+                  tag: singleItemHeroTag('$item.id'),
                   child: Image(
                     image: controller.getImage().image,
                   ),
