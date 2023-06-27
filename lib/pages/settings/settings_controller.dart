@@ -7,7 +7,7 @@ import 'settings_view.dart';
 
 var settings = SettingsModel(
   calendar: null,
-  selectedThemeIndex: 0,
+  selectedThemeIndex: 1,
 );
 
 class SettingsControllerImpl extends SettingsController {

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gruppe4/common/theme/custom_theme_data.dart';
 import 'package:social_share/social_share.dart';
 import '../../common/provider.dart';
 import 'full_screen_image_view.dart';
@@ -27,8 +28,12 @@ class SingleItemPage extends ConsumerWidget {
         ref.watch(Providers.singleItemControllerProvider(_id));
     final SingleItemController controller =
         ref.read(Providers.singleItemControllerProvider(_id).notifier);
+
+    final CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
     return CupertinoPageScaffold(
+      backgroundColor: theme.backgroundColor,
       navigationBar: CupertinoNavigationBar(
+        backgroundColor: theme.navBarColor,
         middle: Text(item.title),
       ),
       child: SafeArea(
@@ -58,9 +63,13 @@ class SingleItemPage extends ConsumerWidget {
                     ),
                   ),
                 ),
-                SizedBox(
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 20, right: 20),
+                Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: theme.groupingColor,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                     child: InfoContainer(
                       text: item.description,
                     ),
@@ -70,8 +79,7 @@ class SingleItemPage extends ConsumerWidget {
                     padding: const EdgeInsets.all(20.0),
                     child: Container(
                         decoration: BoxDecoration(
-                          color: CupertinoDynamicColor.resolve(
-                              CupertinoColors.systemGrey5, context),
+                          color: theme.groupingColor,
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: EventsContainer(id: _id, editable: false))),
@@ -80,8 +88,7 @@ class SingleItemPage extends ConsumerWidget {
             Align(
               alignment: Alignment.bottomCenter,
               child: Container(
-                color: CupertinoDynamicColor.resolve(
-                    CupertinoColors.systemGrey5, context),
+                color: theme.navBarColor,
                 padding: const EdgeInsets.only(left: 20, right: 20),
                 child: ActionButtons(itemId: _id, controller: controller),
               ),
@@ -133,11 +140,6 @@ class InfoContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: MediaQuery.of(context).size.height / 12,
-      decoration: BoxDecoration(
-        color:
-            CupertinoDynamicColor.resolve(CupertinoColors.systemGrey5, context),
-        borderRadius: BorderRadius.circular(10),
-      ),
       padding: const EdgeInsets.all(10.0),
       child: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),

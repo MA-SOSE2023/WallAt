@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../theme/custom_theme_data.dart';
 import '/common/provider.dart';
 import '/pages/single_item/single_item_view.dart';
 import '/pages/single_item/model/single_item.dart';
@@ -21,6 +22,7 @@ class DocumentCard extends ConsumerWidget {
     final bool heroEnabled = ref.watch(Providers.enableHeroAnimationProvider);
     final SingleItemController controller =
         ref.watch(Providers.singleItemControllerProvider(_item.id).notifier);
+    final CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
     return CupertinoListSection.insetGrouped(
       margin: const EdgeInsets.all(0),
       backgroundColor: Colors.transparent,
@@ -33,10 +35,7 @@ class DocumentCard extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(item.title,
-                  style: CupertinoTheme.of(context)
-                      .textTheme
-                      .navActionTextStyle
-                      .copyWith(fontSize: 20)),
+                  style: TextStyle(color: theme.accentColor, fontSize: 20)),
               Text(item.description,
                   maxLines: 2,
                   style: CupertinoTheme.of(context)

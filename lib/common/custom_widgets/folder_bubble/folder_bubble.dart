@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../theme/custom_theme_data.dart';
 import '/pages/folders/folder_item.dart';
 import '/pages/folders/folder_model.dart';
 import '/common/provider.dart';
@@ -23,6 +24,8 @@ class FolderBubble extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     ref.watch(Providers.enableHeroAnimationProvider);
 
+    final CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
+
     Widget gridItem(
       FolderItem item, {
       double padding = 4.0,
@@ -33,8 +36,7 @@ class FolderBubble extends ConsumerWidget {
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(15.0),
-              color: CupertinoDynamicColor.resolve(
-                  CupertinoColors.systemGrey6, context),
+              color: theme.groupingColor,
             ),
             child: Padding(
               padding: EdgeInsets.all(padding),
@@ -84,8 +86,7 @@ class FolderBubble extends ConsumerWidget {
             margin: const EdgeInsets.all(10.0),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(15.0),
-              color: CupertinoDynamicColor.resolve(
-                  CupertinoColors.systemGrey6, context),
+              color: theme.groupingColor,
             ),
             child: itemGrid(
               [

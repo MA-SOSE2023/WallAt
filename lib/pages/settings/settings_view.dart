@@ -18,8 +18,6 @@ class SettingsPage extends ConsumerWidget {
     SettingsController controller =
         ref.read(Providers.settingsControllerProvider.notifier);
 
-    ThemeController themeController =
-        ref.read(Providers.themeControllerProvider.notifier);
     CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
 
     void setSystemCalendar(BuildContext context) {
@@ -36,28 +34,28 @@ class SettingsPage extends ConsumerWidget {
     }
 
     return CupertinoPageScaffold(
+      backgroundColor: theme.backgroundColor,
       navigationBar: CupertinoNavigationBar(
+        backgroundColor: theme.navBarColor,
         middle: Text("Settings"),
       ),
       child: SafeArea(
         child: Padding(
-          padding: EdgeInsets.all(10),
+          padding: const EdgeInsets.all(10),
           child: Container(
             decoration: BoxDecoration(
-              color: CupertinoDynamicColor.resolve(
-                  CupertinoColors.systemGrey5, context),
+              color: theme.groupingColor,
               borderRadius: BorderRadius.circular(10),
             ),
             child: CupertinoListSection.insetGrouped(
               backgroundColor: Colors.transparent,
               decoration: BoxDecoration(
-                color: CupertinoDynamicColor.resolve(
-                    CupertinoColors.systemBackground, context),
+                color: theme.backgroundColor,
               ),
               header: Text("Common"),
               children: [
                 CupertinoListTile(
-                  title: const Text("Set a preferred color theme"),
+                  title: Text("Set a preferred color theme"),
                   subtitle: Text(
                     "Selected Theme: ${ref.watch(Providers.themeControllerProvider).name}",
                   ),
@@ -68,24 +66,30 @@ class SettingsPage extends ConsumerWidget {
                         context: context,
                         builder: (BuildContext context) {
                           return CupertinoAlertDialog(
-                            title: const Text('Select a theme'),
+                            title: Text('Select a theme'),
                             content: Column(
                               children: [
                                 Container(
                                   decoration: BoxDecoration(
-                                    color: CupertinoDynamicColor.resolve(
-                                        CupertinoColors.systemGrey5, context),
+                                    color: theme.groupingColor,
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                   child: CupertinoListSection.insetGrouped(
                                     backgroundColor: Colors.transparent,
-                                    header: const Text("Themes"),
-                                    children: selectableThemes.map((theme) {
+                                    decoration: BoxDecoration(
+                                      color: theme.backgroundColor,
+                                    ),
+                                    header: Text("Themes"),
+                                    children: selectableThemes.map((currTheme) {
                                       return CupertinoListTile(
-                                        title: Text(theme.name),
+                                        title: Text(
+                                            style: TextStyle(
+                                                color: theme.textColor),
+                                            currTheme.name),
                                         onTap: () {
                                           controller.changeThemeIndex(
-                                              selectableThemes.indexOf(theme));
+                                              selectableThemes
+                                                  .indexOf(currTheme));
                                           print(ref
                                               .watch(Providers
                                                   .themeControllerProvider)
@@ -100,7 +104,7 @@ class SettingsPage extends ConsumerWidget {
                             ),
                             actions: <Widget>[
                               CupertinoDialogAction(
-                                child: const Text('Cancel'),
+                                child: Text('Cancel'),
                                 onPressed: () {
                                   Navigator.pop(context);
                                 },
@@ -113,7 +117,7 @@ class SettingsPage extends ConsumerWidget {
                   ),
                 ),
                 CupertinoListTile(
-                  title: const Text("Set a system calendar"),
+                  title: Text("Set a system calendar"),
                   subtitle: Text(
                     (settings.calendar == null)
                         ? "No calendar selected"

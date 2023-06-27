@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gruppe4/common/theme/custom_theme_data.dart';
 
 import '/common/provider.dart';
 import '/common/custom_widgets/all_custom_widgets.dart'
@@ -36,6 +37,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
   Widget build(BuildContext context) {
     AsyncValue<List<SingleItem>> favoritesFuture =
         ref.watch(Providers.favoritesControllerProvider);
+    CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
 
     final emptyListMessage = searchString.isEmpty
         ? 'No favorites yet.\nTry adding some by tapping the heart icon.'
@@ -77,11 +79,13 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
               ));
 
     return CupertinoPageScaffold(
+      backgroundColor: theme.backgroundColor,
       child: Stack(
         children: [
           CustomScrollView(
             slivers: [
-              const CupertinoSliverNavigationBar(
+              CupertinoSliverNavigationBar(
+                backgroundColor: theme.navBarColor,
                 largeTitle: Text('Favorites'),
               ),
               SliverAppBar(
