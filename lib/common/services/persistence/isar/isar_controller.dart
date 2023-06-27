@@ -41,6 +41,20 @@ class IsarController extends DbController {
         rootFolderId: rootFolderId);
   }
 
+  Future<bool> closeDb() async {
+    if (state.db == null) {
+      return false;
+    }
+    (await state.db!).close();
+    state = state.copyWith(
+        db: null,
+        singleItemDio: null,
+        folderDio: null,
+        eventDio: null,
+        rootFolderId: null);
+    return true;
+  }
+
   @override
   Future<ItemEventDio> get eventDio async {
     if (state.db == null) {
