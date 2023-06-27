@@ -117,7 +117,6 @@ class Providers {
   static final Provider<PersistenceService> persistenceServiceProvider =
       Provider<PersistenceService>((ref) {
     final DbController dbController = ref.read(dbControllerProvider.notifier);
-
     return PersistenceService(controller: dbController);
   });
 }
