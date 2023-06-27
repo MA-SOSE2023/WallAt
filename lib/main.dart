@@ -16,9 +16,9 @@ class App extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     SettingsModel settings = ref.watch(Providers.settingsControllerProvider);
     return CupertinoApp.router(
-      theme: CupertinoThemeData(
-        brightness: settings.brightness,
-      ),
+      theme: settings.brightness == Brightness.light
+          ? AppCupertinoTheme.lightTheme
+          : AppCupertinoTheme.darkTheme,
       localizationsDelegates: const [
         DefaultCupertinoLocalizations.delegate,
         DefaultMaterialLocalizations.delegate,
