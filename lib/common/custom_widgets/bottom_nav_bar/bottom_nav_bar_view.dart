@@ -41,6 +41,7 @@ class CustomBottomNavBar extends ConsumerStatefulWidget {
 
 class _CustomBottomNavBarState extends ConsumerState<CustomBottomNavBar> {
   late final BeamerDelegate _beamerDelegate;
+  Color? accentColor;
 
   void _setStateListener() => setState(() {});
 
@@ -53,16 +54,26 @@ class _CustomBottomNavBarState extends ConsumerState<CustomBottomNavBar> {
 
   @override
   Widget build(BuildContext context) {
-    CustomBottomNavBarModel state =
-        ref.watch(Providers.customBottomNavBarControllerProvider);
-    CustomBottomNavBarController controller =
-        ref.read(Providers.customBottomNavBarControllerProvider.notifier);
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (accentColor == null) {
+          final CupertinoThemeData theme = CupertinoTheme.of(context);
+          accentColor = theme.primaryContrastingColor;
+        }
 
-    return CupertinoTabBar(
-      iconSize: state.iconSize,
-      onTap: (index) => controller.goToOtherPage(index, context, ref),
-      currentIndex: state.currentIndex,
-      items: controller.getNavBarItems(),
+        CustomBottomNavBarModel state =
+            ref.watch(Providers.customBottomNavBarControllerProvider);
+        CustomBottomNavBarController controller =
+            ref.read(Providers.customBottomNavBarControllerProvider.notifier);
+
+        return CupertinoTabBar(
+          iconSize: state.iconSize,
+          onTap: (index) => controller.goToOtherPage(index, context, ref),
+          currentIndex: state.currentIndex,
+          items: controller.getNavBarItems(),
+          activeColor: accentColor,
+        );
+      },
     );
   }
 

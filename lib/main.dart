@@ -7,6 +7,7 @@ import 'package:timezone/data/latest.dart' as tz;
 import '/common/provider.dart';
 import '/pages/settings/settings_model.dart';
 import 'router/router.dart';
+import 'common/theme.dart';
 
 class App extends ConsumerWidget {
   const App({super.key});
@@ -15,9 +16,9 @@ class App extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     SettingsModel settings = ref.watch(Providers.settingsControllerProvider);
     return CupertinoApp.router(
-      theme: CupertinoThemeData(
-        brightness: settings.brightness,
-      ),
+      theme: settings.brightness == Brightness.light
+          ? AppCupertinoTheme.lightTheme
+          : AppCupertinoTheme.darkTheme,
       localizationsDelegates: const [
         DefaultCupertinoLocalizations.delegate,
         DefaultMaterialLocalizations.delegate,

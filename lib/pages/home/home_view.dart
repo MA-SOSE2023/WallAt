@@ -7,7 +7,6 @@ import 'home_model.dart';
 import '/common/provider.dart';
 import '/common/custom_widgets/all_custom_widgets.dart'
     show EventCard, DocumentCardContainerList, cameraButtonHeroTag;
-import '/router/router.dart';
 import '/pages/single_item/model/single_item.dart';
 import '/pages/single_item/model/item_event.dart';
 
@@ -29,8 +28,8 @@ class HomeScreen extends ConsumerWidget {
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(right: 10.0, bottom: 15.0),
         child: FloatingActionButton(
-          foregroundColor: CupertinoTheme.of(context).primaryContrastingColor,
-          backgroundColor: CupertinoTheme.of(context).primaryColor,
+          foregroundColor: CupertinoDynamicColor.resolve(CupertinoTheme.of(context).scaffoldBackgroundColor, context),
+          backgroundColor: CupertinoDynamicColor.resolve(CupertinoTheme.of(context).primaryContrastingColor, context),
           onPressed: () => ref
               .read(Providers.takePictureControllerProvider.notifier)
               .takePicture(),
@@ -61,9 +60,9 @@ class HomeScreen extends ConsumerWidget {
                     showIndicator: true,
                     slideIndicator: CircularWaveSlideIndicator(
                       currentIndicatorColor: CupertinoDynamicColor.resolve(
-                          CupertinoColors.activeBlue, context),
+                          CupertinoTheme.of(context).primaryContrastingColor, context),
                       indicatorBackgroundColor: CupertinoDynamicColor.resolve(
-                          CupertinoColors.systemGrey3, context),
+                          CupertinoTheme.of(context).primaryColor, context),
                     ),
                     viewportFraction: 0.85,
                     height: double.infinity,
