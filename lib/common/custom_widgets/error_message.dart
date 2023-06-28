@@ -8,9 +8,9 @@ class ErrorMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.center,
-      child: Center(
+    return SliverSafeArea(
+      minimum: EdgeInsets.only(top: MediaQuery.of(context).size.height / 4),
+      sliver: SliverToBoxAdapter(
         child: Text(
           _message,
           textAlign: TextAlign.center,
