@@ -29,11 +29,23 @@ class CustomThemeData {
     this.backgroundColor = const Color.fromARGB(255, 29, 29, 29),
     this.groupingColor = const Color.fromARGB(255, 82, 82, 85),
     this.textColor = const Color.fromARGB(255, 255, 255, 255),
-    this.navBarColor = const Color.fromARGB(255, 63, 63, 63),
+    this.navBarColor = const Color.fromARGB(255, 54, 56, 63),
+  });
+
+  CustomThemeData.oceanTheme({
+    this.name = 'Ocean Theme',
+    this.brightness = Brightness.dark,
+    this.primaryColor = const Color(0xFF1E1E1E),
+    this.accentColor = const Color.fromARGB(255, 72, 131, 194),
+    this.backgroundColor = const Color.fromARGB(255, 4, 1, 22),
+    this.groupingColor = const Color.fromARGB(255, 83, 83, 110),
+    this.textColor = const Color.fromARGB(255, 255, 255, 255),
+    this.navBarColor = const Color.fromARGB(255, 38, 41, 56),
   });
 }
 
 List<CustomThemeData> selectableThemes = [
   CustomThemeData.lightTheme(),
   CustomThemeData.darkTheme(),
+  CustomThemeData.oceanTheme()
 ];

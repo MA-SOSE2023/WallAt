@@ -16,6 +16,7 @@ class App extends ConsumerWidget {
     return CupertinoApp.router(
       theme: CupertinoThemeData(
         brightness: theme.brightness,
+        primaryColor: theme.accentColor,
       ),
       localizationsDelegates: const [
         DefaultCupertinoLocalizations.delegate,
