@@ -78,7 +78,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
                 future: filterFavoritesFuture,
                 success: (favorites) => DocumentCardContainerList(
                     items: favorites, borderlessCards: widget._borderlessCards),
-                emptyListMessage: emptyListMessage,
+                emptyMessage: emptyListMessage,
                 errorMessage: 'Filter could not be applied',
                 onNullMessage:
                     'Something went wrong while loading your favorites.\nTry restarting the app.',

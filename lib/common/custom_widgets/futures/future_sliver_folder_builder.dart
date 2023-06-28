@@ -3,7 +3,11 @@ import 'package:flutter/cupertino.dart';
 import '/pages/folders/folder_item.dart';
 import '/pages/folders/folder_model.dart';
 import '/common/custom_widgets/all_custom_widgets.dart'
-    show ErrorMessage, NoElementsMessage, FutureOptionBuilder;
+    show
+        ErrorMessage,
+        NoElementsMessage,
+        FutureOptionBuilder,
+        SliverActivityIndicator;
 
 class FutureSliverFolderBuilder extends StatelessWidget {
   const FutureSliverFolderBuilder({
@@ -28,16 +32,17 @@ class FutureSliverFolderBuilder extends StatelessWidget {
     return FutureOptionBuilder(
       future: _future,
       success: (folder) {
+        final List<FolderItem>? contents = folder?.contents;
         return CustomScrollView(
           slivers: [
             CupertinoSliverNavigationBar(
               largeTitle: Text(folder?.title ?? 'Folders'),
             ),
-            if (folder == null || folder.contents == null)
+            if (folder == null || contents == null)
               ErrorMessage(
                 message: _onNullMessage,
               )
-            else if (folder.contents!.isEmpty)
+            else if (contents.isEmpty)
               NoElementsMessage(
                 message: _emptyListMessage,
               )
@@ -46,7 +51,7 @@ class FutureSliverFolderBuilder extends StatelessWidget {
           ],
         );
       },
-      errror: (_) => CustomScrollView(
+      error: (_) => CustomScrollView(
         slivers: [
           const CupertinoSliverNavigationBar(
             largeTitle: Text('Folders'),
@@ -56,20 +61,12 @@ class FutureSliverFolderBuilder extends StatelessWidget {
           ),
         ],
       ),
-      loading: () => CustomScrollView(
+      loading: () => const CustomScrollView(
         slivers: [
-          const CupertinoSliverNavigationBar(
+          CupertinoSliverNavigationBar(
             largeTitle: Text('Folders'),
           ),
-          SliverSafeArea(
-            minimum:
-                EdgeInsets.only(top: MediaQuery.of(context).size.height / 4),
-            sliver: const SliverToBoxAdapter(
-              child: Center(
-                child: CupertinoActivityIndicator(),
-              ),
-            ),
-          ),
+          SliverActivityIndicator(),
         ],
       ),
     );
