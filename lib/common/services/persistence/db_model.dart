@@ -8,9 +8,9 @@ part 'db_model.freezed.dart';
 class DbModel with _$DbModel {
   factory DbModel({
     Db? db,
-    FolderDio? folderDio,
-    SingleItemDio? singleItemDio,
-    ItemEventDio? eventDio,
+    FolderDao? folderDao,
+    SingleItemDao? singleItemDao,
+    ItemEventDao? eventDao,
     int? rootFolderId,
   }) = _DbModel;
 }

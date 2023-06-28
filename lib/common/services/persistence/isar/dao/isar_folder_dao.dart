@@ -4,8 +4,8 @@ import '/pages/folders/folder_model.dart';
 import '/common/services/persistence/isar/schemas/isar_folder.dart';
 import '/common/services/persistence/persistence_service.dart';
 
-class IsarFolderDio extends FolderDio {
-  IsarFolderDio({required Future<Isar> db}) : _db = db;
+class IsarFolderDao extends FolderDao {
+  IsarFolderDao({required Future<Isar> db}) : _db = db;
 
   final Future<Isar> _db;
   int? _rootFolderId;

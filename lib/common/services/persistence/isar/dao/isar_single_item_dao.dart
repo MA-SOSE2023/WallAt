@@ -8,8 +8,8 @@ import '/common/services/persistence/isar/schemas/isar_folder.dart';
 import '/common/services/persistence/isar/schemas/isar_item_event.dart';
 import '/common/services/persistence/isar/schemas/isar_single_item.dart';
 
-class IsarSingleItemDio extends SingleItemDio {
-  IsarSingleItemDio({required Future<Isar> db}) : _db = db;
+class IsarSingleItemDao extends SingleItemDao {
+  IsarSingleItemDao({required Future<Isar> db}) : _db = db;
 
   final Future<Isar> _db;
 

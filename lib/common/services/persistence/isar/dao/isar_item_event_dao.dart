@@ -6,8 +6,8 @@ import '/pages/single_item/model/item_event.dart';
 import '/common/services/persistence/isar/schemas/isar_item_event.dart';
 import '/common/services/persistence/persistence_service.dart';
 
-class IsarItemEventDio extends ItemEventDio {
-  IsarItemEventDio({required Future<Isar> db}) : _db = db;
+class IsarItemEventDao extends ItemEventDao {
+  IsarItemEventDao({required Future<Isar> db}) : _db = db;
 
   final Future<Isar> _db;
 

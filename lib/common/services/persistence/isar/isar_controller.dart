@@ -2,9 +2,9 @@ import 'package:gruppe4/common/services/persistence/db_model.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 
-import 'dio/isar_folder_dio.dart';
-import 'dio/isar_item_event_dio.dart';
-import 'dio/isar_single_item_dio.dart';
+import 'dao/isar_folder_dao.dart';
+import 'dao/isar_item_event_dao.dart';
+import 'dao/isar_single_item_dao.dart';
 import 'schemas/isar_folder.dart';
 import 'schemas/isar_item_event.dart';
 import 'schemas/isar_single_item.dart';
@@ -27,17 +27,17 @@ class IsarController extends DbController {
       db = Future.value(Isar.getInstance());
     }
 
-    SingleItemDio singleItemDio = IsarSingleItemDio(db: db);
-    FolderDio folderDio = IsarFolderDio(db: db);
-    ItemEventDio eventDio = IsarItemEventDio(db: db);
+    SingleItemDao singleItemDao = IsarSingleItemDao(db: db);
+    FolderDao folderDao = IsarFolderDao(db: db);
+    ItemEventDao eventDao = IsarItemEventDao(db: db);
 
-    Id rootFolderId = (await folderDio.createOrFindRoot());
+    Id rootFolderId = (await folderDao.createOrFindRoot());
 
     state = state.copyWith(
         db: db,
-        singleItemDio: singleItemDio,
-        folderDio: folderDio,
-        eventDio: eventDio,
+        singleItemDao: singleItemDao,
+        folderDao: folderDao,
+        eventDao: eventDao,
         rootFolderId: rootFolderId);
   }
 
@@ -48,35 +48,35 @@ class IsarController extends DbController {
     (await state.db!).close();
     state = state.copyWith(
         db: null,
-        singleItemDio: null,
-        folderDio: null,
-        eventDio: null,
+        singleItemDao: null,
+        folderDao: null,
+        eventDao: null,
         rootFolderId: null);
     return true;
   }
 
   @override
-  Future<ItemEventDio> get eventDio async {
+  Future<ItemEventDao> get eventDio async {
     if (state.db == null) {
       await openDb();
     }
-    return state.eventDio!;
+    return state.eventDao!;
   }
 
   @override
-  Future<FolderDio> get folderDio async {
+  Future<FolderDao> get folderDio async {
     if (state.db == null) {
       await openDb();
     }
-    return state.folderDio!;
+    return state.folderDao!;
   }
 
   @override
-  Future<SingleItemDio> get singleItemDio async {
+  Future<SingleItemDao> get singleItemDio async {
     if (state.db == null) {
       await openDb();
     }
-    return state.singleItemDio!;
+    return state.singleItemDao!;
   }
 
   @override

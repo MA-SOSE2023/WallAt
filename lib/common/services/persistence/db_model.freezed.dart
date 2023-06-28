@@ -17,9 +17,9 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$DbModel {
   Future<dynamic>? get db => throw _privateConstructorUsedError;
-  FolderDio? get folderDio => throw _privateConstructorUsedError;
-  SingleItemDio? get singleItemDio => throw _privateConstructorUsedError;
-  ItemEventDio? get eventDio => throw _privateConstructorUsedError;
+  FolderDao? get folderDao => throw _privateConstructorUsedError;
+  SingleItemDao? get singleItemDao => throw _privateConstructorUsedError;
+  ItemEventDao? get eventDao => throw _privateConstructorUsedError;
   int? get rootFolderId => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -33,9 +33,9 @@ abstract class $DbModelCopyWith<$Res> {
   @useResult
   $Res call(
       {Future<dynamic>? db,
-      FolderDio? folderDio,
-      SingleItemDio? singleItemDio,
-      ItemEventDio? eventDio,
+      FolderDao? folderDao,
+      SingleItemDao? singleItemDao,
+      ItemEventDao? eventDao,
       int? rootFolderId});
 }
 
@@ -53,9 +53,9 @@ class _$DbModelCopyWithImpl<$Res, $Val extends DbModel>
   @override
   $Res call({
     Object? db = freezed,
-    Object? folderDio = freezed,
-    Object? singleItemDio = freezed,
-    Object? eventDio = freezed,
+    Object? folderDao = freezed,
+    Object? singleItemDao = freezed,
+    Object? eventDao = freezed,
     Object? rootFolderId = freezed,
   }) {
     return _then(_value.copyWith(
@@ -63,18 +63,18 @@ class _$DbModelCopyWithImpl<$Res, $Val extends DbModel>
           ? _value.db
           : db // ignore: cast_nullable_to_non_nullable
               as Future<dynamic>?,
-      folderDio: freezed == folderDio
-          ? _value.folderDio
-          : folderDio // ignore: cast_nullable_to_non_nullable
-              as FolderDio?,
-      singleItemDio: freezed == singleItemDio
-          ? _value.singleItemDio
-          : singleItemDio // ignore: cast_nullable_to_non_nullable
-              as SingleItemDio?,
-      eventDio: freezed == eventDio
-          ? _value.eventDio
-          : eventDio // ignore: cast_nullable_to_non_nullable
-              as ItemEventDio?,
+      folderDao: freezed == folderDao
+          ? _value.folderDao
+          : folderDao // ignore: cast_nullable_to_non_nullable
+              as FolderDao?,
+      singleItemDao: freezed == singleItemDao
+          ? _value.singleItemDao
+          : singleItemDao // ignore: cast_nullable_to_non_nullable
+              as SingleItemDao?,
+      eventDao: freezed == eventDao
+          ? _value.eventDao
+          : eventDao // ignore: cast_nullable_to_non_nullable
+              as ItemEventDao?,
       rootFolderId: freezed == rootFolderId
           ? _value.rootFolderId
           : rootFolderId // ignore: cast_nullable_to_non_nullable
@@ -92,9 +92,9 @@ abstract class _$$_DbModelCopyWith<$Res> implements $DbModelCopyWith<$Res> {
   @useResult
   $Res call(
       {Future<dynamic>? db,
-      FolderDio? folderDio,
-      SingleItemDio? singleItemDio,
-      ItemEventDio? eventDio,
+      FolderDao? folderDao,
+      SingleItemDao? singleItemDao,
+      ItemEventDao? eventDao,
       int? rootFolderId});
 }
 
@@ -109,9 +109,9 @@ class __$$_DbModelCopyWithImpl<$Res>
   @override
   $Res call({
     Object? db = freezed,
-    Object? folderDio = freezed,
-    Object? singleItemDio = freezed,
-    Object? eventDio = freezed,
+    Object? folderDao = freezed,
+    Object? singleItemDao = freezed,
+    Object? eventDao = freezed,
     Object? rootFolderId = freezed,
   }) {
     return _then(_$_DbModel(
@@ -119,18 +119,18 @@ class __$$_DbModelCopyWithImpl<$Res>
           ? _value.db
           : db // ignore: cast_nullable_to_non_nullable
               as Future<dynamic>?,
-      folderDio: freezed == folderDio
-          ? _value.folderDio
-          : folderDio // ignore: cast_nullable_to_non_nullable
-              as FolderDio?,
-      singleItemDio: freezed == singleItemDio
-          ? _value.singleItemDio
-          : singleItemDio // ignore: cast_nullable_to_non_nullable
-              as SingleItemDio?,
-      eventDio: freezed == eventDio
-          ? _value.eventDio
-          : eventDio // ignore: cast_nullable_to_non_nullable
-              as ItemEventDio?,
+      folderDao: freezed == folderDao
+          ? _value.folderDao
+          : folderDao // ignore: cast_nullable_to_non_nullable
+              as FolderDao?,
+      singleItemDao: freezed == singleItemDao
+          ? _value.singleItemDao
+          : singleItemDao // ignore: cast_nullable_to_non_nullable
+              as SingleItemDao?,
+      eventDao: freezed == eventDao
+          ? _value.eventDao
+          : eventDao // ignore: cast_nullable_to_non_nullable
+              as ItemEventDao?,
       rootFolderId: freezed == rootFolderId
           ? _value.rootFolderId
           : rootFolderId // ignore: cast_nullable_to_non_nullable
@@ -144,25 +144,25 @@ class __$$_DbModelCopyWithImpl<$Res>
 class _$_DbModel implements _DbModel {
   _$_DbModel(
       {this.db,
-      this.folderDio,
-      this.singleItemDio,
-      this.eventDio,
+      this.folderDao,
+      this.singleItemDao,
+      this.eventDao,
       this.rootFolderId});
 
   @override
   final Future<dynamic>? db;
   @override
-  final FolderDio? folderDio;
+  final FolderDao? folderDao;
   @override
-  final SingleItemDio? singleItemDio;
+  final SingleItemDao? singleItemDao;
   @override
-  final ItemEventDio? eventDio;
+  final ItemEventDao? eventDao;
   @override
   final int? rootFolderId;
 
   @override
   String toString() {
-    return 'DbModel(db: $db, folderDio: $folderDio, singleItemDio: $singleItemDio, eventDio: $eventDio, rootFolderId: $rootFolderId)';
+    return 'DbModel(db: $db, folderDao: $folderDao, singleItemDao: $singleItemDao, eventDao: $eventDao, rootFolderId: $rootFolderId)';
   }
 
   @override
@@ -171,19 +171,19 @@ class _$_DbModel implements _DbModel {
         (other.runtimeType == runtimeType &&
             other is _$_DbModel &&
             (identical(other.db, db) || other.db == db) &&
-            (identical(other.folderDio, folderDio) ||
-                other.folderDio == folderDio) &&
-            (identical(other.singleItemDio, singleItemDio) ||
-                other.singleItemDio == singleItemDio) &&
-            (identical(other.eventDio, eventDio) ||
-                other.eventDio == eventDio) &&
+            (identical(other.folderDao, folderDao) ||
+                other.folderDao == folderDao) &&
+            (identical(other.singleItemDao, singleItemDao) ||
+                other.singleItemDao == singleItemDao) &&
+            (identical(other.eventDao, eventDao) ||
+                other.eventDao == eventDao) &&
             (identical(other.rootFolderId, rootFolderId) ||
                 other.rootFolderId == rootFolderId));
   }
 
   @override
   int get hashCode => Object.hash(
-      runtimeType, db, folderDio, singleItemDio, eventDio, rootFolderId);
+      runtimeType, db, folderDao, singleItemDao, eventDao, rootFolderId);
 
   @JsonKey(ignore: true)
   @override
@@ -195,19 +195,19 @@ class _$_DbModel implements _DbModel {
 abstract class _DbModel implements DbModel {
   factory _DbModel(
       {final Future<dynamic>? db,
-      final FolderDio? folderDio,
-      final SingleItemDio? singleItemDio,
-      final ItemEventDio? eventDio,
+      final FolderDao? folderDao,
+      final SingleItemDao? singleItemDao,
+      final ItemEventDao? eventDao,
       final int? rootFolderId}) = _$_DbModel;
 
   @override
   Future<dynamic>? get db;
   @override
-  FolderDio? get folderDio;
+  FolderDao? get folderDao;
   @override
-  SingleItemDio? get singleItemDio;
+  SingleItemDao? get singleItemDao;
   @override
-  ItemEventDio? get eventDio;
+  ItemEventDao? get eventDao;
   @override
   int? get rootFolderId;
   @override

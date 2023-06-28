@@ -14,13 +14,13 @@ class PersistenceService {
     required DbController controller,
   }) : _controller = controller;
 
-  Future<R> _singleItemDio<R>(Future<R> Function(SingleItemDio) callback) =>
+  Future<R> _singleItemDao<R>(Future<R> Function(SingleItemDao) callback) =>
       _controller.singleItemDio.then(callback);
 
-  Future<R> _folderDio<R>(Future<R> Function(FolderDio) callback) =>
+  Future<R> _folderDao<R>(Future<R> Function(FolderDao) callback) =>
       _controller.folderDio.then(callback);
 
-  Future<R> _eventDio<R>(Future<R> Function(ItemEventDio) callback) =>
+  Future<R> _eventDao<R>(Future<R> Function(ItemEventDao) callback) =>
       _controller.eventDio.then(callback);
 
   // ====================== CREATION ====================== //
@@ -33,8 +33,8 @@ class PersistenceService {
     int? parentFolderId,
   }) =>
       _controller.rootFolderId.then(
-        (rootId) => _singleItemDio(
-          (dio) => dio.create(
+        (rootId) => _singleItemDao(
+          (dao) => dao.create(
             title: title,
             imagePath: imagePath,
             description: description,
@@ -48,8 +48,8 @@ class PersistenceService {
     required String title,
     int? parentFolderId,
   }) =>
-      _folderDio(
-        (dio) => dio.create(
+      _folderDao(
+        (dao) => dao.create(
           title: title,
           parentFolderId: parentFolderId,
         ),
@@ -59,8 +59,8 @@ class PersistenceService {
     required Event event,
     required int parentItemId,
   }) =>
-      _eventDio(
-        (dio) => dio.create(
+      _eventDao(
+        (dao) => dao.create(
           event: event,
           parentItemId: parentItemId,
         ),
@@ -71,65 +71,65 @@ class PersistenceService {
   /// Returns the [SingleItme] with the given [itemId].
   /// Returns null if no item with the given [itemId] exists
   Future<SingleItem?> getSingleItem(int itemId) =>
-      _singleItemDio((dio) => dio.read(itemId));
+      _singleItemDao((dao) => dao.read(itemId));
 
   Future<List<SingleItem>> getItemsMatching(String query) =>
-      _singleItemDio((dio) => dio.readAllMatching(query));
+      _singleItemDao((dao) => dao.readAllMatching(query));
 
   Future<List<SingleItem>> getFavoriteItems() =>
-      _singleItemDio((dio) => dio.readAllFavorites());
+      _singleItemDao((dao) => dao.readAllFavorites());
 
   Future<List<SingleItem>> getFavoriteItemsMatching(String query) =>
-      _singleItemDio((dio) => dio.readAllFavoritesMatching(query));
+      _singleItemDao((dao) => dao.readAllFavoritesMatching(query));
 
   Future<List<SingleItem>> getRecentItems() =>
-      _singleItemDio((dio) => dio.readAllRecent());
+      _singleItemDao((dao) => dao.readAllRecent());
 
   /// Returns the [Folder] with the given [folderId].
   /// Returns null if no folder with the given [folderId] exists
   Future<Folder?> getFolder(int folderId) =>
-      _folderDio((dio) => dio.read(folderId));
+      _folderDao((dao) => dao.read(folderId));
 
   /// Returns the [ItemEvent] with the given [eventId].
   /// Returns null if no event with the given [eventId] exists
   Future<ItemEvent?> getEvent(int eventId) =>
-      _eventDio((dio) => dio.read(eventId));
+      _eventDao((dao) => dao.read(eventId));
 
-  Future<List<ItemEvent>> getAllEvents() => _eventDio((dio) => dio.readAll());
+  Future<List<ItemEvent>> getAllEvents() => _eventDao((dao) => dao.readAll());
 
   Future<List<ItemEvent>> getSoonEvents() =>
-      _eventDio((dio) => dio.readAllSoon(const Duration(days: 7)));
+      _eventDao((dao) => dao.readAllSoon(const Duration(days: 7)));
 
   // ====================== SETTERS ====================== //
 
   Future<void> updateSingleItem(SingleItem item) =>
-      _singleItemDio((dio) => dio.update(item));
+      _singleItemDao((dao) => dao.update(item));
 
   Future<void> updateFolder(Folder folder) =>
-      _folderDio((dio) => dio.update(folder));
+      _folderDao((dao) => dao.update(folder));
 
   Future<void> updateEvent(ItemEvent event) =>
-      _eventDio((dio) => dio.update(event));
+      _eventDao((dao) => dao.update(event));
 
   // ====================== DELETION ====================== //
 
   Future<void> deleteSingleItem(SingleItem item) =>
-      _singleItemDio((dio) => dio.delete(item.id));
+      _singleItemDao((dao) => dao.delete(item.id));
 
   Future<void> deleteFolder(Folder folder) =>
-      _folderDio((dio) => dio.delete(folder.id));
+      _folderDao((dao) => dao.delete(folder.id));
 
   Future<void> deleteEvent(ItemEvent event) =>
-      _eventDio((dio) => dio.delete(event.id));
+      _eventDao((dao) => dao.delete(event.id));
 }
 
-abstract class Dio<T> {
+abstract class Dao<T> {
   Future<void> update(T item);
   Future<bool> delete(int id);
   Future<T?> read(int id);
 }
 
-abstract class SingleItemDio extends Dio<SingleItem> {
+abstract class SingleItemDao extends Dao<SingleItem> {
   Future<SingleItem> create({
     required String title,
     required String imagePath,
@@ -145,7 +145,7 @@ abstract class SingleItemDio extends Dio<SingleItem> {
   Future<List<SingleItem>> readAllRecent();
 }
 
-abstract class FolderDio extends Dio<Folder> {
+abstract class FolderDao extends Dao<Folder> {
   Future<Folder> create({
     required String title,
     int? parentFolderId,
@@ -155,7 +155,7 @@ abstract class FolderDio extends Dio<Folder> {
   Future<List<Folder>> readAll();
 }
 
-abstract class ItemEventDio extends Dio<ItemEvent> {
+abstract class ItemEventDao extends Dao<ItemEvent> {
   Future<ItemEvent> create({
     required Event event,
     required int parentItemId,
@@ -171,9 +171,9 @@ abstract class DbController extends StateNotifier<DbModel> {
 
   Future<void> openDb();
 
-  Future<SingleItemDio> get singleItemDio;
-  Future<FolderDio> get folderDio;
-  Future<ItemEventDio> get eventDio;
+  Future<SingleItemDao> get singleItemDio;
+  Future<FolderDao> get folderDio;
+  Future<ItemEventDao> get eventDio;
 
   Future<int> get rootFolderId;
 }
