@@ -2,23 +2,22 @@ import 'package:beamer/beamer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gruppe4/common/theme/custom_theme_data.dart';
 import 'package:timezone/data/latest.dart' as tz;
-
-import '/common/provider.dart';
-import '/pages/settings/settings_model.dart';
+import 'common/provider.dart';
 import 'router/router.dart';
-import 'common/theme.dart';
 
 class App extends ConsumerWidget {
   const App({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    SettingsModel settings = ref.watch(Providers.settingsControllerProvider);
+    CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
     return CupertinoApp.router(
-      theme: settings.brightness == Brightness.light
-          ? AppCupertinoTheme.lightTheme
-          : AppCupertinoTheme.darkTheme,
+      theme: CupertinoThemeData(
+        brightness: theme.brightness,
+        primaryColor: theme.accentColor,
+      ),
       localizationsDelegates: const [
         DefaultCupertinoLocalizations.delegate,
         DefaultMaterialLocalizations.delegate,

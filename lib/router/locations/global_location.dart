@@ -71,7 +71,7 @@ class GlobalLocation extends BeamLocation<BeamState> {
               key: const ValueKey('camera_view'),
               title: 'Camera View',
               type: BeamPageType.cupertino,
-              child: DisplayPicturesScreen(model: data as TakePictureModel)),
+              child: SaveItemScreen(model: data as TakePictureModel)),
         if ((state.routeInformation.location ?? '').startsWith('/item'))
           BeamPage(
             key: const ValueKey('item'),

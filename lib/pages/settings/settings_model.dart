@@ -9,6 +9,6 @@ part 'settings_model.freezed.dart';
 class SettingsModel with _$SettingsModel {
   const factory SettingsModel({
     Calendar? calendar,
-    required Brightness brightness,
+    required int selectedThemeIndex,
   }) = _SettingsModel;
 }

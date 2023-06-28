@@ -7,11 +7,10 @@ import 'camera_model.dart';
 import '/common/provider.dart';
 import '/router/router.dart';
 
-class DisplayPicturesScreen extends ConsumerWidget {
+class SaveItemScreen extends ConsumerWidget {
   final TakePictureModel model;
 
-  const DisplayPicturesScreen({Key? key, required this.model})
-      : super(key: key);
+  const SaveItemScreen({Key? key, required this.model}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gruppe4/common/theme/custom_theme_data.dart';
 
 import '/pages/single_item/single_item_view.dart';
 import 'calendar_button/calendar_button.dart';
@@ -20,12 +21,12 @@ class EventsContainer extends ConsumerWidget {
     final SingleItemController controller = editable
         ? ref.watch(Providers.editSingleItemControllerProvider(id).notifier)
         : ref.watch(Providers.singleItemControllerProvider(id).notifier);
+
+    final CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
     return CupertinoListSection.insetGrouped(
       margin: const EdgeInsets.all(8),
       backgroundColor: Colors.transparent,
-      decoration: BoxDecoration(
-          color: CupertinoDynamicColor.resolve(
-              CupertinoColors.systemBackground, context)),
+      decoration: BoxDecoration(color: theme.backgroundColor),
       header: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         const Text("Events"),
         if (editable) CalendarButton(id: id),

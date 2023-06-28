@@ -5,6 +5,7 @@ import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 
 import 'home_model.dart';
 import '/common/provider.dart';
+import '/common/theme/custom_theme_data.dart';
 import '/common/custom_widgets/all_custom_widgets.dart'
     show EventCard, DocumentCardContainerList, cameraButtonHeroTag;
 import '/pages/single_item/model/single_item.dart';
@@ -15,6 +16,7 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
     HomeModel model = ref.watch(Providers.homeControllerProvider);
     final List<EventCard> eventCards = model.events
         .map((event) => EventCard(
@@ -23,13 +25,12 @@ class HomeScreen extends ConsumerWidget {
         .toList();
     final List<SingleItem> documentCards = model.recentItems;
     return Scaffold(
-      backgroundColor: CupertinoTheme.of(context).scaffoldBackgroundColor,
+      backgroundColor: theme.backgroundColor,
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(right: 10.0, bottom: 15.0),
         child: FloatingActionButton(
-          foregroundColor: CupertinoDynamicColor.resolve(CupertinoTheme.of(context).scaffoldBackgroundColor, context),
-          backgroundColor: CupertinoDynamicColor.resolve(CupertinoTheme.of(context).primaryContrastingColor, context),
+          backgroundColor: theme.accentColor,
           onPressed: () => ref
               .read(Providers.takePictureControllerProvider.notifier)
               .takePicture(),
@@ -42,7 +43,8 @@ class HomeScreen extends ConsumerWidget {
       ),
       body: CustomScrollView(
         slivers: [
-          const CupertinoSliverNavigationBar(
+          CupertinoSliverNavigationBar(
+            backgroundColor: theme.navBarColor,
             largeTitle: Text('Home'),
           ),
           SliverToBoxAdapter(
@@ -59,11 +61,8 @@ class HomeScreen extends ConsumerWidget {
                     enlargeCenterPage: true,
                     showIndicator: true,
                     slideIndicator: CircularWaveSlideIndicator(
-                      currentIndicatorColor: CupertinoDynamicColor.resolve(
-                          CupertinoTheme.of(context).primaryContrastingColor, context),
-                      indicatorBackgroundColor: CupertinoDynamicColor.resolve(
-                          CupertinoTheme.of(context).primaryColor, context),
-                    ),
+                        currentIndicatorColor: theme.accentColor,
+                        indicatorBackgroundColor: theme.groupingColor),
                     viewportFraction: 0.85,
                     height: double.infinity,
                   ),
@@ -74,15 +73,13 @@ class HomeScreen extends ConsumerWidget {
           SliverAppBar(
             pinned: true,
             toolbarHeight: 30.0,
-            backgroundColor: CupertinoDynamicColor.resolve(
-                CupertinoColors.systemGrey6, context),
+            backgroundColor: theme.groupingColor,
             flexibleSpace: const FlexibleSpaceBar(
               titlePadding: EdgeInsets.only(left: 20.0, bottom: 10.0),
               title: Text(
                 'Frequently Used',
                 style: TextStyle(
                   fontSize: 18,
-                  color: CupertinoColors.systemGrey,
                 ),
               ),
             ),

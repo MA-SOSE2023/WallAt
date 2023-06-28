@@ -2,6 +2,7 @@ import 'package:beamer/beamer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gruppe4/common/theme/custom_theme_data.dart';
 
 import 'bottom_nav_bar_model.dart';
 import '/common/provider.dart';
@@ -56,22 +57,19 @@ class _CustomBottomNavBarState extends ConsumerState<CustomBottomNavBar> {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        if (accentColor == null) {
-          final CupertinoThemeData theme = CupertinoTheme.of(context);
-          accentColor = theme.primaryContrastingColor;
-        }
-
         CustomBottomNavBarModel state =
             ref.watch(Providers.customBottomNavBarControllerProvider);
         CustomBottomNavBarController controller =
             ref.read(Providers.customBottomNavBarControllerProvider.notifier);
 
+        CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
+
         return CupertinoTabBar(
+          backgroundColor: theme.navBarColor,
           iconSize: state.iconSize,
           onTap: (index) => controller.goToOtherPage(index, context, ref),
           currentIndex: state.currentIndex,
           items: controller.getNavBarItems(),
-          activeColor: accentColor,
         );
       },
     );

@@ -1,10 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gruppe4/common/theme/custom_theme_data.dart';
 
+import '../../provider.dart';
 import 'document_card_container.dart';
 import '/pages/single_item/model/single_item.dart';
 
-class DocumentCardContainerList extends StatelessWidget {
+class DocumentCardContainerList extends ConsumerWidget {
   const DocumentCardContainerList({
     required List<SingleItem> items,
     bool borderlessCards = true,
@@ -22,7 +25,8 @@ class DocumentCardContainerList extends StatelessWidget {
   final bool _showFavoriteButton;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
     Widget documentCardContainerListTile(SingleItem item) => Padding(
           padding: _borderlessCards
               ? const EdgeInsets.all(0.0)
@@ -36,8 +40,7 @@ class DocumentCardContainerList extends StatelessWidget {
                       showFavoriteButton: _showFavoriteButton,
                     ),
                     Divider(
-                      color: CupertinoDynamicColor.resolve(
-                          CupertinoColors.inactiveGray, context),
+                      color: theme.groupingColor,
                       thickness: 1,
                       indent: 64,
                       height: _itemMargin,

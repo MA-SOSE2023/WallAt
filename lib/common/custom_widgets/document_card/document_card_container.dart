@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gruppe4/common/theme/custom_theme_data.dart';
 
 import 'document_card.dart';
 import '/common/provider.dart';
@@ -38,15 +39,14 @@ class DocumentCardContainer extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final SingleItem item =
         ref.watch(Providers.singleItemControllerProvider(_item.id));
+    CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
     return DecoratedBox(
       decoration: _containerDeco ??
           BoxDecoration(
-            color: _backgroundColor ??
-                CupertinoTheme.of(context).scaffoldBackgroundColor,
+            color: _backgroundColor ?? theme.backgroundColor,
             borderRadius: BorderRadius.circular(25),
             border: Border.all(
-              color:
-                  CupertinoDynamicColor.resolve(CupertinoColors.label, context),
+              color: theme.groupingColor,
               width: 1,
             ),
           ),
