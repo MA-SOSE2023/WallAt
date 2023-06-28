@@ -66,14 +66,8 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
             ? DocumentCardContainerList(
                 items: filteredFavorites,
                 borderlessCards: widget._borderlessCards)
-            : SliverSafeArea(
-                sliver: SliverToBoxAdapter(
-                  child: Padding(
-                      padding: specialPadding,
-                      child: NoElementsMessage(
-                        message: emptyListMessage,
-                      )),
-                ),
+            : NoElementsMessage(
+                message: emptyListMessage,
               ));
 
     return CupertinoPageScaffold(
