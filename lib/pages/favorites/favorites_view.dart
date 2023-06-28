@@ -8,8 +8,7 @@ import '/common/custom_widgets/all_custom_widgets.dart'
         DocumentCardContainerList,
         CameraButtonHeroDestination,
         SearchBarContainer,
-        NoElementsMessage,
-        ErrorMessage;
+        FutureSliverListBuilder;
 import '/pages/single_item/model/single_item.dart';
 
 class FavoritesScreen extends ConsumerStatefulWidget {
@@ -34,15 +33,14 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    AsyncValue<List<SingleItem>> favoritesFuture =
+    Future<List<SingleItem>> favoritesFuture =
         ref.watch(Providers.favoritesControllerProvider);
 
     final emptyListMessage = searchString.isEmpty
         ? 'No favorites yet.\nTry adding some by tapping the heart icon.'
         : 'No items found for "$searchString".';
 
-    final AsyncValue<List<SingleItem>> filterFavoritesFuture =
-        favoritesFuture.whenData(
+    final Future<List<SingleItem>> filterFavoritesFuture = favoritesFuture.then(
       (favorites) {
         if (searchString.isEmpty) {
           return favorites;
@@ -54,21 +52,6 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
         }
       },
     );
-
-    const EdgeInsets specialPadding = EdgeInsets.only(top: 40.0);
-
-    final Widget body = filterFavoritesFuture.when(
-        error: (object, stackTrace) => favoritesFuture.hasError
-            ? const ErrorMessage()
-            : const ErrorMessage(message: 'Filter could not be applied'),
-        loading: () => const CupertinoActivityIndicator(),
-        data: (filteredFavorites) => filteredFavorites.isNotEmpty
-            ? DocumentCardContainerList(
-                items: filteredFavorites,
-                borderlessCards: widget._borderlessCards)
-            : NoElementsMessage(
-                message: emptyListMessage,
-              ));
 
     return CupertinoPageScaffold(
       child: Stack(
@@ -91,16 +74,15 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
                 ),
                 toolbarHeight: 35.0,
               ),
-              filterFavoritesFuture.hasValue
-                  ? body
-                  : SliverSafeArea(
-                      sliver: SliverToBoxAdapter(
-                        child: Padding(
-                          padding: specialPadding,
-                          child: body,
-                        ),
-                      ),
-                    )
+              FutureSliverListBuilder(
+                future: filterFavoritesFuture,
+                success: (favorites) => DocumentCardContainerList(
+                    items: favorites, borderlessCards: widget._borderlessCards),
+                emptyListMessage: emptyListMessage,
+                errorMessage: 'Filter could not be applied',
+                onNullMessage:
+                    'Something went wrong while loading your favorites.\nTry restarting the app.',
+              )
             ],
           ),
           const CameraButtonHeroDestination(),
@@ -110,8 +92,9 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
   }
 }
 
-abstract class FavoritesController extends StateNotifier<List<SingleItem>> {
-  FavoritesController(List<SingleItem> state) : super(state);
+abstract class FavoritesController
+    extends StateNotifier<Future<List<SingleItem>>> {
+  FavoritesController(Future<List<SingleItem>> state) : super(state);
 
-  List<SingleItem> get favorites;
+  Future<List<SingleItem>> get favorites;
 }
