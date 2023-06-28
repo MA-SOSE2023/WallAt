@@ -31,14 +31,12 @@ class IsarController extends DbController {
     FolderDao folderDao = IsarFolderDao(db: db);
     ItemEventDao eventDao = IsarItemEventDao(db: db);
 
-    Id rootFolderId = (await folderDao.createOrFindRoot());
-
     state = state.copyWith(
         db: db,
         singleItemDao: singleItemDao,
         folderDao: folderDao,
         eventDao: eventDao,
-        rootFolderId: rootFolderId);
+        rootFolderId: (await folderDao.createOrFindRoot()));
   }
 
   Future<bool> closeDb() async {
