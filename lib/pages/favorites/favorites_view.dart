@@ -33,25 +33,13 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Future<List<SingleItem>> favoritesFuture =
-        ref.watch(Providers.favoritesControllerProvider);
+    Future<List<SingleItem>> favoritesFuture = ref
+        .watch(Providers.favoritesControllerProvider.notifier)
+        .filterFavorites(searchString);
 
     final emptyListMessage = searchString.isEmpty
         ? 'No favorites yet.\nTry adding some by tapping the heart icon.'
         : 'No items found for "$searchString".';
-
-    final Future<List<SingleItem>> filterFavoritesFuture = favoritesFuture.then(
-      (favorites) {
-        if (searchString.isEmpty) {
-          return favorites;
-        } else {
-          return favorites
-              .where((item) =>
-                  item.title.toLowerCase().contains(searchString.toLowerCase()))
-              .toList();
-        }
-      },
-    );
 
     return CupertinoPageScaffold(
       child: Stack(
@@ -75,7 +63,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
                 toolbarHeight: 35.0,
               ),
               FutureSliverListBuilder(
-                future: filterFavoritesFuture,
+                future: favoritesFuture,
                 success: (favorites) => DocumentCardContainerList(
                     items: favorites, borderlessCards: widget._borderlessCards),
                 emptyMessage: emptyListMessage,
@@ -97,4 +85,6 @@ abstract class FavoritesController
   FavoritesController(Future<List<SingleItem>> state) : super(state);
 
   Future<List<SingleItem>> get favorites;
+
+  Future<List<SingleItem>> filterFavorites(String searchString);
 }

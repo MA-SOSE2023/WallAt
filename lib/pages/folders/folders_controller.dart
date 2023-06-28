@@ -1,5 +1,3 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import '/common/services/persistence/persistence_service.dart';
 
 import 'folder_item.dart';

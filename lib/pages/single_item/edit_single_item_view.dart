@@ -2,10 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gruppe4/pages/single_item/single_item_view.dart';
-import '../../common/provider.dart';
 
 import 'model/single_item.dart';
-import '/common/custom_widgets/all_custom_widgets.dart' show EventsContainer;
+import '/common/provider.dart';
+import '/common/custom_widgets/all_custom_widgets.dart'
+    show EventsContainer, FutureOptionBuilder;
 
 Widget makeDismissable(
         {required BuildContext context, required Widget child}) =>
@@ -19,15 +20,15 @@ Widget makeDismissable(
     );
 
 class EditSingleItemPage extends ConsumerWidget {
-  const EditSingleItemPage({required int id, Key? key})
-      : _id = id,
+  const EditSingleItemPage({required int singleItemId, Key? key})
+      : _id = singleItemId,
         super(key: key);
 
   final int _id;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final SingleItem item =
+    final Future<SingleItem> item =
         ref.watch(Providers.editSingleItemControllerProvider(_id));
     final EditSingleItemController controller =
         ref.read(Providers.editSingleItemControllerProvider(_id).notifier);
@@ -48,101 +49,110 @@ class EditSingleItemPage extends ConsumerWidget {
           ),
           child: Stack(
             children: [
-              ListView(
-                padding: const EdgeInsets.fromLTRB(8.0, 52.0, 8.0, 0.0),
-                controller: scrollController,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: CupertinoDynamicColor.resolve(
-                            CupertinoColors.systemGrey5, context),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: CupertinoFormSection.insetGrouped(
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: CupertinoDynamicColor.resolve(
-                                  CupertinoColors.systemBackground, context)),
-                          margin: const EdgeInsets.all(10),
-                          backgroundColor: Colors.transparent,
-                          children: [
-                            CupertinoTextField(
-                                controller: TextEditingController.fromValue(
-                                    TextEditingValue(
-                                        text: controller.getTitle(),
-                                        selection: TextSelection.collapsed(
-                                            offset:
-                                                controller.getTitle().length))),
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Colors.transparent,
-                                  ),
-                                ),
-                                placeholder: 'Title',
-                                prefix: const Icon(CupertinoIcons.pencil),
-                                onChanged: (value) => {
-                                      controller.setTitle(value),
-                                    }),
-                            CupertinoTextField(
-                              controller: TextEditingController.fromValue(
-                                  TextEditingValue(
-                                      text: controller.getDescription(),
-                                      selection: TextSelection.collapsed(
-                                          offset: controller
-                                              .getDescription()
-                                              .length))),
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: Colors.transparent,
-                                ),
-                              ),
-                              placeholder: "Description",
-                              prefix: const Icon(CupertinoIcons.pencil),
-                              onChanged: (value) => {
-                                controller.setDescription(value),
-                              },
-                            ),
-                          ]),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      // @TODO: add functionality
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 20.0, right: 20),
+              FutureOptionBuilder(
+                loading: () => const Align(
+                    alignment: Alignment.center,
+                    child: CupertinoActivityIndicator()),
+                error: (_) => const Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                      "Something went wrong while loading this item.\nPlease reload."),
+                ),
+                future: item,
+                success: (item) => ListView(
+                  padding: const EdgeInsets.fromLTRB(8.0, 52.0, 8.0, 0.0),
+                  controller: scrollController,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(20.0),
                       child: Container(
                         decoration: BoxDecoration(
                           color: CupertinoDynamicColor.resolve(
                               CupertinoColors.systemGrey5, context),
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child: Container(
-                          margin: const EdgeInsets.all(8.0),
-                          height: MediaQuery.of(context).size.height / 6,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            image: DecorationImage(
-                              image: controller.getImage().image,
-                              fit: BoxFit.fitWidth,
-                            ),
-                          ),
-                        ),
+                        child: CupertinoFormSection.insetGrouped(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: CupertinoDynamicColor.resolve(
+                                    CupertinoColors.systemBackground, context)),
+                            margin: const EdgeInsets.all(10),
+                            backgroundColor: Colors.transparent,
+                            children: [
+                              CupertinoTextField(
+                                  controller: TextEditingController.fromValue(
+                                      TextEditingValue(
+                                          text: item.title,
+                                          selection: TextSelection.collapsed(
+                                              offset: item.title.length))),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Colors.transparent,
+                                    ),
+                                  ),
+                                  placeholder: 'Title',
+                                  prefix: const Icon(CupertinoIcons.pencil),
+                                  onChanged: (value) => {
+                                        controller.setTitle(value),
+                                      }),
+                              CupertinoTextField(
+                                controller: TextEditingController.fromValue(
+                                    TextEditingValue(
+                                        text: item.description,
+                                        selection: TextSelection.collapsed(
+                                            offset: item.description.length))),
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Colors.transparent,
+                                  ),
+                                ),
+                                placeholder: "Description",
+                                prefix: const Icon(CupertinoIcons.pencil),
+                                onChanged: (value) => {
+                                  controller.setDescription(value),
+                                },
+                              ),
+                            ]),
                       ),
                     ),
-                  ),
-                  Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Container(
+                    GestureDetector(
+                      onTap: () {
+                        // @TODO: add functionality
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 20.0, right: 20),
+                        child: Container(
                           decoration: BoxDecoration(
                             color: CupertinoDynamicColor.resolve(
                                 CupertinoColors.systemGrey5, context),
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          child: EventsContainer(id: _id, editable: true))),
-                ],
+                          child: Container(
+                            margin: const EdgeInsets.all(8.0),
+                            height: MediaQuery.of(context).size.height / 6,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              image: DecorationImage(
+                                image: item.image,
+                                fit: BoxFit.fitWidth,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Container(
+                            decoration: BoxDecoration(
+                              color: CupertinoDynamicColor.resolve(
+                                  CupertinoColors.systemGrey5, context),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child:
+                                EventsContainer(id: item.id, editable: true))),
+                  ],
+                ),
               ),
               SizedBox(
                 height: 52,
@@ -190,7 +200,7 @@ class EditSingleItemPage extends ConsumerWidget {
 }
 
 abstract class EditSingleItemController extends SingleItemController {
-  EditSingleItemController(SingleItem state) : super(state);
+  EditSingleItemController(Future<SingleItem> state) : super(state);
 
   DateTime? getSelectedDate();
 

@@ -9,10 +9,7 @@ import '/common/custom_widgets/all_custom_widgets.dart'
     show
         EventCard,
         DocumentCardContainerList,
-        NoElementsMessage,
         FutureSliverListBuilder,
-        SliverActivityIndicator,
-        ErrorMessage,
         cameraButtonHeroTag;
 
 class HomeScreen extends ConsumerWidget {
@@ -101,6 +98,7 @@ class HomeScreen extends ConsumerWidget {
             future: model.then((m) => m.recentItems),
             success: (recentItems) => DocumentCardContainerList(
               items: recentItems,
+              showFavoriteButton: false,
             ),
             emptyMessage:
                 'No items yet.\nTry adding some by clicking the camera button.',

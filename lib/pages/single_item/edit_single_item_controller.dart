@@ -1,23 +1,22 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gruppe4/pages/single_item/single_item_view.dart';
 import 'package:device_calendar/device_calendar.dart';
-import 'model/single_item.dart';
+import 'package:gruppe4/common/utils/future_controller_mixin.dart';
+
 import 'edit_single_item_view.dart';
-import 'single_item_controller.dart';
+import 'model/single_item.dart';
 import 'model/item_event.dart';
-
 import '/common/provider.dart';
+import '/pages/single_item/single_item_view.dart';
 
-class EditSingleItemControllerMock extends EditSingleItemController {
-  EditSingleItemControllerMock({required int id, SingleItem? model})
-      : _id = id,
-        super(model ?? mockSingleItem);
+class EditSingleItemControllerImpl extends EditSingleItemController
+    with FutureControllerMixin<SingleItem> {
+  EditSingleItemControllerImpl({required Future<SingleItem> model})
+      : super(model);
 
   List<ItemEvent> newEvents = [];
   List<ItemEvent> deletedEvents = [];
-  final int _id;
   DateTime? _selectedDate;
 
   @override
@@ -31,50 +30,33 @@ class EditSingleItemControllerMock extends EditSingleItemController {
   }
 
   @override
-  void saveChanges(WidgetRef ref) {
+  Future<void> saveChanges(WidgetRef ref) async {
     removeEventsFromCalendar();
     addEventsToCalendar();
-    state = state.copyWith(events: [...state.events, ...newEvents]);
+    futureState(
+        (state) => state.copyWith(events: [...state.events, ...newEvents]));
 
-    SingleItemController singleItemController =
-        ref.read(Providers.singleItemControllerProvider(_id).notifier);
-    singleItemController.state = state;
+    SingleItemController singleItemController = ref.read(
+        Providers.singleItemControllerProvider((await state).id).notifier);
+    singleItemController.state = Future.value(state);
   }
 
   @override
-  Image getImage() {
-    return Image(image: state.image);
-  }
+  void setImage(Image image) =>
+      futureState((state) => state.copyWith(image: image.image));
 
   @override
-  void setImage(Image image) {
-    state = state.copyWith(image: image.image);
-  }
+  void setDescription(String description) =>
+      futureState((state) => state.copyWith(description: description));
 
   @override
-  String getDescription() {
-    return state.description;
-  }
-
-  @override
-  void setDescription(String description) {
-    state = state.copyWith(description: description);
-  }
-
-  @override
-  String getTitle() {
-    return state.title;
-  }
-
-  @override
-  void setTitle(String title) {
-    state = state.copyWith(title: title);
-  }
+  void setTitle(String title) =>
+      futureState((state) => state.copyWith(title: title));
 
   @override
   void addEvent({required Event event, required int parentId}) async {
     newEvents.add(ItemEvent(id: 0, event: event, parentId: parentId));
-    state = state.copyWith(events: [...state.events]);
+    futureState((state) => state.copyWith(events: [...state.events]));
   }
 
   @override
@@ -85,49 +67,32 @@ class EditSingleItemControllerMock extends EditSingleItemController {
       deletedEvents.add(event);
     }
 
-    state = state.copyWith(
-        events: List<ItemEvent>.from(state.events)..remove(event));
+    futureState((state) => state.copyWith(
+        events: List<ItemEvent>.from(state.events)..remove(event)));
   }
 
   @override
-  List<ItemEvent> getEvents() {
-    return List<ItemEvent>.from(state.events + newEvents);
-  }
+  void setCurrentDate(DateTime date) =>
+      futureState((state) => state.copyWith(currentSelectedDate: date));
 
   @override
-  void setCurrentDate(DateTime date) {
-    state = state.copyWith(currentSelectedDate: date);
-  }
+  void setFavorite() => futureState(
+      (state) => state.copyWith(isFavorite: state.isFavorite ? false : true));
 
-  @override
-  DateTime? getCurrentDate() {
-    return state.currentSelectedDate;
-  }
-
-  @override
-  bool getFavorite() {
-    return state.isFavorite;
-  }
-
-  @override
-  void setFavorite() {
-    state = state.copyWith(isFavorite: getFavorite() ? false : true);
-  }
-
-  void addEventsToCalendar() {
+  Future<void> addEventsToCalendar() async {
     DeviceCalendarPlugin deviceCalendarPlugin = DeviceCalendarPlugin();
-    newEvents.forEach((event) async {
+    for (ItemEvent event in newEvents) {
       var eventId = await deviceCalendarPlugin.createOrUpdateEvent(event.event);
       event.event.eventId = eventId?.data!;
-    });
+    }
   }
 
-  void removeEventsFromCalendar() {
+  Future<void> removeEventsFromCalendar() async {
     DeviceCalendarPlugin deviceCalendarPlugin = DeviceCalendarPlugin();
-    deletedEvents.forEach((event) async {
-      var res = await deviceCalendarPlugin.deleteEvent(
+    for (ItemEvent event in newEvents) {
+      await deviceCalendarPlugin.deleteEvent(
           event.event.calendarId!, event.event.eventId!);
-    });
+    }
   }
 
   @override

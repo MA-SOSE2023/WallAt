@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gruppe4/common/services/persistence/db_model.dart';
 import 'package:gruppe4/common/services/persistence/persistence_service.dart';
-import 'package:isar/isar.dart';
 
 // Single Item
 import '/pages/single_item/single_item_view.dart';
@@ -38,17 +37,18 @@ class Providers {
   /// Provider for [SingleItemPage]
   /// - Provides a [SingleItemController] for a [SingleItem]
   static final AutoDisposeStateNotifierProviderFamily<SingleItemController,
-          SingleItem, int> singleItemControllerProvider =
-      StateNotifierProvider.autoDispose
-          .family((ref, id) => SingleItemControllerMock(id: id));
+          Future<SingleItem>, int> singleItemControllerProvider =
+      StateNotifierProvider.autoDispose.family((ref, id) =>
+          SingleItemControllerImpl(
+              id: id, service: ref.read(persistenceServiceProvider)));
 
   /// Provider for [EditSingleItemPage]
   /// - Provides a [EditSingleItemController] for a [SingleItem]
   static final AutoDisposeStateNotifierProviderFamily<EditSingleItemController,
-          SingleItem, int> editSingleItemControllerProvider =
+          Future<SingleItem>, int> editSingleItemControllerProvider =
       StateNotifierProvider.autoDispose.family(
-    (ref, id) => EditSingleItemControllerMock(
-        id: id, model: ref.read(singleItemControllerProvider(id))),
+    (ref, id) => EditSingleItemControllerImpl(
+        model: ref.read(singleItemControllerProvider(id))),
   );
 
   /// Provider for [HomeScreen]
@@ -64,7 +64,7 @@ class Providers {
           Future<List<SingleItem>>> favoritesControllerProvider =
       StateNotifierProvider<FavoritesController, Future<List<SingleItem>>>(
           (ref) =>
-              FavoritesControllerImpl(ref.read(persistenceServiceProvider)));
+              FavoritesControllerImpl(ref.watch(persistenceServiceProvider)));
 
   /// Provider for [FoldersScreen]
   /// - Provides a [FoldersController] for a [Folder]

@@ -13,14 +13,15 @@ import '/common/custom_widgets/all_custom_widgets.dart'
         FutureSliverFolderBuilder;
 
 class FoldersScreen extends ConsumerWidget {
-  const FoldersScreen({int folderId = 1, super.key}) : _folderId = folderId;
+  const FoldersScreen({int? folderId, super.key}) : _folderId = folderId;
 
-  final int _folderId;
+  final int? _folderId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final Future<Folder?> rootFolder =
-        ref.watch(Providers.foldersControllerProvider(_folderId));
+    final Future<Folder?> rootFolder = ref.watch(
+        Providers.foldersControllerProvider(_folderId ??
+            ref.read(Providers.dbControllerProvider).rootFolderId!));
 
     return CupertinoPageScaffold(
       child: Stack(
