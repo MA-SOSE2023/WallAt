@@ -94,7 +94,7 @@ class FolderBubble extends ConsumerWidget {
             child: itemGrid(
               [
                 ...threeMainItems(),
-                secondaryGrid(),
+                if (contents.length > 3) secondaryGrid(),
               ],
             ),
           ),

@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'document_card_container.dart';
+import '/common/custom_widgets/all_custom_widgets.dart'
+    show DocumentCardContainer;
+
 import '/pages/single_item/model/single_item.dart';
 
 class DocumentCardContainerList extends StatelessWidget {
@@ -23,16 +26,18 @@ class DocumentCardContainerList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget documentCardContainerListTile(SingleItem item) => Padding(
-          padding: _borderlessCards
-              ? const EdgeInsets.all(0.0)
-              : EdgeInsets.fromLTRB(
-                  20.0, _itemMargin / 2, 20.0, _itemMargin / 2),
-          child: _borderlessCards
+    Widget padding(Widget child) => Padding(
+        padding: _borderlessCards
+            ? const EdgeInsets.all(0.0)
+            : EdgeInsets.fromLTRB(20.0, _itemMargin / 2, 20.0, _itemMargin / 2),
+        child: child);
+
+    Widget documentCardContainerListTile(SingleItem item) => padding(
+          _borderlessCards
               ? Column(
                   children: [
                     DocumentCardContainer.borderless(
-                      item: item,
+                      itemId: item.id,
                       showFavoriteButton: _showFavoriteButton,
                     ),
                     Divider(
@@ -45,7 +50,7 @@ class DocumentCardContainerList extends StatelessWidget {
                   ],
                 )
               : DocumentCardContainer(
-                  item: item,
+                  itemId: item.id,
                   showFavoriteButton: _showFavoriteButton,
                 ),
         );

@@ -32,6 +32,9 @@ class FutureOptionBuilder<T> extends StatelessWidget {
             return _onSuccessBuilder(data);
           }
         } else if (snapshot.hasError) {
+          // TODO: add logging
+          print('============= Fatal error in FutureOptionBuilder:');
+          print(snapshot.error);
           return _onErrorBuilder(snapshot.error);
         } else {
           return _onLoadingBuilder();

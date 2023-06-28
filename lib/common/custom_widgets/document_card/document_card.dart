@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gruppe4/common/custom_widgets/all_custom_widgets.dart';
 
 import '/common/provider.dart';
 import '/pages/single_item/single_item_view.dart';
@@ -16,8 +17,6 @@ class DocumentCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final SingleItem item =
-        ref.watch(Providers.singleItemControllerProvider(_item.id));
     final bool heroEnabled = ref.watch(Providers.enableHeroAnimationProvider);
     final SingleItemController controller =
         ref.watch(Providers.singleItemControllerProvider(_item.id).notifier);
@@ -32,12 +31,12 @@ class DocumentCard extends ConsumerWidget {
           title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(item.title,
+              Text(_item.title,
                   style: CupertinoTheme.of(context)
                       .textTheme
                       .navActionTextStyle
                       .copyWith(fontSize: 20)),
-              Text(item.description,
+              Text(_item.description,
                   maxLines: 2,
                   style: CupertinoTheme.of(context)
                       .textTheme
@@ -58,9 +57,9 @@ class DocumentCard extends ConsumerWidget {
               child: HeroMode(
                 enabled: heroEnabled,
                 child: Hero(
-                  tag: singleItemHeroTag('$item.id'),
+                  tag: singleItemHeroTag('$_item.id'),
                   child: Image(
-                    image: controller.getImage().image,
+                    image: _item.image,
                   ),
                 ),
               ),
