@@ -29,7 +29,7 @@ class IsarFolder {
               .map((isarFolder) => Folder(
                     id: isarFolder.id,
                     title: isarFolder.title,
-                    contents: null,
+                    contents: isarFolder.toFolder().contents,
                   ))
               .toList(),
           ...items.map((isarItem) => isarItem.toSingleItem()).toList(),

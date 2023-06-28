@@ -23,6 +23,8 @@ class PersistenceService {
   Future<R> _eventDao<R>(Future<R> Function(ItemEventDao) callback) =>
       _controller.eventDio.then(callback);
 
+  Future<int> get rootFolderId => _controller.rootFolderId;
+
   // ====================== CREATION ====================== //
 
   Future<SingleItem> createSingleItem({

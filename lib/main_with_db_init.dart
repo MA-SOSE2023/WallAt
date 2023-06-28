@@ -43,10 +43,11 @@ Future<String> imagePath2 =
         .then((value) => value.path);
 
 Future<List<SingleItem>> createExampleItems(
-    PersistenceService service, int? folder) {
+    PersistenceService service, int? folder,
+    {int count = 10}) {
   return Future.wait(
     List.generate(
-      10,
+      count,
       (index) async => service.createSingleItem(
         title: randomItemTitles[index % randomItemTitles.length],
         imagePath: index % 2 == 0 ? (await imagePath1) : (await imagePath2),
@@ -62,6 +63,8 @@ Future<List<Folder>> createExampleFolders(PersistenceService service) async {
   Future<Folder> containerFolder = service.createFolder(title: 'Nested folder');
 
   createExampleItems(service, null);
+  containerFolder
+      .then((folder) => createExampleItems(service, folder.id, count: 5));
 
   Future<List<Future<Folder>>> subFolders = containerFolder.then(
     (folder) => List.generate(2, (index) async {
@@ -75,7 +78,8 @@ Future<List<Folder>> createExampleFolders(PersistenceService service) async {
   List<Future<Folder>> normalFolders = List.generate(3, (index) async {
     Future<Folder> createdFolder =
         service.createFolder(title: 'Example folder $index');
-    createExampleItems(service, (await createdFolder).id);
+    createExampleItems(service, (await createdFolder).id,
+        count: 10 - index * 4);
     return createdFolder;
   });
 

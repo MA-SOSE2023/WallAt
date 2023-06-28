@@ -70,7 +70,7 @@ class DocumentCardContainer extends ConsumerWidget {
           ),
       child: FutureOptionBuilder(
         future: itemFuture,
-        loading: () => const ActivityIndicator(),
+        loading: () => DocumentCard(item: SingleItem.placeholder(id: _itemId)),
         error: (_) => DocumentCard(item: SingleItem.error()),
         success: (item) => documentCardRow(item),
       ),

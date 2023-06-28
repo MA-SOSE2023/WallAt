@@ -13,56 +13,74 @@ import '/common/custom_widgets/all_custom_widgets.dart'
         FutureSliverFolderBuilder;
 
 class FoldersScreen extends ConsumerWidget {
-  const FoldersScreen({int? folderId, super.key}) : _folderId = folderId;
+  const FoldersScreen({Folder? folder, int? folderId, super.key})
+      : _folder = folder,
+        _folderId = folderId;
 
+  final Folder? _folder;
   final int? _folderId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final Future<Folder?> rootFolder = ref.watch(
-        Providers.foldersControllerProvider(_folderId ??
-            ref.read(Providers.dbControllerProvider).rootFolderId!));
+    final Future<Folder?> rootFolder = _folderId != null
+        ? ref.watch(Providers.foldersControllerProvider(_folderId!))
+        : _folder == null
+            ? ref.watch(Providers.foldersControllerProvider(
+                ref.read(Providers.dbControllerProvider).rootFolderId!))
+            : Future.value(_folder);
+
+    List<Widget> folderViewBody(List<FolderItem> contents) => [
+          FolderBubbleGrid(
+              folder: contents
+                  .where((item) => item.isFolder)
+                  .map((item) => item.folder)
+                  .toList()),
+          SliverPadding(
+            padding: const EdgeInsets.only(top: 20.0, bottom: 10.0),
+            sliver: SliverAppBar(
+              automaticallyImplyLeading: false,
+              pinned: false,
+              toolbarHeight: 0.0,
+              backgroundColor: CupertinoDynamicColor.resolve(
+                  CupertinoColors.systemGrey6, context),
+              flexibleSpace: FlexibleSpaceBar(
+                titlePadding: const EdgeInsets.only(bottom: 12),
+                title: Divider(
+                  height: 0.75,
+                  thickness: 1,
+                  indent: 24,
+                  endIndent: 24,
+                  color: CupertinoDynamicColor.resolve(
+                      CupertinoColors.systemGrey, context),
+                ),
+              ),
+            ),
+          ),
+          DocumentCardContainerList(
+            items: contents
+                .where((item) => item.isLeaf)
+                .map((item) => item.item)
+                .toList(),
+          )
+        ];
 
     return CupertinoPageScaffold(
       child: Stack(
         children: [
-          FutureSliverFolderBuilder(
-            future: rootFolder,
-            success: (contents) => [
-              FolderBubbleGrid(
-                  folder: contents
-                      .where((item) => item.isFolder)
-                      .map((item) => item.folder)
-                      .toList()),
-              SliverPadding(
-                padding: const EdgeInsets.only(top: 20.0, bottom: 10.0),
-                sliver: SliverAppBar(
-                  automaticallyImplyLeading: false,
-                  pinned: false,
-                  toolbarHeight: 0.0,
-                  backgroundColor: CupertinoDynamicColor.resolve(
-                      CupertinoColors.systemGrey6, context),
-                  flexibleSpace: FlexibleSpaceBar(
-                    titlePadding: const EdgeInsets.only(bottom: 12),
-                    title: Divider(
-                      height: 0.75,
-                      thickness: 1,
-                      indent: 24,
-                      endIndent: 24,
-                      color: CupertinoDynamicColor.resolve(
-                          CupertinoColors.systemGrey, context),
-                    ),
-                  ),
+          if (_folder == null)
+            FutureSliverFolderBuilder(
+              future: rootFolder,
+              success: folderViewBody,
+            ),
+          if (_folder != null)
+            CustomScrollView(
+              slivers: [
+                CupertinoSliverNavigationBar(
+                  largeTitle: Text(_folder!.title),
                 ),
-              ),
-              DocumentCardContainerList(
-                items: contents
-                    .where((item) => item.isLeaf)
-                    .map((item) => item.item)
-                    .toList(),
-              ),
-            ],
-          ),
+                ...folderViewBody(_folder!.contents ?? [])
+              ],
+            ),
           const CameraButtonHeroDestination(),
         ],
       ),

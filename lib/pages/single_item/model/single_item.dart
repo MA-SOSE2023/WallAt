@@ -37,6 +37,18 @@ class SingleItem extends FolderItem with _$SingleItem {
         events: [],
       );
 
+  factory SingleItem.placeholder({
+    required int id,
+  }) =>
+      SingleItem(
+        id: id,
+        title: '',
+        description: '',
+        image: const AssetImage('assets/dev_debug_images/hampter1.jpg'),
+        isFavorite: false,
+        events: [],
+      );
+
   factory SingleItem.error() => SingleItem(
         id: -1,
         title: 'Item could not be loaded',

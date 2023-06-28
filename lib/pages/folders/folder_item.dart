@@ -46,7 +46,7 @@ abstract class FolderItem {
                 true,
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => FoldersScreen(folderId: item.id),
+                builder: (context) => FoldersScreen(folder: item.maybeFolder),
               ),
             )
           };
