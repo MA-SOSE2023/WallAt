@@ -23,29 +23,27 @@ class IsarSingleItemDao extends SingleItemDao {
           required bool isFavorite,
           required int parentFolderId}) =>
       _isar(
-        (isar) => isar.writeTxnSync(
-          () => _isarReadParentFolder(parentFolderId)
-              .then(
-                (isarParentFolder) => isar.isarSingleItems.putSync(
-                  IsarSingleItem()
-                    ..title = title
-                    ..imagePath = imagePath
-                    ..description = description
-                    ..isFavorite = isFavorite
-                    ..parentFolder.value = isarParentFolder,
-                ),
-              )
-              .then(
-                (createdItemId) => SingleItem(
-                  id: createdItemId,
-                  title: title,
-                  image: FileImage(File(imagePath)),
-                  description: description,
-                  isFavorite: isFavorite,
-                  events: [],
-                ),
+        (isar) => _isarReadParentFolder(parentFolderId)
+            .then((isarParentFolder) => isar.writeTxnSync(
+                  () => isar.isarSingleItems.putSync(
+                    IsarSingleItem()
+                      ..title = title
+                      ..imagePath = imagePath
+                      ..description = description
+                      ..isFavorite = isFavorite
+                      ..parentFolder.value = isarParentFolder,
+                  ),
+                ))
+            .then(
+              (createdItemId) => SingleItem(
+                id: createdItemId,
+                title: title,
+                image: FileImage(File(imagePath)),
+                description: description,
+                isFavorite: isFavorite,
+                events: [],
               ),
-        ),
+            ),
       );
 
   Future<IsarFolder?> _isarReadParentFolder(int id) =>
@@ -124,7 +122,7 @@ class IsarSingleItemDao extends SingleItemDao {
                         ..end = event.event.end!
                         ..parentItem.value = isarItem,
                     ));
-              isar.isarSingleItems.put(isarItem);
+              isar.writeTxnSync(() => isar.isarSingleItems.putSync(isarItem));
             }
           },
         ),
@@ -135,8 +133,8 @@ class IsarSingleItemDao extends SingleItemDao {
         (isar) => isar.isarSingleItems.get(id).then(
           (item) {
             if (item != null) {
-              isar.isarSingleItems
-                  .put(item..lastAccessedOrModified = DateTime.now());
+              isar.writeTxnSync(() => isar.isarSingleItems
+                  .putSync(item..lastAccessedOrModified = DateTime.now()));
             }
           },
         ),
