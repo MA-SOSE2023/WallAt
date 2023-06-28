@@ -94,12 +94,14 @@ class IsarSingleItemDao extends SingleItemDao {
               isarItems.map((isarItem) => isarItem.toSingleItem()).toList()));
 
   @override
-  Future<List<SingleItem>> readAllRecent() {
-    // TODO: implement readAllRecent
-    // Need some sort of extra field to track recency
-    // Or maybe just a DateTime of last access
-    throw UnimplementedError();
-  }
+  Future<List<SingleItem>> readAllRecent(int count) =>
+      _isar((isar) => isar.isarSingleItems
+          .where()
+          .sortByLastAccessedOrModifiedDesc()
+          .limit(count)
+          .findAll()
+          .then((isarItems) =>
+              isarItems.map((isarItem) => isarItem.toSingleItem()).toList()));
 
   @override
   Future<void> update(SingleItem item) => _isar(
@@ -123,6 +125,18 @@ class IsarSingleItemDao extends SingleItemDao {
                         ..parentItem.value = isarItem,
                     ));
               isar.isarSingleItems.put(isarItem);
+            }
+          },
+        ),
+      );
+
+  @override
+  Future<void> updateRecency(int id) => _isar(
+        (isar) => isar.isarSingleItems.get(id).then(
+          (item) {
+            if (item != null) {
+              isar.isarSingleItems
+                  .put(item..lastAccessedOrModified = DateTime.now());
             }
           },
         ),

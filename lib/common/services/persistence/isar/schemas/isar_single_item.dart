@@ -22,6 +22,8 @@ class IsarSingleItem {
 
   late bool isFavorite;
 
+  DateTime lastAccessedOrModified = DateTime.now();
+
   @Backlink(to: "items")
   final parentFolder = IsarLink<IsarFolder>();
 

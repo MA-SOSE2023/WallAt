@@ -83,7 +83,7 @@ class PersistenceService {
       _singleItemDao((dao) => dao.readAllFavoritesMatching(query));
 
   Future<List<SingleItem>> getRecentItems() =>
-      _singleItemDao((dao) => dao.readAllRecent());
+      _singleItemDao((dao) => dao.readAllRecent(15));
 
   /// Returns the [Folder] with the given [folderId].
   /// Returns null if no folder with the given [folderId] exists
@@ -104,6 +104,12 @@ class PersistenceService {
 
   Future<void> updateSingleItem(SingleItem item) =>
       _singleItemDao((dao) => dao.update(item));
+
+  Future<void> updateSingleItemRecencyFromId(SingleItem item) =>
+      updateSingleItemRecency(item.id);
+
+  Future<void> updateSingleItemRecency(int itemId) =>
+      _singleItemDao((dao) => dao.updateRecency(itemId));
 
   Future<void> updateFolder(Folder folder) =>
       _folderDao((dao) => dao.update(folder));
@@ -142,7 +148,8 @@ abstract class SingleItemDao extends Dao<SingleItem> {
   Future<List<SingleItem>> readAllMatching(String query);
   Future<List<SingleItem>> readAllFavorites();
   Future<List<SingleItem>> readAllFavoritesMatching(String query);
-  Future<List<SingleItem>> readAllRecent();
+  Future<List<SingleItem>> readAllRecent(int count);
+  Future<void> updateRecency(int id);
 }
 
 abstract class FolderDao extends Dao<Folder> {

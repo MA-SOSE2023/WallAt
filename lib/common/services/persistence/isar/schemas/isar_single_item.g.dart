@@ -32,8 +32,13 @@ const IsarSingleItemSchema = CollectionSchema(
       name: r'isFavorite',
       type: IsarType.bool,
     ),
-    r'title': PropertySchema(
+    r'lastAccessedOrModified': PropertySchema(
       id: 3,
+      name: r'lastAccessedOrModified',
+      type: IsarType.dateTime,
+    ),
+    r'title': PropertySchema(
+      id: 4,
       name: r'title',
       type: IsarType.string,
     )
@@ -101,7 +106,8 @@ void _isarSingleItemSerialize(
   writer.writeString(offsets[0], object.description);
   writer.writeString(offsets[1], object.imagePath);
   writer.writeBool(offsets[2], object.isFavorite);
-  writer.writeString(offsets[3], object.title);
+  writer.writeDateTime(offsets[3], object.lastAccessedOrModified);
+  writer.writeString(offsets[4], object.title);
 }
 
 IsarSingleItem _isarSingleItemDeserialize(
@@ -115,7 +121,8 @@ IsarSingleItem _isarSingleItemDeserialize(
   object.id = id;
   object.imagePath = reader.readString(offsets[1]);
   object.isFavorite = reader.readBool(offsets[2]);
-  object.title = reader.readString(offsets[3]);
+  object.lastAccessedOrModified = reader.readDateTime(offsets[3]);
+  object.title = reader.readString(offsets[4]);
   return object;
 }
 
@@ -133,6 +140,8 @@ P _isarSingleItemDeserializeProp<P>(
     case 2:
       return (reader.readBool(offset)) as P;
     case 3:
+      return (reader.readDateTime(offset)) as P;
+    case 4:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -724,6 +733,62 @@ extension IsarSingleItemQueryFilter
   }
 
   QueryBuilder<IsarSingleItem, IsarSingleItem, QAfterFilterCondition>
+      lastAccessedOrModifiedEqualTo(DateTime value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'lastAccessedOrModified',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarSingleItem, IsarSingleItem, QAfterFilterCondition>
+      lastAccessedOrModifiedGreaterThan(
+    DateTime value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'lastAccessedOrModified',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarSingleItem, IsarSingleItem, QAfterFilterCondition>
+      lastAccessedOrModifiedLessThan(
+    DateTime value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'lastAccessedOrModified',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarSingleItem, IsarSingleItem, QAfterFilterCondition>
+      lastAccessedOrModifiedBetween(
+    DateTime lower,
+    DateTime upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'lastAccessedOrModified',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<IsarSingleItem, IsarSingleItem, QAfterFilterCondition>
       titleEqualTo(
     String value, {
     bool caseSensitive = true,
@@ -984,6 +1049,20 @@ extension IsarSingleItemQuerySortBy
     });
   }
 
+  QueryBuilder<IsarSingleItem, IsarSingleItem, QAfterSortBy>
+      sortByLastAccessedOrModified() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'lastAccessedOrModified', Sort.asc);
+    });
+  }
+
+  QueryBuilder<IsarSingleItem, IsarSingleItem, QAfterSortBy>
+      sortByLastAccessedOrModifiedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'lastAccessedOrModified', Sort.desc);
+    });
+  }
+
   QueryBuilder<IsarSingleItem, IsarSingleItem, QAfterSortBy> sortByTitle() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'title', Sort.asc);
@@ -1052,6 +1131,20 @@ extension IsarSingleItemQuerySortThenBy
     });
   }
 
+  QueryBuilder<IsarSingleItem, IsarSingleItem, QAfterSortBy>
+      thenByLastAccessedOrModified() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'lastAccessedOrModified', Sort.asc);
+    });
+  }
+
+  QueryBuilder<IsarSingleItem, IsarSingleItem, QAfterSortBy>
+      thenByLastAccessedOrModifiedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'lastAccessedOrModified', Sort.desc);
+    });
+  }
+
   QueryBuilder<IsarSingleItem, IsarSingleItem, QAfterSortBy> thenByTitle() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'title', Sort.asc);
@@ -1088,6 +1181,13 @@ extension IsarSingleItemQueryWhereDistinct
     });
   }
 
+  QueryBuilder<IsarSingleItem, IsarSingleItem, QDistinct>
+      distinctByLastAccessedOrModified() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'lastAccessedOrModified');
+    });
+  }
+
   QueryBuilder<IsarSingleItem, IsarSingleItem, QDistinct> distinctByTitle(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -1119,6 +1219,13 @@ extension IsarSingleItemQueryProperty
   QueryBuilder<IsarSingleItem, bool, QQueryOperations> isFavoriteProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'isFavorite');
+    });
+  }
+
+  QueryBuilder<IsarSingleItem, DateTime, QQueryOperations>
+      lastAccessedOrModifiedProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'lastAccessedOrModified');
     });
   }
 
