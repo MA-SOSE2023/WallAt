@@ -35,10 +35,7 @@ Future<File> getImageFileFromAssets(String path) async {
   return file;
 }
 
-Future<String> imagePath1 =
-    getImageFileFromAssets('dev_debug_images/hampter1.jpg')
-        .then((value) => value.path);
-Future<String> imagePath2 =
+Future<String> imagePath =
     getImageFileFromAssets('dev_debug_images/example_document.png')
         .then((value) => value.path);
 
@@ -50,7 +47,7 @@ Future<List<SingleItem>> createExampleItems(
       count,
       (index) async => service.createSingleItem(
         title: randomItemTitles[index % randomItemTitles.length],
-        imagePath: index % 2 == 0 ? (await imagePath1) : (await imagePath2),
+        imagePath: (await imagePath),
         description:
             'This is ${randomItemTitles[index % randomItemTitles.length]}',
         parentFolderId: folder,
