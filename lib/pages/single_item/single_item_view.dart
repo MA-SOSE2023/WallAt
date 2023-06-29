@@ -32,30 +32,59 @@ class SingleItemPage extends ConsumerWidget {
     final CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
     return CupertinoPageScaffold(
       backgroundColor: theme.backgroundColor,
-      navigationBar: CupertinoNavigationBar(
-        backgroundColor: theme.navBarColor,
-        middle: Text(item.title),
-      ),
       child: SafeArea(
         child: Stack(
           children: [
-            ListView(
-              children: [
-                SizedBox(
-                  height: MediaQuery.of(context).size.height /
-                      2, // Set the height to half the screen height
-                  child: Hero(
-                    tag: singleItemHeroTag(_id),
-                    child: PictureContainer(
-                      color: theme.groupingColor,
-                      image: controller.getImage().image,
+            CustomScrollView(
+              slivers: [
+                SliverAppBar(
+                  titleSpacing: 10,
+                  pinned: true,
+                  leading: const CupertinoNavigationBarBackButton(),
+                  backgroundColor: theme.navBarColor,
+                  expandedHeight: MediaQuery.of(context).size.height / 1.5,
+                  flexibleSpace: FlexibleSpaceBar(
+                    title: Row(children: [
+                      Expanded(
+                        child: Container(
+                          padding: const EdgeInsets.only(right: 20),
+                          decoration: BoxDecoration(
+                            // gradient: LinearGradient(
+                            //   begin: Alignment.centerLeft,
+                            //   end: Alignment.centerRight,
+                            //   colors: [
+                            //     Colors.transparent,
+                            //     theme.navBarColor.withOpacity(0.7),
+                            //   ],
+                            // ),
+                            color: theme.navBarColor.withOpacity(0.7),
+                          ),
+                          child: Text(
+                            textAlign: TextAlign.right,
+                            item.title,
+                          ),
+                        ),
+                      ),
+                    ]),
+                    background: GestureDetector(
+                      child: Hero(
+                        tag: singleItemHeroTag(_id),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: item.image,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                      ),
                       onTap: () {
                         Navigator.push(
                           context,
                           CupertinoPageRoute(
                             builder: (context) => FullScreenImagePage(
                               itemId: _id,
-                              imageProvider: controller.getImage().image,
+                              imageProvider: item.image,
                             ),
                             fullscreenDialog: true,
                           ),
@@ -64,26 +93,31 @@ class SingleItemPage extends ConsumerWidget {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, right: 20),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: theme.groupingColor,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: InfoContainer(
-                      text: item.description,
+                SliverPadding(
+                  padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
+                  sliver: SliverToBoxAdapter(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: theme.groupingColor,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: InfoContainer(
+                        text: item.description,
+                      ),
                     ),
                   ),
                 ),
-                Padding(
-                    padding: const EdgeInsets.all(20.0),
+                SliverPadding(
+                  padding: const EdgeInsets.all(20.0),
+                  sliver: SliverToBoxAdapter(
                     child: Container(
                         decoration: BoxDecoration(
                           color: theme.groupingColor,
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child: EventsContainer(id: _id, editable: false))),
+                        child: EventsContainer(id: _id, editable: false)),
+                  ),
+                ),
               ],
             ),
             Align(
