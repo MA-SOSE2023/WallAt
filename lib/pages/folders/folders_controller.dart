@@ -39,7 +39,7 @@ SingleItem _mockSingleItem(int id) => SingleItem(
       id: '$id',
       title: 'Example Title',
       description: 'Example Description',
-      image: const AssetImage('assets/dev_debug_images/hampter1.jpg'),
+      image: const AssetImage('assets/dev_debug_images/example_document.png'),
       isFavorite: true,
       events: _mockEvents.map((e) => e.copyWith(parentId: '$id')).toList(),
     );

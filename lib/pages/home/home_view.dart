@@ -74,12 +74,13 @@ class HomeScreen extends ConsumerWidget {
             pinned: true,
             toolbarHeight: 30.0,
             backgroundColor: theme.groupingColor,
-            flexibleSpace: const FlexibleSpaceBar(
-              titlePadding: EdgeInsets.only(left: 20.0, bottom: 10.0),
+            flexibleSpace: FlexibleSpaceBar(
+              titlePadding: const EdgeInsets.only(left: 20.0, bottom: 10.0),
               title: Text(
                 'Frequently Used',
                 style: TextStyle(
                   fontSize: 18,
+                  color: theme.textColor,
                 ),
               ),
             ),

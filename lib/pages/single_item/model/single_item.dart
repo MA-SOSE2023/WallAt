@@ -31,7 +31,7 @@ class SingleItem extends FolderItem with _$SingleItem {
         id: 'prototype',
         title: 'prototype',
         description: 'prototype',
-        image: const AssetImage('assets/dev_debug_images/hampter1.jpg'),
+        image: const AssetImage('assets/dev_debug_images/example_document.png'),
         isFavorite: false,
         events: [],
       );

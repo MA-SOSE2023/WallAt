@@ -34,18 +34,30 @@ class FolderBubble extends ConsumerWidget {
         GestureDetector(
           onTap: onTapped ?? FolderItem.navigateTo(item, context, ref),
           child: Container(
+            clipBehavior: Clip.hardEdge,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15.0),
-              color: theme.groupingColor,
+              borderRadius: BorderRadius.circular(10.0),
+              color: CupertinoDynamicColor.resolve(
+                  CupertinoColors.systemGrey6, context),
+              image: item.isLeaf
+                  ? DecorationImage(
+                      fit: BoxFit.cover,
+                      image: item.item.image,
+                    )
+                  : null,
             ),
-            child: Padding(
-              padding: EdgeInsets.all(padding),
-              child: FittedBox(
-                fit: BoxFit.cover,
-                clipBehavior: Clip.hardEdge,
-                child: Hero(tag: item.heroTag, child: item.thumbnail),
-              ),
-            ),
+            child: item.isFolder
+                ? Padding(
+                    padding: EdgeInsets.all(padding),
+                    child: FittedBox(
+                      fit: BoxFit.cover,
+                      clipBehavior: Clip.hardEdge,
+                      child: Hero(
+                          tag: item.heroTag,
+                          child: const Icon(CupertinoIcons.folder)),
+                    ),
+                  )
+                : null,
           ),
         );
 
