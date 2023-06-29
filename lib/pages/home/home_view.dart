@@ -43,10 +43,10 @@ class HomeScreen extends ConsumerWidget {
       ),
       body: CustomScrollView(
         slivers: [
-          CupertinoSliverNavigationBar(
-            backgroundColor: theme.navBarColor,
-            largeTitle: Text('Home'),
-          ),
+  	      CupertinoSliverNavigationBar(
+              backgroundColor: theme.navBarColor,
+              largeTitle: Text('Home'),
+            ),
           SliverToBoxAdapter(
             child: ConstrainedBox(
               constraints: BoxConstraints(

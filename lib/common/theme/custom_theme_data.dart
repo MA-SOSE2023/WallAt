@@ -9,17 +9,25 @@ class CustomThemeData {
   final Color groupingColor;
   final Color textColor;
   final Color navBarColor;
+  final LinearGradient gradient;
 
   CustomThemeData.lightTheme({
     this.name = 'Light Theme',
     this.brightness = Brightness.light,
     this.primaryColor = const Color.fromARGB(255, 174, 174, 178),
-    this.accentColor = const Color.fromARGB(255, 0, 122, 255),
+    this.accentColor = const Color(0xFF125991),
     this.backgroundColor = const Color.fromARGB(255, 255, 255, 255),
     this.groupingColor = const Color.fromARGB(255, 174, 174, 178),
-    this.textColor = const Color.fromARGB(255, 0, 0, 0),
+    this.textColor = const Color.fromARGB(255, 255, 255, 255),
     this.navBarColor = const Color.fromARGB(255, 211, 211, 211),
-  });
+    }) : gradient = LinearGradient(
+       begin: Alignment.topCenter,
+       end: Alignment.bottomCenter,
+       colors: [
+         groupingColor,
+         accentColor,
+       ],
+  );
 
   CustomThemeData.darkTheme({
     this.name = 'Dark Theme',
@@ -30,7 +38,14 @@ class CustomThemeData {
     this.groupingColor = const Color.fromARGB(255, 82, 82, 85),
     this.textColor = const Color.fromARGB(255, 255, 255, 255),
     this.navBarColor = const Color.fromARGB(255, 54, 56, 63),
-  });
+    }) : gradient = LinearGradient(
+       begin: Alignment.topCenter,
+       end: Alignment.bottomCenter,
+       colors: [
+         groupingColor,
+         accentColor,
+       ],
+  );
 
   CustomThemeData.oceanTheme({
     this.name = 'Ocean Theme',
@@ -41,11 +56,37 @@ class CustomThemeData {
     this.groupingColor = const Color.fromARGB(255, 83, 83, 110),
     this.textColor = const Color.fromARGB(255, 255, 255, 255),
     this.navBarColor = const Color.fromARGB(255, 38, 41, 56),
-  });
+    }) : gradient = LinearGradient(
+       begin: Alignment.topCenter,
+       end: Alignment.bottomCenter,
+       colors: [
+         groupingColor,
+         accentColor,
+       ],
+  );
+  
+  CustomThemeData.hotDogStandTheme({
+    this.name = 'Hot Dog Stand Theme',
+    this.brightness = Brightness.dark,
+    this.primaryColor = const Color(0xFF1E1E1E),
+    this.accentColor = const Color.fromARGB(255, 255, 255, 0),
+    this.backgroundColor = const Color.fromARGB(255, 255, 0, 0),
+    this.groupingColor = const Color.fromARGB(255, 255, 0, 0),
+    this.textColor = const Color.fromARGB(255, 255, 255, 255),
+    this.navBarColor = const Color.fromARGB(255, 255, 0, 0),
+    }) : gradient = LinearGradient(
+       begin: Alignment.topCenter,
+       end: Alignment.bottomCenter,
+       colors: [
+         groupingColor,
+         accentColor,
+       ],
+    );
 }
 
 List<CustomThemeData> selectableThemes = [
   CustomThemeData.lightTheme(),
   CustomThemeData.darkTheme(),
-  CustomThemeData.oceanTheme()
+  CustomThemeData.oceanTheme(),
+  CustomThemeData.hotDogStandTheme()
 ];
