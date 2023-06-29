@@ -95,16 +95,6 @@ class EditSingleItemControllerMock extends EditSingleItemController {
   }
 
   @override
-  void setCurrentDate(DateTime date) {
-    state = state.copyWith(currentSelectedDate: date);
-  }
-
-  @override
-  DateTime? getCurrentDate() {
-    return state.currentSelectedDate;
-  }
-
-  @override
   bool getFavorite() {
     return state.isFavorite;
   }

@@ -25,7 +25,6 @@ class SingleItem extends FolderItem with _$SingleItem {
     required ImageProvider image,
     required bool isFavorite,
     required List<ItemEvent> events,
-    DateTime? currentSelectedDate,
   }) = _SingleItem;
 
   factory SingleItem.prototype() => SingleItem(

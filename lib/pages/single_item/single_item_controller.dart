@@ -13,7 +13,6 @@ var mockSingleItem = SingleItem(
   image: const AssetImage('assets/dev_debug_images/hampter1.jpg'),
   isFavorite: false,
   events: [],
-  currentSelectedDate: null,
 );
 
 class SingleItemControllerMock extends SingleItemController {
@@ -71,16 +70,6 @@ class SingleItemControllerMock extends SingleItemController {
   @override
   List<ItemEvent> getEvents() {
     return List<ItemEvent>.from(state.events);
-  }
-
-  @override
-  void setCurrentDate(DateTime date) {
-    state = state.copyWith(currentSelectedDate: date);
-  }
-
-  @override
-  DateTime? getCurrentDate() {
-    return state.currentSelectedDate;
   }
 
   @override

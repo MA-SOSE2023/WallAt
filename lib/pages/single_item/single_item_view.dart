@@ -233,10 +233,6 @@ abstract class SingleItemController extends StateNotifier<SingleItem> {
 
   void removeEvent(ItemEvent event);
 
-  void setCurrentDate(DateTime date);
-
-  DateTime? getCurrentDate();
-
   bool getFavorite();
 
   void setFavorite();

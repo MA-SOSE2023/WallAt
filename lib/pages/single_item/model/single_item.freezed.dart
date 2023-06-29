@@ -22,7 +22,6 @@ mixin _$SingleItem {
   ImageProvider<Object> get image => throw _privateConstructorUsedError;
   bool get isFavorite => throw _privateConstructorUsedError;
   List<ItemEvent> get events => throw _privateConstructorUsedError;
-  DateTime? get currentSelectedDate => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $SingleItemCopyWith<SingleItem> get copyWith =>
@@ -41,8 +40,7 @@ abstract class $SingleItemCopyWith<$Res> {
       String description,
       ImageProvider<Object> image,
       bool isFavorite,
-      List<ItemEvent> events,
-      DateTime? currentSelectedDate});
+      List<ItemEvent> events});
 }
 
 /// @nodoc
@@ -64,7 +62,6 @@ class _$SingleItemCopyWithImpl<$Res, $Val extends SingleItem>
     Object? image = null,
     Object? isFavorite = null,
     Object? events = null,
-    Object? currentSelectedDate = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -91,10 +88,6 @@ class _$SingleItemCopyWithImpl<$Res, $Val extends SingleItem>
           ? _value.events
           : events // ignore: cast_nullable_to_non_nullable
               as List<ItemEvent>,
-      currentSelectedDate: freezed == currentSelectedDate
-          ? _value.currentSelectedDate
-          : currentSelectedDate // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
     ) as $Val);
   }
 }
@@ -113,8 +106,7 @@ abstract class _$$_SingleItemCopyWith<$Res>
       String description,
       ImageProvider<Object> image,
       bool isFavorite,
-      List<ItemEvent> events,
-      DateTime? currentSelectedDate});
+      List<ItemEvent> events});
 }
 
 /// @nodoc
@@ -134,7 +126,6 @@ class __$$_SingleItemCopyWithImpl<$Res>
     Object? image = null,
     Object? isFavorite = null,
     Object? events = null,
-    Object? currentSelectedDate = freezed,
   }) {
     return _then(_$_SingleItem(
       id: null == id
@@ -161,10 +152,6 @@ class __$$_SingleItemCopyWithImpl<$Res>
           ? _value._events
           : events // ignore: cast_nullable_to_non_nullable
               as List<ItemEvent>,
-      currentSelectedDate: freezed == currentSelectedDate
-          ? _value.currentSelectedDate
-          : currentSelectedDate // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
     ));
   }
 }
@@ -178,8 +165,7 @@ class _$_SingleItem extends _SingleItem {
       required this.description,
       required this.image,
       required this.isFavorite,
-      required final List<ItemEvent> events,
-      this.currentSelectedDate})
+      required final List<ItemEvent> events})
       : _events = events,
         super._();
 
@@ -202,11 +188,8 @@ class _$_SingleItem extends _SingleItem {
   }
 
   @override
-  final DateTime? currentSelectedDate;
-
-  @override
   String toString() {
-    return 'SingleItem(id: $id, title: $title, description: $description, image: $image, isFavorite: $isFavorite, events: $events, currentSelectedDate: $currentSelectedDate)';
+    return 'SingleItem(id: $id, title: $title, description: $description, image: $image, isFavorite: $isFavorite, events: $events)';
   }
 
   @override
@@ -221,21 +204,12 @@ class _$_SingleItem extends _SingleItem {
             (identical(other.image, image) || other.image == image) &&
             (identical(other.isFavorite, isFavorite) ||
                 other.isFavorite == isFavorite) &&
-            const DeepCollectionEquality().equals(other._events, _events) &&
-            (identical(other.currentSelectedDate, currentSelectedDate) ||
-                other.currentSelectedDate == currentSelectedDate));
+            const DeepCollectionEquality().equals(other._events, _events));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      title,
-      description,
-      image,
-      isFavorite,
-      const DeepCollectionEquality().hash(_events),
-      currentSelectedDate);
+  int get hashCode => Object.hash(runtimeType, id, title, description, image,
+      isFavorite, const DeepCollectionEquality().hash(_events));
 
   @JsonKey(ignore: true)
   @override
@@ -251,8 +225,7 @@ abstract class _SingleItem extends SingleItem implements FolderItem {
       required final String description,
       required final ImageProvider<Object> image,
       required final bool isFavorite,
-      required final List<ItemEvent> events,
-      final DateTime? currentSelectedDate}) = _$_SingleItem;
+      required final List<ItemEvent> events}) = _$_SingleItem;
   _SingleItem._() : super._();
 
   @override
@@ -267,8 +240,6 @@ abstract class _SingleItem extends SingleItem implements FolderItem {
   bool get isFavorite;
   @override
   List<ItemEvent> get events;
-  @override
-  DateTime? get currentSelectedDate;
   @override
   @JsonKey(ignore: true)
   _$$_SingleItemCopyWith<_$_SingleItem> get copyWith =>
