@@ -1,16 +1,16 @@
+import 'dart:io';
+
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:gruppe4/pages/single_item/edit_single_item_view.dart';
-import 'dart:io';
 
-import '../../common/custom_widgets/event_container.dart';
 import 'camera_model.dart';
-import '/common/provider.dart';
-import '/router/router.dart';
 
-import 'package:flutter/material.dart';
-import '../../common/theme/custom_theme_data.dart';
 import '/pages/single_item/model/single_item.dart';
+import '/common/provider.dart';
+import '/common/custom_widgets/event_container.dart';
+import '/common/theme/custom_theme_data.dart';
 
 // currently uses the mock item that is create in the single_item_controller
 class SaveItemScreen extends ConsumerWidget {

@@ -23,7 +23,7 @@ class CalendarButton extends StatelessWidget {
       builder: (BuildContext context, WidgetRef ref, Widget? child) {
         SettingsController controller =
             ref.read(Providers.settingsControllerProvider.notifier);
-        void _showAddEventDialog(
+        void showAddEventDialog(
           BuildContext context,
         ) {
           final settings = ref.watch(Providers.settingsControllerProvider);
@@ -157,7 +157,7 @@ class CalendarButton extends StatelessWidget {
         return CupertinoButton(
           child: const Icon(CupertinoIcons.calendar_badge_plus),
           onPressed: () {
-            _showAddEventDialog(context);
+            showAddEventDialog(context);
           },
         );
       },

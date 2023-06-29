@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'bottom_nav_bar_view.dart';
-import '/common/provider.dart';
 
 class CustomBottomNavBarControllerImpl extends CustomBottomNavBarController {
   CustomBottomNavBarControllerImpl() : super();

@@ -2,12 +2,11 @@ import 'package:device_calendar/device_calendar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gruppe4/common/theme/theme_controller.dart';
-import '../../router/router.dart';
+
+import 'settings_model.dart';
 import '/common/custom_widgets/all_custom_widgets.dart';
 import '/common/theme/custom_theme_data.dart';
 import '/common/provider.dart';
-import 'settings_model.dart';
 
 class SettingsPage extends ConsumerWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -37,7 +36,7 @@ class SettingsPage extends ConsumerWidget {
       backgroundColor: theme.backgroundColor,
       navigationBar: CupertinoNavigationBar(
         backgroundColor: theme.navBarColor,
-        middle: Text("Settings"),
+        middle: const Text("Settings"),
       ),
       child: SafeArea(
         child: Padding(
@@ -52,10 +51,10 @@ class SettingsPage extends ConsumerWidget {
               decoration: BoxDecoration(
                 color: theme.backgroundColor,
               ),
-              header: Text("Common"),
+              header: const Text("Common"),
               children: [
                 CupertinoListTile(
-                  title: Text("Set a preferred color theme"),
+                  title: const Text("Set a preferred color theme"),
                   subtitle: Text(
                     "Selected Theme: ${ref.watch(Providers.themeControllerProvider).name}",
                   ),
@@ -66,7 +65,7 @@ class SettingsPage extends ConsumerWidget {
                         context: context,
                         builder: (BuildContext context) {
                           return CupertinoAlertDialog(
-                            title: Text('Select a theme'),
+                            title: const Text('Select a theme'),
                             content: Column(
                               children: [
                                 Container(
@@ -79,7 +78,7 @@ class SettingsPage extends ConsumerWidget {
                                     decoration: BoxDecoration(
                                       color: theme.backgroundColor,
                                     ),
-                                    header: Text("Themes"),
+                                    header: const Text("Themes"),
                                     children: selectableThemes.map((currTheme) {
                                       return CupertinoListTile(
                                         title: Text(
@@ -90,10 +89,6 @@ class SettingsPage extends ConsumerWidget {
                                           controller.changeThemeIndex(
                                               selectableThemes
                                                   .indexOf(currTheme));
-                                          print(ref
-                                              .watch(Providers
-                                                  .themeControllerProvider)
-                                              .name);
                                           Navigator.pop(context);
                                         },
                                       );
@@ -104,7 +99,7 @@ class SettingsPage extends ConsumerWidget {
                             ),
                             actions: <Widget>[
                               CupertinoDialogAction(
-                                child: Text('Cancel'),
+                                child: const Text('Cancel'),
                                 onPressed: () {
                                   Navigator.pop(context);
                                 },
@@ -117,7 +112,7 @@ class SettingsPage extends ConsumerWidget {
                   ),
                 ),
                 CupertinoListTile(
-                  title: Text("Set a system calendar"),
+                  title: const Text("Set a system calendar"),
                   subtitle: Text(
                     (settings.calendar == null)
                         ? "No calendar selected"

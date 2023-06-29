@@ -5,7 +5,7 @@ import 'package:gruppe4/common/theme/custom_theme_data.dart';
 import '/pages/single_item/model/single_item.dart';
 import '/common/provider.dart';
 import '/common/custom_widgets/all_custom_widgets.dart'
-    show FutureOptionBuilder, DocumentCard, ActivityIndicator;
+    show FutureOptionBuilder, DocumentCard;
 
 class DocumentCardContainer extends ConsumerWidget {
   const DocumentCardContainer({

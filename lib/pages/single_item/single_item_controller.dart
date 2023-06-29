@@ -21,11 +21,9 @@ class SingleItemControllerImpl extends SingleItemController
     with FutureControllerMixin {
   SingleItemControllerImpl(
       {required int id, required PersistenceService service})
-      : _id = id,
-        _service = service,
+      : _service = service,
         super(service.getSingleItem(id).then((item) => item ?? mockSingleItem));
 
-  final int _id;
   final PersistenceService _service;
 
   @override
@@ -62,7 +60,7 @@ class SingleItemControllerImpl extends SingleItemController
   @override
   void removeEvent(ItemEvent event) {
     DeviceCalendarPlugin deviceCalendarPlugin = DeviceCalendarPlugin();
-    var res = deviceCalendarPlugin.deleteEvent(
+    deviceCalendarPlugin.deleteEvent(
         event.event.calendarId!, event.event.eventId!);
 
     futureState((state) => state.copyWith(
