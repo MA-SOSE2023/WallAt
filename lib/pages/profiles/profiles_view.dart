@@ -10,6 +10,9 @@ import 'package:flutter/cupertino.dart';
 import '/common/theme/custom_theme_data.dart';
 import '/common/provider.dart';
 
+import '/pages/settings/settings_model.dart';
+import '/pages/settings/settings_view.dart';
+
 class ProfilesPage extends ConsumerWidget {
   const ProfilesPage({Key? key}) : super(key: key);
 
@@ -19,6 +22,9 @@ class ProfilesPage extends ConsumerWidget {
         ref.read(Providers.profilesControllerProvider.notifier);
     List<ProfileModel> profiles =
         ref.watch(Providers.profilesControllerProvider);
+    SettingsModel settings = ref.watch(Providers.settingsControllerProvider);
+    SettingsController settingsController =
+        ref.read(Providers.settingsControllerProvider.notifier);
     HomeModel model = ref.watch(Providers.homeControllerProvider);
     final List<EventCard> eventCards = model.events
         .map((event) => EventCard(
@@ -56,10 +62,10 @@ class ProfilesPage extends ConsumerWidget {
                     ),
                   ))),
           SliverGrid(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                mainAxisSpacing: 8.0,
-                crossAxisSpacing: 8.0,
+                mainAxisSpacing: 6.0,
+                crossAxisSpacing: 6.0,
               ),
               delegate: SliverChildBuilderDelegate(
                   (context, index) => Padding(
@@ -72,25 +78,38 @@ class ProfilesPage extends ConsumerWidget {
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Container(
-                                height: 100,
-                                width: 100,
+                                height: 80,
+                                width: 80,
                                 decoration: BoxDecoration(
                                     border: Border.all(
                                         color: theme.accentColor, width: 2),
                                     shape: BoxShape.circle,
                                     image: DecorationImage(
                                         image: controller
-                                                .getProfilePicture(
-                                                    profiles[index])
-                                                ?.image ??
-                                            AssetImage(
-                                                'assets/images/placeholder.png'),
+                                            .getProfilePicture(profiles[index])!
+                                            .image,
                                         fit: BoxFit.fill)),
                               ),
                             ),
                             Text(profiles[index].name,
                                 style: TextStyle(color: theme.textColor)),
-                            Text("Currently active")
+                            if (index == settings.selectedProfileIndex)
+                              Padding(
+                                  padding: const EdgeInsets.only(top: 10),
+                                  child: Container(
+                                      padding: const EdgeInsets.all(8),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: theme.backgroundColor,
+                                      ),
+                                      child: Text("Currently Selected",
+                                          style: TextStyle(
+                                              color: theme.textColor))))
+                            else
+                              CupertinoButton(
+                                  child: Text("Select this profile"),
+                                  onPressed: () =>
+                                      settingsController.setProfileIndex(index))
                           ]),
                         ),
                       ),

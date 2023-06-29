@@ -18,7 +18,8 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$ProfileModel {
   String get id => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
-  ImageProvider get profilePicture => throw _privateConstructorUsedError;
+  ImageProvider<Object> get profilePicture =>
+      throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $ProfileModelCopyWith<ProfileModel> get copyWith =>
@@ -31,7 +32,7 @@ abstract class $ProfileModelCopyWith<$Res> {
           ProfileModel value, $Res Function(ProfileModel) then) =
       _$ProfileModelCopyWithImpl<$Res, ProfileModel>;
   @useResult
-  $Res call({String id, String name, ImageProvider profilePicture});
+  $Res call({String id, String name, ImageProvider<Object> profilePicture});
 }
 
 /// @nodoc
@@ -49,7 +50,7 @@ class _$ProfileModelCopyWithImpl<$Res, $Val extends ProfileModel>
   $Res call({
     Object? id = null,
     Object? name = null,
-    Object? profilePicture = freezed,
+    Object? profilePicture = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -60,10 +61,10 @@ class _$ProfileModelCopyWithImpl<$Res, $Val extends ProfileModel>
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      profilePicture: freezed == profilePicture
+      profilePicture: null == profilePicture
           ? _value.profilePicture
           : profilePicture // ignore: cast_nullable_to_non_nullable
-              as ImageProvider,
+              as ImageProvider<Object>,
     ) as $Val);
   }
 }
@@ -76,7 +77,7 @@ abstract class _$$_ProfileModelCopyWith<$Res>
       __$$_ProfileModelCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String id, String name, ImageProvider profilePicture});
+  $Res call({String id, String name, ImageProvider<Object> profilePicture});
 }
 
 /// @nodoc
@@ -92,7 +93,7 @@ class __$$_ProfileModelCopyWithImpl<$Res>
   $Res call({
     Object? id = null,
     Object? name = null,
-    Object? profilePicture = freezed,
+    Object? profilePicture = null,
   }) {
     return _then(_$_ProfileModel(
       id: null == id
@@ -103,10 +104,10 @@ class __$$_ProfileModelCopyWithImpl<$Res>
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      profilePicture: freezed == profilePicture
+      profilePicture: null == profilePicture
           ? _value.profilePicture
           : profilePicture // ignore: cast_nullable_to_non_nullable
-              as ImageProvider,
+              as ImageProvider<Object>,
     ));
   }
 }
@@ -122,7 +123,7 @@ class _$_ProfileModel implements _ProfileModel {
   @override
   final String name;
   @override
-  final ImageProvider profilePicture;
+  final ImageProvider<Object> profilePicture;
 
   @override
   String toString() {
@@ -136,13 +137,12 @@ class _$_ProfileModel implements _ProfileModel {
             other is _$_ProfileModel &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.name, name) || other.name == name) &&
-            const DeepCollectionEquality()
-                .equals(other.profilePicture, profilePicture));
+            (identical(other.profilePicture, profilePicture) ||
+                other.profilePicture == profilePicture));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, id, name,
-      const DeepCollectionEquality().hash(profilePicture));
+  int get hashCode => Object.hash(runtimeType, id, name, profilePicture);
 
   @JsonKey(ignore: true)
   @override
@@ -155,14 +155,14 @@ abstract class _ProfileModel implements ProfileModel {
   const factory _ProfileModel(
       {required final String id,
       required final String name,
-      required final ImageProvider profilePicture}) = _$_ProfileModel;
+      required final ImageProvider<Object> profilePicture}) = _$_ProfileModel;
 
   @override
   String get id;
   @override
   String get name;
   @override
-  ImageProvider get profilePicture;
+  ImageProvider<Object> get profilePicture;
   @override
   @JsonKey(ignore: true)
   _$$_ProfileModelCopyWith<_$_ProfileModel> get copyWith =>
