@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 
+import '../../router/router.dart';
 import 'home_model.dart';
 import '/common/provider.dart';
 import '/common/theme/custom_theme_data.dart';
@@ -44,9 +45,12 @@ class HomeScreen extends ConsumerWidget {
       body: CustomScrollView(
         slivers: [
           CupertinoSliverNavigationBar(
-            backgroundColor: theme.navBarColor,
-            largeTitle: Text('Home'),
-          ),
+              backgroundColor: theme.navBarColor,
+              largeTitle: Text('Home'),
+              trailing: CupertinoButton(
+                  child: Icon(CupertinoIcons.profile_circled),
+                  onPressed: () =>
+                      Routers.globalRouterDelegate.beamToNamed('/profiles'))),
           SliverToBoxAdapter(
             child: ConstrainedBox(
               constraints: BoxConstraints(
