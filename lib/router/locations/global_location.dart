@@ -49,7 +49,7 @@ class GlobalLocation extends BeamLocation<BeamState> {
             title: 'Settings',
             type: BeamPageType.cupertino,
             popToNamed: prevNavBarLocation,
-            child: const SettingsPage(), // TODO: Settings Screen
+            child: const SettingsPage(),
           ),
         if (state.routeInformation.location == '/profiles')
           BeamPage(

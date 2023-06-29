@@ -1,3 +1,4 @@
+import 'package:gruppe4/common/theme/custom_theme_data.dart';
 import 'package:intl/intl.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:flutter/cupertino.dart';
@@ -25,20 +26,41 @@ class EventsContainer extends ConsumerWidget {
     final SingleItemController controller = editable
         ? ref.watch(Providers.editSingleItemControllerProvider(id).notifier)
         : ref.watch(Providers.singleItemControllerProvider(id).notifier);
+    final CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
+
+    Widget eventSection({required List<Widget> children}) =>
+        CupertinoListSection.insetGrouped(
+            margin: const EdgeInsets.all(8),
+            backgroundColor: Colors.transparent,
+            decoration: BoxDecoration(
+              color: theme.primaryColor,
+            ),
+            header: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text("Events"),
+                  if (editable) CalendarButton(id: id),
+                ]),
+            children: children);
+
     return FutureOptionListBuilder(
       future: item.then((item) => item.events),
+      empty: (emptyMessage) => eventSection(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              emptyMessage,
+              style: TextStyle(
+                fontSize: 16,
+                color: theme.textColor,
+              ),
+            ),
+          )
+        ],
+      ),
       emptyMessage: 'No events',
-      success: (events) => CupertinoListSection.insetGrouped(
-        margin: const EdgeInsets.all(8),
-        backgroundColor: Colors.transparent,
-        decoration: BoxDecoration(
-            color: CupertinoDynamicColor.resolve(
-                CupertinoColors.systemBackground, context)),
-        header:
-            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          const Text("Events"),
-          if (editable) CalendarButton(id: id),
-        ]),
+      success: (events) => eventSection(
         children: events.map((itemEvent) {
           return CupertinoListTile(
             trailing: editable

@@ -7,6 +7,7 @@ class FutureOptionListBuilder<T> extends StatelessWidget {
   const FutureOptionListBuilder({
     required Future<List<T>?> future,
     required Widget Function(List<T>) success,
+    this.empty,
     this.onNullMessage = 'No matching item was found.\nTry restarting the app.',
     this.emptyMessage = 'There are no entries yet.\nTry adding some items.',
     this.errorMessage =
@@ -18,6 +19,8 @@ class FutureOptionListBuilder<T> extends StatelessWidget {
 
   final Future<List<T>?> _future;
   final Widget Function(List<T>) _onSuccessBuilder;
+
+  final Widget Function(String)? empty;
 
   final String onNullMessage;
   final String emptyMessage;
@@ -37,7 +40,9 @@ class FutureOptionListBuilder<T> extends StatelessWidget {
         if (data == null) {
           return _centerAligned(child: Text(onNullMessage));
         } else if (data.isEmpty) {
-          return _centerAligned(child: Text(emptyMessage));
+          return empty == null
+              ? _centerAligned(child: Text(emptyMessage))
+              : empty!(emptyMessage);
         } else {
           return _onSuccessBuilder(data);
         }
