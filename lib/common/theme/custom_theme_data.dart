@@ -16,7 +16,7 @@ class CustomThemeData {
     this.primaryColor = const Color.fromARGB(255, 174, 174, 178),
     this.accentColor = const Color.fromARGB(255, 0, 122, 255),
     this.backgroundColor = const Color.fromARGB(255, 255, 255, 255),
-    this.groupingColor = const Color.fromARGB(255, 174, 174, 178),
+    this.groupingColor = const Color.fromARGB(255, 212, 212, 217),
     this.textColor = const Color.fromARGB(255, 0, 0, 0),
     this.navBarColor = const Color.fromARGB(255, 211, 211, 211),
   });

@@ -47,6 +47,7 @@ class SingleItemPage extends ConsumerWidget {
                   child: Hero(
                     tag: singleItemHeroTag(_id),
                     child: PictureContainer(
+                      color: theme.groupingColor,
                       image: controller.getImage().image,
                       onTap: () {
                         Navigator.push(
@@ -103,10 +104,12 @@ class SingleItemPage extends ConsumerWidget {
 class PictureContainer extends StatelessWidget {
   const PictureContainer({
     Key? key,
+    required this.color,
     required this.image,
     required this.onTap,
   }) : super(key: key);
 
+  final Color color;
   final ImageProvider image;
   final VoidCallback onTap;
 
@@ -118,7 +121,7 @@ class PictureContainer extends StatelessWidget {
         onTap: onTap,
         child: Container(
           decoration: BoxDecoration(
-            border: Border.all(color: CupertinoTheme.of(context).primaryColor),
+            border: Border.all(color: color, width: 3),
             borderRadius: BorderRadius.circular(10),
             image: DecorationImage(
               image: image,

@@ -44,24 +44,26 @@ class DocumentCard extends ConsumerWidget {
                       .copyWith(fontSize: 12)),
             ],
           ),
-          leading: Container(
-            width: 80,
-            height: 80,
-            clipBehavior: Clip.hardEdge,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            margin: const EdgeInsets.all(5),
-            child: FittedBox(
-              fit: BoxFit.cover,
-              child: HeroMode(
-                enabled: heroEnabled,
-                child: Hero(
-                  tag: singleItemHeroTag(item.id),
-                  child: Image(
+          leading: HeroMode(
+            enabled: heroEnabled,
+            child: Hero(
+              tag: singleItemHeroTag(item.id),
+              child: Container(
+                width: 80,
+                height: 80,
+                clipBehavior: Clip.hardEdge,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: theme.groupingColor,
+                    width: 3,
+                  ),
+                  image: DecorationImage(
+                    fit: BoxFit.cover,
                     image: controller.getImage().image,
                   ),
+                  borderRadius: BorderRadius.circular(10),
                 ),
+                margin: const EdgeInsets.all(5),
               ),
             ),
           ),

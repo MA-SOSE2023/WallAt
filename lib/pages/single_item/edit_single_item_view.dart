@@ -120,16 +120,25 @@ class EditSingleItemPage extends ConsumerWidget {
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Container(
-                          margin: const EdgeInsets.all(8.0),
-                          height: MediaQuery.of(context).size.height / 6,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            image: DecorationImage(
-                              image: controller.getImage().image,
-                              fit: BoxFit.fitWidth,
+                            padding: EdgeInsets.all(
+                              MediaQuery.of(context).size.height / (24),
                             ),
-                          ),
-                        ),
+                            margin: const EdgeInsets.all(8.0),
+                            height: MediaQuery.of(context).size.height / 6,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              image: DecorationImage(
+                                image: controller.getImage().image,
+                                fit: BoxFit.fitWidth,
+                              ),
+                            ),
+                            child: FloatingActionButton(
+                              backgroundColor:
+                                  theme.accentColor.withOpacity(0.5),
+                              onPressed: () => {},
+                              child:
+                                  const Icon(CupertinoIcons.pencil, size: 35),
+                            )),
                       ),
                     ),
                   ),
