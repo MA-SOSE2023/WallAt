@@ -6,22 +6,26 @@ class FutureOptionBuilder<T> extends StatelessWidget {
     required Widget Function(T) success,
     required Widget Function() loading,
     required Widget Function(Object?) error,
+    T? initialData,
     super.key,
   })  : _future = future,
         _onSuccessBuilder = success,
         _onLoadingBuilder = loading,
-        _onErrorBuilder = error;
+        _onErrorBuilder = error,
+        _initialData = initialData;
 
   final Future<T> _future;
 
   final Widget Function(T) _onSuccessBuilder;
   final Widget Function() _onLoadingBuilder;
   final Widget Function(Object?) _onErrorBuilder;
+  final T? _initialData;
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: _future,
+      initialData: _initialData,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           final data = snapshot.data;

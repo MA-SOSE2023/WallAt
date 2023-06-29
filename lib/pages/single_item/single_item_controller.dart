@@ -82,7 +82,7 @@ class SingleItemControllerImpl extends SingleItemController
   }
 
   @override
-  void navigateToThisItem() {
-    Routers.globalRouterDelegate.beamToNamed('/item/$_id');
+  void navigateToThisItem() async {
+    Routers.globalRouterDelegate.beamToNamed('/item', data: await state);
   }
 }

@@ -18,18 +18,19 @@ String singleItemHeroTag(String id) {
 
 // TODO: maybe use CustomScrollView with SliverAppbar instead of CupertinoPageScaffold
 class SingleItemPage extends ConsumerWidget {
-  const SingleItemPage({required int id, Key? key})
-      : _id = id,
+  const SingleItemPage({required SingleItem item, Key? key})
+      : _item = item,
         super(key: key);
 
-  final int _id;
+  final SingleItem _item;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final Future<SingleItem> item =
-        ref.watch(Providers.singleItemControllerProvider(_id));
+        ref.watch(Providers.singleItemControllerProvider(_item.id));
     return FutureOptionBuilder(
       future: item,
+      initialData: _item,
       loading: () => const Align(
           alignment: Alignment.center, child: CupertinoActivityIndicator()),
       error: (_) => const Align(
@@ -48,7 +49,7 @@ class SingleItemPage extends ConsumerWidget {
                     height: MediaQuery.of(context).size.height /
                         2, // Set the height to half the screen height
                     child: Hero(
-                      tag: singleItemHeroTag('$_id'),
+                      tag: singleItemHeroTag('${item.id}'),
                       child: PictureContainer(
                         image: item.image,
                         onTap: () {
@@ -56,7 +57,7 @@ class SingleItemPage extends ConsumerWidget {
                             context,
                             CupertinoPageRoute(
                               builder: (context) => FullScreenImagePage(
-                                itemId: _id,
+                                itemId: item.id,
                                 imageProvider: item.image,
                               ),
                               fullscreenDialog: true,
@@ -82,7 +83,7 @@ class SingleItemPage extends ConsumerWidget {
                                 CupertinoColors.systemGrey5, context),
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          child: EventsContainer(id: _id, editable: false))),
+                          child: EventsContainer(id: item.id, editable: false))),
                 ],
               ),
               Align(
@@ -91,7 +92,7 @@ class SingleItemPage extends ConsumerWidget {
                   color: CupertinoDynamicColor.resolve(
                       CupertinoColors.systemGrey5, context),
                   padding: const EdgeInsets.only(left: 20, right: 20),
-                  child: ActionButtons(itemId: _id),
+                  child: ActionButtons(itemId: item.id),
                 ),
               ),
             ],

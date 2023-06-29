@@ -8,6 +8,7 @@ class Routers {
   /// This is meant to contain the [bottomNavRouterDelegate] which handles the
   /// individual pages
   static final globalRouterDelegate = BeamerDelegate(
+    navigatorObservers: [HeroController()],
     initialPath: '/home',
     locationBuilder: BeamerLocationBuilder(
       beamLocations: [

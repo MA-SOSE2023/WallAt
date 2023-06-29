@@ -67,7 +67,7 @@ class CustomBottomNavBarControllerImpl extends CustomBottomNavBarController {
       ),
     );
 
-    ref.read(Providers.enableHeroAnimationProvider.notifier).state = false;
+    //ref.read(Providers.enableHeroAnimationProvider.notifier).state = false;
     context.beamToNamed(getNavBarItems()[index].initialLocation);
 
     if (state != updatedState) {

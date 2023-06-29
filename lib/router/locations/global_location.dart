@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:gruppe4/pages/camera/camera_model.dart';
 import 'package:gruppe4/pages/camera/camera_view.dart';
 
+import '/pages/single_item/model/single_item.dart';
 import '/pages/single_item/single_item_view.dart';
 import '/common/custom_widgets/all_custom_widgets.dart'
     show CustomBottomNavBarScreen;
@@ -20,7 +21,7 @@ class GlobalLocation extends BeamLocation<BeamState> {
         '/camera/view',
         '/settings',
         '/profiles',
-        '/item/:id',
+        '/item',
       ];
 
   @override
@@ -69,7 +70,7 @@ class GlobalLocation extends BeamLocation<BeamState> {
             title: 'Item',
             type: BeamPageType.cupertino,
             popToNamed: prevNavBarLocation,
-            child: SingleItemPage(id: int.parse(state.pathParameters['id']!)),
+            child: SingleItemPage(item: data as SingleItem),
           ),
       ];
 }

@@ -40,10 +40,12 @@ class FolderBubble extends ConsumerWidget {
             ),
             child: Padding(
               padding: EdgeInsets.all(padding),
-              child: FittedBox(
-                fit: BoxFit.cover,
-                clipBehavior: Clip.hardEdge,
-                child: Hero(tag: item.heroTag, child: item.thumbnail),
+              child: Hero(tag: item.heroTag, 
+                child: FittedBox(
+                  fit: BoxFit.cover,
+                  clipBehavior: Clip.hardEdge,
+                  child: item.thumbnail,
+                ),
               ),
             ),
           ),

@@ -43,27 +43,23 @@ class DocumentCard extends ConsumerWidget {
                       .copyWith(fontSize: 12)),
             ],
           ),
-          leading: Container(
+          leading: Hero(
+                  tag: singleItemHeroTag('${_item.id}'),
+                  child: Container(
             width: 80,
             height: 80,
             clipBehavior: Clip.hardEdge,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
+              image: DecorationImage(
+                image: _item.image,
+                fit: BoxFit.cover,
+              ),	
             ),
             margin: const EdgeInsets.all(5),
-            child: FittedBox(
-              fit: BoxFit.cover,
-              child: HeroMode(
-                enabled: heroEnabled,
-                child: Hero(
-                  tag: singleItemHeroTag('$_item.id'),
-                  child: Image(
-                    image: _item.image,
-                  ),
-                ),
-              ),
+              
             ),
-          ),
+                ),
           leadingSize: 80,
           onTap: () {
             ref.read(Providers.enableHeroAnimationProvider.notifier).state =

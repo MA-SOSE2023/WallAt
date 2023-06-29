@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gruppe4/pages/single_item/single_item_view.dart';
 
 import 'folder_model.dart';
 import 'folders_view.dart';
@@ -32,13 +33,13 @@ abstract class FolderItem {
   List<FolderItem>? get contents => maybeFolder!.contents;
 
   String get heroTag =>
-      isLeaf ? 'folderItem-itemHeroTag-$id' : 'folderItem-folderHeroTag-$id';
+      isLeaf ? singleItemHeroTag('$id') : 'folder-heroTag$id';
 
   static VoidCallback navigateTo(
       FolderItem item, BuildContext context, WidgetRef ref) {
     if (item.isLeaf) {
       return () => Routers.globalRouterDelegate.beamToNamed(
-            '/item/${item.id}',
+            '/item', data: item.item,
           );
     } else {
       return () => {
