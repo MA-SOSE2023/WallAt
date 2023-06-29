@@ -1,3 +1,4 @@
+import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -108,8 +109,11 @@ class ProfilesPage extends ConsumerWidget {
                             else
                               CupertinoButton(
                                   child: Text("Select this profile"),
-                                  onPressed: () =>
-                                      settingsController.setProfileIndex(index))
+                                  onPressed: () => {
+                                        settingsController
+                                            .setProfileIndex(index),
+                                        context.beamBack(),
+                                      })
                           ]),
                         ),
                       ),

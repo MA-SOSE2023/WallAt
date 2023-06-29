@@ -45,12 +45,14 @@ class HomeScreen extends ConsumerWidget {
       body: CustomScrollView(
         slivers: [
           CupertinoSliverNavigationBar(
-              backgroundColor: theme.navBarColor,
-              largeTitle: Text('Home'),
-              trailing: CupertinoButton(
-                  child: Icon(CupertinoIcons.profile_circled),
-                  onPressed: () =>
-                      Routers.globalRouterDelegate.beamToNamed('/profiles'))),
+            backgroundColor: theme.navBarColor,
+            largeTitle: Text('Home'),
+            trailing: CupertinoButton(
+                padding: EdgeInsets.zero,
+                child: Icon(CupertinoIcons.profile_circled, size: 30.0),
+                onPressed: () =>
+                    Routers.globalRouterDelegate.beamToNamed('/profiles')),
+          ),
           SliverToBoxAdapter(
             child: ConstrainedBox(
               constraints: BoxConstraints(
