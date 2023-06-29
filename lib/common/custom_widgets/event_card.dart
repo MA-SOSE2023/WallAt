@@ -20,62 +20,69 @@ class EventCard extends ConsumerWidget {
     final CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
     return Column(
       children: [
-        CupertinoListSection.insetGrouped(
-          margin: EdgeInsets.zero,
+        Container(
           decoration: BoxDecoration(
-            border: Border.all(
-              color: theme.groupingColor,
-              width: 2,
-            ),
+            gradient: theme.gradient,
             borderRadius: BorderRadius.circular(10),
           ),
-          backgroundColor: Colors.transparent,
-          children: [
-            CupertinoListTile.notched(
-              title: Text(
-                  '${date.day}/${date.month}/${date.year}  -  ${date.hour}:${date.minute}'),
-              leading: Container(
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: theme.groupingColor,
-                    width: 2,
+          child:
+            CupertinoListSection.insetGrouped(
+              margin: EdgeInsets.fromLTRB(2, 2, 2, 0),
+              decoration: BoxDecoration(
+                gradient: theme.gradient,
+              ),
+              backgroundColor: Colors.transparent,
+              children: [
+                CupertinoListTile.notched(
+                  backgroundColor: theme.backgroundColor,
+                  title: Text(
+                      '${date.day}/${date.month}/${date.year}  -  ${date.hour}:${date.minute}'),
+                  leading: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: theme.groupingColor,
+                        width: 2,
+                      ),
+                      borderRadius: BorderRadius.circular(12),
+                      color: theme.backgroundColor,
+                    ),
+                    padding: const EdgeInsets.all(5),
+                    child: Icon(
+                      CupertinoIcons.alarm,
+                      color: theme.accentColor,
+                      size: 24,
+                    ),
                   ),
-                  borderRadius: BorderRadius.circular(12),
-                  color: theme.backgroundColor,
+                  trailing: const Icon(
+                    CupertinoIcons.forward,
+                  ),
+                  leadingSize: 36,
+                  onTap: () {
+                    ref
+                        .read(Providers.singleItemControllerProvider(event.parentId)
+                            .notifier)
+                        .navigateToThisItem();
+                  },
                 ),
-                padding: const EdgeInsets.all(5),
-                child: Icon(
-                  CupertinoIcons.alarm,
-                  color: theme.accentColor,
-                  size: 24,
+                CupertinoListTile.notched(
+                  title: Container(
+                    height: MediaQuery.of(context).size.height / 15,
+                    child: Text(
+                      description,
+                      maxLines: 2,
+                      style: TextStyle(
+                        color: theme.textColor,
+                        fontSize: 20,
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-              trailing: const Icon(
-                CupertinoIcons.forward,
-              ),
-              leadingSize: 36,
-              onTap: () {
-                ref
-                    .read(Providers.singleItemControllerProvider(event.parentId)
-                        .notifier)
-                    .navigateToThisItem();
-              },
+              ],
             ),
-            CupertinoListTile.notched(
-              title: SizedBox(
-                height: MediaQuery.of(context).size.height / 15,
-                child: Text(
-                  description,
-                  maxLines: 2,
-                  style: CupertinoTheme.of(context).textTheme.pickerTextStyle,
-                ),
-              ),
-              backgroundColor: theme.groupingColor,
-            ),
-          ],
         ),
       ],
     );
+        
   }
 }
 
