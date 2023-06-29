@@ -1,99 +1,146 @@
+import 'package:device_calendar/device_calendar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gruppe4/common/theme/custom_theme_data.dart';
 import 'package:social_share/social_share.dart';
-import '../../common/provider.dart';
+
 import 'full_screen_image_view.dart';
 import 'edit_single_item_view.dart';
 import 'model/single_item.dart';
 import 'model/item_event.dart';
-import '/common/custom_widgets/all_custom_widgets.dart' show EventsContainer;
+import '/common/provider.dart';
+import '/common/custom_widgets/all_custom_widgets.dart'
+    show EventsContainer, FutureOptionBuilder;
 
 String singleItemHeroTag(String id) {
   return "single_item_image$id";
 }
 
-//@TODO: maybe use CustomScrollView with SliverAppbar instead of CupertinoPageScaffold
 class SingleItemPage extends ConsumerWidget {
-  const SingleItemPage({required String id, Key? key})
-      : _id = id,
+  const SingleItemPage({required SingleItem item, Key? key})
+      : _item = item,
         super(key: key);
 
-  final String _id;
+  final SingleItem _item;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final SingleItem item =
-        ref.watch(Providers.singleItemControllerProvider(_id));
-    final SingleItemController controller =
-        ref.read(Providers.singleItemControllerProvider(_id).notifier);
-
+    final Future<SingleItem> item =
+        ref.watch(Providers.singleItemControllerProvider(_item.id));
     final CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
-    return CupertinoPageScaffold(
-      backgroundColor: theme.backgroundColor,
-      navigationBar: CupertinoNavigationBar(
-        backgroundColor: theme.navBarColor,
-        middle: Text(item.title),
-      ),
-      child: SafeArea(
-        child: Stack(
-          children: [
-            ListView(
-              children: [
-                SizedBox(
-                  height: MediaQuery.of(context).size.height /
-                      2, // Set the height to half the screen height
-                  child: Hero(
-                    tag: singleItemHeroTag(_id),
-                    child: PictureContainer(
-                      image: controller.getImage().image,
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          CupertinoPageRoute(
-                            builder: (context) => FullScreenImagePage(
-                              itemId: _id,
-                              imageProvider: controller.getImage().image,
+
+    return FutureOptionBuilder(
+      future: item,
+      initialData: _item,
+      loading: () => const Align(
+          alignment: Alignment.center, child: CupertinoActivityIndicator()),
+      error: (_) => const Align(
+          alignment: Alignment.center,
+          child: Text("Fatal error, please restart the app")),
+      success: (item) => CupertinoPageScaffold(
+        backgroundColor: theme.backgroundColor,
+        child: SafeArea(
+          child: Stack(
+            children: [
+              CustomScrollView(
+                slivers: [
+                  SliverAppBar(
+                    titleSpacing: 10,
+                    pinned: true,
+                    leading: const CupertinoNavigationBarBackButton(),
+                    backgroundColor: theme.navBarColor,
+                    expandedHeight: MediaQuery.of(context).size.height / 1.5,
+                    flexibleSpace: FlexibleSpaceBar(
+                      title: Row(children: [
+                        Expanded(
+                          child: Container(
+                            padding: const EdgeInsets.only(right: 20),
+                            decoration: BoxDecoration(
+                              color: theme.navBarColor.withOpacity(0.7),
                             ),
-                            fullscreenDialog: true,
+                            child: Text(
+                              textAlign: TextAlign.right,
+                              style: TextStyle(
+                                color: theme.textColor,
+                              ),
+                              item.title,
+                            ),
                           ),
-                        );
-                      },
+                        ),
+                      ]),
+                      background: GestureDetector(
+                        child: Hero(
+                          tag: singleItemHeroTag(item.id.toString()),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: item.image,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            CupertinoPageRoute(
+                              fullscreenDialog: true,
+                              builder: (context) => FullScreenImagePage(
+                                itemId: item.id,
+                                imageProvider: item.image,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, right: 20),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: theme.groupingColor,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: InfoContainer(
-                      text: item.description,
-                    ),
-                  ),
-                ),
-                Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Container(
+                  SliverPadding(
+                    padding:
+                        const EdgeInsets.only(left: 20, right: 20, top: 20),
+                    sliver: SliverToBoxAdapter(
+                      child: Container(
                         decoration: BoxDecoration(
                           color: theme.groupingColor,
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child: EventsContainer(id: _id, editable: false))),
-              ],
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Container(
-                color: theme.navBarColor,
-                padding: const EdgeInsets.only(left: 20, right: 20),
-                child: ActionButtons(itemId: _id, controller: controller),
+                        child: InfoContainer(
+                          text: item.description,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SliverPadding(
+                    padding: const EdgeInsets.all(20.0),
+                    sliver: SliverToBoxAdapter(
+                      child: Container(
+                          decoration: BoxDecoration(
+                            color: theme.groupingColor,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: EventsContainer(id: item.id, editable: false)),
+                    ),
+                  ),
+                  // Empty box at the bottom to make sure you can scroll the
+                  // events above the bottom bar
+                  const SliverPadding(
+                      padding: EdgeInsets.only(bottom: 60),
+                      sliver: SliverToBoxAdapter(
+                        child: SizedBox(height: 10),
+                      )),
+                ],
               ),
-            ),
-          ],
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  color: theme.navBarColor,
+                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  child: ActionButtons(itemId: item.id),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -103,10 +150,12 @@ class SingleItemPage extends ConsumerWidget {
 class PictureContainer extends StatelessWidget {
   const PictureContainer({
     Key? key,
+    required this.color,
     required this.image,
     required this.onTap,
   }) : super(key: key);
 
+  final Color color;
   final ImageProvider image;
   final VoidCallback onTap;
 
@@ -118,7 +167,7 @@ class PictureContainer extends StatelessWidget {
         onTap: onTap,
         child: Container(
           decoration: BoxDecoration(
-            border: Border.all(color: CupertinoTheme.of(context).primaryColor),
+            border: Border.all(color: color, width: 3),
             borderRadius: BorderRadius.circular(10),
             image: DecorationImage(
               image: image,
@@ -160,84 +209,76 @@ class InfoContainer extends StatelessWidget {
 }
 
 class ActionButtons extends ConsumerWidget {
-  const ActionButtons(
-      {Key? key, required this.itemId, required this.controller})
-      : super(key: key);
+  const ActionButtons({Key? key, required this.itemId}) : super(key: key);
 
-  final String itemId;
-  final SingleItemController controller; //TODO: remove, call via ref
+  final int itemId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        CupertinoButton(
-          onPressed: () {
-            SocialShare.shareOptions(
-              "Hello world",
-              //@TODO: add the correct image path
-            );
-          },
-          child: const Icon(CupertinoIcons.share),
-        ),
-        CupertinoButton(
-          onPressed: () {
-            showModalBottomSheet(
-              context: context,
-              isScrollControlled: true,
-              backgroundColor: Colors.transparent,
-              builder: (context) => EditSingleItemPage(id: itemId),
-            );
-          },
-          child: const Icon(
-              CupertinoIcons.slider_horizontal_3), // Use the Cupertino icon
-        ),
-        CupertinoButton(
-          onPressed: () {
-            // Handle delete button logic
-          },
-          child: const Icon(CupertinoIcons.delete), // Use the Cupertino icon
-        ),
-        CupertinoButton(
-          onPressed: () {
-            controller.setFavorite();
-          },
-          child: Icon(controller.getFavorite()
-              ? CupertinoIcons.heart_fill
-              : CupertinoIcons.heart), // Use the Cupertino icon
-        ),
-      ],
+    final Future<SingleItem> item =
+        ref.watch(Providers.singleItemControllerProvider(itemId));
+    final SingleItemController controller =
+        ref.read(Providers.singleItemControllerProvider(itemId).notifier);
+    return FutureOptionBuilder(
+      future: item,
+      loading: () => const CupertinoActivityIndicator(),
+      error: (_) => const Text("Fatal error, please restart the app"),
+      success: (item) => Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          CupertinoButton(
+            onPressed: () {
+              SocialShare.shareOptions(
+                "Hello world",
+                //@TODO: add the correct image path
+              );
+            },
+            child: const Icon(CupertinoIcons.share),
+          ),
+          CupertinoButton(
+            onPressed: () {
+              showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                backgroundColor: Colors.transparent,
+                builder: (context) => EditSingleItemPage(singleItemId: item.id),
+              );
+            },
+            child: const Icon(
+                CupertinoIcons.slider_horizontal_3), // Use the Cupertino icon
+          ),
+          CupertinoButton(
+            onPressed: () {
+              // Handle delete button logic
+            },
+            child: const Icon(CupertinoIcons.delete), // Use the Cupertino icon
+          ),
+          CupertinoButton(
+            onPressed: () {
+              controller.setFavorite();
+            },
+            child: Icon(item.isFavorite
+                ? CupertinoIcons.heart_fill
+                : CupertinoIcons.heart), // Use the Cupertino icon
+          ),
+        ],
+      ),
     );
   }
 }
 
-abstract class SingleItemController extends StateNotifier<SingleItem> {
-  SingleItemController(SingleItem state) : super(state);
-
-  Image getImage();
+abstract class SingleItemController extends StateNotifier<Future<SingleItem>> {
+  SingleItemController(Future<SingleItem> state) : super(state);
 
   void setImage(Image image);
 
-  String getDescription();
-
   void setDescription(String description);
-
-  String getTitle();
 
   void setTitle(String title);
 
-  void addEvent(ItemEvent event);
-
-  List<ItemEvent> getEvents();
+  void addEvent({required Event event, required int parentId});
 
   void removeEvent(ItemEvent event);
-
-  void setCurrentDate(DateTime date);
-
-  DateTime? getCurrentDate();
-
-  bool getFavorite();
 
   void setFavorite();
 

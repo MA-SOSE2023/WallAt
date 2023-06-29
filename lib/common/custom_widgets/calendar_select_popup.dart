@@ -1,7 +1,6 @@
 import 'package:device_calendar/device_calendar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class SelectCalendarPopup extends StatelessWidget {
   const SelectCalendarPopup({
@@ -45,7 +44,7 @@ class SelectCalendarPopup extends StatelessWidget {
             content: Column(
               children: [
                 const Text('Select a calendar to add the event to:'),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 Column(
                   children: usableCalendars.map((calendar) {
                     return Container(

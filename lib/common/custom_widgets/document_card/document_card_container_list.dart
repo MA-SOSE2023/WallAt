@@ -1,11 +1,13 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gruppe4/common/theme/custom_theme_data.dart';
 
-import '../../provider.dart';
 import 'document_card_container.dart';
+
 import '/pages/single_item/model/single_item.dart';
+import '/common/provider.dart';
+import '/common/theme/custom_theme_data.dart';
+import '/common/custom_widgets/all_custom_widgets.dart'
+    show DocumentCardContainer;
 
 class DocumentCardContainerList extends ConsumerWidget {
   const DocumentCardContainerList({
@@ -26,13 +28,15 @@ class DocumentCardContainerList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
-    Widget documentCardContainerListTile(SingleItem item) => Padding(
-          padding: _borderlessCards
-              ? const EdgeInsets.all(0.0)
-              : EdgeInsets.fromLTRB(
-                  20.0, _itemMargin / 2, 20.0, _itemMargin / 2),
-          child: _borderlessCards
+    final CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
+    Widget padding(Widget child) => Padding(
+        padding: _borderlessCards
+            ? const EdgeInsets.all(0.0)
+            : EdgeInsets.fromLTRB(20.0, _itemMargin / 2, 20.0, _itemMargin / 2),
+        child: child);
+
+    Widget documentCardContainerListTile(SingleItem item) => padding(
+          _borderlessCards
               ? Column(
                   children: [
                     DocumentCardContainer.borderless(

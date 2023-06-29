@@ -6,7 +6,8 @@ part 'item_event.freezed.dart';
 @freezed
 class ItemEvent with _$ItemEvent {
   const factory ItemEvent({
+    required int id,
     required Event event,
-    required String parentId,
+    required int parentId,
   }) = _ItemEvent;
 }

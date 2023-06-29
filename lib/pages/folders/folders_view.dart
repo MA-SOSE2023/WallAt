@@ -10,65 +10,80 @@ import '/common/custom_widgets/all_custom_widgets.dart'
     show
         FolderBubbleGrid,
         DocumentCardContainerList,
-        CameraButtonHeroDestination;
-import '/pages/single_item/model/single_item.dart';
+        CameraButtonHeroDestination,
+        FutureSliverFolderBuilder;
 
 class FoldersScreen extends ConsumerWidget {
-  const FoldersScreen({String folderId = '0', super.key})
-      : _folderId = folderId;
+  const FoldersScreen({Folder? folder, int? folderId, super.key})
+      : _folder = folder,
+        _folderId = folderId;
 
-  final String _folderId;
+  final Folder? _folder;
+  final int? _folderId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final Folder rootFolder =
-        ref.watch(Providers.foldersControllerProvider(_folderId));
-
-    final List<Folder> folders = rootFolder.contents
-        .where((element) => element.isFolder)
-        .map((e) => e as Folder)
-        .toList();
-
-    final List<SingleItem> items = rootFolder.contents
-        .where((element) => element.isLeaf)
-        .map((e) => e as SingleItem)
-        .toList();
+    final Future<Folder?> rootFolder = _folderId != null
+        ? ref.watch(Providers.foldersControllerProvider(_folderId!))
+        : _folder == null
+            ? ref.watch(Providers.foldersControllerProvider(
+                ref.read(Providers.dbControllerProvider).rootFolderId!))
+            : Future.value(_folder);
 
     final CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
+
+    List<Widget> folderViewBody(List<FolderItem> contents) => [
+          FolderBubbleGrid(
+              folder: contents
+                  .where((item) => item.isFolder)
+                  .map((item) => item.folder)
+                  .toList()),
+          SliverPadding(
+            padding: const EdgeInsets.only(top: 20.0, bottom: 10.0),
+            sliver: SliverAppBar(
+              automaticallyImplyLeading: false,
+              pinned: false,
+              toolbarHeight: 0.0,
+              backgroundColor: theme.groupingColor,
+              flexibleSpace: FlexibleSpaceBar(
+                titlePadding: const EdgeInsets.only(bottom: 12),
+                title: Divider(
+                  height: 0.75,
+                  thickness: 1,
+                  indent: 24,
+                  endIndent: 24,
+                  color: theme.textColor.withOpacity(0.5),
+                ),
+              ),
+            ),
+          ),
+          DocumentCardContainerList(
+            items: contents
+                .where((item) => item.isLeaf)
+                .map((item) => item.item)
+                .toList(),
+          )
+        ];
 
     return CupertinoPageScaffold(
       backgroundColor: theme.backgroundColor,
       child: Stack(
         children: [
-          CustomScrollView(
-            slivers: [
-              CupertinoSliverNavigationBar(
-                backgroundColor: theme.navBarColor,
-                largeTitle: Text(rootFolder.title),
-              ),
-              FolderBubbleGrid(folder: folders),
-              SliverPadding(
-                padding: const EdgeInsets.only(top: 20.0, bottom: 10.0),
-                sliver: SliverAppBar(
-                  automaticallyImplyLeading: false,
-                  pinned: false,
-                  toolbarHeight: 0.0,
-                  backgroundColor: theme.groupingColor,
-                  flexibleSpace: FlexibleSpaceBar(
-                    titlePadding: const EdgeInsets.only(bottom: 12),
-                    title: Divider(
-                      height: 0.75,
-                      thickness: 1,
-                      indent: 24,
-                      endIndent: 24,
-                      color: theme.textColor.withOpacity(0.5),
-                    ),
-                  ),
+          if (_folder == null)
+            FutureSliverFolderBuilder(
+              future: rootFolder,
+              success: folderViewBody,
+            ),
+          if (_folder != null)
+            CustomScrollView(
+              slivers: [
+                CupertinoSliverNavigationBar(
+                  backgroundColor: theme.navBarColor,
+                  largeTitle: Text(_folder!.title),
                 ),
-              ),
-              DocumentCardContainerList(items: items)
-            ],
-          ),
+                ...folderViewBody(_folder!.contents ?? [])
+              ],
+            ),
           const CameraButtonHeroDestination(),
         ],
       ),
@@ -76,8 +91,8 @@ class FoldersScreen extends ConsumerWidget {
   }
 }
 
-abstract class FoldersController extends StateNotifier<Folder> {
-  FoldersController(Folder state) : super(state);
+abstract class FoldersController extends StateNotifier<Future<Folder?>> {
+  FoldersController(Future<Folder?> state) : super(state);
 
   void delete();
 
@@ -90,8 +105,4 @@ abstract class FoldersController extends StateNotifier<Folder> {
   void removeItem(FolderItem item);
 
   void moveItem(FolderItem item, Folder newParent);
-
-  List<FolderItem> get contents;
-  String get title;
-  String get id;
 }

@@ -1,19 +1,21 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-import '../../../pages/settings/settings_model.dart';
-import '../../../pages/settings/settings_view.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../provider.dart';
-
-import '/common/custom_widgets/all_custom_widgets.dart';
 import 'package:device_calendar/device_calendar.dart';
 import 'package:intl/intl.dart';
-import '/pages/single_item/model/item_event.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'calendar_model.dart';
+
+import '/pages/settings/settings_model.dart';
+import '/pages/settings/settings_view.dart';
+import '/common/custom_widgets/all_custom_widgets.dart'
+    show DatePicker, SelectCalendarPopup;
+import '/common/provider.dart';
 
 class CalendarButton extends StatelessWidget {
   const CalendarButton({required this.id, Key? key}) : super(key: key);
 
-  final String id;
+  final int id;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +23,7 @@ class CalendarButton extends StatelessWidget {
       builder: (BuildContext context, WidgetRef ref, Widget? child) {
         SettingsController controller =
             ref.read(Providers.settingsControllerProvider.notifier);
-        void _showAddEventDialog(
+        void showAddEventDialog(
           BuildContext context,
         ) {
           final settings = ref.watch(Providers.settingsControllerProvider);
@@ -138,8 +140,7 @@ class CalendarButton extends StatelessWidget {
                               .read(
                                   Providers.editSingleItemControllerProvider(id)
                                       .notifier)
-                              .addEvent(
-                                  ItemEvent(event: newEvent, parentId: id));
+                              .addEvent(event: newEvent, parentId: id);
 
                           Navigator.pop(context);
                           // Event added successfully
@@ -156,7 +157,7 @@ class CalendarButton extends StatelessWidget {
         return CupertinoButton(
           child: const Icon(CupertinoIcons.calendar_badge_plus),
           onPressed: () {
-            _showAddEventDialog(context);
+            showAddEventDialog(context);
           },
         );
       },

@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gruppe4/common/services/persistence/db_model.dart';
+import 'package:gruppe4/common/services/persistence/persistence_service.dart';
 
 // Single Item
 import '/pages/single_item/single_item_view.dart';
@@ -18,6 +20,8 @@ import '/pages/favorites/favorites_controller.dart';
 import '/pages/folders/folders_view.dart';
 import '/pages/folders/folders_controller.dart';
 import '/pages/folders/folder_model.dart';
+// Persistence
+import '/common/services/persistence/isar/isar_controller.dart';
 
 // Settings
 import '/pages/settings/settings_view.dart';
@@ -26,7 +30,6 @@ import '/pages/settings/settings_model.dart';
 
 import 'custom_widgets/all_custom_widgets.dart';
 
-import 'custom_widgets/bottom_nav_bar/bottom_nav_bar_controller.dart';
 // Camera
 import '/pages/camera/camera_view.dart';
 import '/pages/camera/camera_controller.dart';
@@ -41,43 +44,41 @@ class Providers {
   /// Provider for [SingleItemPage]
   /// - Provides a [SingleItemController] for a [SingleItem]
   static final AutoDisposeStateNotifierProviderFamily<SingleItemController,
-          SingleItem, String> singleItemControllerProvider =
-      StateNotifierProvider.autoDispose.family((ref, id) {
-    return SingleItemControllerMock(id: id);
-  });
+          Future<SingleItem>, int> singleItemControllerProvider =
+      StateNotifierProvider.autoDispose.family((ref, id) =>
+          SingleItemControllerImpl(
+              id: id, service: ref.read(persistenceServiceProvider)));
 
   /// Provider for [EditSingleItemPage]
   /// - Provides a [EditSingleItemController] for a [SingleItem]
   static final AutoDisposeStateNotifierProviderFamily<EditSingleItemController,
-          SingleItem, String> editSingleItemControllerProvider =
-      StateNotifierProvider.autoDispose.family((ref, id) {
-    return EditSingleItemControllerMock(
-        id: id, model: ref.read(singleItemControllerProvider(id)));
-  });
+          Future<SingleItem>, int> editSingleItemControllerProvider =
+      StateNotifierProvider.autoDispose.family(
+    (ref, id) => EditSingleItemControllerImpl(
+        model: ref.read(singleItemControllerProvider(id))),
+  );
 
   /// Provider for [HomeScreen]
   /// - Provides a [HomeController] for a [HomeModel]
-  static final StateNotifierProvider<HomeController, HomeModel>
+  static final StateNotifierProvider<HomeController, Future<HomeModel>>
       homeControllerProvider =
-      StateNotifierProvider<HomeController, HomeModel>((ref) {
-    return HomeControllerMock();
-  });
+      StateNotifierProvider<HomeController, Future<HomeModel>>(
+          (ref) => HomeControllerImpl(ref.read(persistenceServiceProvider)));
 
   /// Provider for [FavoritesScreen]
   /// - Provides a [FavoritesController] for a List of [SingleItem]s
-  static final FutureProvider<List<SingleItem>> favoritesControllerProvider =
-      FutureProvider<List<SingleItem>>((ref) async {
-    return Future.delayed(
-        const Duration(seconds: 1), () => FavoritesControllerMock().favorites);
-  });
+  static final StateNotifierProvider<FavoritesController,
+          Future<List<SingleItem>>> favoritesControllerProvider =
+      StateNotifierProvider<FavoritesController, Future<List<SingleItem>>>(
+          (ref) =>
+              FavoritesControllerImpl(ref.watch(persistenceServiceProvider)));
 
   /// Provider for [FoldersScreen]
   /// - Provides a [FoldersController] for a [Folder]
-  static final AutoDisposeStateNotifierProviderFamily<FoldersController, Folder,
-          String> foldersControllerProvider =
-      StateNotifierProvider.autoDispose.family((ref, id) {
-    return FoldersControllerMock(id);
-  });
+  static final AutoDisposeStateNotifierProviderFamily<FoldersController,
+          Future<Folder?>, int> foldersControllerProvider =
+      StateNotifierProvider.autoDispose.family((ref, id) =>
+          FoldersControllerImpl(id, ref.read(persistenceServiceProvider)));
 
   /// Provider for [CustomBottomNavBar]
   /// - Provides a [CustomBottomNavBarController] for a [CustomBottomNavBarModel]
@@ -97,17 +98,28 @@ class Providers {
     return GlobalKey<NavigatorState>();
   });
 
-  static final enableHeroAnimationProvider = StateProvider<bool>((ref) {
-    return true;
-  });
+  static final enableHeroAnimationProvider = StateProvider<bool>((ref) => true);
 
   /// Provider for [CalendarButton]
   /// - Provides a [CalendarButtonController] for a [CalendarModel]
   static final StateNotifierProvider<CalendarButtonController, CalendarModel>
       calendarButtonControllerProvider =
-      StateNotifierProvider<CalendarButtonController, CalendarModel>((ref) {
-    return CalendarButtonControllerImpl();
+      StateNotifierProvider<CalendarButtonController, CalendarModel>(
+          (ref) => CalendarButtonControllerImpl());
+
+  static final StateNotifierProvider<DbController, DbModel>
+      dbControllerProvider =
+      StateNotifierProvider<DbController, DbModel>((ref) {
+    DbController dbController = IsarController();
+    dbController.openDb();
+    return dbController;
   });
+
+  static final Provider<PersistenceService> persistenceServiceProvider =
+      Provider<PersistenceService>(
+    (ref) =>
+        PersistenceService(controller: ref.read(dbControllerProvider.notifier)),
+  );
 
   /// Provider for [SettingsScreen]
   /// - Provides a [SettingsController] for a [SettingsModel]
@@ -122,9 +134,7 @@ class Providers {
   static final StateNotifierProvider<ThemeController, CustomThemeData>
       themeControllerProvider =
       StateNotifierProvider<ThemeController, CustomThemeData>((ref) {
-    final settingsController = ref.watch(settingsControllerProvider);
-    final index = settingsController.selectedThemeIndex;
-    print(index);
-    return ThemeControllerImpl(index: index);
+    return ThemeControllerImpl(
+        index: ref.watch(settingsControllerProvider).selectedThemeIndex);
   });
 }

@@ -7,23 +7,20 @@ import 'home_model.dart';
 import '/common/provider.dart';
 import '/common/theme/custom_theme_data.dart';
 import '/common/custom_widgets/all_custom_widgets.dart'
-    show EventCard, DocumentCardContainerList, cameraButtonHeroTag;
-import '/pages/single_item/model/single_item.dart';
-import '/pages/single_item/model/item_event.dart';
+    show
+        EventCard,
+        DocumentCardContainerList,
+        FutureSliverListBuilder,
+        cameraButtonHeroTag;
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
-    HomeModel model = ref.watch(Providers.homeControllerProvider);
-    final List<EventCard> eventCards = model.events
-        .map((event) => EventCard(
-              event: event,
-            ))
-        .toList();
-    final List<SingleItem> documentCards = model.recentItems;
+    Future<HomeModel> model = ref.watch(Providers.homeControllerProvider);
+    final CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
+
     return Scaffold(
       backgroundColor: theme.backgroundColor,
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
@@ -43,60 +40,79 @@ class HomeScreen extends ConsumerWidget {
       ),
       body: CustomScrollView(
         slivers: [
-  	      CupertinoSliverNavigationBar(
-              backgroundColor: theme.navBarColor,
-              largeTitle: Text('Home'),
-            ),
-          SliverToBoxAdapter(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                  maxHeight: MediaQuery.of(context).size.height / 4),
-              child: Padding(
-                padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
-                child: FlutterCarousel(
-                  items: eventCards,
-                  options: CarouselOptions(
-                    initialPage: 0,
-                    enableInfiniteScroll: true,
-                    enlargeCenterPage: true,
-                    showIndicator: true,
-                    slideIndicator: CircularWaveSlideIndicator(
+          CupertinoSliverNavigationBar(
+            backgroundColor: theme.navBarColor,
+            largeTitle: const Text('Home'),
+          ),
+          FutureSliverListBuilder(
+            future: model.then((m) => m.events),
+            success: (events) => SliverToBoxAdapter(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                    maxHeight: MediaQuery.of(context).size.height / 4),
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+                  child: FlutterCarousel(
+                    items:
+                        events.map((event) => EventCard(event: event)).toList(),
+                    options: CarouselOptions(
+                      initialPage: 0,
+                      enableInfiniteScroll: true,
+                      enlargeCenterPage: true,
+                      showIndicator: true,
+                      slideIndicator: CircularWaveSlideIndicator(
                         currentIndicatorColor: theme.accentColor,
-                        indicatorBackgroundColor: theme.groupingColor),
-                    viewportFraction: 0.85,
-                    height: double.infinity,
+                        indicatorBackgroundColor: theme.groupingColor,
+                      ),
+                      viewportFraction: 0.85,
+                      height: double.infinity,
+                    ),
                   ),
                 ),
               ),
             ),
+            emptyMessage:
+                'Events that are nearly due will be displayed here.\nTry adding some from the edit page of an item.',
+            errorMessage: 'An error occurred while loading events.\n'
+                'Try restarting the app.',
+            onNullMessage: 'Something went wrong while loading events.\n'
+                'Try restarting the app.',
+            errorMessagesPadding: 40.0,
           ),
           SliverAppBar(
             pinned: true,
             toolbarHeight: 30.0,
             backgroundColor: theme.groupingColor,
-            flexibleSpace: const FlexibleSpaceBar(
-              titlePadding: EdgeInsets.only(left: 20.0, bottom: 10.0),
+            flexibleSpace: FlexibleSpaceBar(
+              titlePadding: const EdgeInsets.only(left: 20.0, bottom: 10.0),
               title: Text(
                 'Frequently Used',
                 style: TextStyle(
                   fontSize: 18,
+                  color: theme.textColor,
                 ),
               ),
             ),
           ),
-          DocumentCardContainerList(
-            items: documentCards,
-            showFavoriteButton: false,
-          ),
+          FutureSliverListBuilder(
+            future: model.then((m) => m.recentItems),
+            success: (recentItems) => DocumentCardContainerList(
+              items: recentItems,
+              showFavoriteButton: false,
+            ),
+            emptyMessage:
+                'No items yet.\nTry adding some by clicking the camera button.',
+            errorMessage:
+                'Something went wrong while loading your recent items.\nTry restarting the app.',
+            onNullMessage:
+                'Something went wrong while loading your recent items.\nTry restarting the app.',
+          )
         ],
       ),
     );
   }
 }
 
-abstract class HomeController extends StateNotifier<HomeModel> {
-  HomeController(HomeModel state) : super(state);
-
-  List<ItemEvent> get events => state.events;
-  List<SingleItem> get recentItems => state.recentItems;
+abstract class HomeController extends StateNotifier<Future<HomeModel>> {
+  HomeController(Future<HomeModel> state) : super(state);
 }

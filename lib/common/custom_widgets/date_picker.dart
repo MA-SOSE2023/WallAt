@@ -6,7 +6,8 @@ class DatePicker extends ConsumerWidget {
   const DatePicker(
       {required this.description,
       required this.dateTime,
-      required this.onDateTimeChanged});
+      required this.onDateTimeChanged,
+      super.key});
 
   final String description;
   final DateTime dateTime;

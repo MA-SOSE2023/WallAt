@@ -4,6 +4,7 @@ import 'package:gruppe4/pages/settings/settings_view.dart';
 import 'package:gruppe4/pages/camera/camera_model.dart';
 import 'package:gruppe4/pages/camera/camera_view.dart';
 
+import '/pages/single_item/model/single_item.dart';
 import '/pages/single_item/single_item_view.dart';
 import '/common/custom_widgets/all_custom_widgets.dart'
     show CustomBottomNavBarScreen;
@@ -21,7 +22,7 @@ class GlobalLocation extends BeamLocation<BeamState> {
         '/camera/view',
         '/settings',
         '/profiles',
-        '/item/:id',
+        '/item',
       ];
 
   @override
@@ -48,15 +49,7 @@ class GlobalLocation extends BeamLocation<BeamState> {
             title: 'Settings',
             type: BeamPageType.cupertino,
             popToNamed: prevNavBarLocation,
-            child: SettingsPage(), // TODO: Settings Screen
-          ),
-        if (state.routeInformation.location == '/camera')
-          BeamPage(
-            key: const ValueKey('camera'),
-            title: 'Camera',
-            type: BeamPageType.cupertino,
-            popToNamed: prevNavBarLocation,
-            child: Placeholder(), // TODO: Camera Screen
+            child: const SettingsPage(),
           ),
         if (state.routeInformation.location == '/profiles')
           BeamPage(
@@ -78,7 +71,7 @@ class GlobalLocation extends BeamLocation<BeamState> {
             title: 'Item',
             type: BeamPageType.cupertino,
             popToNamed: prevNavBarLocation,
-            child: SingleItemPage(id: state.pathParameters['id']!),
+            child: SingleItemPage(item: data as SingleItem),
           ),
       ];
 }

@@ -1,16 +1,22 @@
 import 'package:flutter/cupertino.dart';
 
 class ErrorMessage extends StatelessWidget {
-  const ErrorMessage({String message = 'Something went wrong', super.key})
-      : _message = message;
+  const ErrorMessage(
+      {String message = 'Something went wrong', double? minPadding, super.key})
+      : _message = message,
+        _minPadding = minPadding;
 
   final String _message;
+  final double? _minPadding;
 
   @override
   Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.center,
-      child: Center(
+    return SliverSafeArea(
+      minimum: EdgeInsets.only(
+        top: _minPadding ?? MediaQuery.of(context).size.height / 4,
+        bottom: _minPadding ?? 0.0,
+      ),
+      sliver: SliverToBoxAdapter(
         child: Text(
           _message,
           textAlign: TextAlign.center,

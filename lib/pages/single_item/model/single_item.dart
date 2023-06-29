@@ -19,19 +19,41 @@ class SingleItem extends FolderItem with _$SingleItem {
 
   @Implements<FolderItem>()
   factory SingleItem({
-    required String id,
+    required int id,
     required String title,
     required String description,
     required ImageProvider image,
     required bool isFavorite,
     required List<ItemEvent> events,
-    DateTime? currentSelectedDate,
   }) = _SingleItem;
 
   factory SingleItem.prototype() => SingleItem(
-        id: 'prototype',
+        id: 1,
         title: 'prototype',
         description: 'prototype',
+        image: const AssetImage('assets/dev_debug_images/example_document.png'),
+        isFavorite: false,
+        events: [],
+      );
+
+  factory SingleItem.placeholder({
+    required int id,
+    ImageProvider? image,
+  }) =>
+      SingleItem(
+        id: id,
+        title: '',
+        description: '',
+        image: image ??
+            const AssetImage('assets/dev_debug_images/example_document.png'),
+        isFavorite: false,
+        events: [],
+      );
+
+  factory SingleItem.error() => SingleItem(
+        id: -1,
+        title: 'Item could not be loaded',
+        description: 'Something went wrong',
         image: const AssetImage('assets/dev_debug_images/hampter1.jpg'),
         isFavorite: false,
         events: [],
@@ -41,7 +63,7 @@ class SingleItem extends FolderItem with _$SingleItem {
   get thumbnail => Image(image: image);
 
   @override
-  get heroTag => singleItemHeroTag(id);
+  get heroTag => singleItemHeroTag('$id');
 
   @override
   List<FolderItem> get contents => throw UnsupportedError('Not a folder');

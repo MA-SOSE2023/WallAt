@@ -2,10 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../theme/custom_theme_data.dart';
-import '/common/provider.dart';
 import '/pages/single_item/single_item_view.dart';
 import '/pages/single_item/model/single_item.dart';
+import '/common/provider.dart';
+import '/common/theme/custom_theme_data.dart';
 
 class DocumentCard extends ConsumerWidget {
   const DocumentCard({
@@ -17,9 +17,6 @@ class DocumentCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final SingleItem item =
-        ref.watch(Providers.singleItemControllerProvider(_item.id));
-    final bool heroEnabled = ref.watch(Providers.enableHeroAnimationProvider);
     final SingleItemController controller =
         ref.watch(Providers.singleItemControllerProvider(_item.id).notifier);
     final CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
@@ -34,9 +31,9 @@ class DocumentCard extends ConsumerWidget {
           title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(item.title,
+              Text(_item.title,
                   style: TextStyle(color: theme.accentColor, fontSize: 20)),
-              Text(item.description,
+              Text(_item.description,
                   maxLines: 2,
                   style: CupertinoTheme.of(context)
                       .textTheme
@@ -44,25 +41,24 @@ class DocumentCard extends ConsumerWidget {
                       .copyWith(fontSize: 12)),
             ],
           ),
-          leading: Container(
-            width: 80,
-            height: 80,
-            clipBehavior: Clip.hardEdge,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            margin: const EdgeInsets.all(5),
-            child: FittedBox(
-              fit: BoxFit.cover,
-              child: HeroMode(
-                enabled: heroEnabled,
-                child: Hero(
-                  tag: singleItemHeroTag(item.id),
-                  child: Image(
-                    image: controller.getImage().image,
-                  ),
+          leading: Hero(
+            tag: singleItemHeroTag('${_item.id}'),
+            child: Container(
+              width: 80,
+              height: 80,
+              clipBehavior: Clip.hardEdge,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: theme.groupingColor,
+                  width: 3,
+                ),
+                borderRadius: BorderRadius.circular(10),
+                image: DecorationImage(
+                  image: _item.image,
+                  fit: BoxFit.cover,
                 ),
               ),
+              margin: const EdgeInsets.all(5),
             ),
           ),
           leadingSize: 80,

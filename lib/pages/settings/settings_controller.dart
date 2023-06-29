@@ -1,11 +1,9 @@
-import 'dart:ui';
-
 import 'package:device_calendar/device_calendar.dart';
 
 import 'settings_model.dart';
 import 'settings_view.dart';
 
-var settings = SettingsModel(
+var settings = const SettingsModel(
   calendar: null,
   selectedThemeIndex: 1,
 );
