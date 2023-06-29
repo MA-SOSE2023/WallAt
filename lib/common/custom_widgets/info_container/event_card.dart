@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '/common/provider.dart';
 import '/pages/single_item/model/item_event.dart';
+import '/common/theme/custom_theme_data.dart';
 
 class EventCard extends ConsumerWidget {
   const EventCard({required this.event, super.key});
@@ -15,14 +16,15 @@ class EventCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final TZDateTime date = event.event.start!;
     final String description = event.event.description ?? '';
+
+    final CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
     return Column(
       children: [
         CupertinoListSection.insetGrouped(
           margin: EdgeInsets.zero,
           decoration: BoxDecoration(
             border: Border.all(
-              color: CupertinoDynamicColor.resolve(
-                  CupertinoColors.systemGrey5, context),
+              color: theme.groupingColor,
               width: 2,
             ),
             borderRadius: BorderRadius.circular(10),
@@ -35,19 +37,16 @@ class EventCard extends ConsumerWidget {
               leading: Container(
                 decoration: BoxDecoration(
                   border: Border.all(
-                    color: CupertinoDynamicColor.resolve(
-                        CupertinoColors.secondaryLabel, context),
+                    color: theme.groupingColor,
                     width: 2,
                   ),
                   borderRadius: BorderRadius.circular(12),
-                  color: CupertinoDynamicColor.resolve(
-                      CupertinoColors.systemGrey6, context),
+                  color: theme.backgroundColor,
                 ),
                 padding: const EdgeInsets.all(5),
                 child: Icon(
                   CupertinoIcons.alarm,
-                  color: CupertinoDynamicColor.resolve(
-                      CupertinoColors.systemTeal, context),
+                  color: theme.accentColor,
                   size: 24,
                 ),
               ),
@@ -71,8 +70,7 @@ class EventCard extends ConsumerWidget {
                   style: CupertinoTheme.of(context).textTheme.pickerTextStyle,
                 ),
               ),
-              backgroundColor: CupertinoDynamicColor.resolve(
-                  CupertinoColors.systemGrey5, context),
+              backgroundColor: theme.groupingColor,
             ),
           ],
         ),

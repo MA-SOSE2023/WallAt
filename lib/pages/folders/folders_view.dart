@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gruppe4/common/theme/custom_theme_data.dart';
 
 import 'folder_model.dart';
 import 'folder_item.dart';
@@ -29,6 +30,8 @@ class FoldersScreen extends ConsumerWidget {
                 ref.read(Providers.dbControllerProvider).rootFolderId!))
             : Future.value(_folder);
 
+    final CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
+
     List<Widget> folderViewBody(List<FolderItem> contents) => [
           FolderBubbleGrid(
               folder: contents
@@ -41,8 +44,7 @@ class FoldersScreen extends ConsumerWidget {
               automaticallyImplyLeading: false,
               pinned: false,
               toolbarHeight: 0.0,
-              backgroundColor: CupertinoDynamicColor.resolve(
-                  CupertinoColors.systemGrey6, context),
+              backgroundColor: theme.groupingColor,
               flexibleSpace: FlexibleSpaceBar(
                 titlePadding: const EdgeInsets.only(bottom: 12),
                 title: Divider(
@@ -50,8 +52,7 @@ class FoldersScreen extends ConsumerWidget {
                   thickness: 1,
                   indent: 24,
                   endIndent: 24,
-                  color: CupertinoDynamicColor.resolve(
-                      CupertinoColors.systemGrey, context),
+                  color: theme.textColor.withOpacity(0.5),
                 ),
               ),
             ),
@@ -65,6 +66,7 @@ class FoldersScreen extends ConsumerWidget {
         ];
 
     return CupertinoPageScaffold(
+      backgroundColor: theme.backgroundColor,
       child: Stack(
         children: [
           if (_folder == null)
@@ -76,6 +78,7 @@ class FoldersScreen extends ConsumerWidget {
             CustomScrollView(
               slivers: [
                 CupertinoSliverNavigationBar(
+                  backgroundColor: theme.navBarColor,
                   largeTitle: Text(_folder!.title),
                 ),
                 ...folderViewBody(_folder!.contents ?? [])

@@ -1,11 +1,11 @@
 import 'package:device_calendar/device_calendar.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:gruppe4/common/services/persistence/persistence_service.dart';
 
 import 'model/single_item.dart';
 import 'model/item_event.dart';
 import '/pages/single_item/single_item_view.dart';
 import '/common/utils/future_controller_mixin.dart';
+import '/common/services/persistence/persistence_service.dart';
 import '/router/router.dart';
 
 var mockSingleItem = SingleItem(
@@ -15,7 +15,6 @@ var mockSingleItem = SingleItem(
   image: const AssetImage('assets/dev_debug_images/hampter1.jpg'),
   isFavorite: false,
   events: [],
-  currentSelectedDate: null,
 );
 
 class SingleItemControllerImpl extends SingleItemController
@@ -68,11 +67,6 @@ class SingleItemControllerImpl extends SingleItemController
 
     futureState((state) => state.copyWith(
         events: List<ItemEvent>.from(state.events)..remove(event)));
-  }
-
-  @override
-  void setCurrentDate(DateTime date) {
-    futureState((state) => state.copyWith(currentSelectedDate: date));
   }
 
   @override

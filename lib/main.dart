@@ -2,9 +2,10 @@ import 'package:beamer/beamer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gruppe4/common/provider.dart';
 import 'package:timezone/data/latest.dart' as tz;
+import 'common/provider.dart';
 
+import '/common/theme/custom_theme_data.dart';
 import 'router/router.dart';
 
 class App extends ConsumerWidget {
@@ -14,9 +15,11 @@ class App extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // Call to this provider should open the database
     ref.read(Providers.persistenceServiceProvider);
+    CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
     return CupertinoApp.router(
-      theme: const CupertinoThemeData(
-        brightness: Brightness.dark,
+      theme: CupertinoThemeData(
+        brightness: theme.brightness,
+        primaryColor: theme.accentColor,
       ),
       localizationsDelegates: const [
         DefaultCupertinoLocalizations.delegate,

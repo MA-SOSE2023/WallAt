@@ -1,13 +1,15 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'document_card_container.dart';
+
+import '/pages/single_item/model/single_item.dart';
+import '/common/provider.dart';
+import '/common/theme/custom_theme_data.dart';
 import '/common/custom_widgets/all_custom_widgets.dart'
     show DocumentCardContainer;
 
-import '/pages/single_item/model/single_item.dart';
-
-class DocumentCardContainerList extends StatelessWidget {
+class DocumentCardContainerList extends ConsumerWidget {
   const DocumentCardContainerList({
     required List<SingleItem> items,
     bool borderlessCards = true,
@@ -25,7 +27,8 @@ class DocumentCardContainerList extends StatelessWidget {
   final bool _showFavoriteButton;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
     Widget padding(Widget child) => Padding(
         padding: _borderlessCards
             ? const EdgeInsets.all(0.0)
@@ -37,12 +40,11 @@ class DocumentCardContainerList extends StatelessWidget {
               ? Column(
                   children: [
                     DocumentCardContainer.borderless(
-                      itemId: item.id,
+                      item: item,
                       showFavoriteButton: _showFavoriteButton,
                     ),
                     Divider(
-                      color: CupertinoDynamicColor.resolve(
-                          CupertinoColors.inactiveGray, context),
+                      color: theme.groupingColor,
                       thickness: 1,
                       indent: 64,
                       height: _itemMargin,
@@ -50,7 +52,7 @@ class DocumentCardContainerList extends StatelessWidget {
                   ],
                 )
               : DocumentCardContainer(
-                  itemId: item.id,
+                  item: item,
                   showFavoriteButton: _showFavoriteButton,
                 ),
         );

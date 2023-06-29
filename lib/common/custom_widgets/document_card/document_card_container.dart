@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gruppe4/common/theme/custom_theme_data.dart';
 
 import '/pages/single_item/model/single_item.dart';
 import '/common/provider.dart';
@@ -8,29 +9,29 @@ import '/common/custom_widgets/all_custom_widgets.dart'
 
 class DocumentCardContainer extends ConsumerWidget {
   const DocumentCardContainer({
-    required int itemId,
+    required SingleItem item,
     BoxDecoration? containerDeco,
     Color? backgroundColor,
     bool? showFavoriteButton,
     super.key,
-  })  : _itemId = itemId,
+  })  : _item = item,
         _containerDeco = containerDeco,
         _backgroundColor = backgroundColor,
         _showFavoriteButton = showFavoriteButton ?? true;
 
   DocumentCardContainer.borderless({
-    required int itemId,
+    required SingleItem item,
     Color? backgroundColor,
     bool? showFavoriteButton,
     super.key,
-  })  : _itemId = itemId,
+  })  : _item = item,
         _containerDeco = BoxDecoration(
           color: backgroundColor,
         ),
         _backgroundColor = backgroundColor,
         _showFavoriteButton = showFavoriteButton ?? true;
 
-  final int _itemId;
+  final SingleItem _item;
   final BoxDecoration? _containerDeco;
   final Color? _backgroundColor;
   final bool _showFavoriteButton;
@@ -38,8 +39,8 @@ class DocumentCardContainer extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final Future<SingleItem> itemFuture =
-        ref.watch(Providers.singleItemControllerProvider(_itemId));
-
+        ref.watch(Providers.singleItemControllerProvider(_item.id));
+    final CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
     Widget documentCardRow(SingleItem item) => Row(
           children: [
             Expanded(child: DocumentCard(item: item)),
@@ -59,18 +60,17 @@ class DocumentCardContainer extends ConsumerWidget {
     return DecoratedBox(
       decoration: _containerDeco ??
           BoxDecoration(
-            color: _backgroundColor ??
-                CupertinoTheme.of(context).scaffoldBackgroundColor,
+            color: _backgroundColor ?? theme.backgroundColor,
             borderRadius: BorderRadius.circular(25),
             border: Border.all(
-              color:
-                  CupertinoDynamicColor.resolve(CupertinoColors.label, context),
+              color: theme.groupingColor,
               width: 1,
             ),
           ),
       child: FutureOptionBuilder(
         future: itemFuture,
-        loading: () => DocumentCard(item: SingleItem.placeholder(id: _itemId)),
+        loading: () => DocumentCard(
+            item: SingleItem.placeholder(id: _item.id, image: _item.image)),
         error: (_) => DocumentCard(item: SingleItem.error()),
         success: (item) => documentCardRow(item),
       ),

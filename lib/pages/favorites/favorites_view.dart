@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '/common/provider.dart';
+import '/common/theme/custom_theme_data.dart';
 import '/common/custom_widgets/all_custom_widgets.dart'
     show
         DocumentCardContainerList,
@@ -37,17 +38,21 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
         .watch(Providers.favoritesControllerProvider.notifier)
         .filterFavorites(searchString);
 
+    final CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
+
     final emptyListMessage = searchString.isEmpty
         ? 'No favorites yet.\nTry adding some by tapping the heart icon.'
         : 'No items found for "$searchString".';
 
     return CupertinoPageScaffold(
+      backgroundColor: theme.backgroundColor,
       child: Stack(
         children: [
           CustomScrollView(
             slivers: [
-              const CupertinoSliverNavigationBar(
-                largeTitle: Text('Favorites'),
+              CupertinoSliverNavigationBar(
+                backgroundColor: theme.navBarColor,
+                largeTitle: const Text('Favorites'),
               ),
               SliverAppBar(
                 pinned: true,

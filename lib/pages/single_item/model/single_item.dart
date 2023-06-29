@@ -25,26 +25,27 @@ class SingleItem extends FolderItem with _$SingleItem {
     required ImageProvider image,
     required bool isFavorite,
     required List<ItemEvent> events,
-    DateTime? currentSelectedDate,
   }) = _SingleItem;
 
   factory SingleItem.prototype() => SingleItem(
         id: 1,
         title: 'prototype',
         description: 'prototype',
-        image: const AssetImage('assets/dev_debug_images/hampter1.jpg'),
+        image: const AssetImage('assets/dev_debug_images/example_document.png'),
         isFavorite: false,
         events: [],
       );
 
   factory SingleItem.placeholder({
     required int id,
+    ImageProvider? image,
   }) =>
       SingleItem(
         id: id,
         title: '',
         description: '',
-        image: const AssetImage('assets/dev_debug_images/hampter1.jpg'),
+        image: image ??
+            const AssetImage('assets/dev_debug_images/example_document.png'),
         isFavorite: false,
         events: [],
       );

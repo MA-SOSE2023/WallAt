@@ -1,10 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gruppe4/pages/single_item/single_item_view.dart';
 
 import 'model/single_item.dart';
+import '/pages/single_item/single_item_view.dart';
 import '/common/provider.dart';
+import '/common/theme/custom_theme_data.dart';
 import '/common/custom_widgets/all_custom_widgets.dart'
     show EventsContainer, FutureOptionBuilder;
 
@@ -33,6 +34,8 @@ class EditSingleItemPage extends ConsumerWidget {
     final EditSingleItemController controller =
         ref.read(Providers.editSingleItemControllerProvider(_id).notifier);
 
+    final CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
+
     return makeDismissable(
       context: context,
       child: DraggableScrollableSheet(
@@ -42,7 +45,7 @@ class EditSingleItemPage extends ConsumerWidget {
         snap: true,
         builder: (context, scrollController) => Container(
           decoration: BoxDecoration(
-            color: CupertinoTheme.of(context).scaffoldBackgroundColor,
+            color: theme.backgroundColor,
             borderRadius: const BorderRadius.vertical(
               top: Radius.circular(20),
             ),
@@ -67,52 +70,29 @@ class EditSingleItemPage extends ConsumerWidget {
                       padding: const EdgeInsets.all(20.0),
                       child: Container(
                         decoration: BoxDecoration(
-                          color: CupertinoDynamicColor.resolve(
-                              CupertinoColors.systemGrey5, context),
+                          color: theme.groupingColor,
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child: CupertinoFormSection.insetGrouped(
+                        child: Container(
+                            padding: EdgeInsets.all(
+                              MediaQuery.of(context).size.height / (24),
+                            ),
+                            margin: const EdgeInsets.all(8.0),
+                            height: MediaQuery.of(context).size.height / 6,
                             decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: CupertinoDynamicColor.resolve(
-                                    CupertinoColors.systemBackground, context)),
-                            margin: const EdgeInsets.all(10),
-                            backgroundColor: Colors.transparent,
-                            children: [
-                              CupertinoTextField(
-                                  controller: TextEditingController.fromValue(
-                                      TextEditingValue(
-                                          text: item.title,
-                                          selection: TextSelection.collapsed(
-                                              offset: item.title.length))),
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: Colors.transparent,
-                                    ),
-                                  ),
-                                  placeholder: 'Title',
-                                  prefix: const Icon(CupertinoIcons.pencil),
-                                  onChanged: (value) => {
-                                        controller.setTitle(value),
-                                      }),
-                              CupertinoTextField(
-                                controller: TextEditingController.fromValue(
-                                    TextEditingValue(
-                                        text: item.description,
-                                        selection: TextSelection.collapsed(
-                                            offset: item.description.length))),
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Colors.transparent,
-                                  ),
-                                ),
-                                placeholder: "Description",
-                                prefix: const Icon(CupertinoIcons.pencil),
-                                onChanged: (value) => {
-                                  controller.setDescription(value),
-                                },
+                              borderRadius: BorderRadius.circular(10),
+                              image: DecorationImage(
+                                image: item.image,
+                                fit: BoxFit.fitWidth,
                               ),
-                            ]),
+                            ),
+                            child: FloatingActionButton(
+                              backgroundColor:
+                                  theme.accentColor.withOpacity(0.5),
+                              onPressed: () => {},
+                              child:
+                                  const Icon(CupertinoIcons.pencil, size: 35),
+                            )),
                       ),
                     ),
                     GestureDetector(
@@ -123,8 +103,7 @@ class EditSingleItemPage extends ConsumerWidget {
                         padding: const EdgeInsets.only(left: 20.0, right: 20),
                         child: Container(
                           decoration: BoxDecoration(
-                            color: CupertinoDynamicColor.resolve(
-                                CupertinoColors.systemGrey5, context),
+                            color: theme.groupingColor,
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Container(
@@ -142,15 +121,18 @@ class EditSingleItemPage extends ConsumerWidget {
                       ),
                     ),
                     Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: Container(
-                            decoration: BoxDecoration(
-                              color: CupertinoDynamicColor.resolve(
-                                  CupertinoColors.systemGrey5, context),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child:
-                                EventsContainer(id: item.id, editable: true))),
+                      padding: const EdgeInsets.all(20.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: theme.groupingColor,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: EventsContainer(
+                          id: item.id,
+                          editable: true,
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -158,7 +140,7 @@ class EditSingleItemPage extends ConsumerWidget {
                 height: 52,
                 child: Container(
                   decoration: BoxDecoration(
-                    color: CupertinoTheme.of(context).barBackgroundColor,
+                    color: theme.navBarColor,
                     borderRadius: const BorderRadius.vertical(
                       top: Radius.circular(20),
                     ),
@@ -175,10 +157,8 @@ class EditSingleItemPage extends ConsumerWidget {
                         },
                       ),
                       Text('Edit Item',
-                          style: TextStyle(
-                              color: CupertinoDynamicColor.resolve(
-                                  CupertinoColors.label, context),
-                              fontSize: 18)),
+                          style:
+                              TextStyle(color: theme.textColor, fontSize: 18)),
                       CupertinoButton(
                           child: const Text('Save',
                               style: TextStyle(fontSize: 14)),

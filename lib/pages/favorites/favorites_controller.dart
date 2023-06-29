@@ -1,5 +1,6 @@
-import '../single_item/model/single_item.dart';
 import 'favorites_view.dart';
+
+import '/pages/single_item/model/single_item.dart';
 import '/common/services/persistence/persistence_service.dart';
 
 class FavoritesControllerImpl extends FavoritesController {

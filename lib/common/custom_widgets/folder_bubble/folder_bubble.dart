@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../theme/custom_theme_data.dart';
 import '/pages/folders/folder_item.dart';
 import '/pages/folders/folder_model.dart';
 import '/common/provider.dart';
@@ -21,9 +22,8 @@ class FolderBubble extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.watch(Providers.enableHeroAnimationProvider);
-
     final List<FolderItem> contents = _folder.contents ?? [];
+    final CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
 
     Widget gridItem(
       FolderItem item, {
@@ -32,21 +32,31 @@ class FolderBubble extends ConsumerWidget {
     }) =>
         GestureDetector(
           onTap: onTapped ?? FolderItem.navigateTo(item, context, ref),
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15.0),
-              color: CupertinoDynamicColor.resolve(
-                  CupertinoColors.systemGrey6, context),
-            ),
-            child: Padding(
-              padding: EdgeInsets.all(padding),
-              child: Hero(tag: item.heroTag, 
-                child: FittedBox(
-                  fit: BoxFit.cover,
-                  clipBehavior: Clip.hardEdge,
-                  child: item.thumbnail,
-                ),
+          child: Hero(
+            tag: item.heroTag,
+            child: Container(
+              clipBehavior: Clip.hardEdge,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10.0),
+                color: CupertinoDynamicColor.resolve(
+                    CupertinoColors.systemGrey6, context),
+                image: item.isLeaf
+                    ? DecorationImage(
+                        fit: BoxFit.cover,
+                        image: item.item.image,
+                      )
+                    : null,
               ),
+              child: item.isFolder
+                  ? Padding(
+                      padding: EdgeInsets.all(padding),
+                      child: const FittedBox(
+                        fit: BoxFit.cover,
+                        clipBehavior: Clip.hardEdge,
+                        child: Icon(CupertinoIcons.folder),
+                      ),
+                    )
+                  : null,
             ),
           ),
         );
@@ -90,8 +100,7 @@ class FolderBubble extends ConsumerWidget {
             margin: const EdgeInsets.all(10.0),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(15.0),
-              color: CupertinoDynamicColor.resolve(
-                  CupertinoColors.systemGrey6, context),
+              color: theme.groupingColor,
             ),
             child: itemGrid(
               [

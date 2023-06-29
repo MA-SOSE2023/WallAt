@@ -2,9 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '/common/provider.dart';
 import '/pages/single_item/single_item_view.dart';
 import '/pages/single_item/model/single_item.dart';
+import '/common/provider.dart';
+import '/common/theme/custom_theme_data.dart';
 
 class DocumentCard extends ConsumerWidget {
   const DocumentCard({
@@ -16,9 +17,9 @@ class DocumentCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final bool heroEnabled = ref.watch(Providers.enableHeroAnimationProvider);
     final SingleItemController controller =
         ref.watch(Providers.singleItemControllerProvider(_item.id).notifier);
+    final CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
     return CupertinoListSection.insetGrouped(
       margin: const EdgeInsets.all(0),
       backgroundColor: Colors.transparent,
@@ -31,10 +32,7 @@ class DocumentCard extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(_item.title,
-                  style: CupertinoTheme.of(context)
-                      .textTheme
-                      .navActionTextStyle
-                      .copyWith(fontSize: 20)),
+                  style: TextStyle(color: theme.accentColor, fontSize: 20)),
               Text(_item.description,
                   maxLines: 2,
                   style: CupertinoTheme.of(context)
@@ -44,22 +42,25 @@ class DocumentCard extends ConsumerWidget {
             ],
           ),
           leading: Hero(
-                  tag: singleItemHeroTag('${_item.id}'),
-                  child: Container(
-            width: 80,
-            height: 80,
-            clipBehavior: Clip.hardEdge,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              image: DecorationImage(
-                image: _item.image,
-                fit: BoxFit.cover,
-              ),	
-            ),
-            margin: const EdgeInsets.all(5),
-              
-            ),
+            tag: singleItemHeroTag('${_item.id}'),
+            child: Container(
+              width: 80,
+              height: 80,
+              clipBehavior: Clip.hardEdge,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: theme.groupingColor,
+                  width: 3,
                 ),
+                borderRadius: BorderRadius.circular(10),
+                image: DecorationImage(
+                  image: _item.image,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              margin: const EdgeInsets.all(5),
+            ),
+          ),
           leadingSize: 80,
           onTap: () {
             ref.read(Providers.enableHeroAnimationProvider.notifier).state =

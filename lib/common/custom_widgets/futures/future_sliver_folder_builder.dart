@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gruppe4/common/theme/custom_theme_data.dart';
 
 import '/pages/folders/folder_item.dart';
 import '/pages/folders/folder_model.dart';
+import '/common/provider.dart';
 import '/common/custom_widgets/all_custom_widgets.dart'
     show
         ErrorMessage,
@@ -9,7 +12,7 @@ import '/common/custom_widgets/all_custom_widgets.dart'
         FutureOptionBuilder,
         SliverActivityIndicator;
 
-class FutureSliverFolderBuilder extends StatelessWidget {
+class FutureSliverFolderBuilder extends ConsumerWidget {
   const FutureSliverFolderBuilder({
     required Future<Folder?> future,
     required List<Widget> Function(List<FolderItem>) success,
@@ -28,7 +31,8 @@ class FutureSliverFolderBuilder extends StatelessWidget {
       'An error occurred while loading the folder.\nTry restarting the app.';
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
     return FutureOptionBuilder(
       future: _future,
       success: (folder) {
@@ -36,6 +40,7 @@ class FutureSliverFolderBuilder extends StatelessWidget {
         return CustomScrollView(
           slivers: [
             CupertinoSliverNavigationBar(
+              backgroundColor: theme.navBarColor,
               largeTitle: Text(folder?.title ?? 'Folders'),
             ),
             if (folder == null || contents == null)

@@ -72,14 +72,10 @@ class EditSingleItemControllerImpl extends EditSingleItemController
   }
 
   @override
-  void setCurrentDate(DateTime date) =>
-      futureState((state) => state.copyWith(currentSelectedDate: date));
-
-  @override
   void setFavorite() => futureState(
       (state) => state.copyWith(isFavorite: state.isFavorite ? false : true));
 
-  Future<void> addEventsToCalendar() async {
+  void addEventsToCalendar() async {
     DeviceCalendarPlugin deviceCalendarPlugin = DeviceCalendarPlugin();
     for (ItemEvent event in newEvents) {
       var eventId = await deviceCalendarPlugin.createOrUpdateEvent(event.event);

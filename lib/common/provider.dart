@@ -23,7 +23,10 @@ import '/pages/folders/folder_model.dart';
 // Persistence
 import '/common/services/persistence/isar/isar_controller.dart';
 
-// CalendarButton
+// Settings
+import '/pages/settings/settings_view.dart';
+import '/pages/settings/settings_controller.dart';
+import '/pages/settings/settings_model.dart';
 
 import 'custom_widgets/all_custom_widgets.dart';
 
@@ -31,6 +34,10 @@ import 'custom_widgets/all_custom_widgets.dart';
 import '/pages/camera/camera_view.dart';
 import '/pages/camera/camera_controller.dart';
 import '/pages/camera/camera_model.dart';
+
+// theme
+import 'theme/theme_controller.dart';
+import 'theme/custom_theme_data.dart';
 
 /// Flutter Riverpod providers
 class Providers {
@@ -94,7 +101,7 @@ class Providers {
   static final enableHeroAnimationProvider = StateProvider<bool>((ref) => true);
 
   /// Provider for [CalendarButton]
-  /// - Provides a [CalendarButtonController] for a [CalendarButton]
+  /// - Provides a [CalendarButtonController] for a [CalendarModel]
   static final StateNotifierProvider<CalendarButtonController, CalendarModel>
       calendarButtonControllerProvider =
       StateNotifierProvider<CalendarButtonController, CalendarModel>(
@@ -113,4 +120,21 @@ class Providers {
     (ref) =>
         PersistenceService(controller: ref.read(dbControllerProvider.notifier)),
   );
+
+  /// Provider for [SettingsScreen]
+  /// - Provides a [SettingsController] for a [SettingsModel]
+  static final StateNotifierProvider<SettingsController, SettingsModel>
+      settingsControllerProvider =
+      StateNotifierProvider<SettingsController, SettingsModel>((ref) {
+    return SettingsControllerImpl();
+  });
+
+  /// Provider for [ThemeModel]
+  /// - Provides a [ThemeController] for a [ThemeModel]
+  static final StateNotifierProvider<ThemeController, CustomThemeData>
+      themeControllerProvider =
+      StateNotifierProvider<ThemeController, CustomThemeData>((ref) {
+    return ThemeControllerImpl(
+        index: ref.watch(settingsControllerProvider).selectedThemeIndex);
+  });
 }

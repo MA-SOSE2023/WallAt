@@ -2,6 +2,7 @@ import 'package:device_calendar/device_calendar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gruppe4/common/theme/custom_theme_data.dart';
 import 'package:social_share/social_share.dart';
 
 import 'full_screen_image_view.dart';
@@ -16,7 +17,6 @@ String singleItemHeroTag(String id) {
   return "single_item_image$id";
 }
 
-// TODO: maybe use CustomScrollView with SliverAppbar instead of CupertinoPageScaffold
 class SingleItemPage extends ConsumerWidget {
   const SingleItemPage({required SingleItem item, Key? key})
       : _item = item,
@@ -28,6 +28,8 @@ class SingleItemPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final Future<SingleItem> item =
         ref.watch(Providers.singleItemControllerProvider(_item.id));
+    final CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
+
     return FutureOptionBuilder(
       future: item,
       initialData: _item,
@@ -37,60 +39,99 @@ class SingleItemPage extends ConsumerWidget {
           alignment: Alignment.center,
           child: Text("Fatal error, please restart the app")),
       success: (item) => CupertinoPageScaffold(
-        navigationBar: CupertinoNavigationBar(
-          middle: Text(item.title),
-        ),
+        backgroundColor: theme.backgroundColor,
         child: SafeArea(
           child: Stack(
             children: [
-              ListView(
-                children: [
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height /
-                        2, // Set the height to half the screen height
-                    child: Hero(
-                      tag: singleItemHeroTag('${item.id}'),
-                      child: PictureContainer(
-                        image: item.image,
+              CustomScrollView(
+                slivers: [
+                  SliverAppBar(
+                    titleSpacing: 10,
+                    pinned: true,
+                    leading: const CupertinoNavigationBarBackButton(),
+                    backgroundColor: theme.navBarColor,
+                    expandedHeight: MediaQuery.of(context).size.height / 1.5,
+                    flexibleSpace: FlexibleSpaceBar(
+                      title: Row(children: [
+                        Expanded(
+                          child: Container(
+                            padding: const EdgeInsets.only(right: 20),
+                            decoration: BoxDecoration(
+                              color: theme.navBarColor.withOpacity(0.7),
+                            ),
+                            child: Text(
+                              textAlign: TextAlign.right,
+                              item.title,
+                            ),
+                          ),
+                        ),
+                      ]),
+                      background: GestureDetector(
+                        child: Hero(
+                          tag: singleItemHeroTag(item.id.toString()),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: item.image,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        ),
                         onTap: () {
                           Navigator.push(
                             context,
                             CupertinoPageRoute(
+                              fullscreenDialog: true,
                               builder: (context) => FullScreenImagePage(
                                 itemId: item.id,
                                 imageProvider: item.image,
                               ),
-                              fullscreenDialog: true,
                             ),
                           );
                         },
                       ),
                     ),
                   ),
-                  SizedBox(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 20, right: 20),
-                      child: InfoContainer(
-                        text: item.description,
+                  SliverPadding(
+                    padding:
+                        const EdgeInsets.only(left: 20, right: 20, top: 20),
+                    sliver: SliverToBoxAdapter(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: theme.groupingColor,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: InfoContainer(
+                          text: item.description,
+                        ),
                       ),
                     ),
                   ),
-                  Padding(
-                      padding: const EdgeInsets.all(20.0),
+                  SliverPadding(
+                    padding: const EdgeInsets.all(20.0),
+                    sliver: SliverToBoxAdapter(
                       child: Container(
                           decoration: BoxDecoration(
-                            color: CupertinoDynamicColor.resolve(
-                                CupertinoColors.systemGrey5, context),
+                            color: theme.groupingColor,
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          child: EventsContainer(id: item.id, editable: false))),
+                          child: EventsContainer(id: item.id, editable: false)),
+                    ),
+                  ),
+                  // Empty box at the bottom to make sure you can scroll the
+                  // events above the bottom bar
+                  const SliverPadding(
+                      padding: EdgeInsets.only(bottom: 60),
+                      sliver: SliverToBoxAdapter(
+                        child: SizedBox(height: 10),
+                      )),
                 ],
               ),
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(
-                  color: CupertinoDynamicColor.resolve(
-                      CupertinoColors.systemGrey5, context),
+                  color: theme.navBarColor,
                   padding: const EdgeInsets.only(left: 20, right: 20),
                   child: ActionButtons(itemId: item.id),
                 ),
@@ -106,10 +147,12 @@ class SingleItemPage extends ConsumerWidget {
 class PictureContainer extends StatelessWidget {
   const PictureContainer({
     Key? key,
+    required this.color,
     required this.image,
     required this.onTap,
   }) : super(key: key);
 
+  final Color color;
   final ImageProvider image;
   final VoidCallback onTap;
 
@@ -121,7 +164,7 @@ class PictureContainer extends StatelessWidget {
         onTap: onTap,
         child: Container(
           decoration: BoxDecoration(
-            border: Border.all(color: CupertinoTheme.of(context).primaryColor),
+            border: Border.all(color: color, width: 3),
             borderRadius: BorderRadius.circular(10),
             image: DecorationImage(
               image: image,
@@ -143,11 +186,6 @@ class InfoContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: MediaQuery.of(context).size.height / 12,
-      decoration: BoxDecoration(
-        color:
-            CupertinoDynamicColor.resolve(CupertinoColors.systemGrey5, context),
-        borderRadius: BorderRadius.circular(10),
-      ),
       padding: const EdgeInsets.all(10.0),
       child: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
@@ -238,8 +276,6 @@ abstract class SingleItemController extends StateNotifier<Future<SingleItem>> {
   void addEvent({required Event event, required int parentId});
 
   void removeEvent(ItemEvent event);
-
-  void setCurrentDate(DateTime date);
 
   void setFavorite();
 
