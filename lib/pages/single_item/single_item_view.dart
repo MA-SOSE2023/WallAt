@@ -61,6 +61,9 @@ class SingleItemPage extends ConsumerWidget {
                             ),
                             child: Text(
                               textAlign: TextAlign.right,
+                              style: TextStyle(
+                                color: theme.textColor,
+                              ),
                               item.title,
                             ),
                           ),

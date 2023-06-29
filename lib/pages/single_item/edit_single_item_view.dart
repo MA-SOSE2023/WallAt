@@ -73,6 +73,56 @@ class EditSingleItemPage extends ConsumerWidget {
                           color: theme.groupingColor,
                           borderRadius: BorderRadius.circular(10),
                         ),
+                        child: CupertinoFormSection.insetGrouped(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: theme.backgroundColor),
+                            margin: const EdgeInsets.all(10),
+                            backgroundColor: Colors.transparent,
+                            children: [
+                              CupertinoTextField(
+                                  controller: TextEditingController.fromValue(
+                                      TextEditingValue(
+                                          text: item.title,
+                                          selection: TextSelection.collapsed(
+                                              offset: item.title.length))),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Colors.transparent,
+                                    ),
+                                  ),
+                                  placeholder: 'Title',
+                                  prefix: const Icon(CupertinoIcons.pencil),
+                                  onChanged: (value) => {
+                                        controller.setTitle(value),
+                                      }),
+                              CupertinoTextField(
+                                controller: TextEditingController.fromValue(
+                                    TextEditingValue(
+                                        text: item.description,
+                                        selection: TextSelection.collapsed(
+                                            offset: item.description.length))),
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Colors.transparent,
+                                  ),
+                                ),
+                                placeholder: "Description",
+                                prefix: const Icon(CupertinoIcons.pencil),
+                                onChanged: (value) => {
+                                  controller.setDescription(value),
+                                },
+                              ),
+                            ]),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: theme.groupingColor,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                         child: Container(
                             padding: EdgeInsets.all(
                               MediaQuery.of(context).size.height / (24),
@@ -93,31 +143,6 @@ class EditSingleItemPage extends ConsumerWidget {
                               child:
                                   const Icon(CupertinoIcons.pencil, size: 35),
                             )),
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        // @TODO: add functionality
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 20.0, right: 20),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: theme.groupingColor,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Container(
-                            margin: const EdgeInsets.all(8.0),
-                            height: MediaQuery.of(context).size.height / 6,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              image: DecorationImage(
-                                image: item.image,
-                                fit: BoxFit.fitWidth,
-                              ),
-                            ),
-                          ),
-                        ),
                       ),
                     ),
                     Padding(
