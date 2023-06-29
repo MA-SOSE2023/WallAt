@@ -42,7 +42,6 @@ SingleItem _mockSingleItem(int id) => SingleItem(
       image: const AssetImage('assets/dev_debug_images/hampter1.jpg'),
       isFavorite: true,
       events: _mockEvents.map((e) => e.copyWith(parentId: '$id')).toList(),
-      currentSelectedDate: null,
     );
 
 var _id = 0;
