@@ -91,7 +91,7 @@ class EditSingleItemControllerImpl extends EditSingleItemController
   Future<void> removeEventsFromCalendar() async {
     DeviceCalendarPlugin deviceCalendarPlugin = DeviceCalendarPlugin();
     for (ItemEvent event in deletedEvents) {
-      await deviceCalendarPlugin.deleteEvent(
+      deviceCalendarPlugin.deleteEvent(
           event.event.calendarId!, event.event.eventId!);
       _service.deleteEvent(event);
     }

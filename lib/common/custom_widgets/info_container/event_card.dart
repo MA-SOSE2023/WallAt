@@ -71,7 +71,7 @@ class EventCard extends ConsumerWidget {
                       description,
                       maxLines: 2,
                       style: TextStyle(
-                        color: theme.textColor,
+                        color: Colors.white,
                         fontSize: 20,
                       ),
                     ),
