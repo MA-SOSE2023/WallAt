@@ -58,13 +58,11 @@ class SingleItemPage extends ConsumerWidget {
                         Expanded(
                           child: Container(
                             padding: const EdgeInsets.only(right: 20),
-                            decoration: BoxDecoration(
-                              color: theme.navBarColor.withOpacity(0.7),
-                            ),
+                            
                             child: Text(
-                              textAlign: TextAlign.right,
-                              style: TextStyle(
-                                color: theme.textColor,
+                              textAlign: TextAlign.left,
+                              style: const TextStyle(
+                                color: Colors.white,
                               ),
                               item.title,
                             ),
@@ -72,16 +70,33 @@ class SingleItemPage extends ConsumerWidget {
                         ),
                       ]),
                       background: GestureDetector(
-                        child: Hero(
-                          tag: singleItemHeroTag(item.id.toString()),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: item.image,
-                                fit: BoxFit.cover,
+                        child: Stack(
+                          children: [
+                            
+                            
+                             
+                          Hero(
+                            tag: singleItemHeroTag(item.id.toString()),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                
+                                image: DecorationImage(
+                                  image: item.image,
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             ),
                           ),
+                          Container(decoration: const BoxDecoration(gradient: LinearGradient(colors: 
+                                  [
+                                    Color.fromARGB(255, 50, 50, 50),
+                                    Color.fromARGB(0, 0, 0, 0),
+                                  ],
+                                  begin: Alignment.bottomCenter,
+                                  end: Alignment.topCenter,
+                                  stops: [0.0, 0.3],
+                                ),),),
+                          ],
                         ),
                         onTap: () {
                           Navigator.push(

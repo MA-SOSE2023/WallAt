@@ -42,7 +42,7 @@ class FoldersScreen extends ConsumerWidget {
               primary: false,
               toolbarHeight: 30.0,
               backgroundColor: theme.groupingColor,
-              title: const Text('Subfolders', style: TextStyle(fontSize: 16)),
+              title: Text('Subfolders', style: TextStyle(fontSize: 16, color: theme.textColor)),
               centerTitle: true,
               actions: [
                 CupertinoButton(
