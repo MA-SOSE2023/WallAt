@@ -6,6 +6,7 @@ import 'settings_view.dart';
 var settings = const SettingsModel(
   calendar: null,
   selectedThemeIndex: 1,
+  selectedProfileIndex: 0,
 );
 
 class SettingsControllerImpl extends SettingsController {
@@ -19,5 +20,10 @@ class SettingsControllerImpl extends SettingsController {
   @override
   void changeThemeIndex(int index) {
     state = state.copyWith(selectedThemeIndex: index);
+  }
+
+  @override
+  void setProfileIndex(int index) {
+    state = state.copyWith(selectedProfileIndex: index);
   }
 }

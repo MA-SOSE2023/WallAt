@@ -8,5 +8,6 @@ class SettingsModel with _$SettingsModel {
   const factory SettingsModel({
     Calendar? calendar,
     required int selectedThemeIndex,
+    required int selectedProfileIndex,
   }) = _SettingsModel;
 }

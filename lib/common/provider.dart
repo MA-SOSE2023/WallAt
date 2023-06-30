@@ -39,6 +39,11 @@ import '/pages/camera/camera_model.dart';
 import 'theme/theme_controller.dart';
 import 'theme/custom_theme_data.dart';
 
+//Profiles
+import '/pages/profiles/profiles_view.dart';
+import '/pages/profiles/profiles_controller.dart';
+import '/pages/profiles/profile_model.dart';
+
 /// Flutter Riverpod providers
 class Providers {
   /// Provider for [SingleItemPage]
@@ -136,5 +141,13 @@ class Providers {
       StateNotifierProvider<ThemeController, CustomThemeData>((ref) {
     return ThemeControllerImpl(
         index: ref.watch(settingsControllerProvider).selectedThemeIndex);
+  });
+
+  /// Provider for [SettingsScreen]
+  /// - Provides a [SettingsController] for a [SettingsModel]
+  static final StateNotifierProvider<ProfilesController, List<ProfileModel>>
+      profilesControllerProvider =
+      StateNotifierProvider<ProfilesController, List<ProfileModel>>((ref) {
+    return ProfilesControllerImpl();
   });
 }

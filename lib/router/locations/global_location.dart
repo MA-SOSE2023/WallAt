@@ -1,5 +1,6 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:gruppe4/pages/profiles/profiles_view.dart';
 import 'package:gruppe4/pages/settings/settings_view.dart';
 import 'package:gruppe4/pages/camera/camera_model.dart';
 import 'package:gruppe4/pages/camera/camera_view.dart';
@@ -59,7 +60,7 @@ class GlobalLocation extends BeamLocation<BeamState> {
             title: 'Profiles',
             type: BeamPageType.cupertino,
             popToNamed: prevNavBarLocation,
-            child: const Placeholder(), // TODO: Profiles Screen
+            child: const ProfilesPage(), // TODO: Profiles Screen
           ),
         if (state.routeInformation.location == '/camera/view')
           BeamPage(

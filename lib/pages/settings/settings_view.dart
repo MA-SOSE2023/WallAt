@@ -2,11 +2,14 @@ import 'package:device_calendar/device_calendar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import 'settings_model.dart';
+import 'package:gruppe4/common/theme/theme_controller.dart';
+import 'package:gruppe4/pages/profiles/profile_model.dart';
+import '../../router/router.dart';
 import '/common/custom_widgets/all_custom_widgets.dart';
 import '/common/theme/custom_theme_data.dart';
 import '/common/provider.dart';
+import 'settings_model.dart';
+import '/pages/profiles/profiles_view.dart';
 
 class SettingsPage extends ConsumerWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -16,6 +19,10 @@ class SettingsPage extends ConsumerWidget {
     SettingsModel settings = ref.watch(Providers.settingsControllerProvider);
     SettingsController controller =
         ref.read(Providers.settingsControllerProvider.notifier);
+    List<ProfileModel> profiles =
+        ref.watch(Providers.profilesControllerProvider);
+    ProfilesController profilesController =
+        ref.read(Providers.profilesControllerProvider.notifier);
 
     CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
 
@@ -124,6 +131,28 @@ class SettingsPage extends ConsumerWidget {
                     onPressed: () => {setSystemCalendar(context)},
                   ),
                 ),
+                CupertinoListTile(
+                  title: Text(
+                      "Selected User Profile: ${profiles[settings.selectedProfileIndex].name}"),
+                  trailing: Padding(
+                    padding:
+                        const EdgeInsets.only(right: 10, top: 10, bottom: 10),
+                    child: Container(
+                      height: 40,
+                      width: 40,
+                      decoration: BoxDecoration(
+                          border:
+                              Border.all(color: theme.accentColor, width: 2),
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                              image: profilesController
+                                  .getProfilePicture(
+                                      profiles[settings.selectedProfileIndex])!
+                                  .image,
+                              fit: BoxFit.fill)),
+                    ),
+                  ),
+                )
               ],
             ),
           ),
@@ -139,4 +168,6 @@ abstract class SettingsController extends StateNotifier<SettingsModel> {
   void setUsedCalendar(Calendar? calendar);
 
   void changeThemeIndex(int index);
+
+  void setProfileIndex(int index);
 }
