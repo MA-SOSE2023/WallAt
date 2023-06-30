@@ -76,7 +76,12 @@ int _isarItemEventEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
-  bytesCount += 3 + object.calendarId.length * 3;
+  {
+    final value = object.calendarId;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   bytesCount += 3 + object.description.length * 3;
   {
     final value = object.eventId;
@@ -109,7 +114,7 @@ IsarItemEvent _isarItemEventDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = IsarItemEvent();
-  object.calendarId = reader.readString(offsets[0]);
+  object.calendarId = reader.readStringOrNull(offsets[0]);
   object.description = reader.readString(offsets[1]);
   object.end = reader.readDateTime(offsets[2]);
   object.eventId = reader.readStringOrNull(offsets[3]);
@@ -127,7 +132,7 @@ P _isarItemEventDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readString(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 1:
       return (reader.readString(offset)) as P;
     case 2:
@@ -242,8 +247,26 @@ extension IsarItemEventQueryWhere
 extension IsarItemEventQueryFilter
     on QueryBuilder<IsarItemEvent, IsarItemEvent, QFilterCondition> {
   QueryBuilder<IsarItemEvent, IsarItemEvent, QAfterFilterCondition>
+      calendarIdIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'calendarId',
+      ));
+    });
+  }
+
+  QueryBuilder<IsarItemEvent, IsarItemEvent, QAfterFilterCondition>
+      calendarIdIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'calendarId',
+      ));
+    });
+  }
+
+  QueryBuilder<IsarItemEvent, IsarItemEvent, QAfterFilterCondition>
       calendarIdEqualTo(
-    String value, {
+    String? value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -257,7 +280,7 @@ extension IsarItemEventQueryFilter
 
   QueryBuilder<IsarItemEvent, IsarItemEvent, QAfterFilterCondition>
       calendarIdGreaterThan(
-    String value, {
+    String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -273,7 +296,7 @@ extension IsarItemEventQueryFilter
 
   QueryBuilder<IsarItemEvent, IsarItemEvent, QAfterFilterCondition>
       calendarIdLessThan(
-    String value, {
+    String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -289,8 +312,8 @@ extension IsarItemEventQueryFilter
 
   QueryBuilder<IsarItemEvent, IsarItemEvent, QAfterFilterCondition>
       calendarIdBetween(
-    String lower,
-    String upper, {
+    String? lower,
+    String? upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
@@ -1205,7 +1228,7 @@ extension IsarItemEventQueryProperty
     });
   }
 
-  QueryBuilder<IsarItemEvent, String, QQueryOperations> calendarIdProperty() {
+  QueryBuilder<IsarItemEvent, String?, QQueryOperations> calendarIdProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'calendarId');
     });

@@ -10,7 +10,7 @@ part 'isar_item_event.g.dart';
 class IsarItemEvent {
   Id id = Isar.autoIncrement;
 
-  late String calendarId;
+  String? calendarId;
 
   String? eventId;
 

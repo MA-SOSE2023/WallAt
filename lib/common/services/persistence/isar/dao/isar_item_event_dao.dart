@@ -20,6 +20,7 @@ class IsarItemEventDao extends ItemEventDao {
               parentItem!;
               Id createdEvent = isar.isarItemEvents.putSync(IsarItemEvent()
                 ..title = event.title ?? ''
+                ..calendarId = event.calendarId
                 ..description = event.description ?? ''
                 ..start = event.start!
                 ..end = event.end!
