@@ -2,18 +2,23 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:device_calendar/device_calendar.dart';
-import 'package:gruppe4/common/utils/future_controller_mixin.dart';
 
 import 'edit_single_item_view.dart';
 import 'model/single_item.dart';
 import 'model/item_event.dart';
 import '/common/provider.dart';
+import '/common/services/persistence/persistence_service.dart';
+import '/common/utils/future_controller_mixin.dart';
 import '/pages/single_item/single_item_view.dart';
 
 class EditSingleItemControllerImpl extends EditSingleItemController
     with FutureControllerMixin<SingleItem> {
-  EditSingleItemControllerImpl({required Future<SingleItem> model})
-      : super(model);
+  EditSingleItemControllerImpl(
+      {required Future<SingleItem> model, required PersistenceService service})
+      : _service = service,
+        super(model);
+
+  final PersistenceService _service;
 
   List<ItemEvent> newEvents = [];
   List<ItemEvent> deletedEvents = [];
@@ -85,9 +90,10 @@ class EditSingleItemControllerImpl extends EditSingleItemController
 
   Future<void> removeEventsFromCalendar() async {
     DeviceCalendarPlugin deviceCalendarPlugin = DeviceCalendarPlugin();
-    for (ItemEvent event in newEvents) {
+    for (ItemEvent event in deletedEvents) {
       await deviceCalendarPlugin.deleteEvent(
           event.event.calendarId!, event.event.eventId!);
+      _service.deleteEvent(event);
     }
   }
 
@@ -95,4 +101,13 @@ class EditSingleItemControllerImpl extends EditSingleItemController
   void navigateToThisItem() {
     throw UnimplementedError('Cannot navigate to items used in edit view');
   }
+
+  @override
+  Future<bool> deleteItem(WidgetRef ref) => state.then((item) async {
+        item.events.forEach(removeEvent);
+        removeEventsFromCalendar();
+        return ref
+            .read(Providers.singleItemControllerProvider(item.id).notifier)
+            .deleteItem(ref);
+      });
 }

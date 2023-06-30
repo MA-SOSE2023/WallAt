@@ -1,8 +1,8 @@
+import 'package:beamer/beamer.dart';
 import 'package:device_calendar/device_calendar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gruppe4/common/theme/custom_theme_data.dart';
 import 'package:social_share/social_share.dart';
 
 import 'full_screen_image_view.dart';
@@ -10,6 +10,7 @@ import 'edit_single_item_view.dart';
 import 'model/single_item.dart';
 import 'model/item_event.dart';
 import '/common/provider.dart';
+import '/common/theme/custom_theme_data.dart';
 import '/common/custom_widgets/all_custom_widgets.dart'
     show EventsContainer, FutureOptionBuilder;
 
@@ -48,6 +49,7 @@ class SingleItemPage extends ConsumerWidget {
                   SliverAppBar(
                     titleSpacing: 10,
                     pinned: true,
+                    stretch: true,
                     leading: const CupertinoNavigationBarBackButton(),
                     backgroundColor: theme.navBarColor,
                     expandedHeight: MediaQuery.of(context).size.height / 1.5,
@@ -249,7 +251,8 @@ class ActionButtons extends ConsumerWidget {
           ),
           CupertinoButton(
             onPressed: () {
-              // Handle delete button logic
+              controller.deleteItem(ref);
+              context.beamBack();
             },
             child: const Icon(CupertinoIcons.delete), // Use the Cupertino icon
           ),
@@ -279,6 +282,8 @@ abstract class SingleItemController extends StateNotifier<Future<SingleItem>> {
   void addEvent({required Event event, required int parentId});
 
   void removeEvent(ItemEvent event);
+
+  Future<bool> deleteItem(WidgetRef ref);
 
   void setFavorite();
 

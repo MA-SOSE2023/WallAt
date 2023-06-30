@@ -29,8 +29,8 @@ class HomeScreen extends ConsumerWidget {
         child: FloatingActionButton(
           backgroundColor: theme.accentColor,
           onPressed: () => ref
-              .read(Providers.takePictureControllerProvider.notifier)
-              .takePicture(),
+              .read(Providers.takePictureControllerProvider(null).notifier)
+              .takePicture(ref),
           heroTag: cameraButtonHeroTag,
           child: const Icon(
             CupertinoIcons.camera,

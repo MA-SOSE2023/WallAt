@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:gruppe4/pages/settings/settings_view.dart';
 import 'package:gruppe4/pages/camera/camera_model.dart';
 import 'package:gruppe4/pages/camera/camera_view.dart';
+import 'package:gruppe4/pages/single_item/move_to_folder_view.dart';
 
 import '/pages/single_item/model/single_item.dart';
 import '/pages/single_item/single_item_view.dart';
@@ -23,6 +24,7 @@ class GlobalLocation extends BeamLocation<BeamState> {
         '/settings',
         '/profiles',
         '/item',
+        '/item/move',
       ];
 
   @override
@@ -30,7 +32,7 @@ class GlobalLocation extends BeamLocation<BeamState> {
     if (routeInformation.location != '/settings' &&
         routeInformation.location != '/camera' &&
         routeInformation.location != '/profiles' &&
-        !(routeInformation.location ?? '').startsWith('/item')) {
+        !(routeInformation.location?.startsWith('/item') ?? false)) {
       prevNavBarLocation = routeInformation.location;
     }
     super.updateState(routeInformation);
@@ -64,8 +66,16 @@ class GlobalLocation extends BeamLocation<BeamState> {
               key: const ValueKey('camera_view'),
               title: 'Camera View',
               type: BeamPageType.cupertino,
-              child: SaveItemScreen(model: data as TakePictureModel)),
-        if ((state.routeInformation.location ?? '').startsWith('/item'))
+              child: SaveItemScreen(item: data as Future<SingleItem?>)),
+        if (state.routeInformation.location == '/item/move')
+          BeamPage(
+            key: const ValueKey('item_move'),
+            title: 'Move Item',
+            type: BeamPageType.cupertino,
+            popToNamed: prevNavBarLocation,
+            child: MoveToFolderScreen(item: data as SingleItem),
+          ),
+        if (state.routeInformation.location == '/item')
           BeamPage(
             key: const ValueKey('item'),
             title: 'Item',

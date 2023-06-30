@@ -15,13 +15,13 @@ import '/common/custom_widgets/all_custom_widgets.dart'
 class FutureSliverFolderBuilder extends ConsumerWidget {
   const FutureSliverFolderBuilder({
     required Future<Folder?> future,
-    required List<Widget> Function(List<FolderItem>) success,
+    required List<Widget> Function(List<FolderItem>, Folder) success,
     super.key,
   })  : _future = future,
         _onSuccessBuilder = success;
 
   final Future<Folder?> _future;
-  final List<Widget> Function(List<FolderItem>) _onSuccessBuilder;
+  final List<Widget> Function(List<FolderItem>, Folder) _onSuccessBuilder;
 
   final String _onNullMessage =
       'No matching folder was found.\nTry restarting the app.';
@@ -52,7 +52,7 @@ class FutureSliverFolderBuilder extends ConsumerWidget {
                 message: _emptyListMessage,
               )
             else
-              ..._onSuccessBuilder(folder.contents!),
+              ..._onSuccessBuilder(folder.contents!, folder),
           ],
         );
       },

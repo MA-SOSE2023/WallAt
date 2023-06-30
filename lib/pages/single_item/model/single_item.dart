@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:gruppe4/pages/single_item/single_item_view.dart';
 
 import 'item_event.dart';
 import '/pages/folders/folder_item.dart';
+import '/pages/single_item/single_item_view.dart';
 
 part 'single_item.freezed.dart';
 

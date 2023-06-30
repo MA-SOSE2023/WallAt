@@ -55,7 +55,8 @@ class Providers {
           Future<SingleItem>, int> editSingleItemControllerProvider =
       StateNotifierProvider.autoDispose.family(
     (ref, id) => EditSingleItemControllerImpl(
-        model: ref.read(singleItemControllerProvider(id))),
+        model: ref.read(singleItemControllerProvider(id)),
+        service: ref.read(persistenceServiceProvider)),
   );
 
   /// Provider for [HomeScreen]
@@ -76,9 +77,11 @@ class Providers {
   /// Provider for [FoldersScreen]
   /// - Provides a [FoldersController] for a [Folder]
   static final AutoDisposeStateNotifierProviderFamily<FoldersController,
-          Future<Folder?>, int> foldersControllerProvider =
+          Future<Folder?>, int?> foldersControllerProvider =
       StateNotifierProvider.autoDispose.family((ref, id) =>
-          FoldersControllerImpl(id, ref.read(persistenceServiceProvider)));
+          FoldersControllerImpl(
+              id ?? ref.read(dbControllerProvider).rootFolderId ?? 1,
+              ref.read(persistenceServiceProvider)));
 
   /// Provider for [CustomBottomNavBar]
   /// - Provides a [CustomBottomNavBarController] for a [CustomBottomNavBarModel]
@@ -89,14 +92,11 @@ class Providers {
 
   /// Provider for [TakePictureController]
   /// - Provides a [TakePictureController] for a [TakePictureModel]
-  static final StateNotifierProvider<TakePictureController, TakePictureModel>
-      takePictureControllerProvider =
-      StateNotifierProvider<TakePictureController, TakePictureModel>(
-          (ref) => TakePictureControllerImpl());
-  static final navigatorKeyProvider =
-      Provider<GlobalKey<NavigatorState>>((ref) {
-    return GlobalKey<NavigatorState>();
-  });
+  static final AutoDisposeStateNotifierProviderFamily<TakePictureController,
+          TakePictureModel, TakePictureModel?> takePictureControllerProvider =
+      StateNotifierProvider.autoDispose.family((ref, state) =>
+          TakePictureControllerImpl(
+              state, ref.read(persistenceServiceProvider)));
 
   static final enableHeroAnimationProvider = StateProvider<bool>((ref) => true);
 

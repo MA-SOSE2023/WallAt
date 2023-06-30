@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
+import 'package:gruppe4/pages/folders/folder_model.dart';
 import 'package:isar/isar.dart';
 
 import '/pages/single_item/model/single_item.dart';
@@ -17,41 +18,42 @@ class IsarSingleItemDao extends SingleItemDao {
 
   @override
   Future<SingleItem> create(
-          {required String title,
-          required String imagePath,
-          required String description,
-          required bool isFavorite,
-          required int parentFolderId}) =>
-      _isar(
-        (isar) => _isarReadParentFolder(parentFolderId)
-            .then((isarParentFolder) => isar.writeTxnSync(
-                  () => isar.isarSingleItems.putSync(
-                    IsarSingleItem()
-                      ..title = title
-                      ..imagePath = imagePath
-                      ..description = description
-                      ..isFavorite = isFavorite
-                      ..parentFolder.value = isarParentFolder,
-                  ),
-                ))
-            .then(
-              (createdItemId) => SingleItem(
-                id: createdItemId,
-                title: title,
-                image: FileImage(File(imagePath)),
-                description: description,
-                isFavorite: isFavorite,
-                events: [],
-              ),
+      {required String title,
+      required String imagePath,
+      required String description,
+      required bool isFavorite,
+      required int parentFolderId}) {
+    return _isar(
+      (isar) => _isarReadParentFolder(parentFolderId)
+          .then((isarParentFolder) => isar.writeTxnSync(
+                () => isar.isarSingleItems.putSync(
+                  IsarSingleItem()
+                    ..title = title
+                    ..imagePath = imagePath
+                    ..description = description
+                    ..isFavorite = isFavorite
+                    ..parentFolder.value = isarParentFolder,
+                ),
+              ))
+          .then(
+            (createdItemId) => SingleItem(
+              id: createdItemId,
+              title: title,
+              image: FileImage(File(imagePath)),
+              description: description,
+              isFavorite: isFavorite,
+              events: [],
             ),
-      );
+          ),
+    );
+  }
 
   Future<IsarFolder?> _isarReadParentFolder(int id) =>
       _isar((isar) => isar.isarFolders.get(id));
 
   @override
-  Future<bool> delete(Id id) =>
-      _isar((isar) => isar.isarSingleItems.delete(id));
+  Future<bool> delete(Id id) => _db.then(
+      (isar) => isar.writeTxnSync(() => isar.isarSingleItems.deleteSync(id)));
 
   @override
   Future<SingleItem?> read(Id id) => _isar((isar) => isar.isarSingleItems
@@ -139,4 +141,13 @@ class IsarSingleItemDao extends SingleItemDao {
           },
         ),
       );
+
+  @override
+  Future<void> move(SingleItem item, Folder newParent) =>
+      _db.then((isar) => isar.isarSingleItems.get(item.id).then((isarItem) {
+            if (isarItem != null) {
+              isar.writeTxnSync(() => isar.isarSingleItems.putSync(isarItem
+                ..parentFolder.value = isar.isarFolders.getSync(newParent.id)));
+            }
+          }));
 }

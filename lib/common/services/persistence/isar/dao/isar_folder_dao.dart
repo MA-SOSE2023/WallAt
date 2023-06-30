@@ -1,3 +1,6 @@
+import 'package:gruppe4/common/services/persistence/isar/schemas/isar_item_event.dart';
+import 'package:gruppe4/common/services/persistence/isar/schemas/isar_single_item.dart';
+import 'package:gruppe4/pages/single_item/model/single_item.dart';
 import 'package:isar/isar.dart';
 
 import '/pages/folders/folder_model.dart';
@@ -50,7 +53,8 @@ class IsarFolderDao extends FolderDao {
           )));
 
   @override
-  Future<bool> delete(Id id) => _db.then((isar) => isar.isarFolders.delete(id));
+  Future<bool> delete(Id id) => _db
+      .then((isar) => isar.writeTxnSync(() => isar.isarFolders.deleteSync(id)));
 
   @override
   Future<Folder?> read(Id id) =>
@@ -78,5 +82,17 @@ class IsarFolderDao extends FolderDao {
       _db.then((isar) => isar.writeTxnSync(() async {
             isar.isarFolders.putSync((await _isarRead(folder.id))!
               ..parentFolder.value = await _isarRead(newParent.id));
+          }));
+
+  @override
+  Future<bool> deleteItemFromFolder(SingleItem item) =>
+      _db.then((isar) => isar.isarSingleItems.get(item.id).then((isarItem) {
+            if (isarItem != null) {
+              return isar.writeTxnSync(() {
+                isarItem.parentFolder.value?.items.remove(isarItem);
+                return isar.isarSingleItems.deleteSync(isarItem.id);
+              });
+            }
+            return false;
           }));
 }

@@ -41,8 +41,8 @@ class IsarItemEventDao extends ItemEventDao {
       _db.then((isar) => isar.isarSingleItems.get(id));
 
   @override
-  Future<bool> delete(Id id) =>
-      _db.then((isar) => isar.isarItemEvents.delete(id));
+  Future<bool> delete(Id id) => _db.then(
+      (isar) => isar.writeTxnSync(() => isar.isarItemEvents.deleteSync(id)));
 
   @override
   Future<ItemEvent?> read(Id id) =>
@@ -68,11 +68,12 @@ class IsarItemEventDao extends ItemEventDao {
   @override
   Future<void> update(ItemEvent item) => _isarRead(item.id).then((isarEvent) {
         if (isarEvent != null) {
-          _db.then((isar) => isar.isarItemEvents.put(isarEvent
-            ..title = item.event.title ?? ''
-            ..description = item.event.description ?? ''
-            ..start = item.event.start!
-            ..end = item.event.end!));
+          _db.then((isar) =>
+              isar.writeTxnSync(() => isar.isarItemEvents.put(isarEvent
+                ..title = item.event.title ?? ''
+                ..description = item.event.description ?? ''
+                ..start = item.event.start!
+                ..end = item.event.end!)));
         }
       });
 }

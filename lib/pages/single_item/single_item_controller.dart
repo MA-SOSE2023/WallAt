@@ -1,6 +1,8 @@
 import 'package:device_calendar/device_calendar.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../common/provider.dart';
 import 'model/single_item.dart';
 import 'model/item_event.dart';
 import '/pages/single_item/single_item_view.dart';
@@ -62,6 +64,7 @@ class SingleItemControllerImpl extends SingleItemController
     DeviceCalendarPlugin deviceCalendarPlugin = DeviceCalendarPlugin();
     deviceCalendarPlugin.deleteEvent(
         event.event.calendarId!, event.event.eventId!);
+    _service.deleteEvent(event);
 
     futureState((state) => state.copyWith(
         events: List<ItemEvent>.from(state.events)..remove(event)));
@@ -77,4 +80,15 @@ class SingleItemControllerImpl extends SingleItemController
   void navigateToThisItem() async {
     Routers.globalRouterDelegate.beamToNamed('/item', data: await state);
   }
+
+  @override
+  Future<bool> deleteItem(WidgetRef ref) => state.then((item) async {
+        item.events.forEach(removeEvent);
+        return ref
+            .read(Providers.dbControllerProvider.notifier)
+            .rootFolderId
+            .then((rootId) => ref
+                .read(Providers.foldersControllerProvider(rootId).notifier)
+                .removeItem(item));
+      });
 }

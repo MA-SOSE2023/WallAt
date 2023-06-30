@@ -38,8 +38,7 @@ class FolderBubble extends ConsumerWidget {
               clipBehavior: Clip.hardEdge,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10.0),
-                color: CupertinoDynamicColor.resolve(
-                    CupertinoColors.systemGrey6, context),
+                color: theme.groupingColor,
                 image: item.isLeaf
                     ? DecorationImage(
                         fit: BoxFit.cover,
@@ -96,17 +95,20 @@ class FolderBubble extends ConsumerWidget {
     return Column(
       children: [
         Expanded(
-          child: Container(
-            margin: const EdgeInsets.all(10.0),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15.0),
-              color: theme.groupingColor,
-            ),
-            child: itemGrid(
-              [
-                ...threeMainItems(),
-                if (contents.length > 3) secondaryGrid(),
-              ],
+          child: GestureDetector(
+            onTap: FolderItem.navigateTo(_folder, context, ref),
+            child: Container(
+              margin: const EdgeInsets.all(10.0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15.0),
+                color: theme.groupingColor,
+              ),
+              child: itemGrid(
+                [
+                  ...threeMainItems(),
+                  if (contents.length > 3) secondaryGrid(),
+                ],
+              ),
             ),
           ),
         ),

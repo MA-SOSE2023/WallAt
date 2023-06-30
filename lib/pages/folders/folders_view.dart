@@ -32,7 +32,65 @@ class FoldersScreen extends ConsumerWidget {
 
     final CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
 
-    List<Widget> folderViewBody(List<FolderItem> contents) => [
+    List<Widget> folderViewBody(List<FolderItem> contents, Folder rootFolder) =>
+        [
+          SliverPadding(
+            padding: const EdgeInsets.only(bottom: 10.0),
+            sliver: SliverAppBar(
+              automaticallyImplyLeading: false,
+              pinned: true,
+              primary: false,
+              toolbarHeight: 30.0,
+              backgroundColor: theme.groupingColor,
+              title: const Text('Subfolders', style: TextStyle(fontSize: 16)),
+              centerTitle: true,
+              actions: [
+                CupertinoButton(
+                    padding: const EdgeInsets.all(0),
+                    child: const Icon(CupertinoIcons.ellipsis),
+                    onPressed: () {}),
+                CupertinoButton(
+                  padding: const EdgeInsets.only(right: 5),
+                  child: Icon(
+                    CupertinoIcons.plus,
+                    color: theme.accentColor,
+                  ),
+                  onPressed: () {
+                    showCupertinoDialog(
+                      context: context,
+                      builder: (context) {
+                        String? newFolderName;
+                        return CupertinoAlertDialog(
+                          title: const Text('Add subfolder'),
+                          content: CupertinoTextField(
+                            placeholder: 'Folder title',
+                            onChanged: (value) => newFolderName = value,
+                          ),
+                          actions: [
+                            CupertinoDialogAction(
+                              child: const Text('Cancel'),
+                              onPressed: () => Navigator.of(context).pop(),
+                            ),
+                            CupertinoDialogAction(
+                              child: const Text('Add'),
+                              onPressed: () {
+                                ref
+                                    .read(Providers.foldersControllerProvider(
+                                            rootFolder.id)
+                                        .notifier)
+                                    .addSubFolder(newFolderName ?? 'Folder');
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
           FolderBubbleGrid(
               folder: contents
                   .where((item) => item.isFolder)
@@ -62,7 +120,7 @@ class FoldersScreen extends ConsumerWidget {
                 .where((item) => item.isLeaf)
                 .map((item) => item.item)
                 .toList(),
-          )
+          ),
         ];
 
     return CupertinoPageScaffold(
@@ -81,7 +139,7 @@ class FoldersScreen extends ConsumerWidget {
                   backgroundColor: theme.navBarColor,
                   largeTitle: Text(_folder!.title),
                 ),
-                ...folderViewBody(_folder!.contents ?? [])
+                ...folderViewBody(_folder!.contents ?? [], _folder!)
               ],
             ),
           const CameraButtonHeroDestination(),
@@ -101,8 +159,11 @@ abstract class FoldersController extends StateNotifier<Future<Folder?>> {
   void move(Folder newParent);
 
   void addItem(FolderItem item);
+  void addSubFolder(String title);
 
-  void removeItem(FolderItem item);
+  Future<bool> removeItem(FolderItem item);
 
   void moveItem(FolderItem item, Folder newParent);
+
+  Future<void> moveItemHere(FolderItem item);
 }

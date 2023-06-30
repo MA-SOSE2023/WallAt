@@ -119,15 +119,21 @@ class PersistenceService {
   Future<void> updateEvent(ItemEvent event) =>
       _eventDao((dao) => dao.update(event));
 
+  Future<void> moveSingleItem(SingleItem item, Folder newParent) =>
+      _singleItemDao((dao) => dao.move(item, newParent));
+
+  Future<void> moveFolder(Folder folder, Folder newParent) =>
+      _folderDao((dao) => dao.move(folder, newParent));
+
   // ====================== DELETION ====================== //
 
-  Future<void> deleteSingleItem(SingleItem item) =>
-      _singleItemDao((dao) => dao.delete(item.id));
+  Future<bool> deleteSingleItem(SingleItem item) =>
+      _folderDao((dao) => dao.deleteItemFromFolder(item));
 
-  Future<void> deleteFolder(Folder folder) =>
+  Future<bool> deleteFolder(Folder folder) =>
       _folderDao((dao) => dao.delete(folder.id));
 
-  Future<void> deleteEvent(ItemEvent event) =>
+  Future<bool> deleteEvent(ItemEvent event) =>
       _eventDao((dao) => dao.delete(event.id));
 }
 
@@ -151,6 +157,9 @@ abstract class SingleItemDao extends Dao<SingleItem> {
   Future<List<SingleItem>> readAllFavorites();
   Future<List<SingleItem>> readAllFavoritesMatching(String query);
   Future<List<SingleItem>> readAllRecent(int count);
+
+  Future<void> move(SingleItem item, Folder newParent);
+
   Future<void> updateRecency(int id);
 }
 
@@ -160,7 +169,9 @@ abstract class FolderDao extends Dao<Folder> {
     int? parentFolderId,
   });
   Future<int> createOrFindRoot();
+  Future<bool> deleteItemFromFolder(SingleItem item);
   Future<void> move(Folder folder, Folder newParent);
+
   Future<List<Folder>> readAll();
 }
 

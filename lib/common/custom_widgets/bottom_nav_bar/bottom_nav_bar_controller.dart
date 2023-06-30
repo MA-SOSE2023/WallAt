@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'bottom_nav_bar_view.dart';
+import '/common/provider.dart';
 
 class CustomBottomNavBarControllerImpl extends CustomBottomNavBarController {
   CustomBottomNavBarControllerImpl() : super();
@@ -29,11 +30,14 @@ class CustomBottomNavBarControllerImpl extends CustomBottomNavBarController {
     ),
   ];
 
-  static const CustomBottomNavBarItem _cameraItem = CustomBottomNavBarItem(
-    icon: Icon(Icons.camera_alt_outlined),
-    activeIcon: Icon(Icons.camera_alt),
+  static final CustomBottomNavBarItem _cameraItem = CustomBottomNavBarItem(
+    icon: const Icon(Icons.camera_alt_outlined),
+    activeIcon: const Icon(Icons.camera_alt),
     label: 'CAMERA',
     initialLocation: '/camera',
+    onTap: (ref) => ref
+        .read(Providers.takePictureControllerProvider(null).notifier)
+        .takePicture(ref),
   );
 
   static const CustomBottomNavBarItem _settingsItem = CustomBottomNavBarItem(
@@ -66,8 +70,11 @@ class CustomBottomNavBarControllerImpl extends CustomBottomNavBarController {
       ),
     );
 
-    //ref.read(Providers.enableHeroAnimationProvider.notifier).state = false;
-    context.beamToNamed(getNavBarItems()[index].initialLocation);
+    if (getNavBarItems()[index].onTap != null) {
+      getNavBarItems()[index].onTap!(ref);
+    } else {
+      context.beamToNamed(getNavBarItems()[index].initialLocation);
+    }
 
     if (state != updatedState) {
       state = updatedState;
