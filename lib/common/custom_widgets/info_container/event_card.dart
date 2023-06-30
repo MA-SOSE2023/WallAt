@@ -25,64 +25,63 @@ class EventCard extends ConsumerWidget {
             gradient: theme.gradient,
             borderRadius: BorderRadius.circular(10),
           ),
-          child:
-            CupertinoListSection.insetGrouped(
-              margin: EdgeInsets.fromLTRB(2, 2, 2, 0),
-              decoration: BoxDecoration(
-                gradient: theme.gradient,
-              ),
-              backgroundColor: Colors.transparent,
-              children: [
-                CupertinoListTile.notched(
-                  backgroundColor: theme.backgroundColor,
-                  title: Text(
-                      '${date.day}/${date.month}/${date.year}  -  ${date.hour}:${date.minute}'),
-                  leading: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: theme.groupingColor,
-                        width: 2,
-                      ),
-                      borderRadius: BorderRadius.circular(12),
-                      color: theme.backgroundColor,
-                    ),
-                    padding: const EdgeInsets.all(5),
-                    child: Icon(
-                      CupertinoIcons.alarm,
-                      color: theme.accentColor,
-                      size: 24,
-                    ),
-                  ),
-                  trailing: const Icon(
-                    CupertinoIcons.forward,
-                  ),
-                  leadingSize: 36,
-                  onTap: () {
-                    ref
-                        .read(Providers.singleItemControllerProvider(event.parentId)
-                            .notifier)
-                        .navigateToThisItem();
-                  },
-                ),
-                CupertinoListTile.notched(
-                  title: Container(
-                    height: MediaQuery.of(context).size.height / 15,
-                    child: Text(
-                      description,
-                      maxLines: 2,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+          child: CupertinoListSection.insetGrouped(
+            margin: EdgeInsets.fromLTRB(2, 2, 2, 0),
+            decoration: BoxDecoration(
+              gradient: theme.gradient,
             ),
+            backgroundColor: Colors.transparent,
+            children: [
+              CupertinoListTile.notched(
+                backgroundColor: theme.backgroundColor,
+                title: Text(
+                    '${date.day}/${date.month}/${date.year}  -  ${date.hour}:${date.minute}'),
+                leading: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: theme.groupingColor,
+                      width: 2,
+                    ),
+                    borderRadius: BorderRadius.circular(12),
+                    color: theme.backgroundColor,
+                  ),
+                  padding: const EdgeInsets.all(5),
+                  child: Icon(
+                    CupertinoIcons.alarm,
+                    color: theme.accentColor,
+                    size: 24,
+                  ),
+                ),
+                trailing: const Icon(
+                  CupertinoIcons.forward,
+                ),
+                leadingSize: 36,
+                onTap: () {
+                  ref
+                      .read(
+                          Providers.singleItemControllerProvider(event.parentId)
+                              .notifier)
+                      .navigateToThisItem();
+                },
+              ),
+              CupertinoListTile.notched(
+                title: Container(
+                  height: MediaQuery.of(context).size.height / 15,
+                  child: Text(
+                    description,
+                    maxLines: 2,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ],
     );
-        
   }
 }
 

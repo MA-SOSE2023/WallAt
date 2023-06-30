@@ -40,78 +40,80 @@ class MoveToFolderScreen extends ConsumerWidget {
             .where((item) => item.isFolder)
             .map((e) => e as Folder)
             .toList();
-        return CustomScrollView(
-          slivers: [
-            CupertinoSliverNavigationBar(
-              largeTitle: Text(folder?.title ?? 'Move Item'),
-              backgroundColor: theme.navBarColor,
-              leading: CupertinoButton(
-                padding: const EdgeInsets.all(10),
-                child: const Text('Cancel', style: TextStyle(fontSize: 15)),
-                onPressed: () {
-                  // Cancel the item
-                  ref
-                      .read(Providers.singleItemControllerProvider(_item.id)
-                          .notifier)
-                      .deleteItem(ref);
-                  Navigator.of(context).pop();
-                },
-              ),
-              trailing: CupertinoButton(
-                padding: const EdgeInsets.all(10),
-                child: const Text('Save', style: TextStyle(fontSize: 15)),
-                onPressed: () {
-                  // Save the item
-                  ref
-                      .read(Providers.foldersControllerProvider(folder?.id)
-                          .notifier)
-                      .moveItemHere(_item);
-                  /*ScaffoldMessenger.of(context).showSnackBar(
+        return CupertinoPageScaffold(
+            backgroundColor: theme.backgroundColor,
+            child: CustomScrollView(
+              slivers: [
+                CupertinoSliverNavigationBar(
+                  largeTitle: Text(folder?.title ?? 'Move Item'),
+                  backgroundColor: theme.navBarColor,
+                  leading: CupertinoButton(
+                    padding: const EdgeInsets.all(10),
+                    child: const Text('Cancel', style: TextStyle(fontSize: 15)),
+                    onPressed: () {
+                      // Cancel the item
+                      ref
+                          .read(Providers.singleItemControllerProvider(_item.id)
+                              .notifier)
+                          .deleteItem(ref);
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  trailing: CupertinoButton(
+                    padding: const EdgeInsets.all(10),
+                    child: const Text('Save', style: TextStyle(fontSize: 15)),
+                    onPressed: () {
+                      // Save the item
+                      ref
+                          .read(Providers.foldersControllerProvider(folder?.id)
+                              .notifier)
+                          .moveItemHere(_item);
+                      /*ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(
                           'Item moved to ${folder?.title ?? "folder"} successfully!'),
                     ),
                   );*/
-                  context.beamToNamed('/folders');
-                },
-              ),
-            ),
-            SliverGrid.builder(
-              itemCount: subFolder.length,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2),
-              itemBuilder: (context, index) => GestureDetector(
-                onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => MoveToFolderScreen(
-                      item: _item,
-                      folderId: subFolder[index].id,
+                      context.beamToNamed('/folders');
+                    },
+                  ),
+                ),
+                SliverGrid.builder(
+                  itemCount: subFolder.length,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2),
+                  itemBuilder: (context, index) => GestureDetector(
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => MoveToFolderScreen(
+                          item: _item,
+                          folderId: subFolder[index].id,
+                        ),
+                      ),
+                    ),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: theme.groupingColor,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      margin: const EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(3),
+                      child: Column(
+                        children: [
+                          Expanded(
+                            child: Icon(
+                              CupertinoIcons.folder,
+                              size: MediaQuery.of(context).size.width / 2 - 60,
+                            ),
+                          ),
+                          Text(subFolder[index].title),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: theme.groupingColor,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  margin: const EdgeInsets.all(10),
-                  padding: const EdgeInsets.all(3),
-                  child: Column(
-                    children: [
-                      Expanded(
-                        child: Icon(
-                          CupertinoIcons.folder,
-                          size: MediaQuery.of(context).size.width / 2 - 60,
-                        ),
-                      ),
-                      Text(subFolder[index].title),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ],
-        );
+              ],
+            ));
       },
     );
   }
