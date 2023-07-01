@@ -104,23 +104,19 @@ class _EventsContainer extends ConsumerWidget {
     return AsyncOptionBuilder(
       future: item,
       initialData: _item,
+      errorMessage: "Failed to load events.\nTry re-opening this page.",
       success: (item) {
-        if (item != null) {
-          return _eventSection(
-            calendarButton: CalendarButton(
-              onSave: (event) =>
-                  controller.addEvent(event: event, parentId: item.id),
-            ),
-            theme: theme,
-            children: item.events.map((itemEvent) {
-              return _eventTile(
-                  event: itemEvent, deleteEvent: controller.removeEvent);
-            }).toList(),
-          );
-        } else {
-          return const ErrorMessage(
-              message: "Failed to load events.\nTry re-opening this page.");
-        }
+        return _eventSection(
+          calendarButton: CalendarButton(
+            onSave: (event) =>
+                controller.addEvent(event: event, parentId: item.id),
+          ),
+          theme: theme,
+          children: item.events.map((itemEvent) {
+            return _eventTile(
+                event: itemEvent, deleteEvent: controller.removeEvent);
+          }).toList(),
+        );
       },
     );
   }

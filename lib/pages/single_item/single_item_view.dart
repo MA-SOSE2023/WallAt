@@ -12,7 +12,7 @@ import 'model/item_event.dart';
 import '/common/provider.dart';
 import '/common/theme/custom_theme_data.dart';
 import '/common/custom_widgets/all_custom_widgets.dart'
-    show EventsContainer, FutureOptionBuilder;
+    show EventsContainer, AsyncOptionBuilder;
 
 String singleItemHeroTag(String id) {
   return "single_item_image$id";
@@ -27,11 +27,11 @@ class SingleItemPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final Future<SingleItem> item =
+    final AsyncValue<SingleItem?> item =
         ref.watch(Providers.singleItemControllerProvider(_item.id));
     final CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
 
-    return FutureOptionBuilder(
+    return AsyncOptionBuilder(
       future: item,
       initialData: _item,
       loading: () => const Align(
@@ -135,7 +135,7 @@ class SingleItemPage extends ConsumerWidget {
                             color: theme.groupingColor,
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          child: EventsContainer(id: item.id, editable: false)),
+                          child: EventsContainer(item: item, editable: false)),
                     ),
                   ),
                   // Empty box at the bottom to make sure you can scroll the

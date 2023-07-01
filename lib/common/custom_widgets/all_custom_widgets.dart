@@ -32,6 +32,8 @@ export 'futures/future_option_builder.dart';
 export 'futures/future_option_list_builder.dart';
 export 'futures/future_sliver_folder_builder.dart';
 export 'futures/future_sliver_list_builder.dart';
+// Async
+export 'futures/async_builder.dart';
 export 'futures/async_option_builder.dart';
 export 'futures/async_option_list_builder.dart';
 export 'futures/async_sliver_folder_builder.dart';
