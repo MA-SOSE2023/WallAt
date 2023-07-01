@@ -1,6 +1,7 @@
 import 'package:device_calendar/device_calendar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '/pages/folders/folder_item.dart';
 import '/pages/folders/folder_model.dart';
 import '/pages/single_item/model/single_item.dart';
 import '/pages/single_item/model/item_event.dart';
@@ -92,6 +93,9 @@ class PersistenceService {
   Future<Folder?> getFolder(int folderId) =>
       _folderDao((dao) => dao.read(folderId));
 
+  Future<int?> getParentFolderId(FolderItem item) =>
+      _folderDao((dao) => dao.findParentId(item.id));
+
   /// Returns the [ItemEvent] with the given [eventId].
   /// Returns null if no event with the given [eventId] exists
   Future<ItemEvent?> getEvent(int eventId) =>
@@ -173,6 +177,7 @@ abstract class FolderDao extends Dao<Folder> {
   Future<void> move(Folder folder, Folder newParent);
 
   Future<List<Folder>> readAll();
+  Future<int?> findParentId(int id);
 }
 
 abstract class ItemEventDao extends Dao<ItemEvent> {
@@ -184,7 +189,7 @@ abstract class ItemEventDao extends Dao<ItemEvent> {
   Future<List<ItemEvent>> readAllSoon(Duration soonDuration);
 }
 
-typedef Db = Future<dynamic>;
+typedef Db = dynamic;
 
 abstract class DbController extends StateNotifier<DbModel> {
   DbController(DbModel state) : super(state);

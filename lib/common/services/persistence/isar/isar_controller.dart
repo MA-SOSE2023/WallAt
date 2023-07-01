@@ -15,16 +15,16 @@ class IsarController extends DbController {
 
   @override
   Future<void> openDb() async {
-    late Future<Isar> db;
+    late Isar db;
     if (Isar.instanceNames.isEmpty) {
-      db = Isar.open(
+      db = await Isar.open(
         [IsarSingleItemSchema, IsarFolderSchema, IsarItemEventSchema],
         directory: (await getApplicationDocumentsDirectory()).path,
         inspector: true, // Inspector allows real-time insight into the database
         // we might want to disable this in production
       );
     } else {
-      db = Future.value(Isar.getInstance());
+      db = Isar.getInstance(Isar.instanceNames.first)!;
     }
 
     SingleItemDao singleItemDao = IsarSingleItemDao(db: db);
