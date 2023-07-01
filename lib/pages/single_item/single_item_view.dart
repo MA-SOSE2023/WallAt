@@ -121,7 +121,7 @@ class SingleItemPage extends ConsumerWidget {
                           color: theme.groupingColor,
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child: InfoContainer(
+                        child: _InfoContainer(
                           text: item.description,
                         ),
                       ),
@@ -152,7 +152,7 @@ class SingleItemPage extends ConsumerWidget {
                 child: Container(
                   color: theme.navBarColor,
                   padding: const EdgeInsets.only(left: 20, right: 20),
-                  child: ActionButtons(itemId: item.id),
+                  child: _ActionButtons(itemId: item.id),
                 ),
               ),
             ],
@@ -163,41 +163,8 @@ class SingleItemPage extends ConsumerWidget {
   }
 }
 
-class PictureContainer extends StatelessWidget {
-  const PictureContainer({
-    Key? key,
-    required this.color,
-    required this.image,
-    required this.onTap,
-  }) : super(key: key);
-
-  final Color color;
-  final ImageProvider image;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          decoration: BoxDecoration(
-            border: Border.all(color: color, width: 3),
-            borderRadius: BorderRadius.circular(10),
-            image: DecorationImage(
-              image: image,
-              fit: BoxFit.cover,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class InfoContainer extends StatelessWidget {
-  const InfoContainer({Key? key, required this.text}) : super(key: key);
+class _InfoContainer extends StatelessWidget {
+  const _InfoContainer({Key? key, required this.text}) : super(key: key);
 
   final String text;
 
@@ -224,21 +191,19 @@ class InfoContainer extends StatelessWidget {
   }
 }
 
-class ActionButtons extends ConsumerWidget {
-  const ActionButtons({Key? key, required this.itemId}) : super(key: key);
+class _ActionButtons extends ConsumerWidget {
+  const _ActionButtons({Key? key, required this.itemId}) : super(key: key);
 
   final int itemId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final Future<SingleItem> item =
+    final AsyncValue<SingleItem?> item =
         ref.watch(Providers.singleItemControllerProvider(itemId));
     final SingleItemController controller =
         ref.read(Providers.singleItemControllerProvider(itemId).notifier);
-    return FutureOptionBuilder(
+    return AsyncOptionBuilder(
       future: item,
-      loading: () => const CupertinoActivityIndicator(),
-      error: (_) => const Text("Fatal error, please restart the app"),
       success: (item) => Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -257,7 +222,7 @@ class ActionButtons extends ConsumerWidget {
                 context: context,
                 isScrollControlled: true,
                 backgroundColor: Colors.transparent,
-                builder: (context) => EditSingleItemPage(singleItemId: item.id),
+                builder: (context) => EditSingleItemPage(singleItem: item),
               );
             },
             child: const Icon(

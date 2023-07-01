@@ -12,7 +12,6 @@ import '/common/theme/custom_theme_data.dart';
 import '/common/custom_widgets/all_custom_widgets.dart'
     show FutureOptionBuilder, ErrorMessage, ActivityIndicator, EventsContainer;
 
-// currently uses the mock item that is create in the single_item_controller
 class SaveItemScreen extends ConsumerWidget {
   final Future<SingleItem?> item;
 
@@ -28,7 +27,7 @@ class SaveItemScreen extends ConsumerWidget {
           if (item == null) {
             return null;
           }
-          return ref.watch(Providers.editSingleItemControllerProvider(item.id));
+          return ref.watch(Providers.editSingleItemControllerProvider(item));
         },
       ),
       loading: () => const CupertinoPageScaffold(
@@ -48,8 +47,8 @@ class SaveItemScreen extends ConsumerWidget {
                 message: "Images could not be captured.\nPlease try again."),
           );
         }
-        final EditSingleItemController controller = ref.watch(
-            Providers.editSingleItemControllerProvider(item.id).notifier);
+        final EditSingleItemController controller = ref
+            .watch(Providers.editSingleItemControllerProvider(item).notifier);
         return CupertinoPageScaffold(
           backgroundColor: theme.backgroundColor,
           navigationBar: CupertinoNavigationBar(
@@ -72,7 +71,7 @@ class SaveItemScreen extends ConsumerWidget {
               padding: const EdgeInsets.all(10),
               child: const Text('Save', style: TextStyle(fontSize: 15)),
               onPressed: () {
-                controller.saveChanges(ref);
+                controller.saveChanges();
                 // Save the item
                 context.beamToNamed('/item/move', data: item);
               },
@@ -157,13 +156,15 @@ class SaveItemScreen extends ConsumerWidget {
                   ),
                 ),
                 Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Container(
-                        decoration: BoxDecoration(
-                          color: theme.groupingColor,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: EventsContainer(id: item.id, editable: true))),
+                  padding: const EdgeInsets.all(20.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: theme.groupingColor,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: EventsContainer(item: item, editable: true),
+                  ),
+                ),
               ],
             ),
           ),
