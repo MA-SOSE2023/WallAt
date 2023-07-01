@@ -7,8 +7,8 @@ import '/pages/folders/folder_model.dart';
 import '/common/provider.dart';
 import '/common/custom_widgets/all_custom_widgets.dart'
     show
-        ErrorMessage,
-        NoElementsMessage,
+        SliverErrorMessage,
+        SliverNoElementsMessage,
         AsyncOptionBuilder,
         SliverActivityIndicator;
 
@@ -44,11 +44,11 @@ class AsyncSliverFolderBuilder extends ConsumerWidget {
               largeTitle: Text(folder?.title ?? 'Folders'),
             ),
             if (folder == null || contents == null)
-              ErrorMessage(
+              SliverErrorMessage(
                 message: _onNullMessage,
               )
             else if (contents.isEmpty)
-              NoElementsMessage(
+              SliverNoElementsMessage(
                 message: _emptyListMessage,
               )
             else
@@ -61,7 +61,7 @@ class AsyncSliverFolderBuilder extends ConsumerWidget {
           const CupertinoSliverNavigationBar(
             largeTitle: Text('Folders'),
           ),
-          ErrorMessage(
+          SliverErrorMessage(
             message: _errorMessage,
           ),
         ],

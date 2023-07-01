@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '/common/custom_widgets/all_custom_widgets.dart'
     show
-        ErrorMessage,
-        NoElementsMessage,
+        SliverErrorMessage,
+        SliverNoElementsMessage,
         AsyncOptionBuilder,
         SliverActivityIndicator;
 
@@ -35,12 +35,12 @@ class AsyncSliverListBuilder<T> extends StatelessWidget {
         future: _future,
         success: (data) {
           if (data == null) {
-            return ErrorMessage(
+            return SliverErrorMessage(
               message: onNullMessage,
               minPadding: errorMessagesPadding,
             );
           } else if (data.isEmpty) {
-            return NoElementsMessage(
+            return SliverNoElementsMessage(
               message: emptyMessage,
               minPadding: errorMessagesPadding,
             );
@@ -48,7 +48,7 @@ class AsyncSliverListBuilder<T> extends StatelessWidget {
             return _onSuccessBuilder(data);
           }
         },
-        error: (_) => ErrorMessage(
+        error: (_) => SliverErrorMessage(
               message: errorMessage,
               minPadding: errorMessagesPadding,
             ),

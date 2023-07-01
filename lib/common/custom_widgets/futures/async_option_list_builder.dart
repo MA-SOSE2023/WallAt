@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '/common/custom_widgets/all_custom_widgets.dart' show AsyncOptionBuilder;
+import '/common/custom_widgets/all_custom_widgets.dart'
+    show AsyncOptionBuilder, NoElementsMessage;
 
 class AsyncOptionListBuilder<T> extends StatelessWidget {
   const AsyncOptionListBuilder({
@@ -27,28 +28,21 @@ class AsyncOptionListBuilder<T> extends StatelessWidget {
   final String errorMessage;
   final double? errorMessagesPadding;
 
-  Widget _centerAligned({required Widget child}) => Align(
-        alignment: Alignment.center,
-        child: Padding(padding: const EdgeInsets.all(8.0), child: child),
-      );
-
   @override
   Widget build(BuildContext context) {
     return AsyncOptionBuilder(
       future: _future,
       success: (data) {
         if (data == null) {
-          return _centerAligned(child: Text(onNullMessage));
+          return NoElementsMessage(message: onNullMessage);
         } else if (data.isEmpty) {
           return empty == null
-              ? _centerAligned(child: Text(emptyMessage))
+              ? NoElementsMessage(message: emptyMessage)
               : empty!(emptyMessage);
         } else {
           return _onSuccessBuilder(data);
         }
       },
-      error: (_) => _centerAligned(child: Text(errorMessage)),
-      loading: () => _centerAligned(child: const CupertinoActivityIndicator()),
     );
   }
 }
