@@ -63,8 +63,6 @@ class DocumentCard extends ConsumerWidget {
           ),
           leadingSize: 80,
           onTap: () {
-            ref.read(Providers.enableHeroAnimationProvider.notifier).state =
-                true;
             controller.navigateToThisItem();
           },
         ),

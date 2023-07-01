@@ -13,9 +13,11 @@ import '/common/custom_widgets/all_custom_widgets.dart'
 import '/common/provider.dart';
 
 class CalendarButton extends StatelessWidget {
-  const CalendarButton({required this.id, Key? key}) : super(key: key);
+  const CalendarButton({required Function(Event event) onSave, Key? key})
+      : _onSave = onSave,
+        super(key: key);
 
-  final int id;
+  final Function(Event event) _onSave;
 
   @override
   Widget build(BuildContext context) {
@@ -136,11 +138,7 @@ class CalendarButton extends StatelessWidget {
 
                           final Event newEvent = calendarButtonController
                               .getEvent(settings.calendar?.id);
-                          ref
-                              .read(
-                                  Providers.editSingleItemControllerProvider(id)
-                                      .notifier)
-                              .addEvent(event: newEvent, parentId: id);
+                          _onSave(newEvent);
 
                           Navigator.pop(context);
                           // Event added successfully

@@ -5,7 +5,7 @@ import 'package:gruppe4/common/theme/custom_theme_data.dart';
 import '/pages/single_item/model/single_item.dart';
 import '/common/provider.dart';
 import '/common/custom_widgets/all_custom_widgets.dart'
-    show FutureOptionBuilder, DocumentCard;
+    show AsyncOptionBuilder, DocumentCard;
 
 class DocumentCardContainer extends ConsumerWidget {
   const DocumentCardContainer({
@@ -38,7 +38,7 @@ class DocumentCardContainer extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final Future<SingleItem> itemFuture =
+    final AsyncValue<SingleItem?> itemFuture =
         ref.watch(Providers.singleItemControllerProvider(_item.id));
     final CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
     Widget documentCardRow(SingleItem item) => Row(
@@ -49,7 +49,7 @@ class DocumentCardContainer extends ConsumerWidget {
                 onPressed: ref
                     .read(Providers.singleItemControllerProvider(item.id)
                         .notifier)
-                    .setFavorite,
+                    .toggleFavorite,
                 child: Icon(item.isFavorite
                     ? CupertinoIcons.heart_fill
                     : CupertinoIcons.heart),
@@ -67,12 +67,11 @@ class DocumentCardContainer extends ConsumerWidget {
               width: 1,
             ),
           ),
-      child: FutureOptionBuilder(
+      child: AsyncOptionBuilder(
         future: itemFuture,
-        loading: () => DocumentCard(
-            item: SingleItem.placeholder(id: _item.id, image: _item.image)),
+        loading: () => DocumentCard(item: _item),
         error: (_) => DocumentCard(item: SingleItem.error()),
-        success: (item) => documentCardRow(item),
+        success: (item) => documentCardRow(item ?? _item),
       ),
     );
   }
