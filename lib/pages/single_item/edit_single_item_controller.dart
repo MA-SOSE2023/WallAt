@@ -1,28 +1,29 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:device_calendar/device_calendar.dart';
 
 import 'edit_single_item_view.dart';
-import 'model/single_item.dart';
 import 'model/item_event.dart';
-import '/common/provider.dart';
-import '/common/services/persistence/persistence_service.dart';
-import '/common/utils/future_controller_mixin.dart';
+import '/common/utils/device_calendar_mixin.dart';
 import '/pages/single_item/single_item_view.dart';
+import 'model/single_item.dart';
 
 class EditSingleItemControllerImpl extends EditSingleItemController
-    with FutureControllerMixin<SingleItem> {
-  EditSingleItemControllerImpl(
-      {required Future<SingleItem> model, required PersistenceService service})
-      : _service = service,
-        super(model);
+    with DeviceCalendarMixin {
+  EditSingleItemControllerImpl(super.state,
+      {required SingleItemController controller})
+      : _singleItemController = controller,
+        _previousState = state;
 
-  final PersistenceService _service;
-
-  List<ItemEvent> newEvents = [];
+  List<Event> newEvents = [];
   List<ItemEvent> deletedEvents = [];
   DateTime? _selectedDate;
+
+  final SingleItem _previousState;
+  final SingleItemController _singleItemController;
 
   @override
   DateTime? getSelectedDate() {
@@ -35,65 +36,68 @@ class EditSingleItemControllerImpl extends EditSingleItemController
   }
 
   @override
-  Future<void> saveChanges(WidgetRef ref) async {
+  Future<void> saveChanges() async {
     removeEventsFromCalendar();
     addEventsToCalendar();
-    futureState(
-        (state) => state.copyWith(events: [...state.events, ...newEvents]));
 
-    SingleItemController singleItemController = ref.read(
-        Providers.singleItemControllerProvider((await state).id).notifier);
-    singleItemController.state = Future.value(state);
+    if (_previousState.isFavorite != state.isFavorite) {
+      _singleItemController.toggleFavorite();
+    }
+    if (_previousState.title != state.title) {
+      _singleItemController.setTitle(state.title);
+    }
+    if (_previousState.description != state.description) {
+      _singleItemController.setDescription(state.description);
+    }
+    if (_previousState.image != state.image) {
+      _singleItemController.setImage(state.image);
+    }
   }
 
   @override
-  void setImage(Image image) =>
-      futureState((state) => state.copyWith(image: image.image));
+  void setImage(ImageProvider image) => state = state.copyWith(image: image);
 
   @override
   void setDescription(String description) =>
-      futureState((state) => state.copyWith(description: description));
+      state = state.copyWith(description: description);
 
   @override
-  void setTitle(String title) =>
-      futureState((state) => state.copyWith(title: title));
+  void setTitle(String title) => state = state.copyWith(title: title);
 
   @override
   void addEvent({required Event event, required int parentId}) async {
-    newEvents.add(ItemEvent(id: 0, event: event, parentId: parentId));
-    futureState((state) => state.copyWith(events: [...state.events]));
+    newEvents.add(event);
+    state = state.copyWith(
+        events: state.events
+          ..add(ItemEvent(id: 0, event: event, parentId: state.id)));
   }
 
   @override
   void removeEvent(ItemEvent event) {
     if (event.event.eventId == null) {
-      newEvents.remove(event);
+      newEvents.remove(event.event);
     } else {
       deletedEvents.add(event);
     }
 
-    futureState((state) => state.copyWith(
-        events: List<ItemEvent>.from(state.events)..remove(event)));
+    state = state.copyWith(
+      events: state.events..remove(event),
+    );
   }
 
   @override
-  void setFavorite() => futureState(
-      (state) => state.copyWith(isFavorite: state.isFavorite ? false : true));
+  void toggleFavorite() =>
+      state = state.copyWith(isFavorite: !state.isFavorite);
 
   void addEventsToCalendar() async {
-    DeviceCalendarPlugin deviceCalendarPlugin = DeviceCalendarPlugin();
-    for (ItemEvent event in newEvents) {
-      var eventId = await deviceCalendarPlugin.createOrUpdateEvent(event.event);
-      event.event.eventId = eventId?.data!;
+    for (Event event in newEvents) {
+      _singleItemController.addEvent(event: event, parentId: state.id);
     }
   }
 
   Future<void> removeEventsFromCalendar() async {
-    DeviceCalendarPlugin deviceCalendarPlugin = DeviceCalendarPlugin();
     for (ItemEvent event in deletedEvents) {
-      deviceCalendarPlugin.deleteEvent(
-          event.event.calendarId!, event.event.eventId!);
-      _service.deleteEvent(event);
+      _singleItemController.removeEvent(event);
     }
   }
 
@@ -103,11 +107,5 @@ class EditSingleItemControllerImpl extends EditSingleItemController
   }
 
   @override
-  Future<bool> deleteItem(WidgetRef ref) => state.then((item) async {
-        item.events.forEach(removeEvent);
-        removeEventsFromCalendar();
-        return ref
-            .read(Providers.singleItemControllerProvider(item.id).notifier)
-            .deleteItem(ref);
-      });
+  void deleteItem(WidgetRef ref) => _singleItemController.deleteItem(ref);
 }

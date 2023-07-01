@@ -11,24 +11,17 @@ import '/common/custom_widgets/all_custom_widgets.dart'
         FolderBubbleGrid,
         DocumentCardContainerList,
         CameraButtonHeroDestination,
-        FutureSliverFolderBuilder;
+        AsyncSliverFolderBuilder;
 
 class FoldersScreen extends ConsumerWidget {
-  const FoldersScreen({Folder? folder, int? folderId, super.key})
-      : _folder = folder,
-        _folderId = folderId;
+  const FoldersScreen({int? folderId, super.key}) : _folderId = folderId;
 
-  final Folder? _folder;
   final int? _folderId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final Future<Folder?> rootFolder = _folderId != null
-        ? ref.watch(Providers.foldersControllerProvider(_folderId!))
-        : _folder == null
-            ? ref.watch(Providers.foldersControllerProvider(
-                ref.read(Providers.dbControllerProvider).rootFolderId!))
-            : Future.value(_folder);
+    final AsyncValue<Folder?> folder =
+        ref.watch(Providers.foldersControllerProvider(_folderId));
 
     final CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
 
@@ -78,7 +71,8 @@ class FoldersScreen extends ConsumerWidget {
                                     .read(Providers.foldersControllerProvider(
                                             rootFolder.id)
                                         .notifier)
-                                    .addSubFolder(newFolderName ?? 'Folder');
+                                    .addSubFolder(newFolderName ?? 'Folder',
+                                        rootFolder.id);
                                 Navigator.of(context).pop();
                               },
                             ),
@@ -127,21 +121,10 @@ class FoldersScreen extends ConsumerWidget {
       backgroundColor: theme.backgroundColor,
       child: Stack(
         children: [
-          if (_folder == null)
-            FutureSliverFolderBuilder(
-              future: rootFolder,
-              success: folderViewBody,
-            ),
-          if (_folder != null)
-            CustomScrollView(
-              slivers: [
-                CupertinoSliverNavigationBar(
-                  backgroundColor: theme.navBarColor,
-                  largeTitle: Text(_folder!.title),
-                ),
-                ...folderViewBody(_folder!.contents ?? [], _folder!)
-              ],
-            ),
+          AsyncSliverFolderBuilder(
+            future: folder,
+            success: folderViewBody,
+          ),
           const CameraButtonHeroDestination(),
         ],
       ),
@@ -149,9 +132,8 @@ class FoldersScreen extends ConsumerWidget {
   }
 }
 
-abstract class FoldersController extends StateNotifier<Future<Folder?>> {
-  FoldersController(Future<Folder?> state) : super(state);
-
+abstract class FoldersController
+    extends AutoDisposeFamilyAsyncNotifier<Folder?, int?> {
   void delete();
 
   void rename(String newName);
@@ -159,11 +141,9 @@ abstract class FoldersController extends StateNotifier<Future<Folder?>> {
   void move(Folder newParent);
 
   void addItem(FolderItem item);
-  void addSubFolder(String title);
+  void addSubFolder(String title, int parentFolderId);
 
   Future<bool> removeItem(FolderItem item);
 
   void moveItem(FolderItem item, Folder newParent);
-
-  Future<void> moveItemHere(FolderItem item);
 }

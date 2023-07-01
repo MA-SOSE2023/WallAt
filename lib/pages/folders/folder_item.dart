@@ -32,14 +32,14 @@ abstract class FolderItem {
 
   List<FolderItem>? get contents => maybeFolder!.contents;
 
-  String get heroTag =>
-      isLeaf ? singleItemHeroTag('$id') : 'folder-heroTag$id';
+  String get heroTag => isLeaf ? singleItemHeroTag('$id') : 'folder-heroTag$id';
 
   static VoidCallback navigateTo(
       FolderItem item, BuildContext context, WidgetRef ref) {
     if (item.isLeaf) {
       return () => Routers.globalRouterDelegate.beamToNamed(
-            '/item', data: item.item,
+            '/item',
+            data: item.item,
           );
     } else {
       return () => {
@@ -47,7 +47,7 @@ abstract class FolderItem {
                 true,
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => FoldersScreen(folder: item.maybeFolder),
+                builder: (context) => FoldersScreen(folderId: item.folder.id),
               ),
             )
           };

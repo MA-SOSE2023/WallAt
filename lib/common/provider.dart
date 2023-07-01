@@ -48,20 +48,17 @@ import '/pages/profiles/profile_model.dart';
 class Providers {
   /// Provider for [SingleItemPage]
   /// - Provides a [SingleItemController] for a [SingleItem]
-  static final AutoDisposeStateNotifierProviderFamily<SingleItemController,
-          Future<SingleItem>, int> singleItemControllerProvider =
-      StateNotifierProvider.autoDispose.family((ref, id) =>
-          SingleItemControllerImpl(
-              id: id, service: ref.read(persistenceServiceProvider)));
+  static final AutoDisposeAsyncNotifierProviderFamily<SingleItemController,
+          SingleItem?, int> singleItemControllerProvider =
+      AsyncNotifierProvider.autoDispose.family(SingleItemControllerImpl.new);
 
   /// Provider for [EditSingleItemPage]
   /// - Provides a [EditSingleItemController] for a [SingleItem]
   static final AutoDisposeStateNotifierProviderFamily<EditSingleItemController,
-          Future<SingleItem>, int> editSingleItemControllerProvider =
+          SingleItem, SingleItem> editSingleItemControllerProvider =
       StateNotifierProvider.autoDispose.family(
-    (ref, id) => EditSingleItemControllerImpl(
-        model: ref.read(singleItemControllerProvider(id)),
-        service: ref.read(persistenceServiceProvider)),
+    (ref, item) => EditSingleItemControllerImpl(item,
+        controller: ref.read(singleItemControllerProvider(item.id).notifier)),
   );
 
   /// Provider for [HomeScreen]
@@ -81,12 +78,9 @@ class Providers {
 
   /// Provider for [FoldersScreen]
   /// - Provides a [FoldersController] for a [Folder]
-  static final AutoDisposeStateNotifierProviderFamily<FoldersController,
-          Future<Folder?>, int?> foldersControllerProvider =
-      StateNotifierProvider.autoDispose.family((ref, id) =>
-          FoldersControllerImpl(
-              id ?? ref.read(dbControllerProvider).rootFolderId ?? 1,
-              ref.read(persistenceServiceProvider)));
+  static final AutoDisposeAsyncNotifierProviderFamily<FoldersController,
+          Folder?, int?> foldersControllerProvider =
+      AsyncNotifierProvider.autoDispose.family(FoldersControllerImpl.new);
 
   /// Provider for [CustomBottomNavBar]
   /// - Provides a [CustomBottomNavBarController] for a [CustomBottomNavBarModel]
@@ -103,8 +97,6 @@ class Providers {
           TakePictureControllerImpl(
               state, ref.read(persistenceServiceProvider)));
 
-  static final enableHeroAnimationProvider = StateProvider<bool>((ref) => true);
-
   /// Provider for [CalendarButton]
   /// - Provides a [CalendarButtonController] for a [CalendarModel]
   static final StateNotifierProvider<CalendarButtonController, CalendarModel>
@@ -119,6 +111,8 @@ class Providers {
     dbController.openDb();
     return dbController;
   });
+
+  static final enableHeroAnimationProvider = StateProvider<bool>((ref) => true);
 
   static final Provider<PersistenceService> persistenceServiceProvider =
       Provider<PersistenceService>(

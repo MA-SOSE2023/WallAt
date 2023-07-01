@@ -1,18 +1,20 @@
-import 'package:gruppe4/pages/single_item/model/single_item.dart';
+import 'dart:async';
+
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'folder_item.dart';
 import 'folder_model.dart';
 import 'folders_view.dart';
-import '/common/utils/future_controller_mixin.dart';
-import '/common/services/persistence/persistence_service.dart';
+import '/common/utils/persisting_controller_mixin.dart';
 
 class FoldersControllerImpl extends FoldersController
-    with FutureControllerMixin {
-  FoldersControllerImpl(int id, PersistenceService service)
-      : _service = service,
-        super(service.getFolder(id));
+    with PersistingControllerMixin {
+  @override
+  FutureOr<Folder?> build(int? arg) async =>
+      persistence.getFolder(arg ?? await persistence.rootFolderId);
 
-  final PersistenceService _service;
+  @override
+  Future persistUpdate(Folder updated) => persistence.updateFolder(updated);
 
   @override
   void addItem(FolderItem item) {
@@ -20,14 +22,11 @@ class FoldersControllerImpl extends FoldersController
   }
 
   @override
-  Future<void> addSubFolder(String title) {
-    Future<Folder> createdFolder = state.then((state) =>
-        _service.createFolder(title: title, parentFolderId: state?.id));
-
-    return createdFolder.then((folder) {
-      return futureState((state) =>
-          state?.copyWith(contents: [...state.contents ?? [], folder]));
-    });
+  void addSubFolder(String title, int parentFolderId) async {
+    final Folder subFolder = await persistence.createFolder(
+        title: title, parentFolderId: parentFolderId);
+    state = state.whenData((folder) =>
+        folder?.copyWith(contents: [...folder.contents ?? [], subFolder]));
   }
 
   @override
@@ -41,36 +40,23 @@ class FoldersControllerImpl extends FoldersController
   }
 
   @override
-  void moveItem(FolderItem item, Folder newParent) {
-    futureState((state) => state?.copyWith(
+  void moveItem(FolderItem item, Folder newParent) async {
+    await (item.isLeaf
+        ? persistence.moveSingleItem(item.item, newParent)
+        : persistence.moveFolder(item.folder, newParent));
+    state = state.whenData((folder) => folder?.copyWith(
         contents:
-            state.contents?.where((element) => element != item).toList()));
-    item.isLeaf
-        ? _service.moveSingleItem(item.item, newParent)
-        : _service.moveFolder(item.folder, newParent);
-  }
-
-  @override
-  Future<void> moveItemHere(FolderItem item) {
-    futureState(
-        (state) => state?.copyWith(contents: [...state.contents ?? [], item]));
-    return state.then((state) {
-      if (state != null) {
-        return item.isLeaf
-            ? _service.moveSingleItem(item.item, state)
-            : _service.moveFolder(item.folder, state);
-      }
-    });
+            folder.contents?.where((element) => element != item).toList()));
   }
 
   @override
   Future<bool> removeItem(FolderItem item) {
-    futureState((state) => state?.copyWith(
+    state = state.whenData((folder) => folder?.copyWith(
         contents:
-            state.contents?.where((element) => element != item).toList()));
+            folder.contents?.where((element) => element != item).toList()));
     return item.isLeaf
-        ? _service.deleteSingleItem(item.item)
-        : _service.deleteFolder(item.folder);
+        ? persistence.deleteSingleItem(item.item)
+        : persistence.deleteFolder(item.folder);
   }
 
   @override

@@ -58,7 +58,6 @@ class SingleItemPage extends ConsumerWidget {
                         Expanded(
                           child: Container(
                             padding: const EdgeInsets.only(right: 20),
-                            
                             child: Text(
                               textAlign: TextAlign.left,
                               style: const TextStyle(
@@ -72,30 +71,30 @@ class SingleItemPage extends ConsumerWidget {
                       background: GestureDetector(
                         child: Stack(
                           children: [
-                            
-                            
-                             
-                          Hero(
-                            tag: singleItemHeroTag(item.id.toString()),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                
-                                image: DecorationImage(
-                                  image: item.image,
-                                  fit: BoxFit.cover,
+                            Hero(
+                              tag: singleItemHeroTag(item.id.toString()),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: item.image,
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          Container(decoration: const BoxDecoration(gradient: LinearGradient(colors: 
-                                  [
+                            Container(
+                              decoration: const BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [
                                     Color.fromARGB(255, 50, 50, 50),
                                     Color.fromARGB(0, 0, 0, 0),
                                   ],
                                   begin: Alignment.bottomCenter,
                                   end: Alignment.topCenter,
                                   stops: [0.0, 0.3],
-                                ),),),
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                         onTap: () {
@@ -273,7 +272,7 @@ class ActionButtons extends ConsumerWidget {
           ),
           CupertinoButton(
             onPressed: () {
-              controller.setFavorite();
+              controller.toggleFavorite();
             },
             child: Icon(item.isFavorite
                 ? CupertinoIcons.heart_fill
@@ -285,10 +284,12 @@ class ActionButtons extends ConsumerWidget {
   }
 }
 
-abstract class SingleItemController extends StateNotifier<Future<SingleItem>> {
-  SingleItemController(Future<SingleItem> state) : super(state);
+abstract class SingleItemController
+    extends AutoDisposeFamilyAsyncNotifier<SingleItem?, int>
+    implements SingleItemControllerInterface {}
 
-  void setImage(Image image);
+abstract class SingleItemControllerInterface {
+  void setImage(ImageProvider image);
 
   void setDescription(String description);
 
@@ -298,9 +299,9 @@ abstract class SingleItemController extends StateNotifier<Future<SingleItem>> {
 
   void removeEvent(ItemEvent event);
 
-  Future<bool> deleteItem(WidgetRef ref);
+  void deleteItem(WidgetRef ref);
 
-  void setFavorite();
+  void toggleFavorite();
 
   void navigateToThisItem();
 }

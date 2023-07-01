@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gruppe4/pages/single_item/single_item_view.dart';
 
 import 'model/single_item.dart';
-import '/pages/single_item/single_item_view.dart';
 import '/common/provider.dart';
 import '/common/theme/custom_theme_data.dart';
 import '/common/custom_widgets/all_custom_widgets.dart'
@@ -188,7 +188,7 @@ class EditSingleItemPage extends ConsumerWidget {
                           child: const Text('Save',
                               style: TextStyle(fontSize: 14)),
                           onPressed: () {
-                            controller.saveChanges(ref);
+                            controller.saveChanges();
                             // Save the item
                             Navigator.of(context).pop();
                           }),
@@ -204,12 +204,13 @@ class EditSingleItemPage extends ConsumerWidget {
   }
 }
 
-abstract class EditSingleItemController extends SingleItemController {
-  EditSingleItemController(Future<SingleItem> state) : super(state);
+abstract class EditSingleItemController extends StateNotifier<SingleItem>
+    implements SingleItemControllerInterface {
+  EditSingleItemController(super.state);
 
   DateTime? getSelectedDate();
 
   void setSelectedDate(DateTime date);
 
-  void saveChanges(WidgetRef ref);
+  void saveChanges();
 }
