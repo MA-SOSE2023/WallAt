@@ -16,7 +16,6 @@ class CustomBottomNavBarScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.watch(Providers.enableHeroAnimationProvider);
     return Scaffold(
       body: Beamer(
         key: Routers.bottomNavRouterBeamerKey,

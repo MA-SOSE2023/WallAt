@@ -70,6 +70,7 @@ class CustomBottomNavBarControllerImpl extends CustomBottomNavBarController {
       ),
     );
 
+    ref.read(Providers.enableHeroAnimationProvider.notifier).state = false;
     if (getNavBarItems()[index].onTap != null) {
       getNavBarItems()[index].onTap!(ref);
     } else {
