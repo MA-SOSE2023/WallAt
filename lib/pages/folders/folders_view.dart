@@ -8,25 +8,21 @@ import 'folder_item.dart';
 import '/common/provider.dart';
 import '/common/custom_widgets/all_custom_widgets.dart'
     show
-        FolderBubbleGrid,
-        DocumentCardContainerList,
+        AsyncSliverFolderBuilder,
         CameraButtonHeroDestination,
-        AsyncSliverFolderBuilder;
+        DocumentCardContainerList,
+        FolderBubbleGrid;
 
 class FoldersScreen extends ConsumerWidget {
-  const FoldersScreen({int? folderId, super.key}) : _folderId = folderId;
+  const FoldersScreen({Folder? folder, super.key}) : _folder = folder;
 
-  final int? _folderId;
+  final Folder? _folder;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final AsyncValue<Folder?> folder =
-        ref.watch(Providers.foldersControllerProvider(_folderId));
-
     final CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
 
-    List<Widget> folderViewBody(List<FolderItem> contents, Folder rootFolder) =>
-        [
+    List<Widget> folderViewBody(List<FolderItem> contents, Folder folder) => [
           SliverPadding(
             padding: const EdgeInsets.only(bottom: 10.0),
             sliver: SliverAppBar(
@@ -35,7 +31,8 @@ class FoldersScreen extends ConsumerWidget {
               primary: false,
               toolbarHeight: 30.0,
               backgroundColor: theme.groupingColor,
-              title: Text('Subfolders', style: TextStyle(fontSize: 16, color: theme.textColor)),
+              title: Text('Subfolders',
+                  style: TextStyle(fontSize: 16, color: theme.textColor)),
               centerTitle: true,
               actions: [
                 CupertinoButton(
@@ -69,10 +66,9 @@ class FoldersScreen extends ConsumerWidget {
                               onPressed: () {
                                 ref
                                     .read(Providers.foldersControllerProvider(
-                                            rootFolder.id)
+                                            folder.id)
                                         .notifier)
-                                    .addSubFolder(newFolderName ?? 'Folder',
-                                        rootFolder.id);
+                                    .addSubFolder(newFolderName ?? 'Folder');
                                 Navigator.of(context).pop();
                               },
                             ),
@@ -117,12 +113,17 @@ class FoldersScreen extends ConsumerWidget {
           ),
         ];
 
+    final AsyncValue<Folder?> folderFuture = ref.watch(
+      Providers.foldersControllerProvider(_folder?.id),
+    );
+
     return CupertinoPageScaffold(
       backgroundColor: theme.backgroundColor,
       child: Stack(
         children: [
           AsyncSliverFolderBuilder(
-            future: folder,
+            future: folderFuture,
+            initialData: _folder,
             success: folderViewBody,
           ),
           const CameraButtonHeroDestination(),
@@ -133,15 +134,15 @@ class FoldersScreen extends ConsumerWidget {
 }
 
 abstract class FoldersController
-    extends AutoDisposeFamilyAsyncNotifier<Folder?, int?> {
+    extends AutoDisposeFamilyAsyncNotifier<Folder?, int> {
   void delete();
 
   void rename(String newName);
 
   void move(Folder newParent);
 
-  void addItem(FolderItem item);
-  void addSubFolder(String title, int parentFolderId);
+  void receiveItem(FolderItem item);
+  void addSubFolder(String title);
 
   Future<bool> removeItem(FolderItem item);
 

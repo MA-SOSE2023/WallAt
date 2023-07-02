@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 
-import '../../router/router.dart';
 import 'home_model.dart';
 import '/common/provider.dart';
 import '/common/theme/custom_theme_data.dart';
@@ -11,7 +10,8 @@ import '/common/custom_widgets/all_custom_widgets.dart'
     show
         EventCard,
         DocumentCardContainerList,
-        FutureSliverListBuilder,
+        AsyncSliverListBuilder,
+        ProfilesButton,
         cameraButtonHeroTag;
 
 class HomeScreen extends ConsumerWidget {
@@ -19,7 +19,7 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    Future<HomeModel> model = ref.watch(Providers.homeControllerProvider);
+    AsyncValue<HomeModel> model = ref.watch(Providers.homeControllerProvider);
     final CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
 
     return Scaffold(
@@ -43,15 +43,11 @@ class HomeScreen extends ConsumerWidget {
         slivers: [
           CupertinoSliverNavigationBar(
             backgroundColor: theme.navBarColor,
-            largeTitle: Text('Home'),
-            trailing: CupertinoButton(
-                padding: EdgeInsets.zero,
-                child: Icon(CupertinoIcons.profile_circled, size: 30.0),
-                onPressed: () =>
-                    Routers.globalRouterDelegate.beamToNamed('/profiles')),
+            largeTitle: const Text('Home'),
+            trailing: const ProfilesButton(),
           ),
-          FutureSliverListBuilder(
-            future: model.then((m) => m.events),
+          AsyncSliverListBuilder(
+            future: model.whenData((m) => m.events),
             success: (events) => SliverToBoxAdapter(
               child: ConstrainedBox(
                 constraints: BoxConstraints(
@@ -100,8 +96,8 @@ class HomeScreen extends ConsumerWidget {
               ),
             ),
           ),
-          FutureSliverListBuilder(
-            future: model.then((m) => m.recentItems),
+          AsyncSliverListBuilder(
+            future: model.whenData((m) => m.recentItems),
             success: (recentItems) => DocumentCardContainerList(
               items: recentItems,
               showFavoriteButton: false,
@@ -117,8 +113,4 @@ class HomeScreen extends ConsumerWidget {
       ),
     );
   }
-}
-
-abstract class HomeController extends StateNotifier<Future<HomeModel>> {
-  HomeController(Future<HomeModel> state) : super(state);
 }

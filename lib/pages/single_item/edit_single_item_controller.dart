@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:device_calendar/device_calendar.dart';
 
 import 'edit_single_item_view.dart';
@@ -107,5 +106,5 @@ class EditSingleItemControllerImpl extends EditSingleItemController
   }
 
   @override
-  void deleteItem(WidgetRef ref) => _singleItemController.deleteItem(ref);
+  void deleteItem() => _singleItemController.deleteItem();
 }

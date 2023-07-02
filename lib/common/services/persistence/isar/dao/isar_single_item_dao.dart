@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
-import 'package:gruppe4/pages/folders/folder_model.dart';
 import 'package:isar/isar.dart';
 
+import '/pages/folders/folder_model.dart';
 import '/pages/single_item/model/single_item.dart';
 import '/common/services/persistence/persistence_service.dart';
 import '/common/services/persistence/isar/schemas/isar_folder.dart';

@@ -9,7 +9,6 @@ class Routers {
   /// individual pages
   static final globalRouterDelegate = BeamerDelegate(
     navigatorObservers: [HeroController()],
-    initialPath: '/home',
     locationBuilder: BeamerLocationBuilder(
       beamLocations: [
         GlobalLocation(),
@@ -23,6 +22,7 @@ class Routers {
   /// Handles the individual pages nested into the global navigation
   static final bottomNavRouterDelegate = BeamerDelegate(
     navigatorObservers: [HeroController()],
+    initialPath: '/home',
     locationBuilder: BeamerLocationBuilder(
       beamLocations: [
         HomeLocation(),

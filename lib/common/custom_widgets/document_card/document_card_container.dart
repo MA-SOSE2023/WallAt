@@ -71,7 +71,7 @@ class DocumentCardContainer extends ConsumerWidget {
         future: itemFuture,
         initialData: _item,
         loading: () => DocumentCard(item: _item),
-        onNull: () => DocumentCard(item: _item),
+        onNull: () => DocumentCard(item: SingleItem.placeholder(id: _item.id)),
         error: (_) => DocumentCard(item: SingleItem.error()),
         success: (item) => documentCardRow(item),
       ),

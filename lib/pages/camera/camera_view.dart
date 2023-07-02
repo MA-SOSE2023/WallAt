@@ -63,7 +63,7 @@ class SaveItemScreen extends ConsumerWidget {
                 ref
                     .read(Providers.singleItemControllerProvider(item.id)
                         .notifier)
-                    .deleteItem(ref);
+                    .deleteItem();
                 Navigator.of(context).pop();
               },
             ),
@@ -73,7 +73,7 @@ class SaveItemScreen extends ConsumerWidget {
               onPressed: () {
                 controller.saveChanges();
                 // Save the item
-                context.beamToNamed('/item/move', data: item);
+                context.beamToReplacementNamed('/item/move', data: item);
               },
             ),
           ),

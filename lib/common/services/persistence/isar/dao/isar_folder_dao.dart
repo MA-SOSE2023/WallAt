@@ -1,9 +1,8 @@
-import 'package:gruppe4/common/services/persistence/isar/schemas/isar_item_event.dart';
-import 'package:gruppe4/common/services/persistence/isar/schemas/isar_single_item.dart';
-import 'package:gruppe4/pages/single_item/model/single_item.dart';
 import 'package:isar/isar.dart';
 
+import '/pages/single_item/model/single_item.dart';
 import '/pages/folders/folder_model.dart';
+import '/common/services/persistence/isar/schemas/isar_single_item.dart';
 import '/common/services/persistence/isar/schemas/isar_folder.dart';
 import '/common/services/persistence/persistence_service.dart';
 
@@ -87,10 +86,8 @@ class IsarFolderDao extends FolderDao {
   Future<bool> deleteItemFromFolder(SingleItem item) async {
     final IsarSingleItem? isarItem = await _isar.isarSingleItems.get(item.id);
     if (isarItem != null) {
-      return _isar.writeTxn(() {
-        isarItem.parentFolder.value?.items.remove(isarItem);
-        return _isar.isarSingleItems.delete(isarItem.id);
-      });
+      return _isar
+          .writeTxnSync(() => _isar.isarSingleItems.deleteSync(item.id));
     }
     return false;
   }

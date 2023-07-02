@@ -4,6 +4,7 @@ export 'date_picker.dart';
 export 'event_container.dart';
 export 'camera_button_hero_destination.dart';
 export 'bottom_nav_bar/bottom_nav_bar_view.dart';
+export 'profiles_button.dart';
 // Document Card
 export 'document_card/document_card.dart';
 export 'document_card/document_card_container.dart';

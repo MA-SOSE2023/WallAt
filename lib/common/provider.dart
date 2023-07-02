@@ -1,7 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gruppe4/common/services/persistence/db_model.dart';
-import 'package:gruppe4/common/services/persistence/persistence_service.dart';
+import 'package:gruppe4/pages/single_item/model/item_event.dart';
 
 // Single Item
 import '/pages/single_item/single_item_view.dart';
@@ -11,7 +9,6 @@ import '/pages/single_item/edit_single_item_view.dart';
 import '/pages/single_item/model/single_item.dart';
 // Home
 import '/pages/home/home_view.dart';
-import '/pages/home/home_controller.dart';
 import '/pages/home/home_model.dart';
 // Favorites
 import '/pages/favorites/favorites_view.dart';
@@ -22,27 +19,25 @@ import '/pages/folders/folders_controller.dart';
 import '/pages/folders/folder_model.dart';
 // Persistence
 import '/common/services/persistence/isar/isar_controller.dart';
-
+import '/common/services/persistence/db_model.dart';
+import '/common/services/persistence/persistence_service.dart';
 // Settings
 import '/pages/settings/settings_view.dart';
 import '/pages/settings/settings_controller.dart';
 import '/pages/settings/settings_model.dart';
-
-import 'custom_widgets/all_custom_widgets.dart';
-
 // Camera
 import '/pages/camera/camera_view.dart';
 import '/pages/camera/camera_controller.dart';
 import '/pages/camera/camera_model.dart';
-
-// theme
+// Theme
 import 'theme/theme_controller.dart';
 import 'theme/custom_theme_data.dart';
-
 //Profiles
 import '/pages/profiles/profiles_view.dart';
 import '/pages/profiles/profiles_controller.dart';
 import '/pages/profiles/profile_model.dart';
+
+import 'custom_widgets/all_custom_widgets.dart';
 
 /// Flutter Riverpod providers
 class Providers {
@@ -63,10 +58,15 @@ class Providers {
 
   /// Provider for [HomeScreen]
   /// - Provides a [HomeController] for a [HomeModel]
-  static final StateNotifierProvider<HomeController, Future<HomeModel>>
-      homeControllerProvider =
-      StateNotifierProvider<HomeController, Future<HomeModel>>(
-          (ref) => HomeControllerImpl(ref.read(persistenceServiceProvider)));
+  static final AutoDisposeFutureProvider<HomeModel> homeControllerProvider =
+      FutureProvider.autoDispose<HomeModel>(
+    (ref) async {
+      final PersistenceService service = ref.watch(persistenceServiceProvider);
+      final List<SingleItem> recentItems = await service.getRecentItems();
+      final List<ItemEvent> soonEvents = await service.getSoonEvents();
+      return HomeModel(recentItems: recentItems, events: soonEvents);
+    },
+  );
 
   /// Provider for [FavoritesScreen]
   /// - Provides a [FavoritesController] for a List of [SingleItem]s
@@ -76,11 +76,22 @@ class Providers {
           (ref) =>
               FavoritesControllerImpl(ref.watch(persistenceServiceProvider)));
 
+  static final AutoDisposeAsyncNotifierProviderFamily<FoldersController,
+          Folder?, int> _foldersControllerProvider =
+      AsyncNotifierProvider.autoDispose.family(FoldersControllerImpl.new);
+
+  static final _rootFolderProvider = _foldersControllerProvider(-1);
+
   /// Provider for [FoldersScreen]
   /// - Provides a [FoldersController] for a [Folder]
-  static final AutoDisposeAsyncNotifierProviderFamily<FoldersController,
-          Folder?, int?> foldersControllerProvider =
-      AsyncNotifierProvider.autoDispose.family(FoldersControllerImpl.new);
+  // Proxies to either the root folder or a subfolder
+  static foldersControllerProvider(int? arg) {
+    if (arg == null) {
+      return _rootFolderProvider;
+    } else {
+      return _foldersControllerProvider(arg);
+    }
+  }
 
   /// Provider for [CustomBottomNavBar]
   /// - Provides a [CustomBottomNavBarController] for a [CustomBottomNavBarModel]
@@ -107,9 +118,7 @@ class Providers {
   static final StateNotifierProvider<DbController, DbModel>
       dbControllerProvider =
       StateNotifierProvider<DbController, DbModel>((ref) {
-    DbController dbController = IsarController();
-    dbController.openDb();
-    return dbController;
+    return IsarController();
   });
 
   static final enableHeroAnimationProvider = StateProvider<bool>((ref) => true);

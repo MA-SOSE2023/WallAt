@@ -16,7 +16,7 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$DbModel {
-  Db? get db => throw _privateConstructorUsedError;
+  Future<Db>? get db => throw _privateConstructorUsedError;
   FolderDao? get folderDao => throw _privateConstructorUsedError;
   SingleItemDao? get singleItemDao => throw _privateConstructorUsedError;
   ItemEventDao? get eventDao => throw _privateConstructorUsedError;
@@ -32,7 +32,7 @@ abstract class $DbModelCopyWith<$Res> {
       _$DbModelCopyWithImpl<$Res, DbModel>;
   @useResult
   $Res call(
-      {Db? db,
+      {Future<Db>? db,
       FolderDao? folderDao,
       SingleItemDao? singleItemDao,
       ItemEventDao? eventDao,
@@ -62,7 +62,7 @@ class _$DbModelCopyWithImpl<$Res, $Val extends DbModel>
       db: freezed == db
           ? _value.db
           : db // ignore: cast_nullable_to_non_nullable
-              as Db?,
+              as Future<Db>?,
       folderDao: freezed == folderDao
           ? _value.folderDao
           : folderDao // ignore: cast_nullable_to_non_nullable
@@ -91,7 +91,7 @@ abstract class _$$_DbModelCopyWith<$Res> implements $DbModelCopyWith<$Res> {
   @override
   @useResult
   $Res call(
-      {Db? db,
+      {Future<Db>? db,
       FolderDao? folderDao,
       SingleItemDao? singleItemDao,
       ItemEventDao? eventDao,
@@ -118,7 +118,7 @@ class __$$_DbModelCopyWithImpl<$Res>
       db: freezed == db
           ? _value.db
           : db // ignore: cast_nullable_to_non_nullable
-              as Db?,
+              as Future<Db>?,
       folderDao: freezed == folderDao
           ? _value.folderDao
           : folderDao // ignore: cast_nullable_to_non_nullable
@@ -150,7 +150,7 @@ class _$_DbModel implements _DbModel {
       this.rootFolderId});
 
   @override
-  final Db? db;
+  final Future<Db>? db;
   @override
   final FolderDao? folderDao;
   @override
@@ -170,7 +170,7 @@ class _$_DbModel implements _DbModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_DbModel &&
-            const DeepCollectionEquality().equals(other.db, db) &&
+            (identical(other.db, db) || other.db == db) &&
             (identical(other.folderDao, folderDao) ||
                 other.folderDao == folderDao) &&
             (identical(other.singleItemDao, singleItemDao) ||
@@ -183,12 +183,7 @@ class _$_DbModel implements _DbModel {
 
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(db),
-      folderDao,
-      singleItemDao,
-      eventDao,
-      rootFolderId);
+      runtimeType, db, folderDao, singleItemDao, eventDao, rootFolderId);
 
   @JsonKey(ignore: true)
   @override
@@ -199,14 +194,14 @@ class _$_DbModel implements _DbModel {
 
 abstract class _DbModel implements DbModel {
   factory _DbModel(
-      {final Db? db,
+      {final Future<Db>? db,
       final FolderDao? folderDao,
       final SingleItemDao? singleItemDao,
       final ItemEventDao? eventDao,
       final int? rootFolderId}) = _$_DbModel;
 
   @override
-  Db? get db;
+  Future<Db>? get db;
   @override
   FolderDao? get folderDao;
   @override

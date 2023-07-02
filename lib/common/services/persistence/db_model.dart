@@ -7,7 +7,7 @@ part 'db_model.freezed.dart';
 @freezed
 class DbModel with _$DbModel {
   factory DbModel({
-    Db? db,
+    Future<Db>? db,
     FolderDao? folderDao,
     SingleItemDao? singleItemDao,
     ItemEventDao? eventDao,

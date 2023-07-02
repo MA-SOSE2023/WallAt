@@ -22,7 +22,14 @@ class FolderBubbleGrid extends StatelessWidget {
         crossAxisSpacing: 20.0,
       ),
       delegate: SliverChildBuilderDelegate(
-        (context, index) => FolderBubble(folder: _folder[index]),
+        (context, index) => Padding(
+          padding: EdgeInsets.only(
+            left: index % 2 == 0 ? 10.0 : 0.0,
+            right: index % 2 == 0 ? 0.0 : 10.0,
+            top: 5,
+          ),
+          child: FolderBubble(folder: _folder[index]),
+        ),
         childCount: _folder.length,
       ),
     );

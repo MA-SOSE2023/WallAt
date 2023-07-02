@@ -10,18 +10,22 @@ import '/common/custom_widgets/all_custom_widgets.dart'
         SliverErrorMessage,
         SliverNoElementsMessage,
         AsyncOptionBuilder,
-        SliverActivityIndicator;
+        SliverActivityIndicator,
+        ProfilesButton;
 
 class AsyncSliverFolderBuilder extends ConsumerWidget {
   const AsyncSliverFolderBuilder({
     required AsyncValue<Folder?> future,
     required List<Widget> Function(List<FolderItem>, Folder) success,
+    Folder? initialData,
     super.key,
   })  : _future = future,
-        _onSuccessBuilder = success;
+        _onSuccessBuilder = success,
+        _initialData = initialData;
 
   final AsyncValue<Folder?> _future;
   final List<Widget> Function(List<FolderItem>, Folder) _onSuccessBuilder;
+  final Folder? _initialData;
 
   final String _onNullMessage =
       'No matching folder was found.\nTry restarting the app.';
@@ -33,14 +37,28 @@ class AsyncSliverFolderBuilder extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
-    return AsyncOptionBuilder(
-      future: _future,
-      onNull: () => CustomScrollView(
+    Widget folderScrollView({
+      required List<Widget> children,
+      String? title,
+    }) {
+      return CustomScrollView(
         slivers: [
           CupertinoSliverNavigationBar(
             backgroundColor: theme.navBarColor,
-            largeTitle: const Text('Folders'),
+            largeTitle: Text(title ?? ''),
+            trailing: const ProfilesButton(),
           ),
+          ...children,
+        ],
+      );
+    }
+
+    return AsyncOptionBuilder(
+      future: _future,
+      initialData: _initialData,
+      onNull: () => folderScrollView(
+        title: 'Folders',
+        children: [
           SliverErrorMessage(
             message: _onNullMessage,
           ),
@@ -48,12 +66,9 @@ class AsyncSliverFolderBuilder extends ConsumerWidget {
       ),
       success: (folder) {
         final List<FolderItem>? contents = folder.contents;
-        return CustomScrollView(
-          slivers: [
-            CupertinoSliverNavigationBar(
-              backgroundColor: theme.navBarColor,
-              largeTitle: Text(folder.title),
-            ),
+        return folderScrollView(
+          title: folder.title,
+          children: [
             if (contents == null)
               SliverErrorMessage(
                 message: _onNullMessage,
@@ -64,26 +79,21 @@ class AsyncSliverFolderBuilder extends ConsumerWidget {
                 message: _emptyListMessage,
               )
             ] else
-              ..._onSuccessBuilder(folder.contents!, folder),
+              ..._onSuccessBuilder(contents, folder),
           ],
         );
       },
-      error: (_) => CustomScrollView(
-        slivers: [
-          const CupertinoSliverNavigationBar(
-            largeTitle: Text('Folders'),
-          ),
+      error: (_) => folderScrollView(
+        title: 'Folders',
+        children: [
           SliverErrorMessage(
             message: _errorMessage,
           ),
         ],
       ),
-      loading: () => const CustomScrollView(
-        slivers: [
-          CupertinoSliverNavigationBar(
-            largeTitle: Text('Folders'),
-          ),
-          SliverActivityIndicator(),
+      loading: () => folderScrollView(
+        children: [
+          const SliverActivityIndicator(),
         ],
       ),
     );

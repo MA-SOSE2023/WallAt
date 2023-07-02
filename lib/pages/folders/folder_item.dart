@@ -34,23 +34,24 @@ abstract class FolderItem {
 
   String get heroTag => isLeaf ? singleItemHeroTag('$id') : 'folder-heroTag$id';
 
-  static VoidCallback navigateTo(
-      FolderItem item, BuildContext context, WidgetRef ref) {
-    if (item.isLeaf) {
-      return () => Routers.globalRouterDelegate.beamToNamed(
-            '/item',
-            data: item.item,
-          );
+  VoidCallback navigateTo(BuildContext context, WidgetRef ref) {
+    if (isLeaf) {
+      return () {
+        ref.read(Providers.enableHeroAnimationProvider.notifier).state = true;
+        Routers.globalRouterDelegate.beamToNamed(
+          '/item',
+          data: item,
+        );
+      };
     } else {
-      return () => {
-            ref.read(Providers.enableHeroAnimationProvider.notifier).state =
-                true,
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => FoldersScreen(folderId: item.folder.id),
-              ),
-            )
-          };
+      return () {
+        ref.read(Providers.enableHeroAnimationProvider.notifier).state = true;
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => FoldersScreen(folder: folder),
+          ),
+        );
+      };
     }
   }
 }

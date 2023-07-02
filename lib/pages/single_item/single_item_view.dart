@@ -50,7 +50,10 @@ class SingleItemPage extends ConsumerWidget {
                     titleSpacing: 10,
                     pinned: true,
                     stretch: true,
-                    leading: const CupertinoNavigationBarBackButton(),
+                    leading: CupertinoNavigationBarBackButton(
+                      previousPageTitle: '',
+                      onPressed: () => context.beamBack(),
+                    ),
                     backgroundColor: theme.navBarColor,
                     expandedHeight: MediaQuery.of(context).size.height / 1.5,
                     flexibleSpace: FlexibleSpaceBar(
@@ -230,7 +233,7 @@ class _ActionButtons extends ConsumerWidget {
           ),
           CupertinoButton(
             onPressed: () {
-              controller.deleteItem(ref);
+              controller.deleteItem();
               context.beamBack();
             },
             child: const Icon(CupertinoIcons.delete), // Use the Cupertino icon
@@ -264,7 +267,7 @@ abstract class SingleItemControllerInterface {
 
   void removeEvent(ItemEvent event);
 
-  void deleteItem(WidgetRef ref);
+  void deleteItem();
 
   void toggleFavorite();
 

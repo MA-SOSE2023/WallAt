@@ -5,62 +5,160 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'folder_item.dart';
 import 'folder_model.dart';
 import 'folders_view.dart';
-import '/common/utils/persisting_controller_mixin.dart';
+import '/common/provider.dart';
+import '/common/utils/async_persisting_controller_mixin.dart';
 
 class FoldersControllerImpl extends FoldersController
-    with PersistingControllerMixin {
+    with AutoDisposeAsyncPersistingControllerMixin {
   @override
-  FutureOr<Folder?> build(int? arg) async =>
-      persistence.getFolder(arg ?? await persistence.rootFolderId);
+  FutureOr<Folder?> build(int arg) async {
+    final Folder? folder = await persistence.getFolder(arg);
+    // Register listeners for all children so that provider is updated
+    // automatically when a child is updated
+    for (FolderItem item in folder?.contents ?? []) {
+      listener<T>(T? previous, T next) {
+        if (previous != next) {
+          updateChild(item);
+        }
+      }
+
+      if (item.isLeaf) {
+        ref.listen(Providers.singleItemControllerProvider(item.id), listener);
+      } else {
+        ref.listen(Providers.foldersControllerProvider(item.id), listener);
+      }
+    }
+    return folder;
+  }
+
+  void updateChild(FolderItem item) async {
+    final Folder? folder = await future;
+    state = AsyncValue.data(
+      folder?.copyWith(
+        contents: [
+          for (final FolderItem child in folder.contents ?? [])
+            if (child.id == item.id) item else child
+        ],
+      ),
+    );
+  }
 
   @override
   Future persistUpdate(Folder updated) => persistence.updateFolder(updated);
 
-  @override
-  void addItem(FolderItem item) {
-    // TODO: implement addItem
-  }
+  FoldersControllerImpl _getOtherController(int parentId) =>
+      ref.read(Providers.foldersControllerProvider(parentId).notifier)
+          as FoldersControllerImpl;
 
+  /// Creates a folder from the given title and adds it to this folders state
   @override
-  void addSubFolder(String title, int parentFolderId) async {
+  void addSubFolder(String title) async {
+    final Folder? parentFolder = await future;
     final Folder subFolder = await persistence.createFolder(
-        title: title, parentFolderId: parentFolderId);
-    state = state.whenData((folder) =>
-        folder?.copyWith(contents: [...folder.contents ?? [], subFolder]));
+        title: title, parentFolderId: parentFolder?.id);
+    receiveItem(subFolder);
   }
 
+  /// Deletes this folder from database and removes it from its parent
   @override
-  void delete() {
-    // TODO: implement delete
+  void delete() async {
+    final Folder? folder = await future;
+    if (folder == null) {
+      return;
+    }
+    final Folder? parentFolder = await persistence.getParentFolder(folder);
+    if (parentFolder == null) {
+      return;
+    }
+    _getOtherController(parentFolder.id).removeItem(folder);
   }
 
+  /// Moves this folder into another folder
   @override
-  void move(Folder newParent) {
-    // TODO: implement move
+  void move(Folder newParent) async {
+    final Folder? folder = await future;
+    if (folder == null || folder.id == newParent.id) {
+      return;
+    }
+    await persistence.moveFolder(folder, newParent);
+    _getOtherController(newParent.id).receiveItem(folder);
+    // invalidate own state to trigger refresh in parent folder
+    ref.invalidateSelf();
   }
 
   @override
   void moveItem(FolderItem item, Folder newParent) async {
+    final Folder? folder = await future;
+    if (folder?.id == newParent.id) {
+      return;
+    }
     await (item.isLeaf
         ? persistence.moveSingleItem(item.item, newParent)
         : persistence.moveFolder(item.folder, newParent));
-    state = state.whenData((folder) => folder?.copyWith(
+    _getOtherController(newParent.id).receiveItem(item);
+    state = AsyncValue.data(
+      folder?.copyWith(
         contents:
-            folder.contents?.where((element) => element != item).toList()));
+            folder.contents?.where((element) => element.id != item.id).toList(),
+      ),
+    );
   }
 
+  /// Adds item to this folders state but does not write it to database
   @override
-  Future<bool> removeItem(FolderItem item) {
-    state = state.whenData((folder) => folder?.copyWith(
-        contents:
-            folder.contents?.where((element) => element != item).toList()));
-    return item.isLeaf
+  void receiveItem(FolderItem item) async {
+    final Folder? folder = await future;
+    if (item.isFolder) {
+      final List<FolderItem> subFolders = (folder?.contents ?? [])
+          .where((element) => element.isFolder)
+          .toList();
+      final List<FolderItem> subItems =
+          (folder?.contents ?? []).where((element) => element.isLeaf).toList();
+      state = AsyncValue.data(
+        folder?.copyWith(
+          contents: [
+            ...subFolders,
+            item,
+            ...subItems,
+          ],
+        ),
+      );
+    } else {
+      state = AsyncValue.data(
+        folder?.copyWith(
+          contents: [...folder.contents ?? [], item],
+        ),
+      );
+    }
+  }
+
+  /// Deletes item from this folders state and database
+  @override
+  Future<bool> removeItem(FolderItem item) async {
+    final Folder? folder = await future;
+    final bool deleteResult = await (item.isLeaf
         ? persistence.deleteSingleItem(item.item)
-        : persistence.deleteFolder(item.folder);
+        : persistence.deleteFolder(item.folder));
+    if (deleteResult && folder != null) {
+      state = AsyncValue.data(
+        folder.copyWith(
+          contents: folder.contents
+              ?.where((element) => element.id != item.id)
+              .toList(),
+        ),
+      );
+      ref.invalidateSelf;
+    }
+    return deleteResult;
   }
 
+  /// Renames this folder
   @override
-  void rename(String newName) {
-    // TODO: implement rename
+  void rename(String newName) async {
+    final Folder? folder = await future;
+    if (folder == null) {
+      return;
+    }
+    state = AsyncValue.data(folder.copyWith(title: newName));
   }
 }

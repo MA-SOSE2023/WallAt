@@ -17,8 +17,6 @@ class DocumentCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final SingleItemController controller =
-        ref.watch(Providers.singleItemControllerProvider(_item.id).notifier);
     final CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
     return CupertinoListSection.insetGrouped(
       margin: const EdgeInsets.all(0),
@@ -41,30 +39,31 @@ class DocumentCard extends ConsumerWidget {
                       .copyWith(fontSize: 12)),
             ],
           ),
-          leading: Hero(
-            tag: singleItemHeroTag('${_item.id}'),
-            child: Container(
-              width: 80,
-              height: 80,
-              clipBehavior: Clip.hardEdge,
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: theme.groupingColor,
-                  width: 3,
+          leading: HeroMode(
+            enabled: ref.watch(Providers.enableHeroAnimationProvider),
+            child: Hero(
+              tag: singleItemHeroTag('${_item.id}'),
+              child: Container(
+                width: 80,
+                height: 80,
+                clipBehavior: Clip.hardEdge,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: theme.groupingColor,
+                    width: 3,
+                  ),
+                  borderRadius: BorderRadius.circular(10),
+                  image: DecorationImage(
+                    image: _item.image,
+                    fit: BoxFit.cover,
+                  ),
                 ),
-                borderRadius: BorderRadius.circular(10),
-                image: DecorationImage(
-                  image: _item.image,
-                  fit: BoxFit.cover,
-                ),
+                margin: const EdgeInsets.all(5),
               ),
-              margin: const EdgeInsets.all(5),
             ),
           ),
           leadingSize: 80,
-          onTap: () {
-            controller.navigateToThisItem();
-          },
+          onTap: _item.navigateTo(context, ref),
         ),
       ],
     );

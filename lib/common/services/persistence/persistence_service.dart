@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:device_calendar/device_calendar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -16,15 +18,20 @@ class PersistenceService {
   }) : _controller = controller;
 
   Future<R> _singleItemDao<R>(Future<R> Function(SingleItemDao) callback) =>
-      _controller.singleItemDio.then(callback);
+      _controller.singleItemDao.then(callback);
 
   Future<R> _folderDao<R>(Future<R> Function(FolderDao) callback) =>
-      _controller.folderDio.then(callback);
+      _controller.folderDao.then(callback);
 
   Future<R> _eventDao<R>(Future<R> Function(ItemEventDao) callback) =>
-      _controller.eventDio.then(callback);
+      _controller.eventDao.then(callback);
 
-  Future<int> get rootFolderId => _controller.rootFolderId;
+  // To the outside, use a constant placeholder value
+  // so that providers can be created before the root folder id is known
+  int get rootFolderId => _rootFolderIdPlaceholder;
+  static const int _rootFolderIdPlaceholder = -1;
+
+  Future<int> get _realRootFolderId => _controller.rootFolderId;
 
   // ====================== CREATION ====================== //
 
@@ -34,18 +41,18 @@ class PersistenceService {
     String description = '',
     bool isFavorite = false,
     int? parentFolderId,
-  }) =>
-      _controller.rootFolderId.then(
-        (rootId) => _singleItemDao(
-          (dao) => dao.create(
-            title: title,
-            imagePath: imagePath,
-            description: description,
-            isFavorite: isFavorite,
-            parentFolderId: parentFolderId ?? rootId,
-          ),
-        ),
-      );
+  }) async {
+    final int rootId = await _realRootFolderId;
+    return _singleItemDao(
+      (dao) => dao.create(
+        title: title,
+        imagePath: imagePath,
+        description: description,
+        isFavorite: isFavorite,
+        parentFolderId: parentFolderId ?? rootId,
+      ),
+    );
+  }
 
   Future<Folder> createFolder({
     required String title,
@@ -90,8 +97,25 @@ class PersistenceService {
 
   /// Returns the [Folder] with the given [folderId].
   /// Returns null if no folder with the given [folderId] exists
-  Future<Folder?> getFolder(int folderId) =>
-      _folderDao((dao) => dao.read(folderId));
+  Future<Folder?> getFolder(int folderId) async {
+    if (folderId == _rootFolderIdPlaceholder) {
+      folderId = await _realRootFolderId;
+    }
+    return _folderDao((dao) => dao.read(folderId));
+  }
+
+  Future<Folder?> getParentFolder(FolderItem item) async {
+    int? parentId = await _folderDao((dao) => dao.findParentId(item.id));
+    if (parentId != null) {
+      Future<Folder?> folder = getFolder(parentId);
+      if (parentId == await _realRootFolderId) {
+        return folder
+            .then((folder) => folder?.copyWith(id: _rootFolderIdPlaceholder));
+      }
+      return folder;
+    }
+    return null;
+  }
 
   Future<int?> getParentFolderId(FolderItem item) =>
       _folderDao((dao) => dao.findParentId(item.id));
@@ -196,9 +220,9 @@ abstract class DbController extends StateNotifier<DbModel> {
 
   Future<void> openDb();
 
-  Future<SingleItemDao> get singleItemDio;
-  Future<FolderDao> get folderDio;
-  Future<ItemEventDao> get eventDio;
+  Future<SingleItemDao> get singleItemDao;
+  Future<FolderDao> get folderDao;
+  Future<ItemEventDao> get eventDao;
 
   Future<int> get rootFolderId;
 }

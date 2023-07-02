@@ -1,10 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../theme/custom_theme_data.dart';
 import '/pages/folders/folder_item.dart';
 import '/pages/folders/folder_model.dart';
 import '/common/provider.dart';
+import '/common/theme/custom_theme_data.dart';
+import '/common/custom_widgets/all_custom_widgets.dart' show AsyncOptionBuilder;
 
 class FolderBubble extends ConsumerWidget {
   const FolderBubble({required Folder folder, super.key}) : _folder = folder;
@@ -22,8 +23,11 @@ class FolderBubble extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final List<FolderItem> contents = _folder.contents ?? [];
+    final AsyncValue<Folder?> futureFolder =
+        ref.watch(Providers.foldersControllerProvider(_folder.id));
     final CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
+
+    final VoidCallback onTapped = _folder.navigateTo(context, ref);
 
     Widget gridItem(
       FolderItem item, {
@@ -31,42 +35,42 @@ class FolderBubble extends ConsumerWidget {
       VoidCallback? onTapped,
     }) =>
         GestureDetector(
-          onTap: onTapped ?? FolderItem.navigateTo(item, context, ref),
-          child: Hero(
-            tag: item.heroTag,
-            child: Container(
-              clipBehavior: Clip.hardEdge,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10.0),
-                color: theme.groupingColor,
-                image: item.isLeaf
-                    ? DecorationImage(
-                        fit: BoxFit.cover,
-                        image: item.item.image,
+          onTap: onTapped ?? item.navigateTo(context, ref),
+          child: HeroMode(
+            enabled: ref.watch(Providers.enableHeroAnimationProvider),
+            child: Hero(
+              tag: item.heroTag,
+              child: Container(
+                clipBehavior: Clip.hardEdge,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10.0),
+                  color: theme.groupingColor,
+                  image: item.isLeaf
+                      ? DecorationImage(
+                          fit: BoxFit.cover,
+                          image: item.item.image,
+                        )
+                      : null,
+                ),
+                child: item.isFolder
+                    ? Padding(
+                        padding: EdgeInsets.all(padding),
+                        child: const FittedBox(
+                          fit: BoxFit.cover,
+                          clipBehavior: Clip.hardEdge,
+                          child: Icon(CupertinoIcons.folder),
+                        ),
                       )
                     : null,
               ),
-              child: item.isFolder
-                  ? Padding(
-                      padding: EdgeInsets.all(padding),
-                      child: const FittedBox(
-                        fit: BoxFit.cover,
-                        clipBehavior: Clip.hardEdge,
-                        child: Icon(CupertinoIcons.folder),
-                      ),
-                    )
-                  : null,
             ),
           ),
         );
 
-    List<Widget> threeMainItems() =>
+    List<Widget> threeMainItems(List<FolderItem> contents) =>
         contents.take(3).map((item) => gridItem(item)).toList();
 
-    Widget secondaryGrid() {
-      final VoidCallback onTapped =
-          FolderItem.navigateTo(_folder, context, ref);
-
+    Widget secondaryGrid(List<FolderItem> contents) {
       if (contents.length > 7) {
         return GestureDetector(
             onTap: onTapped,
@@ -96,18 +100,22 @@ class FolderBubble extends ConsumerWidget {
       children: [
         Expanded(
           child: GestureDetector(
-            onTap: FolderItem.navigateTo(_folder, context, ref),
+            onTap: _folder.navigateTo(context, ref),
             child: Container(
-              margin: const EdgeInsets.all(10.0),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(15.0),
                 color: theme.groupingColor,
               ),
-              child: itemGrid(
-                [
-                  ...threeMainItems(),
-                  if (contents.length > 3) secondaryGrid(),
-                ],
+              child: AsyncOptionBuilder(
+                future: futureFolder,
+                initialData: _folder,
+                success: (folder) => itemGrid(
+                  [
+                    ...threeMainItems(folder.contents ?? []),
+                    if ((folder.contents?.length ?? 0) > 3)
+                      secondaryGrid(folder.contents ?? []),
+                  ],
+                ),
               ),
             ),
           ),

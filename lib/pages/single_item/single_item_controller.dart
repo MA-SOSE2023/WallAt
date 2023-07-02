@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:device_calendar/device_calendar.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,14 +7,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'model/single_item.dart';
 import 'model/item_event.dart';
 
+import '/pages/folders/folder_model.dart';
 import '/pages/single_item/single_item_view.dart';
-import '/common/utils/device_calendar_mixin.dart';
-import '/common/utils/persisting_controller_mixin.dart';
 import '/common/provider.dart';
+import '/common/utils/device_calendar_mixin.dart';
+import '/common/utils/async_persisting_controller_mixin.dart';
 import '/router/router.dart';
 
 class SingleItemControllerImpl extends SingleItemController
-    with PersistingControllerMixin, DeviceCalendarMixin {
+    with AutoDisposeAsyncPersistingControllerMixin, DeviceCalendarMixin {
   @override
   FutureOr<SingleItem?> build(int arg) => persistence.getSingleItem(arg);
 
@@ -87,14 +87,18 @@ class SingleItemControllerImpl extends SingleItemController
       (item) => Routers.globalRouterDelegate.beamToNamed('/item', data: item));
 
   @override
-  void deleteItem(WidgetRef ref) => state.whenData((item) async {
-        item?.events.forEach(removeEvent);
-        if (item != null) {
-          ref
-              .read(Providers.foldersControllerProvider(
-                      await persistence.getParentFolderId(item))
-                  .notifier)
-              .removeItem(item);
-        }
-      });
+  void deleteItem() => state.whenData(
+        (item) async {
+          item?.events.forEach(removeEvent);
+          if (item != null) {
+            Folder? parent = await persistence.getParentFolder(item);
+            if (parent != null) {
+              ref
+                  .read(Providers.foldersControllerProvider(parent.id).notifier)
+                  .removeItem(item);
+            }
+            ref.invalidateSelf();
+          }
+        },
+      );
 }
