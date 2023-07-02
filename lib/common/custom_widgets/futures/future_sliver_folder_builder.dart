@@ -47,31 +47,34 @@ class FutureSliverFolderBuilder extends ConsumerWidget {
               SliverErrorMessage(
                 message: _onNullMessage,
               )
-            else if (contents.isEmpty)
+            else if (contents.isEmpty) ...[
+              ..._onSuccessBuilder(contents, folder),
               SliverNoElementsMessage(
                 message: _emptyListMessage,
               )
-            else
-              ..._onSuccessBuilder(folder.contents!, folder),
+            ] else
+              ..._onSuccessBuilder(contents, folder),
           ],
         );
       },
       error: (_) => CustomScrollView(
         slivers: [
-          const CupertinoSliverNavigationBar(
-            largeTitle: Text('Folders'),
+          CupertinoSliverNavigationBar(
+            backgroundColor: theme.navBarColor,
+            largeTitle: const Text('Folders'),
           ),
           SliverErrorMessage(
             message: _errorMessage,
           ),
         ],
       ),
-      loading: () => const CustomScrollView(
+      loading: () => CustomScrollView(
         slivers: [
           CupertinoSliverNavigationBar(
-            largeTitle: Text('Folders'),
+            backgroundColor: theme.navBarColor,
+            largeTitle: const Text('Folders'),
           ),
-          SliverActivityIndicator(),
+          const SliverActivityIndicator(),
         ],
       ),
     );

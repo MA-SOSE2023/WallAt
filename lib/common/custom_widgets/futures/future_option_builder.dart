@@ -44,6 +44,7 @@ class FutureOptionBuilder<T> extends StatelessWidget {
             return _onSuccessBuilder(data);
           }
         } else if (snapshot.hasError) {
+          print(snapshot.error);
           print(snapshot.stackTrace); // TODO: look into logging framework
           return _onErrorBuilder == null
               ? ErrorMessage(message: _errorMessage)

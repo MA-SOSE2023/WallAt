@@ -58,11 +58,12 @@ class AsyncSliverFolderBuilder extends ConsumerWidget {
               SliverErrorMessage(
                 message: _onNullMessage,
               )
-            else if (contents.isEmpty)
+            else if (contents.isEmpty) ...[
+              ..._onSuccessBuilder(contents, folder),
               SliverNoElementsMessage(
                 message: _emptyListMessage,
               )
-            else
+            ] else
               ..._onSuccessBuilder(folder.contents!, folder),
           ],
         );
