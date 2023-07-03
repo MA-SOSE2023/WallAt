@@ -20,8 +20,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'My App',
+    return const CupertinoApp(
       home: App(),
     );
   }
@@ -39,7 +38,7 @@ class App extends ConsumerWidget {
     // Navigate to the SplashScreen before building the main app
     return SplashScreen(
       onInitializationComplete: () {
-        WidgetsBinding.instance?.addPostFrameCallback((_) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
               builder: (_) => CupertinoApp.router(
