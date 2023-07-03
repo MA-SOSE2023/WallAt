@@ -9,6 +9,7 @@ class Routers {
   /// individual pages
   static final globalRouterDelegate = BeamerDelegate(
     navigatorObservers: [HeroController()],
+    initialPath: '/splash',
     locationBuilder: BeamerLocationBuilder(
       beamLocations: [
         GlobalLocation(),
