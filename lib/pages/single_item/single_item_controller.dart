@@ -67,7 +67,7 @@ class SingleItemControllerImpl extends SingleItemController
           event: copyEventWithId(event, addedEventId.data),
           parentItemId: parentId);
       updateState(
-          (item) => item.copyWith(events: item.events..add(addedEvent)));
+          (item) => item.copyWith(events: [...item.events, addedEvent]));
     }
   }
 
@@ -75,7 +75,8 @@ class SingleItemControllerImpl extends SingleItemController
   void removeEvent(ItemEvent event) {
     addEventToCalendar(event.event);
     persistence.deleteEvent(event);
-    updateState((item) => item.copyWith(events: item.events..remove(event)));
+    updateState((item) =>
+        item.copyWith(events: [...item.events.where((e) => e != event)]));
   }
 
   @override

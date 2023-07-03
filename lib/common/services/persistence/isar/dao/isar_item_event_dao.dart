@@ -13,28 +13,29 @@ class IsarItemEventDao extends ItemEventDao {
   final Isar _isar;
 
   @override
-  Future<ItemEvent> create({required Event event, required int parentItemId}) =>
-      _isar.writeTxnSync(
-        () async {
-          final IsarSingleItem? parentItem =
-              await _isarReadParent(parentItemId);
-          if (parentItem != null) {
-            Id createdEvent = _isar.isarItemEvents.putSync(IsarItemEvent()
-              ..title = event.title ?? ''
-              ..calendarId = event.calendarId
-              ..description = event.description ?? ''
-              ..start = event.start!
-              ..end = event.end!
-              ..parentItem.value = parentItem);
-            return ItemEvent(
-              id: createdEvent,
-              event: event,
-              parentId: parentItemId,
-            );
-          }
-          throw Exception('Parent item not found');
-        },
-      );
+  Future<ItemEvent> create(
+      {required Event event, required int parentItemId}) async {
+    final IsarSingleItem? parentItem = await _isarReadParent(parentItemId);
+    return _isar.writeTxnSync(
+      () {
+        if (parentItem != null) {
+          Id createdEvent = _isar.isarItemEvents.putSync(IsarItemEvent()
+            ..title = event.title ?? ''
+            ..calendarId = event.calendarId
+            ..description = event.description ?? ''
+            ..start = event.start!
+            ..end = event.end!
+            ..parentItem.value = parentItem);
+          return ItemEvent(
+            id: createdEvent,
+            event: event,
+            parentId: parentItemId,
+          );
+        }
+        throw Exception('Parent item not found');
+      },
+    );
+  }
 
   Future<IsarItemEvent?> _isarRead(int id) => _isar.isarItemEvents.get(id);
 
