@@ -8,7 +8,8 @@ import 'model/single_item.dart';
 import '/pages/folders/folder_model.dart';
 import '/common/provider.dart';
 import '/common/theme/custom_theme_data.dart';
-import '/common/custom_widgets/all_custom_widgets.dart' show AsyncOptionBuilder;
+import '/common/custom_widgets/all_custom_widgets.dart'
+    show LoadingOptionBuilder;
 
 class MoveToFolderScreen extends ConsumerWidget {
   const MoveToFolderScreen(
@@ -23,13 +24,13 @@ class MoveToFolderScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
 
-    final AsyncValue<Folder?> futureFolder =
+    final Folder folder =
         ref.watch(Providers.foldersControllerProvider(_folder?.id));
 
     return CupertinoPageScaffold(
       backgroundColor: theme.backgroundColor,
-      child: AsyncOptionBuilder(
-        future: futureFolder,
+      child: LoadingOptionBuilder(
+        resource: folder,
         initialData: _folder,
         success: (folder) {
           final List<Folder> subFolder = (folder.contents ?? [])

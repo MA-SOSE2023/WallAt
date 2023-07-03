@@ -1,50 +1,51 @@
-import 'dart:async';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'folder_item.dart';
 import 'folder_model.dart';
 import 'folders_view.dart';
 import '/common/provider.dart';
-import '/common/utils/async_persisting_controller_mixin.dart';
+import '/common/utils/persisting_controller_mixin.dart';
+import '/common/services/persistence/persistence_service.dart';
 
 class FoldersControllerImpl extends FoldersController
-    with AutoDisposeAsyncPersistingControllerMixin {
-  @override
-  FutureOr<Folder?> build(int arg) async {
-    final Folder? folder = await persistence.getFolder(arg);
-    // Register listeners for all children so that provider is updated
-    // automatically when a child is updated
-    for (FolderItem item in folder?.contents ?? []) {
-      listener<T>(T? previous, T next) {
-        if (previous != next) {
-          updateChild(item);
-        }
-      }
-
-      if (item.isLeaf) {
-        ref.listen(Providers.singleItemControllerProvider(item.id), listener);
-      } else {
-        ref.listen(Providers.foldersControllerProvider(item.id), listener);
-      }
-    }
-    return folder;
+    with PersistingControllerMixin {
+  FoldersControllerImpl(
+      {required int folderId,
+      required PersistenceService persistence,
+      required this.ref})
+      : _service = persistence,
+        super(Folder.loading(id: folderId)) {
+    persistence
+        .getFolder(folderId)
+        .then((value) => state = value!)
+        .onError((error, stackTrace) {
+      // TODO: add logging
+      print('Error while fetching folder: $error');
+      print(stackTrace);
+      return state = state.copyWith(hasError: true);
+    }).whenComplete(() => state = state.copyWith(isLoading: false));
   }
 
-  void updateChild(FolderItem item) async {
-    final Folder? folder = await future;
-    state = AsyncValue.data(
-      folder?.copyWith(
-        contents: [
-          for (final FolderItem child in folder.contents ?? [])
-            if (child.id == item.id) item else child
-        ],
-      ),
+  final Ref ref;
+  final PersistenceService _service;
+  @override
+  PersistenceService get persistence => _service;
+
+  @override
+  Future<void> persistUpdate(Folder updated) =>
+      persistence.updateFolder(updated);
+
+  void updateChild(FolderItem item) {
+    state = state.copyWith(
+      contents: [
+        for (final FolderItem child in state.contents ?? [])
+          if (child.id == item.id && child.isLeaf == item.isLeaf)
+            item
+          else
+            child
+      ],
     );
   }
-
-  @override
-  Future persistUpdate(Folder updated) => persistence.updateFolder(updated);
 
   FoldersControllerImpl _getOtherController(int parentId) =>
       ref.read(Providers.foldersControllerProvider(parentId).notifier)
@@ -53,99 +54,66 @@ class FoldersControllerImpl extends FoldersController
   /// Creates a folder from the given title and adds it to this folders state
   @override
   void addSubFolder(String title) async {
-    final Folder? parentFolder = await future;
-    final Folder subFolder = await persistence.createFolder(
-        title: title, parentFolderId: parentFolder?.id);
+    final Folder subFolder =
+        await persistence.createFolder(title: title, parentFolderId: state.id);
     receiveItem(subFolder);
   }
 
   /// Deletes this folder from database and removes it from its parent
   @override
   void delete() async {
-    final Folder? folder = await future;
-    if (folder == null) {
-      return;
-    }
-    final Folder? parentFolder = await persistence.getParentFolder(folder);
+    final Folder? parentFolder = await persistence.getParentFolder(state);
     if (parentFolder == null) {
       return;
     }
-    _getOtherController(parentFolder.id).removeItem(folder);
+    _getOtherController(parentFolder.id).removeItem(state);
   }
 
   /// Moves this folder into another folder
   @override
   void move(Folder newParent) async {
-    final Folder? folder = await future;
-    if (folder == null || folder.id == newParent.id) {
+    if (state.id == newParent.id) {
       return;
     }
-    await persistence.moveFolder(folder, newParent);
-    _getOtherController(newParent.id).receiveItem(folder);
+    await persistence.moveFolder(state, newParent);
+    _getOtherController(newParent.id).receiveItem(state);
     // invalidate own state to trigger refresh in parent folder
     ref.invalidateSelf();
   }
 
   @override
   void moveItem(FolderItem item, Folder newParent) async {
-    final Folder? folder = await future;
-    if (folder?.id == newParent.id) {
+    if (state.id == newParent.id) {
       return;
     }
     await (item.isLeaf
         ? persistence.moveSingleItem(item.item, newParent)
         : persistence.moveFolder(item.folder, newParent));
     _getOtherController(newParent.id).receiveItem(item);
-    state = AsyncValue.data(
-      folder?.copyWith(
-        contents:
-            folder.contents?.where((element) => element.id != item.id).toList(),
-      ),
+    state = state.copyWith(
+      contents:
+          state.contents?.where((element) => element.id != item.id).toList(),
     );
   }
 
   /// Adds item to this folders state but does not write it to database
   @override
   void receiveItem(FolderItem item) async {
-    final Folder? folder = await future;
-    if (item.isFolder) {
-      final List<FolderItem> subFolders = (folder?.contents ?? [])
-          .where((element) => element.isFolder)
-          .toList();
-      final List<FolderItem> subItems =
-          (folder?.contents ?? []).where((element) => element.isLeaf).toList();
-      state = AsyncValue.data(
-        folder?.copyWith(
-          contents: [
-            ...subFolders,
-            item,
-            ...subItems,
-          ],
-        ),
-      );
-    } else {
-      state = AsyncValue.data(
-        folder?.copyWith(
-          contents: [...folder.contents ?? [], item],
-        ),
-      );
-    }
+    state = state.copyWith(
+      contents: [...state.contents ?? [], item],
+    );
   }
 
   /// Deletes item from this folders state and database
   @override
   Future<bool> removeItem(FolderItem item) async {
-    final Folder? folder = await future;
     final bool deleteResult = await (item.isLeaf
         ? persistence.deleteSingleItem(item.item)
         : persistence.deleteFolder(item.folder));
-    if (deleteResult && folder != null) {
-      state = AsyncValue.data(
-        folder.copyWith(
-          contents: folder.contents
-              ?.where((element) => element.id != item.id)
-              .toList(),
-        ),
+    if (deleteResult) {
+      state = state.copyWith(
+        contents:
+            state.contents?.where((element) => element.id != item.id).toList(),
       );
       ref.invalidateSelf;
     }
@@ -154,11 +122,5 @@ class FoldersControllerImpl extends FoldersController
 
   /// Renames this folder
   @override
-  void rename(String newName) async {
-    final Folder? folder = await future;
-    if (folder == null) {
-      return;
-    }
-    state = AsyncValue.data(folder.copyWith(title: newName));
-  }
+  void rename(String newName) async => state = state.copyWith(title: newName);
 }

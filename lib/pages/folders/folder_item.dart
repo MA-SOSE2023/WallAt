@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gruppe4/pages/single_item/single_item_view.dart';
 
 import 'folder_model.dart';
 import 'folders_view.dart';
+import '/pages/single_item/single_item_view.dart';
 import '/pages/single_item/model/single_item.dart';
 import '/common/provider.dart';
 import '/router/router.dart';

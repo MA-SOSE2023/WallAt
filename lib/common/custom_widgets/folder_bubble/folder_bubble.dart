@@ -5,7 +5,8 @@ import '/pages/folders/folder_item.dart';
 import '/pages/folders/folder_model.dart';
 import '/common/provider.dart';
 import '/common/theme/custom_theme_data.dart';
-import '/common/custom_widgets/all_custom_widgets.dart' show AsyncOptionBuilder;
+import '/common/custom_widgets/all_custom_widgets.dart'
+    show LoadingOptionBuilder;
 
 class FolderBubble extends ConsumerWidget {
   const FolderBubble({required Folder folder, super.key}) : _folder = folder;
@@ -23,7 +24,7 @@ class FolderBubble extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final AsyncValue<Folder?> futureFolder =
+    final Folder folder =
         ref.watch(Providers.foldersControllerProvider(_folder.id));
     final CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
 
@@ -106,8 +107,8 @@ class FolderBubble extends ConsumerWidget {
                 borderRadius: BorderRadius.circular(15.0),
                 color: theme.groupingColor,
               ),
-              child: AsyncOptionBuilder(
-                future: futureFolder,
+              child: LoadingOptionBuilder(
+                resource: folder,
                 initialData: _folder,
                 success: (folder) => itemGrid(
                   [

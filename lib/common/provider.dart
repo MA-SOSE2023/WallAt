@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gruppe4/pages/single_item/model/item_event.dart';
 
 // Single Item
+import '/pages/single_item/model/item_event.dart';
 import '/pages/single_item/single_item_view.dart';
 import '/pages/single_item/single_item_controller.dart';
 import '/pages/single_item/edit_single_item_controller.dart';
@@ -76,16 +76,23 @@ class Providers {
           (ref) =>
               FavoritesControllerImpl(ref.watch(persistenceServiceProvider)));
 
-  static final AutoDisposeAsyncNotifierProviderFamily<FoldersController,
-          Folder?, int> _foldersControllerProvider =
-      AsyncNotifierProvider.autoDispose.family(FoldersControllerImpl.new);
+  static final StateNotifierProviderFamily<FoldersController, Folder, int>
+      _foldersControllerProvider = StateNotifierProvider.family(
+    (ref, folderId) => FoldersControllerImpl(
+      folderId: folderId,
+      persistence: ref.watch(persistenceServiceProvider),
+      ref: ref,
+    ),
+  );
 
-  static final _rootFolderProvider = _foldersControllerProvider(-1);
+  static final StateNotifierProvider<FoldersController, Folder>
+      _rootFolderProvider = _foldersControllerProvider(-1);
 
   /// Provider for [FoldersScreen]
   /// - Provides a [FoldersController] for a [Folder]
   // Proxies to either the root folder or a subfolder
-  static foldersControllerProvider(int? arg) {
+  static StateNotifierProvider<FoldersController, Folder>
+      foldersControllerProvider(int? arg) {
     if (arg == null) {
       return _rootFolderProvider;
     } else {

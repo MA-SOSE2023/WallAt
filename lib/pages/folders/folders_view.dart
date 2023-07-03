@@ -8,7 +8,7 @@ import 'folder_item.dart';
 import '/common/provider.dart';
 import '/common/custom_widgets/all_custom_widgets.dart'
     show
-        AsyncSliverFolderBuilder,
+        LoadingSliverFolderBuilder,
         CameraButtonHeroDestination,
         DocumentCardContainerList,
         FolderBubbleGrid;
@@ -113,7 +113,7 @@ class FoldersScreen extends ConsumerWidget {
           ),
         ];
 
-    final AsyncValue<Folder?> folderFuture = ref.watch(
+    final Folder folder = ref.watch(
       Providers.foldersControllerProvider(_folder?.id),
     );
 
@@ -121,8 +121,8 @@ class FoldersScreen extends ConsumerWidget {
       backgroundColor: theme.backgroundColor,
       child: Stack(
         children: [
-          AsyncSliverFolderBuilder(
-            future: folderFuture,
+          LoadingSliverFolderBuilder(
+            folder: folder,
             initialData: _folder,
             success: folderViewBody,
           ),
@@ -133,8 +133,9 @@ class FoldersScreen extends ConsumerWidget {
   }
 }
 
-abstract class FoldersController
-    extends AutoDisposeFamilyAsyncNotifier<Folder?, int> {
+abstract class FoldersController extends StateNotifier<Folder> {
+  FoldersController(super.state);
+
   void delete();
 
   void rename(String newName);

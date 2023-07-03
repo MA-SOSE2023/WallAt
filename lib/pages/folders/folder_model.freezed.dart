@@ -16,6 +16,11 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$Folder {
+  /// To be used when fetching a folder from database
+  bool get isLoading => throw _privateConstructorUsedError;
+
+  /// Inicates if an error occured while fetching the folder
+  bool get hasError => throw _privateConstructorUsedError;
   int get id => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
   List<FolderItem>? get contents => throw _privateConstructorUsedError;
@@ -29,7 +34,12 @@ abstract class $FolderCopyWith<$Res> {
   factory $FolderCopyWith(Folder value, $Res Function(Folder) then) =
       _$FolderCopyWithImpl<$Res, Folder>;
   @useResult
-  $Res call({int id, String title, List<FolderItem>? contents});
+  $Res call(
+      {bool isLoading,
+      bool hasError,
+      int id,
+      String title,
+      List<FolderItem>? contents});
 }
 
 /// @nodoc
@@ -45,11 +55,21 @@ class _$FolderCopyWithImpl<$Res, $Val extends Folder>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? isLoading = null,
+    Object? hasError = null,
     Object? id = null,
     Object? title = null,
     Object? contents = freezed,
   }) {
     return _then(_value.copyWith(
+      isLoading: null == isLoading
+          ? _value.isLoading
+          : isLoading // ignore: cast_nullable_to_non_nullable
+              as bool,
+      hasError: null == hasError
+          ? _value.hasError
+          : hasError // ignore: cast_nullable_to_non_nullable
+              as bool,
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -72,7 +92,12 @@ abstract class _$$_FolderCopyWith<$Res> implements $FolderCopyWith<$Res> {
       __$$_FolderCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int id, String title, List<FolderItem>? contents});
+  $Res call(
+      {bool isLoading,
+      bool hasError,
+      int id,
+      String title,
+      List<FolderItem>? contents});
 }
 
 /// @nodoc
@@ -85,11 +110,21 @@ class __$$_FolderCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? isLoading = null,
+    Object? hasError = null,
     Object? id = null,
     Object? title = null,
     Object? contents = freezed,
   }) {
     return _then(_$_Folder(
+      isLoading: null == isLoading
+          ? _value.isLoading
+          : isLoading // ignore: cast_nullable_to_non_nullable
+              as bool,
+      hasError: null == hasError
+          ? _value.hasError
+          : hasError // ignore: cast_nullable_to_non_nullable
+              as bool,
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -110,12 +145,23 @@ class __$$_FolderCopyWithImpl<$Res>
 
 class _$_Folder extends _Folder {
   _$_Folder(
-      {required this.id,
+      {this.isLoading = false,
+      this.hasError = false,
+      required this.id,
       required this.title,
       required final List<FolderItem>? contents})
       : _contents = contents,
         super._();
 
+  /// To be used when fetching a folder from database
+  @override
+  @JsonKey()
+  final bool isLoading;
+
+  /// Inicates if an error occured while fetching the folder
+  @override
+  @JsonKey()
+  final bool hasError;
   @override
   final int id;
   @override
@@ -132,7 +178,7 @@ class _$_Folder extends _Folder {
 
   @override
   String toString() {
-    return 'Folder(id: $id, title: $title, contents: $contents)';
+    return 'Folder(isLoading: $isLoading, hasError: $hasError, id: $id, title: $title, contents: $contents)';
   }
 
   @override
@@ -140,14 +186,18 @@ class _$_Folder extends _Folder {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_Folder &&
+            (identical(other.isLoading, isLoading) ||
+                other.isLoading == isLoading) &&
+            (identical(other.hasError, hasError) ||
+                other.hasError == hasError) &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.title, title) || other.title == title) &&
             const DeepCollectionEquality().equals(other._contents, _contents));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType, id, title, const DeepCollectionEquality().hash(_contents));
+  int get hashCode => Object.hash(runtimeType, isLoading, hasError, id, title,
+      const DeepCollectionEquality().hash(_contents));
 
   @JsonKey(ignore: true)
   @override
@@ -158,11 +208,21 @@ class _$_Folder extends _Folder {
 
 abstract class _Folder extends Folder implements FolderItem {
   factory _Folder(
-      {required final int id,
+      {final bool isLoading,
+      final bool hasError,
+      required final int id,
       required final String title,
       required final List<FolderItem>? contents}) = _$_Folder;
   _Folder._() : super._();
 
+  @override
+
+  /// To be used when fetching a folder from database
+  bool get isLoading;
+  @override
+
+  /// Inicates if an error occured while fetching the folder
+  bool get hasError;
   @override
   int get id;
   @override
