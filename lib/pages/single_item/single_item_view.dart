@@ -213,8 +213,8 @@ class _ActionButtons extends ConsumerWidget {
           CupertinoButton(
             onPressed: () {
               SocialShare.shareOptions(
-                "Hello world",
-                //@TODO: add the correct image path
+                item.title,
+                imagePath: (item.image as FileImage).file.path,
               );
             },
             child: const Icon(CupertinoIcons.share),

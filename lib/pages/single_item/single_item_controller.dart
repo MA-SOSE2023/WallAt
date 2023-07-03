@@ -68,6 +68,8 @@ class SingleItemControllerImpl extends SingleItemController
           parentItemId: parentId);
       updateState(
           (item) => item.copyWith(events: [...item.events, addedEvent]));
+      // invalidate home controller since the event might be in the home list
+      ref.invalidate(Providers.homeControllerProvider);
     }
   }
 
@@ -77,6 +79,8 @@ class SingleItemControllerImpl extends SingleItemController
     persistence.deleteEvent(event);
     updateState((item) =>
         item.copyWith(events: [...item.events.where((e) => e != event)]));
+    // invalidate home controller since the event might be in the home list
+    ref.invalidate(Providers.homeControllerProvider);
   }
 
   @override

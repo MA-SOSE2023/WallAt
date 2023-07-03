@@ -64,6 +64,11 @@ class Providers {
       final PersistenceService service = ref.watch(persistenceServiceProvider);
       final List<SingleItem> recentItems = await service.getRecentItems();
       final List<ItemEvent> soonEvents = await service.getSoonEvents();
+      for (final SingleItem item in recentItems) {
+        ref.listen(singleItemControllerProvider(item.id), (previous, next) {
+          ref.invalidateSelf();
+        });
+      }
       return HomeModel(recentItems: recentItems, events: soonEvents);
     },
   );
