@@ -45,19 +45,18 @@ class SelectCalendarPopup extends StatelessWidget {
               children: [
                 const Text('Select a calendar to add the event to:'),
                 const SizedBox(height: 16),
-                Column(
-                  children: usableCalendars.map((calendar) {
-                    return Container(
-                      decoration: BoxDecoration(
-                        color: CupertinoDynamicColor.resolve(
-                            CupertinoColors.systemGrey5, context),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: CupertinoListSection.insetGrouped(
-                        header: const Text("Available Calendars"),
-                        backgroundColor: Colors.transparent,
-                        children: [
-                          CupertinoListTile(
+                Container(
+                  decoration: BoxDecoration(
+                    color: CupertinoDynamicColor.resolve(
+                        CupertinoColors.systemGrey5, context),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: CupertinoListSection.insetGrouped(
+                    header: const Text("Available Calendars"),
+                    backgroundColor: Colors.transparent,
+                    children: usableCalendars
+                        .map(
+                          (calendar) => CupertinoListTile(
                             backgroundColor: CupertinoDynamicColor.resolve(
                               CupertinoColors.systemBackground,
                               context,
@@ -68,10 +67,9 @@ class SelectCalendarPopup extends StatelessWidget {
                               Navigator.pop(context);
                             },
                           ),
-                        ],
-                      ),
-                    );
-                  }).toList(),
+                        )
+                        .toList(),
+                  ),
                 ),
               ],
             ),
