@@ -68,8 +68,22 @@ class FolderBubble extends ConsumerWidget {
           ),
         );
 
-    List<Widget> threeMainItems(List<FolderItem> contents) =>
-        contents.take(3).map((item) => gridItem(item)).toList();
+    List<Widget> threeMainItems(List<FolderItem> contents) {
+      final List<FolderItem> subFolders =
+          contents.where((item) => item.isFolder).take(3).toList();
+      // sort items, so that folders are always shown first
+      if (subFolders.length < 3) {
+        return [
+          ...subFolders.map((item) => gridItem(item)).toList(),
+          ...contents
+              .where((item) => item.isLeaf)
+              .take(3 - subFolders.length)
+              .map((item) => gridItem(item))
+              .toList(),
+        ];
+      }
+      return subFolders.map((item) => gridItem(item)).toList();
+    }
 
     Widget secondaryGrid(List<FolderItem> contents) {
       if (contents.length > 7) {
