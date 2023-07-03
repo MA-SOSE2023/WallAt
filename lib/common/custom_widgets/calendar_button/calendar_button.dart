@@ -150,6 +150,7 @@ class CalendarButton extends ConsumerWidget {
     }
 
     return CupertinoButton(
+      padding: EdgeInsets.zero,
       child: const Icon(CupertinoIcons.calendar_badge_plus),
       onPressed: () {
         showAddEventDialog(context);
