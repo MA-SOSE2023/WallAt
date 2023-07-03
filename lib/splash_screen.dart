@@ -1,15 +1,16 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gruppe4/common/theme/custom_theme_data.dart';
-import 'common/provider.dart';
-import 'router/router.dart';
+
+import '/common/theme/custom_theme_data.dart';
+import '/common/provider.dart';
+import '/router/router.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
-  SplashScreen({Key? key}) : super(key: key);
+  const SplashScreen({Key? key}) : super(key: key);
 
   @override
-  _SplashScreenState createState() => _SplashScreenState();
+  ConsumerState<SplashScreen> createState() => _SplashScreenState();
 }
 
 class _SplashScreenState extends ConsumerState<SplashScreen> {
@@ -20,22 +21,35 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   }
 
   Future<void> initializeApp() async {
-    // @TODO - Wait until the database finished loading all the data.
-    await Future.delayed(const Duration(seconds: 2));
+    // Initialize the database
+    ref.read(Providers.dbControllerProvider);
+    // Wait for root folder to be loaded or created
+    await ref.read(Providers.dbControllerProvider.notifier).rootFolderId;
+    // Add puffer delay to reduce lag
+    await Future.delayed(const Duration(seconds: 3));
 
-    // Invoke the callback when initialization is complete
+    // Wait for the root folder to finish loading
+    // subsequent calls to the provider for the root folder will be cached by riverpod
+    await Future.doWhile(() {
+      return Future.delayed(const Duration(seconds: 1), () {
+        return ref.read(Providers.foldersControllerProvider(null)).isLoading;
+      });
+    });
+
+    // Beam to home once initialization is complete
     Routers.globalRouterDelegate.beamToNamed("/home");
   }
 
   @override
   Widget build(BuildContext context) {
     CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
+    final double iconSize = MediaQuery.of(context).size.width * 0.75;
     return Scaffold(
       backgroundColor: theme.navBarColor,
       body: Center(
         child: SizedBox(
-            width: 400,
-            height: 400,
+            width: iconSize,
+            height: iconSize,
             child: Image.asset(
                 "assets/dev_debug_images/splash_gif_wo_background.gif")),
       ),
