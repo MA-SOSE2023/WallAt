@@ -11,7 +11,7 @@ import '/pages/single_item/edit_single_item_view.dart';
 import '/common/provider.dart';
 import '/common/theme/custom_theme_data.dart';
 import '/common/custom_widgets/all_custom_widgets.dart'
-    show AsyncOptionBuilder, CalendarButton, ErrorMessage;
+    show AsyncOptionBuilder, CalendarButton;
 
 Widget _eventSection({
   required CalendarButton calendarButton,
@@ -44,16 +44,20 @@ Widget _eventSection({
               ]
             : children);
 
-Widget _eventTile(
-    {required ItemEvent event,
-    required Function(ItemEvent event) deleteEvent}) {
+Widget _eventTile({
+  required ItemEvent event,
+  required Function(ItemEvent event) deleteEvent,
+  bool editable = false,
+}) {
   return CupertinoListTile(
-    trailing: CupertinoButton(
-      onPressed: () {
-        deleteEvent(event);
-      },
-      child: const Icon(CupertinoIcons.minus_circled),
-    ),
+    trailing: editable
+        ? CupertinoButton(
+            onPressed: () {
+              deleteEvent(event);
+            },
+            child: const Icon(CupertinoIcons.minus_circled),
+          )
+        : null,
     title: Text(
       event.event.title ?? '',
       style: const TextStyle(
@@ -145,7 +149,9 @@ class _EditEventsContainer extends ConsumerWidget {
       theme: theme,
       children: item.events.map((itemEvent) {
         return _eventTile(
-            event: itemEvent, deleteEvent: controller.removeEvent);
+            event: itemEvent,
+            deleteEvent: controller.removeEvent,
+            editable: true);
       }).toList(),
     );
   }
