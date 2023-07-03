@@ -50,8 +50,7 @@ class HomeScreen extends ConsumerWidget {
             future: model.whenData((m) => m.events),
             success: (events) => SliverToBoxAdapter(
               child: ConstrainedBox(
-                constraints: BoxConstraints(
-                    maxHeight: MediaQuery.of(context).size.height / 4),
+                constraints: BoxConstraints(maxHeight: 180),
                 child: Padding(
                   padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
                   child: FlutterCarousel(
@@ -83,7 +82,7 @@ class HomeScreen extends ConsumerWidget {
           ),
           SliverAppBar(
             pinned: true,
-            toolbarHeight: 30.0,
+            toolbarHeight: 20.0,
             backgroundColor: theme.groupingColor,
             flexibleSpace: FlexibleSpaceBar(
               titlePadding: const EdgeInsets.only(left: 20.0, bottom: 10.0),
