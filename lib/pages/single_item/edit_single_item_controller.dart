@@ -66,21 +66,22 @@ class EditSingleItemControllerImpl extends EditSingleItemController
   @override
   void addEvent({required Event event, required int parentId}) async {
     newEvents.add(event);
-    state = state.copyWith(
-        events: state.events
-          ..add(ItemEvent(id: 0, event: event, parentId: state.id)));
+    state = state.copyWith(events: [
+      ...state.events,
+      ItemEvent(id: -1, event: event, parentId: state.id)
+    ]);
   }
 
   @override
   void removeEvent(ItemEvent event) {
-    if (event.event.eventId == null) {
+    if (event.id == -1) {
       newEvents.remove(event.event);
     } else {
       deletedEvents.add(event);
     }
 
     state = state.copyWith(
-      events: state.events..remove(event),
+      events: [...state.events.where((e) => e != event)],
     );
   }
 
