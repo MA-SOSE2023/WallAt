@@ -11,6 +11,8 @@ import '/pages/single_item/single_item_view.dart';
 import '/common/custom_widgets/all_custom_widgets.dart'
     show CustomBottomNavBarScreen;
 
+import '/splash_screen.dart';
+
 class GlobalLocation extends BeamLocation<BeamState> {
   // The previous location needs to be handled manually, because otherwise
   // beaming to the camera or settings will not persist the previous location.
@@ -19,6 +21,7 @@ class GlobalLocation extends BeamLocation<BeamState> {
   @override
   List<String> get pathPatterns => [
         '/home',
+        '/splash',
         '/favorites',
         '/folders',
         '/camera/view',
@@ -46,6 +49,13 @@ class GlobalLocation extends BeamLocation<BeamState> {
           type: BeamPageType.noTransition,
           child: CustomBottomNavBarScreen(),
         ),
+        if (state.routeInformation.location == '/splash')
+          BeamPage(
+            key: const ValueKey('splash'),
+            title: 'Splash',
+            type: BeamPageType.cupertino,
+            child: SplashScreen(),
+          ),
         if (state.routeInformation.location == '/settings')
           BeamPage(
             key: const ValueKey('settings'),

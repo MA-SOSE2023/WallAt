@@ -15,7 +15,7 @@
     </queries>
 
    <application
-        android:label="gruppe4"
+        android:label="Wall@"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
 
