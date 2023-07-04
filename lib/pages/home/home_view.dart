@@ -50,7 +50,7 @@ class HomeScreen extends ConsumerWidget {
             future: model.whenData((m) => m.events),
             success: (events) => SliverToBoxAdapter(
               child: ConstrainedBox(
-                constraints: BoxConstraints(maxHeight: 180),
+                constraints: const BoxConstraints(maxHeight: 180),
                 child: Padding(
                   padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
                   child: FlutterCarousel(
@@ -58,7 +58,7 @@ class HomeScreen extends ConsumerWidget {
                         events.map((event) => EventCard(event: event)).toList(),
                     options: CarouselOptions(
                       initialPage: 0,
-                      enableInfiniteScroll: true,
+                      enableInfiniteScroll: events.length > 1,
                       enlargeCenterPage: true,
                       showIndicator: true,
                       slideIndicator: CircularWaveSlideIndicator(
