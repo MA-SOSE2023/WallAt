@@ -60,7 +60,6 @@ class DocumentCardContainerList extends ConsumerWidget {
     return SliverPrototypeExtentList(
       delegate: SliverChildBuilderDelegate(
         (BuildContext context, int index) {
-          ref.watch(Providers.singleItemControllerProvider(_items[index].id));
           return documentCardContainerListTile(_items[index]);
         },
         childCount: _items.length,
