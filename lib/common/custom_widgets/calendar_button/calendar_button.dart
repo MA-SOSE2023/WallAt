@@ -28,20 +28,11 @@ class CalendarButton extends ConsumerWidget {
     ) {
       final settings = ref.watch(Providers.settingsControllerProvider);
 
-      if (settings.calendar == null) {
-        showCupertinoDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return SelectCalendarPopup(onCalendarSelected: (calendar) {
-                controller.setUsedCalendar(calendar);
-              });
-            });
-      } else {
-        showCupertinoDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return Consumer(
-                builder: (BuildContext context, WidgetRef ref, Widget? child) {
+      showCupertinoDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Consumer(
+            builder: (BuildContext context, WidgetRef ref, Widget? child) {
               CalendarModel calendarModel =
                   ref.watch(Providers.calendarButtonControllerProvider);
               CalendarButtonController calendarButtonController =
@@ -143,7 +134,24 @@ class CalendarButton extends ConsumerWidget {
                   ),
                 ],
               );
-            });
+            },
+          );
+        },
+      );
+
+      // Display calendar selection on top of the dialog
+      if (settings.calendar == null) {
+        showCupertinoDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return SelectCalendarPopup(
+              onCalendarSelected: (calendar) {
+                controller.setUsedCalendar(calendar);
+              },
+              onCancel: () {
+                Navigator.pop(context);
+              },
+            );
           },
         );
       }

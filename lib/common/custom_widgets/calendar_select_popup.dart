@@ -6,9 +6,11 @@ class SelectCalendarPopup extends StatelessWidget {
   const SelectCalendarPopup({
     Key? key,
     required this.onCalendarSelected,
+    this.onCancel,
   }) : super(key: key);
 
   final Function(Calendar) onCalendarSelected;
+  final Function()? onCancel;
 
   @override
   Widget build(BuildContext context) {
@@ -78,6 +80,7 @@ class SelectCalendarPopup extends StatelessWidget {
                 child: const Text('Cancel'),
                 onPressed: () {
                   Navigator.pop(context);
+                  onCancel?.call();
                 },
               ),
             ],

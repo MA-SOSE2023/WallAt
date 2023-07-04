@@ -21,11 +21,25 @@ Widget makeDismissable(
     );
 
 class EditSingleItemPage extends ConsumerWidget {
-  const EditSingleItemPage({required SingleItem singleItem, Key? key})
-      : _item = singleItem,
+  const EditSingleItemPage({
+    required SingleItem singleItem,
+    bool draggable = true,
+    bool showEvents = true,
+    VoidCallback? onDismiss,
+    void Function(SingleItem savedItem)? onSave,
+    Key? key,
+  })  : _item = singleItem,
+        _draggable = draggable,
+        _showEvents = showEvents,
+        _onDismiss = onDismiss,
+        _onSave = onSave,
         super(key: key);
 
   final SingleItem _item;
+  final bool _draggable;
+  final bool _showEvents;
+  final VoidCallback? _onDismiss;
+  final void Function(SingleItem savedItem)? _onSave;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -36,118 +50,105 @@ class EditSingleItemPage extends ConsumerWidget {
 
     final CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
 
-    return makeDismissable(
-      context: context,
-      child: DraggableScrollableSheet(
-        initialChildSize: 0.94,
-        maxChildSize: 0.94,
-        minChildSize: 0.7,
-        snap: true,
-        builder: (context, scrollController) => Container(
-          decoration: BoxDecoration(
-            color: theme.backgroundColor,
-            borderRadius: const BorderRadius.vertical(
-              top: Radius.circular(20),
-            ),
-          ),
-          child: Stack(
-            children: [
-              ListView(
-                padding: const EdgeInsets.fromLTRB(8.0, 52.0, 8.0, 0.0),
-                controller: scrollController,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: theme.groupingColor,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: CupertinoFormSection.insetGrouped(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: theme.backgroundColor),
-                        margin: const EdgeInsets.all(10),
-                        backgroundColor: Colors.transparent,
-                        children: [
-                          CupertinoTextField(
-                            controller: TextEditingController.fromValue(
-                              TextEditingValue(
-                                text: item.title,
-                                selection: TextSelection.collapsed(
-                                  offset: item.title.length,
-                                ),
-                              ),
-                            ),
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: Colors.transparent,
-                              ),
-                            ),
-                            placeholder: 'Title',
-                            prefix: const Icon(CupertinoIcons.pencil),
-                            // TODO check, if not possible with just onSubmitted
-                            // currently problematic, since switching textfields does not count as
-                            // a submit and will reset the value
-                            onChanged: (value) => controller.setTitle(value),
-                            onSubmitted: (title) {
-                              controller.setTitle(title);
-                            },
-                          ),
-                          CupertinoTextField(
-                            controller: TextEditingController.fromValue(
-                              TextEditingValue(
-                                text: item.description,
-                                selection: TextSelection.collapsed(
-                                  offset: item.description.length,
-                                ),
-                              ),
-                            ),
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: Colors.transparent,
-                              ),
-                            ),
-                            placeholder: "Description",
-                            prefix: const Icon(CupertinoIcons.pencil),
-                            onChanged: (value) =>
-                                controller.setDescription(value),
-                            onSubmitted: (description) {
-                              controller.setDescription(description);
-                            },
-                          ),
-                        ],
-                      ),
+    Widget editPageBody(ScrollController? scrollController) => Stack(
+          children: [
+            ListView(
+              padding: const EdgeInsets.fromLTRB(8.0, 52.0, 8.0, 0.0),
+              controller: scrollController,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: theme.groupingColor,
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Container(
+                    child: CupertinoFormSection.insetGrouped(
                       decoration: BoxDecoration(
-                        color: theme.groupingColor,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Container(
-                        padding: EdgeInsets.all(
-                          MediaQuery.of(context).size.height / (24),
-                        ),
-                        margin: const EdgeInsets.all(8.0),
-                        height: MediaQuery.of(context).size.height / 6,
-                        decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          image: DecorationImage(
-                            image: item.image,
-                            fit: BoxFit.fitWidth,
+                          color: theme.backgroundColor),
+                      margin: const EdgeInsets.all(10),
+                      backgroundColor: Colors.transparent,
+                      children: [
+                        CupertinoTextField(
+                          controller: TextEditingController.fromValue(
+                            TextEditingValue(
+                              text: item.title,
+                              selection: TextSelection.collapsed(
+                                offset: item.title.length,
+                              ),
+                            ),
                           ),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Colors.transparent,
+                            ),
+                          ),
+                          placeholder: 'Title',
+                          prefix: const Icon(CupertinoIcons.pencil),
+                          // TODO check, if not possible with just onSubmitted
+                          // currently problematic, since switching textfields does not count as
+                          // a submit and will reset the value
+                          onChanged: (value) => controller.setTitle(value),
+                          onSubmitted: (title) {
+                            controller.setTitle(title);
+                          },
                         ),
-                        child: FloatingActionButton(
-                          backgroundColor: theme.accentColor.withOpacity(0.5),
-                          onPressed: () => {},
-                          child: const Icon(CupertinoIcons.pencil, size: 35),
+                        CupertinoTextField(
+                          controller: TextEditingController.fromValue(
+                            TextEditingValue(
+                              text: item.description,
+                              selection: TextSelection.collapsed(
+                                offset: item.description.length,
+                              ),
+                            ),
+                          ),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Colors.transparent,
+                            ),
+                          ),
+                          placeholder: "Description",
+                          prefix: const Icon(CupertinoIcons.pencil),
+                          onChanged: (value) =>
+                              controller.setDescription(value),
+                          onSubmitted: (description) {
+                            controller.setDescription(description);
+                          },
                         ),
+                      ],
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: theme.groupingColor,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Container(
+                      padding: EdgeInsets.all(
+                        MediaQuery.of(context).size.height / (24),
+                      ),
+                      margin: const EdgeInsets.all(8.0),
+                      height: MediaQuery.of(context).size.height / 6,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        image: DecorationImage(
+                          image: item.image,
+                          fit: BoxFit.fitWidth,
+                        ),
+                      ),
+                      child: FloatingActionButton(
+                        backgroundColor: theme.accentColor.withOpacity(0.5),
+                        onPressed: () => {},
+                        child: const Icon(CupertinoIcons.pencil, size: 35),
                       ),
                     ),
                   ),
+                ),
+                if (_showEvents)
                   Padding(
                     padding: const EdgeInsets.all(20.0),
                     child: Container(
@@ -161,49 +162,80 @@ class EditSingleItemPage extends ConsumerWidget {
                       ),
                     ),
                   ),
-                ],
-              ),
-              SizedBox(
-                height: 52,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: theme.navBarColor,
-                    borderRadius: const BorderRadius.vertical(
-                      top: Radius.circular(20),
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      CupertinoButton(
-                        child: const Text('Cancel',
-                            style: TextStyle(fontSize: 14)),
-                        onPressed: () {
-                          // Cancel the edit
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                      Text('Edit Item',
-                          style:
-                              TextStyle(color: theme.textColor, fontSize: 18)),
-                      CupertinoButton(
-                        child:
-                            const Text('Save', style: TextStyle(fontSize: 14)),
-                        onPressed: () {
-                          controller.saveChanges().whenComplete(() {
-                            Navigator.of(context).pop();
-                          });
-                        },
-                      ),
-                    ],
+              ],
+            ),
+            SizedBox(
+              height: 52,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: theme.navBarColor,
+                  borderRadius: BorderRadius.vertical(
+                    top: _draggable ? const Radius.circular(20) : Radius.zero,
                   ),
                 ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    CupertinoButton(
+                      onPressed:
+                          _onDismiss ?? () => Navigator.of(context).pop(),
+                      child: const Text(
+                        'Cancel',
+                        style: TextStyle(fontSize: 14),
+                      ),
+                    ),
+                    Text('Edit Item',
+                        style: TextStyle(color: theme.textColor, fontSize: 18)),
+                    CupertinoButton(
+                      onPressed: () async {
+                        await controller.saveChanges().whenComplete(() {
+                          if (_onSave == null) {
+                            Navigator.of(context).pop();
+                            return;
+                          }
+                          return;
+                        });
+                        _onSave?.call(item.toSingleItem());
+                      },
+                      child: const Text(
+                        'Save',
+                        style: TextStyle(fontSize: 14),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ],
+            ),
+          ],
+        );
+
+    if (_draggable) {
+      return makeDismissable(
+        context: context,
+        child: DraggableScrollableSheet(
+          initialChildSize: 0.94,
+          maxChildSize: 0.94,
+          minChildSize: 0.7,
+          snap: true,
+          builder: (context, scrollController) => Container(
+            decoration: BoxDecoration(
+              color: theme.backgroundColor,
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(20),
+              ),
+            ),
+            child: editPageBody(scrollController),
           ),
         ),
-      ),
-    );
+      );
+    } else {
+      return CupertinoPageScaffold(
+        backgroundColor: theme.backgroundColor,
+        child: SafeArea(
+          child: editPageBody(null),
+        ),
+      );
+    }
   }
 }
 

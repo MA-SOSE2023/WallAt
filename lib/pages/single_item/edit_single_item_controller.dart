@@ -25,18 +25,7 @@ class EditSingleItemControllerImpl extends EditSingleItemController
     await removeEventsFromCalendar();
     await addEventsToCalendar();
 
-    if (_previousState.isFavorite != state.isFavorite) {
-      await _singleItemController.toggleFavorite();
-    }
-    if (_previousState.title != state.title) {
-      await _singleItemController.setTitle(state.title);
-    }
-    if (_previousState.description != state.description) {
-      await _singleItemController.setDescription(state.description);
-    }
-    if (_previousState.image != state.image) {
-      await _singleItemController.setImage(state.image);
-    }
+    _singleItemController.updateItem(state.toSingleItem());
   }
 
   @override
@@ -94,7 +83,7 @@ class EditSingleItemControllerImpl extends EditSingleItemController
   }
 
   Future<void> removeEventsFromCalendar() async {
-    await _singleItemController.removeEvents(state.deletedEvents);
+    _singleItemController.removeEvents(state.deletedEvents);
   }
 
   @override

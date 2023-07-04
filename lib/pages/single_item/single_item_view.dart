@@ -254,7 +254,9 @@ class _ActionButtons extends ConsumerWidget {
 
 abstract class SingleItemController
     extends AutoDisposeFamilyAsyncNotifier<SingleItem?, int>
-    implements SingleItemControllerInterface {}
+    implements SingleItemControllerInterface {
+  Future<void> updateItem(SingleItem item);
+}
 
 abstract class SingleItemControllerInterface {
   Future<void> setImage(ImageProvider image);

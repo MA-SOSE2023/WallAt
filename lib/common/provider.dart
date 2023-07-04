@@ -116,10 +116,10 @@ class Providers {
 
   /// Provider for [CalendarButton]
   /// - Provides a [CalendarButtonController] for a [CalendarModel]
-  static final StateNotifierProvider<CalendarButtonController, CalendarModel>
-      calendarButtonControllerProvider =
-      StateNotifierProvider<CalendarButtonController, CalendarModel>(
-          (ref) => CalendarButtonControllerImpl());
+  static final AutoDisposeStateNotifierProvider<CalendarButtonController,
+          CalendarModel> calendarButtonControllerProvider =
+      StateNotifierProvider.autoDispose<CalendarButtonController,
+          CalendarModel>((ref) => CalendarButtonControllerImpl());
 
   static final StateNotifierProvider<DbController, DbModel>
       dbControllerProvider =

@@ -2,9 +2,9 @@ import 'package:device_calendar/device_calendar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gruppe4/common/theme/theme_controller.dart';
+
 import 'package:gruppe4/pages/profiles/profile_model.dart';
-import '../../router/router.dart';
+
 import '/common/custom_widgets/all_custom_widgets.dart';
 import '/common/theme/custom_theme_data.dart';
 import '/common/provider.dart';

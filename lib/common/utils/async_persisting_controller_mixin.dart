@@ -52,17 +52,12 @@ mixin AutoDisposeAsyncPersistingControllerMixin<State, Arg>
       _service = ref.watch(Providers.persistenceServiceProvider);
 
   Future<void> updateState(State Function(State) update) async {
-    state = state.whenData(
-      (value) {
-        if (value == null) {
-          return value;
-        }
-        final State updated = update(value);
-        persistUpdate(updated);
-        return updated;
-      },
-    );
-    // read overwritten state to ensure function does not return when waited for
-    await future;
+    final State? item = await future;
+    if (item == null) {
+      return;
+    }
+    final State updated = update(item);
+    persistUpdate(updated);
+    state = AsyncValue.data(updated);
   }
 }

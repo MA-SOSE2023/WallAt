@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:device_calendar/device_calendar.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'model/single_item.dart';
 import 'model/item_event.dart';
@@ -25,40 +24,16 @@ class SingleItemControllerImpl extends SingleItemController
   }
 
   @override
-  Future<void> setImage(ImageProvider image) async {
-    state = state.whenData((item) {
-      if (item != null) {
-        final SingleItem updated = item.copyWith(image: image);
-        persistence.updateSingleItem(updated);
-        return updated;
-      }
-      return item;
-    });
-  }
+  Future<void> setImage(ImageProvider image) async =>
+      updateState((item) => item.copyWith(image: image));
 
   @override
-  Future<void> setDescription(String description) async {
-    state = state.whenData((item) {
-      if (item != null) {
-        final SingleItem updated = item.copyWith(description: description);
-        persistence.updateSingleItem(updated);
-        return updated;
-      }
-      return item;
-    });
-  }
+  Future<void> setDescription(String description) async =>
+      updateState((item) => item.copyWith(description: description));
 
   @override
-  Future<void> setTitle(String title) async {
-    state = state.whenData((item) {
-      if (item != null) {
-        final SingleItem updated = item.copyWith(title: title);
-        persistence.updateSingleItem(updated);
-        return updated;
-      }
-      return item;
-    });
-  }
+  Future<void> setTitle(String title) async =>
+      updateState((item) => item.copyWith(title: item.title));
 
   @override
   Future<void> addEvent({required Event event, required int parentId}) async {
@@ -67,7 +42,7 @@ class SingleItemControllerImpl extends SingleItemController
       final ItemEvent addedEvent = await persistence.createEvent(
           event: copyEventWithId(event, addedEventId.data),
           parentItemId: parentId);
-      await updateState(
+      return updateState(
           (item) => item.copyWith(events: [...item.events, addedEvent]));
     }
   }
@@ -76,7 +51,7 @@ class SingleItemControllerImpl extends SingleItemController
   Future<void> removeEvent(ItemEvent event) async {
     await removeEventFromCalendar(event.event);
     await persistence.deleteEvent(event);
-    await updateState((item) =>
+    return updateState((item) =>
         item.copyWith(events: [...item.events.where((e) => e != event)]));
   }
 
@@ -86,34 +61,48 @@ class SingleItemControllerImpl extends SingleItemController
       await removeEventFromCalendar(event.event);
       await persistence.deleteEvent(event);
     }
-    await updateState((item) => item
+    return updateState((item) => item
         .copyWith(events: [...item.events.where((e) => !events.contains(e))]));
   }
 
   @override
-  Future<void> toggleFavorite() =>
+  Future<void> toggleFavorite() async =>
       updateState((item) => item.copyWith(isFavorite: !item.isFavorite));
 
   @override
-  Future<void> navigateToThisItem() async => state.whenData(
-      (item) => Routers.globalRouterDelegate.beamToNamed('/item', data: item));
+  Future<void> navigateToThisItem() async {
+    final SingleItem? item = await future;
+    Routers.globalRouterDelegate.beamToNamed('/item', data: item);
+  }
 
   @override
-  Future<void> deleteItem() async => state.whenData(
-        (item) async {
-          item?.events.forEach(removeEvent);
-          if (item != null) {
-            Folder? parent = await persistence.getParentFolder(item);
-            if (parent != null) {
-              ref
-                  .read(Providers.foldersControllerProvider(parent.id).notifier)
-                  .removeItem(item);
-            }
-            ref.invalidateSelf();
-            // invalidate favorites controller
-            // since the item might be in their list
-            ref.invalidate(Providers.favoritesControllerProvider);
-          }
-        },
-      );
+  Future<void> deleteItem() async {
+    final SingleItem? item = await future;
+    if (item != null) {
+      for (ItemEvent event in item.events) {
+        await removeEventFromCalendar(event.event);
+      }
+      Folder? parent = await persistence.getParentFolder(item);
+      if (parent != null) {
+        ref
+            .read(Providers.foldersControllerProvider(parent.id).notifier)
+            .removeItem(item);
+      }
+      ref.invalidateSelf();
+      // invalidate favorites controller
+      // since the item might be in their list
+      ref.invalidate(Providers.favoritesControllerProvider);
+    }
+  }
+
+  @override
+  Future<void> updateItem(SingleItem item) {
+    return updateState((state) => state.copyWith(
+          title: item.title,
+          description: item.description,
+          image: item.image,
+          events: item.events,
+          isFavorite: item.isFavorite,
+        ));
+  }
 }

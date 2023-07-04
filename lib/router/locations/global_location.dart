@@ -49,8 +49,8 @@ class GlobalLocation extends BeamLocation<BeamState> {
           child: CustomBottomNavBarScreen(),
         ),
         if (state.routeInformation.location == '/splash')
-          BeamPage(
-            key: const ValueKey('splash'),
+          const BeamPage(
+            key: ValueKey('splash'),
             title: 'Splash',
             type: BeamPageType.cupertino,
             child: SplashScreen(),
