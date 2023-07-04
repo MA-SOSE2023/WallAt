@@ -257,19 +257,21 @@ abstract class SingleItemController
     implements SingleItemControllerInterface {}
 
 abstract class SingleItemControllerInterface {
-  void setImage(ImageProvider image);
+  Future<void> setImage(ImageProvider image);
 
-  void setDescription(String description);
+  Future<void> setDescription(String description);
 
-  void setTitle(String title);
+  Future<void> setTitle(String title);
 
-  void addEvent({required Event event, required int parentId});
+  Future<void> addEvent({required Event event, required int parentId});
 
-  void removeEvent(ItemEvent event);
+  Future<void> removeEvent(ItemEvent event);
 
-  void deleteItem();
+  Future<void> removeEvents(List<ItemEvent> events);
 
-  void toggleFavorite();
+  Future<void> deleteItem();
 
-  void navigateToThisItem();
+  Future<void> toggleFavorite();
+
+  Future<void> navigateToThisItem();
 }

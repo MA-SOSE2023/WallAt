@@ -36,35 +36,38 @@ class EditSingleItemControllerImpl extends EditSingleItemController
 
   @override
   Future<void> saveChanges() async {
-    removeEventsFromCalendar();
-    addEventsToCalendar();
+    await removeEventsFromCalendar();
+    await addEventsToCalendar();
 
     if (_previousState.isFavorite != state.isFavorite) {
-      _singleItemController.toggleFavorite();
+      await _singleItemController.toggleFavorite();
     }
     if (_previousState.title != state.title) {
-      _singleItemController.setTitle(state.title);
+      await _singleItemController.setTitle(state.title);
     }
     if (_previousState.description != state.description) {
-      _singleItemController.setDescription(state.description);
+      await _singleItemController.setDescription(state.description);
     }
     if (_previousState.image != state.image) {
-      _singleItemController.setImage(state.image);
+      await _singleItemController.setImage(state.image);
     }
   }
 
   @override
-  void setImage(ImageProvider image) => state = state.copyWith(image: image);
+  Future<void> setImage(ImageProvider image) async =>
+      state = state.copyWith(image: image);
 
   @override
-  void setDescription(String description) =>
+  Future<void> setDescription(String description) async =>
       state = state.copyWith(description: description);
 
   @override
-  void setTitle(String title) => state = state.copyWith(title: title);
+  Future<void> setTitle(String title) async =>
+      state = state.copyWith(title: title);
 
   @override
-  void addEvent({required Event event, required int parentId}) async {
+  Future<void> addEvent({required Event event, required int parentId}) async {
+    print('added event: $event');
     newEvents.add(event);
     state = state.copyWith(events: [
       ...state.events,
@@ -73,7 +76,8 @@ class EditSingleItemControllerImpl extends EditSingleItemController
   }
 
   @override
-  void removeEvent(ItemEvent event) {
+  Future<void> removeEvent(ItemEvent event) async {
+    print('removed event: $event');
     if (event.id == -1) {
       newEvents.remove(event.event);
     } else {
@@ -86,26 +90,31 @@ class EditSingleItemControllerImpl extends EditSingleItemController
   }
 
   @override
-  void toggleFavorite() =>
+  Future<void> removeEvents(List<ItemEvent> events) async {
+    for (final event in events) {
+      removeEvent(event);
+    }
+  }
+
+  @override
+  Future<void> toggleFavorite() async =>
       state = state.copyWith(isFavorite: !state.isFavorite);
 
-  void addEventsToCalendar() async {
+  Future<void> addEventsToCalendar() async {
     for (Event event in newEvents) {
       _singleItemController.addEvent(event: event, parentId: state.id);
     }
   }
 
   Future<void> removeEventsFromCalendar() async {
-    for (ItemEvent event in deletedEvents) {
-      _singleItemController.removeEvent(event);
-    }
+    _singleItemController.removeEvents(deletedEvents);
   }
 
   @override
-  void navigateToThisItem() {
+  Future<void> navigateToThisItem() {
     throw UnimplementedError('Cannot navigate to items used in edit view');
   }
 
   @override
-  void deleteItem() => _singleItemController.deleteItem();
+  Future<void> deleteItem() => _singleItemController.deleteItem();
 }

@@ -42,6 +42,7 @@ class AsyncOptionBuilder<T> extends StatelessWidget {
           return _onSuccessBuilder(data);
         }
       }, error: (obj, stackTrace) {
+        print(obj);
         print(stackTrace); // TODO: look into logging framework
         return _onErrorBuilder == null
             ? ErrorMessage(message: _errorMessage)

@@ -24,7 +24,7 @@ class SingleItemControllerImpl extends SingleItemController
       persistence.updateSingleItem(updated);
 
   @override
-  void setImage(ImageProvider image) {
+  Future<void> setImage(ImageProvider image) async {
     state = state.whenData((item) {
       if (item != null) {
         final SingleItem updated = item.copyWith(image: image);
@@ -36,7 +36,7 @@ class SingleItemControllerImpl extends SingleItemController
   }
 
   @override
-  void setDescription(String description) {
+  Future<void> setDescription(String description) async {
     state = state.whenData((item) {
       if (item != null) {
         final SingleItem updated = item.copyWith(description: description);
@@ -48,7 +48,7 @@ class SingleItemControllerImpl extends SingleItemController
   }
 
   @override
-  void setTitle(String title) {
+  Future<void> setTitle(String title) async {
     state = state.whenData((item) {
       if (item != null) {
         final SingleItem updated = item.copyWith(title: title);
@@ -66,33 +66,47 @@ class SingleItemControllerImpl extends SingleItemController
       final ItemEvent addedEvent = await persistence.createEvent(
           event: copyEventWithId(event, addedEventId.data),
           parentItemId: parentId);
-      updateState(
+      await updateState(
           (item) => item.copyWith(events: [...item.events, addedEvent]));
+      print('single item added event: $event');
       // invalidate home controller since the event might be in the home list
       ref.invalidate(Providers.homeControllerProvider);
     }
   }
 
   @override
-  void removeEvent(ItemEvent event) {
-    addEventToCalendar(event.event);
-    persistence.deleteEvent(event);
-    updateState((item) =>
+  Future<void> removeEvent(ItemEvent event) async {
+    await removeEventFromCalendar(event.event);
+    await persistence.deleteEvent(event);
+    await updateState((item) =>
         item.copyWith(events: [...item.events.where((e) => e != event)]));
+    print('single item removed event: $event');
     // invalidate home controller since the event might be in the home list
     ref.invalidate(Providers.homeControllerProvider);
   }
 
   @override
-  void toggleFavorite() =>
+  Future<void> removeEvents(List<ItemEvent> events) async {
+    for (final event in events) {
+      await removeEventFromCalendar(event.event);
+      await persistence.deleteEvent(event);
+    }
+    await updateState((item) => item
+        .copyWith(events: [...item.events.where((e) => !events.contains(e))]));
+    // invalidate home controller since the event might be in the home list
+    ref.invalidate(Providers.homeControllerProvider);
+  }
+
+  @override
+  Future<void> toggleFavorite() =>
       updateState((item) => item.copyWith(isFavorite: !item.isFavorite));
 
   @override
-  void navigateToThisItem() => state.whenData(
+  Future<void> navigateToThisItem() async => state.whenData(
       (item) => Routers.globalRouterDelegate.beamToNamed('/item', data: item));
 
   @override
-  void deleteItem() => state.whenData(
+  Future<void> deleteItem() async => state.whenData(
         (item) async {
           item?.events.forEach(removeEvent);
           if (item != null) {
