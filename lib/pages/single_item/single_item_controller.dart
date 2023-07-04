@@ -69,8 +69,6 @@ class SingleItemControllerImpl extends SingleItemController
           parentItemId: parentId);
       await updateState(
           (item) => item.copyWith(events: [...item.events, addedEvent]));
-      // invalidate home controller since the event might be in the home list
-      ref.invalidate(Providers.homeControllerProvider);
     }
   }
 
@@ -80,8 +78,6 @@ class SingleItemControllerImpl extends SingleItemController
     await persistence.deleteEvent(event);
     await updateState((item) =>
         item.copyWith(events: [...item.events.where((e) => e != event)]));
-    // invalidate home controller since the event might be in the home list
-    ref.invalidate(Providers.homeControllerProvider);
   }
 
   @override
@@ -92,8 +88,6 @@ class SingleItemControllerImpl extends SingleItemController
     }
     await updateState((item) => item
         .copyWith(events: [...item.events.where((e) => !events.contains(e))]));
-    // invalidate home controller since the event might be in the home list
-    ref.invalidate(Providers.homeControllerProvider);
   }
 
   @override
@@ -116,8 +110,9 @@ class SingleItemControllerImpl extends SingleItemController
                   .removeItem(item);
             }
             ref.invalidateSelf();
-            // invalidate home controller since the item might be in the home list
-            ref.invalidate(Providers.homeControllerProvider);
+            // invalidate favorites controller
+            // since the item might be in their list
+            ref.invalidate(Providers.favoritesControllerProvider);
           }
         },
       );

@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gruppe4/pages/home/home_controller.dart';
 import 'package:gruppe4/pages/single_item/model/edit_single_item.dart';
 
 // Single Item
@@ -61,16 +62,10 @@ class Providers {
 
   /// Provider for [HomeScreen]
   /// - Provides a [HomeController] for a [HomeModel]
-  static final AutoDisposeFutureProvider<HomeModel> homeControllerProvider =
-      FutureProvider.autoDispose<HomeModel>(
-    (ref) async {
-      final PersistenceService service = ref.watch(persistenceServiceProvider);
-      final List<SingleItem> recentItems = await service.getRecentItems();
-      final List<ItemEvent> soonEvents = await service.getSoonEvents();
-      ref.keepAlive();
-      return HomeModel(recentItems: recentItems, events: soonEvents);
-    },
-  );
+  static final AutoDisposeAsyncNotifierProvider<HomeController, HomeModel>
+      homeControllerProvider =
+      AsyncNotifierProvider.autoDispose<HomeController, HomeModel>(
+          HomeControllerImpl.new);
 
   /// Provider for [FavoritesScreen]
   /// - Provides a [FavoritesController] for a List of [SingleItem]s
