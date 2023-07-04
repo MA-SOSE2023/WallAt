@@ -53,11 +53,10 @@ class Providers {
   static final AutoDisposeStateNotifierProviderFamily<EditSingleItemController,
           EditSingleItem, SingleItem> editSingleItemControllerProvider =
       StateNotifierProvider.autoDispose.family(
-    (ref, item) {
-      print('new EditSingleItemController');
-      return EditSingleItemControllerImpl(EditSingleItem.from(item),
-          controller: ref.read(singleItemControllerProvider(item.id).notifier));
-    },
+    (ref, item) => EditSingleItemControllerImpl(
+      EditSingleItem.from(item),
+      controller: ref.read(singleItemControllerProvider(item.id).notifier),
+    ),
   );
 
   /// Provider for [HomeScreen]

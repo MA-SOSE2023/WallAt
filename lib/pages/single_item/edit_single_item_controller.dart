@@ -54,33 +54,24 @@ class EditSingleItemControllerImpl extends EditSingleItemController
   @override
   Future<void> addEvent({required Event event, required int parentId}) async {
     ItemEvent newEvent = ItemEvent(id: -1, event: event, parentId: state.id);
-    print('previous addedEvents: ${state.addedEvents}');
     state = state.copyWith(
       events: [...state.events, newEvent],
       addedEvents: [...state.addedEvents, newEvent],
     );
-    print('added event: $newEvent');
-    print('added events: ${state.addedEvents}');
   }
 
   @override
   Future<void> removeEvent(ItemEvent event) async {
     if (event.id == -1) {
-      print('previous addedEvents: ${state.addedEvents}');
       state = state.copyWith(
         events: state.events.where((e) => e != event).toList(),
         addedEvents: state.addedEvents.where((e) => e != event).toList(),
       );
-      print('removed placeholder event: $event');
-      print('added events: ${state.addedEvents}');
     } else {
-      print('previous deletedEvents: ${state.deletedEvents}');
       state = state.copyWith(
         events: [...state.events.where((e) => e != event)],
         deletedEvents: [...state.deletedEvents, event],
       );
-      print('removed actual event: $event');
-      print('deleted events: ${state.deletedEvents}');
     }
   }
 
@@ -96,7 +87,6 @@ class EditSingleItemControllerImpl extends EditSingleItemController
       state = state.copyWith(isFavorite: !state.isFavorite);
 
   Future<void> addEventsToCalendar() async {
-    print('add events: ${state.addedEvents}');
     for (ItemEvent event in state.addedEvents) {
       await _singleItemController.addEvent(
           event: event.event, parentId: state.id);
@@ -104,7 +94,6 @@ class EditSingleItemControllerImpl extends EditSingleItemController
   }
 
   Future<void> removeEventsFromCalendar() async {
-    print('remove events: ${state.deletedEvents}');
     await _singleItemController.removeEvents(state.deletedEvents);
   }
 
