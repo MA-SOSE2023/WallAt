@@ -59,8 +59,9 @@ class DocumentCardContainerList extends ConsumerWidget {
 
     return SliverPrototypeExtentList(
       delegate: SliverChildBuilderDelegate(
-        (BuildContext context, int index) =>
-            documentCardContainerListTile(_items[index]),
+        (BuildContext context, int index) {
+          return documentCardContainerListTile(_items[index]);
+        },
         childCount: _items.length,
       ),
       prototypeItem: documentCardContainerListTile(SingleItem.prototype()),

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
-class NoElementsMessage extends StatelessWidget {
-  const NoElementsMessage(
+class SliverNoElementsMessage extends StatelessWidget {
+  const SliverNoElementsMessage(
       {String message = 'No elements yet.', double? minPadding, super.key})
       : _message = message,
         _minPadding = minPadding;

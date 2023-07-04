@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
 import 'profile_model.dart';
-import '/common/provider.dart';
 import 'profiles_view.dart';
 
 List<ProfileModel> profiles = [
@@ -32,6 +31,7 @@ class ProfilesControllerImpl extends ProfilesController {
     //todo implement
   }
 
+  @override
   Image? getProfilePicture(ProfileModel profile) {
     return Image(image: profile.profilePicture);
   }

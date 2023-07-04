@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
-class ErrorMessage extends StatelessWidget {
-  const ErrorMessage(
+class SliverErrorMessage extends StatelessWidget {
+  const SliverErrorMessage(
       {String message = 'Something went wrong', double? minPadding, super.key})
       : _message = message,
         _minPadding = minPadding;

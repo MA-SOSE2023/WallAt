@@ -12,7 +12,7 @@ import 'model/item_event.dart';
 import '/common/provider.dart';
 import '/common/theme/custom_theme_data.dart';
 import '/common/custom_widgets/all_custom_widgets.dart'
-    show EventsContainer, FutureOptionBuilder;
+    show EventsContainer, AsyncOptionBuilder;
 
 String singleItemHeroTag(String id) {
   return "single_item_image$id";
@@ -27,11 +27,11 @@ class SingleItemPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final Future<SingleItem> item =
+    final AsyncValue<SingleItem?> item =
         ref.watch(Providers.singleItemControllerProvider(_item.id));
     final CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
 
-    return FutureOptionBuilder(
+    return AsyncOptionBuilder(
       future: item,
       initialData: _item,
       loading: () => const Align(
@@ -50,7 +50,10 @@ class SingleItemPage extends ConsumerWidget {
                     titleSpacing: 10,
                     pinned: true,
                     stretch: true,
-                    leading: const CupertinoNavigationBarBackButton(),
+                    leading: CupertinoNavigationBarBackButton(
+                      previousPageTitle: '',
+                      onPressed: () => context.beamBack(),
+                    ),
                     backgroundColor: theme.navBarColor,
                     expandedHeight: MediaQuery.of(context).size.height / 1.5,
                     flexibleSpace: FlexibleSpaceBar(
@@ -58,7 +61,6 @@ class SingleItemPage extends ConsumerWidget {
                         Expanded(
                           child: Container(
                             padding: const EdgeInsets.only(right: 20),
-                            
                             child: Text(
                               textAlign: TextAlign.left,
                               style: const TextStyle(
@@ -72,30 +74,30 @@ class SingleItemPage extends ConsumerWidget {
                       background: GestureDetector(
                         child: Stack(
                           children: [
-                            
-                            
-                             
-                          Hero(
-                            tag: singleItemHeroTag(item.id.toString()),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                
-                                image: DecorationImage(
-                                  image: item.image,
-                                  fit: BoxFit.cover,
+                            Hero(
+                              tag: singleItemHeroTag(item.id.toString()),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: item.image,
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          Container(decoration: const BoxDecoration(gradient: LinearGradient(colors: 
-                                  [
+                            Container(
+                              decoration: const BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [
                                     Color.fromARGB(255, 50, 50, 50),
                                     Color.fromARGB(0, 0, 0, 0),
                                   ],
                                   begin: Alignment.bottomCenter,
                                   end: Alignment.topCenter,
                                   stops: [0.0, 0.3],
-                                ),),),
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                         onTap: () {
@@ -122,7 +124,7 @@ class SingleItemPage extends ConsumerWidget {
                           color: theme.groupingColor,
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child: InfoContainer(
+                        child: _InfoContainer(
                           text: item.description,
                         ),
                       ),
@@ -136,7 +138,7 @@ class SingleItemPage extends ConsumerWidget {
                             color: theme.groupingColor,
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          child: EventsContainer(id: item.id, editable: false)),
+                          child: EventsContainer(item: item, editable: false)),
                     ),
                   ),
                   // Empty box at the bottom to make sure you can scroll the
@@ -153,7 +155,7 @@ class SingleItemPage extends ConsumerWidget {
                 child: Container(
                   color: theme.navBarColor,
                   padding: const EdgeInsets.only(left: 20, right: 20),
-                  child: ActionButtons(itemId: item.id),
+                  child: _ActionButtons(itemId: item.id),
                 ),
               ),
             ],
@@ -164,41 +166,8 @@ class SingleItemPage extends ConsumerWidget {
   }
 }
 
-class PictureContainer extends StatelessWidget {
-  const PictureContainer({
-    Key? key,
-    required this.color,
-    required this.image,
-    required this.onTap,
-  }) : super(key: key);
-
-  final Color color;
-  final ImageProvider image;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          decoration: BoxDecoration(
-            border: Border.all(color: color, width: 3),
-            borderRadius: BorderRadius.circular(10),
-            image: DecorationImage(
-              image: image,
-              fit: BoxFit.cover,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class InfoContainer extends StatelessWidget {
-  const InfoContainer({Key? key, required this.text}) : super(key: key);
+class _InfoContainer extends StatelessWidget {
+  const _InfoContainer({Key? key, required this.text}) : super(key: key);
 
   final String text;
 
@@ -225,29 +194,27 @@ class InfoContainer extends StatelessWidget {
   }
 }
 
-class ActionButtons extends ConsumerWidget {
-  const ActionButtons({Key? key, required this.itemId}) : super(key: key);
+class _ActionButtons extends ConsumerWidget {
+  const _ActionButtons({Key? key, required this.itemId}) : super(key: key);
 
   final int itemId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final Future<SingleItem> item =
+    final AsyncValue<SingleItem?> item =
         ref.watch(Providers.singleItemControllerProvider(itemId));
     final SingleItemController controller =
         ref.read(Providers.singleItemControllerProvider(itemId).notifier);
-    return FutureOptionBuilder(
+    return AsyncOptionBuilder(
       future: item,
-      loading: () => const CupertinoActivityIndicator(),
-      error: (_) => const Text("Fatal error, please restart the app"),
       success: (item) => Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           CupertinoButton(
             onPressed: () {
               SocialShare.shareOptions(
-                "Hello world",
-                //@TODO: add the correct image path
+                item.title,
+                imagePath: (item.image as FileImage).file.path,
               );
             },
             child: const Icon(CupertinoIcons.share),
@@ -258,7 +225,7 @@ class ActionButtons extends ConsumerWidget {
                 context: context,
                 isScrollControlled: true,
                 backgroundColor: Colors.transparent,
-                builder: (context) => EditSingleItemPage(singleItemId: item.id),
+                builder: (context) => EditSingleItemPage(singleItem: item),
               );
             },
             child: const Icon(
@@ -266,14 +233,14 @@ class ActionButtons extends ConsumerWidget {
           ),
           CupertinoButton(
             onPressed: () {
-              controller.deleteItem(ref);
+              controller.deleteItem();
               context.beamBack();
             },
             child: const Icon(CupertinoIcons.delete), // Use the Cupertino icon
           ),
           CupertinoButton(
             onPressed: () {
-              controller.setFavorite();
+              controller.toggleFavorite();
             },
             child: Icon(item.isFavorite
                 ? CupertinoIcons.heart_fill
@@ -285,22 +252,28 @@ class ActionButtons extends ConsumerWidget {
   }
 }
 
-abstract class SingleItemController extends StateNotifier<Future<SingleItem>> {
-  SingleItemController(Future<SingleItem> state) : super(state);
+abstract class SingleItemController
+    extends AutoDisposeFamilyAsyncNotifier<SingleItem?, int>
+    implements SingleItemControllerInterface {
+  Future<void> updateItem(SingleItem item);
+}
 
-  void setImage(Image image);
+abstract class SingleItemControllerInterface {
+  Future<void> setImage(ImageProvider image);
 
-  void setDescription(String description);
+  Future<void> setDescription(String description);
 
-  void setTitle(String title);
+  Future<void> setTitle(String title);
 
-  void addEvent({required Event event, required int parentId});
+  Future<void> addEvent({required Event event, required int parentId});
 
-  void removeEvent(ItemEvent event);
+  Future<void> removeEvent(ItemEvent event);
 
-  Future<bool> deleteItem(WidgetRef ref);
+  Future<void> removeEvents(List<ItemEvent> events);
 
-  void setFavorite();
+  Future<void> deleteItem();
 
-  void navigateToThisItem();
+  Future<void> toggleFavorite();
+
+  Future<void> navigateToThisItem();
 }

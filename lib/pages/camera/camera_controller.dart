@@ -1,10 +1,10 @@
 import 'package:cunning_document_scanner/cunning_document_scanner.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../common/provider.dart';
 import 'camera_model.dart';
 import 'camera_view.dart';
 import '/pages/single_item/model/single_item.dart';
+import '/common/provider.dart';
 import '/common/services/persistence/persistence_service.dart';
 import '/router/router.dart';
 
@@ -20,11 +20,16 @@ class TakePictureControllerImpl extends TakePictureController {
     try {
       Routers.globalRouterDelegate.beamToNamed('/camera/view',
           data: CunningDocumentScanner.getPictures()
-              .then<SingleItem?>((pictures) {
-            if (pictures == null) {
+              .then<SingleItem?>((pictures) async {
+            if (pictures == null || pictures.isEmpty) {
+              Routers.globalRouterDelegate.beamBack();
               return null;
             } else {
-              return storeAsItem(pictures);
+              SingleItem item = await storeAsItem(pictures);
+              ref
+                  .read(Providers.foldersControllerProvider(null).notifier)
+                  .receiveItem(item);
+              return item;
             }
           }));
     } catch (exception) {
@@ -45,5 +50,6 @@ class TakePictureControllerImpl extends TakePictureController {
         description: '',
         imagePath: picturePaths.first,
         isFavorite: false,
+        parentFolderId: null,
       );
 }

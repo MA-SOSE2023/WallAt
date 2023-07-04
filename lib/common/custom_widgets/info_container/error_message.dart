@@ -2,7 +2,9 @@ import 'package:flutter/cupertino.dart';
 
 class ErrorMessage extends StatelessWidget {
   const ErrorMessage(
-      {String message = 'Something went wrong', double? minPadding, super.key})
+      {String message = 'Something went wrong.\nPlease try restarting the app.',
+      double? minPadding,
+      super.key})
       : _message = message,
         _minPadding = minPadding;
 

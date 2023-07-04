@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gruppe4/common/custom_widgets/all_custom_widgets.dart';
+import 'package:gruppe4/common/theme/custom_theme_data.dart';
+
+import '../provider.dart';
 
 class DatePicker extends ConsumerWidget {
   const DatePicker(
@@ -15,9 +18,10 @@ class DatePicker extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    CustomThemeData theme = ref.read(Providers.themeControllerProvider);
     return Row(
       children: [
-        const Text('Start Time:'),
+        Text('$description:'),
         const SizedBox(width: 8),
         Expanded(
           child: GestureDetector(
@@ -27,8 +31,8 @@ class DatePicker extends ConsumerWidget {
                 builder: (BuildContext context) {
                   return Container(
                     decoration: BoxDecoration(
-                        color: CupertinoDynamicColor.resolve(
-                            CupertinoColors.systemBackground, context)),
+                      color: theme.backgroundColor,
+                    ),
                     height: 216,
                     child: CupertinoDatePicker(
                       mode: CupertinoDatePickerMode.dateAndTime,

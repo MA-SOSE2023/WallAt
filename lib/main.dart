@@ -3,9 +3,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:timezone/data/latest.dart' as tz;
-import 'common/provider.dart';
 
 import '/common/theme/custom_theme_data.dart';
+import 'common/provider.dart';
 import 'router/router.dart';
 
 class App extends ConsumerWidget {
@@ -13,8 +13,6 @@ class App extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Call to this provider should open the database
-    ref.read(Providers.persistenceServiceProvider);
     CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
     return CupertinoApp.router(
       theme: CupertinoThemeData(

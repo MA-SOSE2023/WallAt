@@ -8,32 +8,21 @@ import 'folder_item.dart';
 import '/common/provider.dart';
 import '/common/custom_widgets/all_custom_widgets.dart'
     show
-        FolderBubbleGrid,
-        DocumentCardContainerList,
+        LoadingSliverFolderBuilder,
         CameraButtonHeroDestination,
-        FutureSliverFolderBuilder;
+        DocumentCardContainerList,
+        FolderBubbleGrid;
 
 class FoldersScreen extends ConsumerWidget {
-  const FoldersScreen({Folder? folder, int? folderId, super.key})
-      : _folder = folder,
-        _folderId = folderId;
+  const FoldersScreen({Folder? folder, super.key}) : _folder = folder;
 
   final Folder? _folder;
-  final int? _folderId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final Future<Folder?> rootFolder = _folderId != null
-        ? ref.watch(Providers.foldersControllerProvider(_folderId!))
-        : _folder == null
-            ? ref.watch(Providers.foldersControllerProvider(
-                ref.read(Providers.dbControllerProvider).rootFolderId!))
-            : Future.value(_folder);
-
     final CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
 
-    List<Widget> folderViewBody(List<FolderItem> contents, Folder rootFolder) =>
-        [
+    List<Widget> folderViewBody(List<FolderItem> contents, Folder folder) => [
           SliverPadding(
             padding: const EdgeInsets.only(bottom: 10.0),
             sliver: SliverAppBar(
@@ -42,7 +31,8 @@ class FoldersScreen extends ConsumerWidget {
               primary: false,
               toolbarHeight: 30.0,
               backgroundColor: theme.groupingColor,
-              title: Text('Subfolders', style: TextStyle(fontSize: 16, color: theme.textColor)),
+              title: Text('Subfolders',
+                  style: TextStyle(fontSize: 16, color: theme.textColor)),
               centerTitle: true,
               actions: [
                 CupertinoButton(
@@ -76,7 +66,7 @@ class FoldersScreen extends ConsumerWidget {
                               onPressed: () {
                                 ref
                                     .read(Providers.foldersControllerProvider(
-                                            rootFolder.id)
+                                            folder.id)
                                         .notifier)
                                     .addSubFolder(newFolderName ?? 'Folder');
                                 Navigator.of(context).pop();
@@ -123,25 +113,19 @@ class FoldersScreen extends ConsumerWidget {
           ),
         ];
 
+    final Folder folder = ref.watch(
+      Providers.foldersControllerProvider(_folder?.id),
+    );
+
     return CupertinoPageScaffold(
       backgroundColor: theme.backgroundColor,
       child: Stack(
         children: [
-          if (_folder == null)
-            FutureSliverFolderBuilder(
-              future: rootFolder,
-              success: folderViewBody,
-            ),
-          if (_folder != null)
-            CustomScrollView(
-              slivers: [
-                CupertinoSliverNavigationBar(
-                  backgroundColor: theme.navBarColor,
-                  largeTitle: Text(_folder!.title),
-                ),
-                ...folderViewBody(_folder!.contents ?? [], _folder!)
-              ],
-            ),
+          LoadingSliverFolderBuilder(
+            folder: folder,
+            initialData: _folder,
+            success: folderViewBody,
+          ),
           const CameraButtonHeroDestination(),
         ],
       ),
@@ -149,8 +133,8 @@ class FoldersScreen extends ConsumerWidget {
   }
 }
 
-abstract class FoldersController extends StateNotifier<Future<Folder?>> {
-  FoldersController(Future<Folder?> state) : super(state);
+abstract class FoldersController extends StateNotifier<Folder> {
+  FoldersController(super.state);
 
   void delete();
 
@@ -158,12 +142,10 @@ abstract class FoldersController extends StateNotifier<Future<Folder?>> {
 
   void move(Folder newParent);
 
-  void addItem(FolderItem item);
+  void receiveItem(FolderItem item);
   void addSubFolder(String title);
 
   Future<bool> removeItem(FolderItem item);
 
   void moveItem(FolderItem item, Folder newParent);
-
-  Future<void> moveItemHere(FolderItem item);
 }

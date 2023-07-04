@@ -16,6 +16,7 @@ class EventCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final TZDateTime date = event.event.start!;
     final String description = event.event.description ?? '';
+    final String title = event.event.title ?? 'Event';
 
     final CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
     return Column(
@@ -26,7 +27,7 @@ class EventCard extends ConsumerWidget {
             borderRadius: BorderRadius.circular(10),
           ),
           child: CupertinoListSection.insetGrouped(
-            margin: EdgeInsets.fromLTRB(2, 2, 2, 0),
+            margin: const EdgeInsets.fromLTRB(2, 2, 2, 0),
             decoration: BoxDecoration(
               gradient: theme.gradient,
             ),
@@ -65,12 +66,12 @@ class EventCard extends ConsumerWidget {
                 },
               ),
               CupertinoListTile.notched(
-                title: Container(
-                  height: MediaQuery.of(context).size.height / 15,
+                title: SizedBox(
+                  height: 45,
                   child: Text(
-                    description,
+                    description.isNotEmpty ? description : title,
                     maxLines: 2,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 20,
                     ),

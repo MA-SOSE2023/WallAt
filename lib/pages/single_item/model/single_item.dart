@@ -28,7 +28,7 @@ class SingleItem extends FolderItem with _$SingleItem {
   }) = _SingleItem;
 
   factory SingleItem.prototype() => SingleItem(
-        id: 1,
+        id: -1,
         title: 'prototype',
         description: 'prototype',
         image: const AssetImage('assets/dev_debug_images/example_document.png'),

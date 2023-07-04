@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gruppe4/pages/single_item/single_item_view.dart';
 
 import 'folder_model.dart';
 import 'folders_view.dart';
+import '/pages/single_item/single_item_view.dart';
 import '/pages/single_item/model/single_item.dart';
 import '/common/provider.dart';
 import '/router/router.dart';
@@ -32,25 +32,26 @@ abstract class FolderItem {
 
   List<FolderItem>? get contents => maybeFolder!.contents;
 
-  String get heroTag =>
-      isLeaf ? singleItemHeroTag('$id') : 'folder-heroTag$id';
+  String get heroTag => isLeaf ? singleItemHeroTag('$id') : 'folder-heroTag$id';
 
-  static VoidCallback navigateTo(
-      FolderItem item, BuildContext context, WidgetRef ref) {
-    if (item.isLeaf) {
-      return () => Routers.globalRouterDelegate.beamToNamed(
-            '/item', data: item.item,
-          );
+  VoidCallback navigateTo(BuildContext context, WidgetRef ref) {
+    if (isLeaf) {
+      return () {
+        ref.read(Providers.enableHeroAnimationProvider.notifier).state = true;
+        Routers.globalRouterDelegate.beamToNamed(
+          '/item',
+          data: item,
+        );
+      };
     } else {
-      return () => {
-            ref.read(Providers.enableHeroAnimationProvider.notifier).state =
-                true,
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => FoldersScreen(folder: item.maybeFolder),
-              ),
-            )
-          };
+      return () {
+        ref.read(Providers.enableHeroAnimationProvider.notifier).state = true;
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => FoldersScreen(folder: folder),
+          ),
+        );
+      };
     }
   }
 }

@@ -7,8 +7,8 @@ import '/pages/folders/folder_model.dart';
 import '/common/provider.dart';
 import '/common/custom_widgets/all_custom_widgets.dart'
     show
-        ErrorMessage,
-        NoElementsMessage,
+        SliverErrorMessage,
+        SliverNoElementsMessage,
         FutureOptionBuilder,
         SliverActivityIndicator;
 
@@ -44,34 +44,37 @@ class FutureSliverFolderBuilder extends ConsumerWidget {
               largeTitle: Text(folder?.title ?? 'Folders'),
             ),
             if (folder == null || contents == null)
-              ErrorMessage(
+              SliverErrorMessage(
                 message: _onNullMessage,
               )
-            else if (contents.isEmpty)
-              NoElementsMessage(
+            else if (contents.isEmpty) ...[
+              ..._onSuccessBuilder(contents, folder),
+              SliverNoElementsMessage(
                 message: _emptyListMessage,
               )
-            else
-              ..._onSuccessBuilder(folder.contents!, folder),
+            ] else
+              ..._onSuccessBuilder(contents, folder),
           ],
         );
       },
       error: (_) => CustomScrollView(
         slivers: [
-          const CupertinoSliverNavigationBar(
-            largeTitle: Text('Folders'),
+          CupertinoSliverNavigationBar(
+            backgroundColor: theme.navBarColor,
+            largeTitle: const Text('Folders'),
           ),
-          ErrorMessage(
+          SliverErrorMessage(
             message: _errorMessage,
           ),
         ],
       ),
-      loading: () => const CustomScrollView(
+      loading: () => CustomScrollView(
         slivers: [
           CupertinoSliverNavigationBar(
-            largeTitle: Text('Folders'),
+            backgroundColor: theme.navBarColor,
+            largeTitle: const Text('Folders'),
           ),
-          SliverActivityIndicator(),
+          const SliverActivityIndicator(),
         ],
       ),
     );
