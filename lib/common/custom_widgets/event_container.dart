@@ -137,8 +137,9 @@ class _EditEventsContainer extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
 
-    final SingleItem item =
-        ref.watch(Providers.editSingleItemControllerProvider(_item));
+    final SingleItem item = ref
+        .watch(Providers.editSingleItemControllerProvider(_item))
+        .toSingleItem();
     final EditSingleItemController controller =
         ref.read(Providers.editSingleItemControllerProvider(_item).notifier);
 
@@ -149,9 +150,10 @@ class _EditEventsContainer extends ConsumerWidget {
       theme: theme,
       children: item.events.map((itemEvent) {
         return _eventTile(
-            event: itemEvent,
-            deleteEvent: controller.removeEvent,
-            editable: true);
+          event: itemEvent,
+          deleteEvent: controller.removeEvent,
+          editable: true,
+        );
       }).toList(),
     );
   }

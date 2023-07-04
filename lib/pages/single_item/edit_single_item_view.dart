@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'model/single_item.dart';
+import 'model/edit_single_item.dart';
 import '/pages/single_item/single_item_view.dart';
 import '/common/provider.dart';
 import '/common/theme/custom_theme_data.dart';
@@ -28,7 +29,7 @@ class EditSingleItemPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final SingleItem item =
+    final EditSingleItem item =
         ref.watch(Providers.editSingleItemControllerProvider(_item));
     final EditSingleItemController controller =
         ref.read(Providers.editSingleItemControllerProvider(_item).notifier);
@@ -155,7 +156,7 @@ class EditSingleItemPage extends ConsumerWidget {
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: EventsContainer(
-                        item: item,
+                        item: _item,
                         editable: true,
                       ),
                     ),
@@ -189,9 +190,9 @@ class EditSingleItemPage extends ConsumerWidget {
                         child:
                             const Text('Save', style: TextStyle(fontSize: 14)),
                         onPressed: () {
-                          controller.saveChanges();
-                          // Save the item
-                          Navigator.of(context).pop();
+                          controller.saveChanges().whenComplete(() {
+                            Navigator.of(context).pop();
+                          });
                         },
                       ),
                     ],
@@ -206,13 +207,9 @@ class EditSingleItemPage extends ConsumerWidget {
   }
 }
 
-abstract class EditSingleItemController extends StateNotifier<SingleItem>
+abstract class EditSingleItemController extends StateNotifier<EditSingleItem>
     implements SingleItemControllerInterface {
   EditSingleItemController(super.state);
 
-  DateTime? getSelectedDate();
-
-  void setSelectedDate(DateTime date);
-
-  void saveChanges();
+  Future<void> saveChanges();
 }

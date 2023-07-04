@@ -26,7 +26,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     // Wait for root folder to be loaded or created
     await ref.read(Providers.dbControllerProvider.notifier).rootFolderId;
     // Add puffer delay to reduce lag
-    await Future.delayed(const Duration(seconds: 3));
+    await Future.delayed(const Duration(seconds: 2));
 
     // Wait for the root folder to finish loading
     // subsequent calls to the provider for the root folder will be cached by riverpod

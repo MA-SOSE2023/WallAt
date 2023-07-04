@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gruppe4/pages/single_item/model/edit_single_item.dart';
 
 // Single Item
 import '/pages/single_item/model/item_event.dart';
@@ -50,10 +51,13 @@ class Providers {
   /// Provider for [EditSingleItemPage]
   /// - Provides a [EditSingleItemController] for a [SingleItem]
   static final AutoDisposeStateNotifierProviderFamily<EditSingleItemController,
-          SingleItem, SingleItem> editSingleItemControllerProvider =
+          EditSingleItem, SingleItem> editSingleItemControllerProvider =
       StateNotifierProvider.autoDispose.family(
-    (ref, item) => EditSingleItemControllerImpl(item,
-        controller: ref.read(singleItemControllerProvider(item.id).notifier)),
+    (ref, item) {
+      print('new EditSingleItemController');
+      return EditSingleItemControllerImpl(EditSingleItem.from(item),
+          controller: ref.read(singleItemControllerProvider(item.id).notifier));
+    },
   );
 
   /// Provider for [HomeScreen]
@@ -64,11 +68,7 @@ class Providers {
       final PersistenceService service = ref.watch(persistenceServiceProvider);
       final List<SingleItem> recentItems = await service.getRecentItems();
       final List<ItemEvent> soonEvents = await service.getSoonEvents();
-      for (final SingleItem item in recentItems) {
-        ref.listen(singleItemControllerProvider(item.id), (previous, next) {
-          ref.invalidateSelf();
-        });
-      }
+      ref.keepAlive();
       return HomeModel(recentItems: recentItems, events: soonEvents);
     },
   );

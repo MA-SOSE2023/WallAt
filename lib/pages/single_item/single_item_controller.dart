@@ -20,8 +20,9 @@ class SingleItemControllerImpl extends SingleItemController
   FutureOr<SingleItem?> build(int arg) => persistence.getSingleItem(arg);
 
   @override
-  Future<void> persistUpdate(SingleItem updated) =>
-      persistence.updateSingleItem(updated);
+  Future<void> persistUpdate(SingleItem updated) {
+    return persistence.updateSingleItem(updated);
+  }
 
   @override
   Future<void> setImage(ImageProvider image) async {
@@ -62,13 +63,14 @@ class SingleItemControllerImpl extends SingleItemController
   @override
   Future<void> addEvent({required Event event, required int parentId}) async {
     final Result<String>? addedEventId = await addEventToCalendar(event);
+    print('addedEventResultId: ${addedEventId?.data}');
     if (addedEventId != null && addedEventId.isSuccess) {
       final ItemEvent addedEvent = await persistence.createEvent(
           event: copyEventWithId(event, addedEventId.data),
           parentItemId: parentId);
       await updateState(
           (item) => item.copyWith(events: [...item.events, addedEvent]));
-      print('single item added event: $event');
+      print('single item added event: ${event.title}');
       // invalidate home controller since the event might be in the home list
       ref.invalidate(Providers.homeControllerProvider);
     }
@@ -80,7 +82,7 @@ class SingleItemControllerImpl extends SingleItemController
     await persistence.deleteEvent(event);
     await updateState((item) =>
         item.copyWith(events: [...item.events.where((e) => e != event)]));
-    print('single item removed event: $event');
+    print('single item removed event: ${event.event.title}');
     // invalidate home controller since the event might be in the home list
     ref.invalidate(Providers.homeControllerProvider);
   }
@@ -90,6 +92,7 @@ class SingleItemControllerImpl extends SingleItemController
     for (final event in events) {
       await removeEventFromCalendar(event.event);
       await persistence.deleteEvent(event);
+      print('single item removed event: ${event.event.title}');
     }
     await updateState((item) => item
         .copyWith(events: [...item.events.where((e) => !events.contains(e))]));

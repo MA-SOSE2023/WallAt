@@ -27,7 +27,9 @@ class SaveItemScreen extends ConsumerWidget {
           if (item == null) {
             return null;
           }
-          return ref.watch(Providers.editSingleItemControllerProvider(item));
+          return ref
+              .watch(Providers.editSingleItemControllerProvider(item))
+              .toSingleItem();
         },
       ),
       loading: () => const CupertinoPageScaffold(
