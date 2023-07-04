@@ -63,46 +63,60 @@ class EditSingleItemPage extends ConsumerWidget {
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: CupertinoFormSection.insetGrouped(
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: theme.backgroundColor),
-                          margin: const EdgeInsets.all(10),
-                          backgroundColor: Colors.transparent,
-                          children: [
-                            CupertinoTextField(
-                                controller: TextEditingController.fromValue(
-                                    TextEditingValue(
-                                        text: item.title,
-                                        selection: TextSelection.collapsed(
-                                            offset: item.title.length))),
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Colors.transparent,
-                                  ),
-                                ),
-                                placeholder: 'Title',
-                                prefix: const Icon(CupertinoIcons.pencil),
-                                onChanged: (value) => {
-                                      controller.setTitle(value),
-                                    }),
-                            CupertinoTextField(
-                              controller: TextEditingController.fromValue(
-                                  TextEditingValue(
-                                      text: item.description,
-                                      selection: TextSelection.collapsed(
-                                          offset: item.description.length))),
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: Colors.transparent,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: theme.backgroundColor),
+                        margin: const EdgeInsets.all(10),
+                        backgroundColor: Colors.transparent,
+                        children: [
+                          CupertinoTextField(
+                            controller: TextEditingController.fromValue(
+                              TextEditingValue(
+                                text: item.title,
+                                selection: TextSelection.collapsed(
+                                  offset: item.title.length,
                                 ),
                               ),
-                              placeholder: "Description",
-                              prefix: const Icon(CupertinoIcons.pencil),
-                              onChanged: (value) => {
-                                controller.setDescription(value),
-                              },
                             ),
-                          ]),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.transparent,
+                              ),
+                            ),
+                            placeholder: 'Title',
+                            prefix: const Icon(CupertinoIcons.pencil),
+                            // TODO check, if not possible with just onSubmitted
+                            // currently problematic, since switching textfields does not count as
+                            // a submit and will reset the value
+                            onChanged: (value) => controller.setTitle(value),
+                            onSubmitted: (title) {
+                              controller.setTitle(title);
+                            },
+                          ),
+                          CupertinoTextField(
+                            controller: TextEditingController.fromValue(
+                              TextEditingValue(
+                                text: item.description,
+                                selection: TextSelection.collapsed(
+                                  offset: item.description.length,
+                                ),
+                              ),
+                            ),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.transparent,
+                              ),
+                            ),
+                            placeholder: "Description",
+                            prefix: const Icon(CupertinoIcons.pencil),
+                            onChanged: (value) =>
+                                controller.setDescription(value),
+                            onSubmitted: (description) {
+                              controller.setDescription(description);
+                            },
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                   Padding(
@@ -113,23 +127,24 @@ class EditSingleItemPage extends ConsumerWidget {
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Container(
-                          padding: EdgeInsets.all(
-                            MediaQuery.of(context).size.height / (24),
+                        padding: EdgeInsets.all(
+                          MediaQuery.of(context).size.height / (24),
+                        ),
+                        margin: const EdgeInsets.all(8.0),
+                        height: MediaQuery.of(context).size.height / 6,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          image: DecorationImage(
+                            image: item.image,
+                            fit: BoxFit.fitWidth,
                           ),
-                          margin: const EdgeInsets.all(8.0),
-                          height: MediaQuery.of(context).size.height / 6,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            image: DecorationImage(
-                              image: item.image,
-                              fit: BoxFit.fitWidth,
-                            ),
-                          ),
-                          child: FloatingActionButton(
-                            backgroundColor: theme.accentColor.withOpacity(0.5),
-                            onPressed: () => {},
-                            child: const Icon(CupertinoIcons.pencil, size: 35),
-                          )),
+                        ),
+                        child: FloatingActionButton(
+                          backgroundColor: theme.accentColor.withOpacity(0.5),
+                          onPressed: () => {},
+                          child: const Icon(CupertinoIcons.pencil, size: 35),
+                        ),
+                      ),
                     ),
                   ),
                   Padding(
@@ -171,13 +186,14 @@ class EditSingleItemPage extends ConsumerWidget {
                           style:
                               TextStyle(color: theme.textColor, fontSize: 18)),
                       CupertinoButton(
-                          child: const Text('Save',
-                              style: TextStyle(fontSize: 14)),
-                          onPressed: () {
-                            controller.saveChanges();
-                            // Save the item
-                            Navigator.of(context).pop();
-                          }),
+                        child:
+                            const Text('Save', style: TextStyle(fontSize: 14)),
+                        onPressed: () {
+                          controller.saveChanges();
+                          // Save the item
+                          Navigator.of(context).pop();
+                        },
+                      ),
                     ],
                   ),
                 ),
