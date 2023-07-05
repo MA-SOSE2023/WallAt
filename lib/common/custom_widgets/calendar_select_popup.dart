@@ -37,9 +37,12 @@ class SelectCalendarPopup extends StatelessWidget {
             ],
           );
         } else {
-          final calendars = snapshot.data!.data!;
-          final usableCalendars =
-              calendars.where((calendar) => !calendar.isReadOnly!).toList();
+          final calendars = snapshot.data?.data;
+          final usableCalendars = calendars == null
+              ? []
+              : calendars
+                  .where((calendar) => !(calendar.isReadOnly ?? true))
+                  .toList();
 
           return CupertinoAlertDialog(
             title: const Text('Select Calendar'),
