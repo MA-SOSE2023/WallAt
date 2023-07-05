@@ -11,6 +11,28 @@ mixin DeviceCalendarMixin {
     return deviceCalendarPlugin.deleteEvent(event.calendarId, event.eventId);
   }
 
+  Future<Calendar?> getCalendarById(String? id) async {
+    if (id == null) {
+      return null;
+    }
+    DeviceCalendarPlugin deviceCalendarPlugin = DeviceCalendarPlugin();
+    Result<List<Calendar>> calendars =
+        await deviceCalendarPlugin.retrieveCalendars();
+    if (calendars.data == null) {
+      return null;
+    }
+    List<Calendar> filteredCalendars = calendars.data!
+        .where((c) => !(c.isReadOnly ?? true))
+        .where(
+          (c) => c.id == id,
+        )
+        .toList();
+    if (filteredCalendars.isEmpty) {
+      return null;
+    }
+    return filteredCalendars.first;
+  }
+
   Event copyEventWithId(Event event, String? id) {
     return Event(
       event.calendarId,

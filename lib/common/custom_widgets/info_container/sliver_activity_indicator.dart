@@ -1,12 +1,15 @@
 import 'package:flutter/cupertino.dart';
 
 class SliverActivityIndicator extends StatelessWidget {
-  const SliverActivityIndicator({super.key});
+  const SliverActivityIndicator({this.padding, super.key});
+
+  final EdgeInsets? padding;
 
   @override
   Widget build(BuildContext context) {
     return SliverSafeArea(
-      minimum: EdgeInsets.only(top: MediaQuery.of(context).size.height / 4),
+      minimum: padding ??
+          EdgeInsets.only(top: MediaQuery.of(context).size.height / 4),
       sliver: const SliverToBoxAdapter(
         child: Center(
           child: CupertinoActivityIndicator(),

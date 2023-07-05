@@ -12,6 +12,9 @@ class AsyncSliverListBuilder<T> extends StatelessWidget {
   const AsyncSliverListBuilder({
     required AsyncValue<List<T>?> future,
     required Widget Function(List<T>) success,
+    Widget Function()? loading,
+    Widget Function(String emptyMessage)? empty,
+    Widget Function(Object?)? error,
     this.onNullMessage = 'No matching item was found.\nTry restarting the app.',
     this.emptyMessage = 'There are no entries yet.\nTry adding some items.',
     this.errorMessage =
@@ -19,10 +22,16 @@ class AsyncSliverListBuilder<T> extends StatelessWidget {
     this.errorMessagesPadding,
     super.key,
   })  : _future = future,
-        _onSuccessBuilder = success;
+        _onSuccessBuilder = success,
+        _onLoadingBuilder = loading,
+        _onEmptyBuilder = empty,
+        _onErrorBuilder = error;
 
   final AsyncValue<List<T>?> _future;
   final Widget Function(List<T>) _onSuccessBuilder;
+  final Widget Function()? _onLoadingBuilder;
+  final Widget Function(String emptyMessage)? _onEmptyBuilder;
+  final Widget Function(Object?)? _onErrorBuilder;
 
   final String onNullMessage;
   final String emptyMessage;
@@ -35,18 +44,20 @@ class AsyncSliverListBuilder<T> extends StatelessWidget {
         future: _future,
         success: (data) {
           if (data.isEmpty) {
-            return SliverNoElementsMessage(
-              message: emptyMessage,
-              minPadding: errorMessagesPadding,
-            );
+            return _onEmptyBuilder?.call(emptyMessage) ??
+                SliverNoElementsMessage(
+                  message: emptyMessage,
+                  minPadding: errorMessagesPadding,
+                );
           } else {
             return _onSuccessBuilder(data);
           }
         },
-        error: (_) => SliverErrorMessage(
-              message: errorMessage,
-              minPadding: errorMessagesPadding,
-            ),
-        loading: () => const SliverActivityIndicator());
+        error: _onErrorBuilder ??
+            (_) => SliverErrorMessage(
+                  message: errorMessage,
+                  minPadding: errorMessagesPadding,
+                ),
+        loading: _onLoadingBuilder ?? () => const SliverActivityIndicator());
   }
 }

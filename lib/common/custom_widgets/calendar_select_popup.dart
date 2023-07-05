@@ -1,8 +1,12 @@
 import 'package:device_calendar/device_calendar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class SelectCalendarPopup extends StatelessWidget {
+import '/common/provider.dart';
+import '/common/theme/custom_theme_data.dart';
+
+class SelectCalendarPopup extends ConsumerWidget {
   const SelectCalendarPopup({
     Key? key,
     required this.onCalendarSelected,
@@ -13,7 +17,10 @@ class SelectCalendarPopup extends StatelessWidget {
   final Function()? onCancel;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
+    final String? selectedCalendarId =
+        ref.watch(Providers.settingsControllerProvider).calendar?.id;
     return FutureBuilder<Result<List<Calendar>>>(
       future: DeviceCalendarPlugin().retrieveCalendars(),
       builder: (BuildContext context,
@@ -52,25 +59,31 @@ class SelectCalendarPopup extends StatelessWidget {
                 const SizedBox(height: 16),
                 Container(
                   decoration: BoxDecoration(
-                    color: CupertinoDynamicColor.resolve(
-                        CupertinoColors.systemGrey5, context),
+                    color: theme.groupingColor,
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: CupertinoListSection.insetGrouped(
                     header: const Text("Available Calendars"),
                     backgroundColor: Colors.transparent,
+                    margin: const EdgeInsets.fromLTRB(12, 16, 8, 16),
                     children: usableCalendars
                         .map(
                           (calendar) => CupertinoListTile(
-                            backgroundColor: CupertinoDynamicColor.resolve(
-                              CupertinoColors.systemBackground,
-                              context,
-                            ),
-                            title: Text(calendar.name!),
+                            backgroundColor: theme.backgroundColor,
+                            title: Text(calendar.name ?? '<no name>'),
                             onTap: () {
                               onCalendarSelected(calendar);
                               Navigator.pop(context);
                             },
+                            leadingSize: 20,
+                            leadingToTitle: 5,
+                            leading: calendar.id == selectedCalendarId
+                                ? Icon(
+                                    CupertinoIcons.check_mark,
+                                    color: theme.accentColor,
+                                    size: 20,
+                                  )
+                                : null,
                           ),
                         )
                         .toList(),
