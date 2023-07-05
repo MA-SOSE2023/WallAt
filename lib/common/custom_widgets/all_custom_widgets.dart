@@ -12,6 +12,9 @@ export 'document_card/document_card_container_list.dart';
 // Search Bar
 export 'search_bar/search_bar.dart';
 export 'search_bar/search_bar_container.dart';
+// Settings
+export 'settings/custom_form_section.dart';
+export 'settings/selection_dialog.dart';
 // Info Container
 export 'info_container/event_card.dart';
 export 'info_container/no_elements_message.dart';
