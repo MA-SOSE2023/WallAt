@@ -45,14 +45,14 @@ class SettingsControllerImpl extends SettingsController
   @override
   void changeThemeIndex(int index) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setInt('selectedThemeIndex', index);
+    prefs.setInt(Settings.selectedColorTheme.name, index);
     state = state.copyWith(selectedThemeIndex: index);
   }
 
   @override
   void setProfileIndex(int index) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setInt('selectedProfileIndex', index);
+    prefs.setInt(Settings.selectedProfile.name, index);
     state = state.copyWith(selectedProfileIndex: index);
   }
 }
