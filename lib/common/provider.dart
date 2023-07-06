@@ -157,6 +157,6 @@ class Providers {
   static final StateNotifierProvider<ProfilesController, List<ProfileModel>>
       profilesControllerProvider =
       StateNotifierProvider<ProfilesController, List<ProfileModel>>((ref) {
-    return ProfilesControllerImpl();
+    return ProfilesControllerImpl(ref: ref);
   });
 }

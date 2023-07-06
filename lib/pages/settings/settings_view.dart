@@ -172,4 +172,10 @@ abstract class SettingsController extends StateNotifier<SettingsModel> {
   void changeThemeIndex(int index);
 
   void setProfileIndex(int index);
+
+  Future<List<ProfileModel>> getAvailableProfies();
+
+  void createProfile(ProfileModel profile);
+
+  void deleteProfile(int index);
 }
