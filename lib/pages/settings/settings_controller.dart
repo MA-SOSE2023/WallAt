@@ -106,7 +106,7 @@ class SettingsControllerImpl extends SettingsController
       Settings.availableProfilePictures.name,
       [...profilePictures.take(index), ...profilePictures.skip(index + 1)],
     );
-    if (index == state.selectedProfileIndex) {
+    if (index == state.selectedProfileIndex && profileNames.length > 1) {
       final int newSelectedIndex =
           (state.selectedProfileIndex + 1) % (profileNames.length - 1);
       prefs.setInt(Settings.selectedProfile.name, newSelectedIndex);
