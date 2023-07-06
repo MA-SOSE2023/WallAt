@@ -99,8 +99,12 @@ class FoldersControllerImpl extends FoldersController
   /// Adds item to this folders state but does not write it to database
   @override
   void receiveItem(FolderItem item) async {
+    final Iterable<FolderItem> subFolders =
+        state.contents?.where((item) => item.isFolder) ?? [];
+    final Iterable<FolderItem> subItems =
+        state.contents?.where((item) => item.isLeaf) ?? [];
     state = state.copyWith(
-      contents: [...state.contents ?? [], item],
+      contents: [...subFolders, item, ...subItems],
     );
   }
 
