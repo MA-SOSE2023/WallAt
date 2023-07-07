@@ -16,10 +16,9 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$ProfileModel {
-  String get id => throw _privateConstructorUsedError;
+  int get id => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
-  ImageProvider<Object> get profilePicture =>
-      throw _privateConstructorUsedError;
+  int get selectedImageIndex => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $ProfileModelCopyWith<ProfileModel> get copyWith =>
@@ -32,7 +31,7 @@ abstract class $ProfileModelCopyWith<$Res> {
           ProfileModel value, $Res Function(ProfileModel) then) =
       _$ProfileModelCopyWithImpl<$Res, ProfileModel>;
   @useResult
-  $Res call({String id, String name, ImageProvider<Object> profilePicture});
+  $Res call({int id, String name, int selectedImageIndex});
 }
 
 /// @nodoc
@@ -50,21 +49,21 @@ class _$ProfileModelCopyWithImpl<$Res, $Val extends ProfileModel>
   $Res call({
     Object? id = null,
     Object? name = null,
-    Object? profilePicture = null,
+    Object? selectedImageIndex = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String,
+              as int,
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      profilePicture: null == profilePicture
-          ? _value.profilePicture
-          : profilePicture // ignore: cast_nullable_to_non_nullable
-              as ImageProvider<Object>,
+      selectedImageIndex: null == selectedImageIndex
+          ? _value.selectedImageIndex
+          : selectedImageIndex // ignore: cast_nullable_to_non_nullable
+              as int,
     ) as $Val);
   }
 }
@@ -77,7 +76,7 @@ abstract class _$$_ProfileModelCopyWith<$Res>
       __$$_ProfileModelCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String id, String name, ImageProvider<Object> profilePicture});
+  $Res call({int id, String name, int selectedImageIndex});
 }
 
 /// @nodoc
@@ -93,21 +92,21 @@ class __$$_ProfileModelCopyWithImpl<$Res>
   $Res call({
     Object? id = null,
     Object? name = null,
-    Object? profilePicture = null,
+    Object? selectedImageIndex = null,
   }) {
     return _then(_$_ProfileModel(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String,
+              as int,
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      profilePicture: null == profilePicture
-          ? _value.profilePicture
-          : profilePicture // ignore: cast_nullable_to_non_nullable
-              as ImageProvider<Object>,
+      selectedImageIndex: null == selectedImageIndex
+          ? _value.selectedImageIndex
+          : selectedImageIndex // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -116,18 +115,18 @@ class __$$_ProfileModelCopyWithImpl<$Res>
 
 class _$_ProfileModel implements _ProfileModel {
   const _$_ProfileModel(
-      {required this.id, required this.name, required this.profilePicture});
+      {required this.id, required this.name, required this.selectedImageIndex});
 
   @override
-  final String id;
+  final int id;
   @override
   final String name;
   @override
-  final ImageProvider<Object> profilePicture;
+  final int selectedImageIndex;
 
   @override
   String toString() {
-    return 'ProfileModel(id: $id, name: $name, profilePicture: $profilePicture)';
+    return 'ProfileModel(id: $id, name: $name, selectedImageIndex: $selectedImageIndex)';
   }
 
   @override
@@ -137,12 +136,12 @@ class _$_ProfileModel implements _ProfileModel {
             other is _$_ProfileModel &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.name, name) || other.name == name) &&
-            (identical(other.profilePicture, profilePicture) ||
-                other.profilePicture == profilePicture));
+            (identical(other.selectedImageIndex, selectedImageIndex) ||
+                other.selectedImageIndex == selectedImageIndex));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, id, name, profilePicture);
+  int get hashCode => Object.hash(runtimeType, id, name, selectedImageIndex);
 
   @JsonKey(ignore: true)
   @override
@@ -153,16 +152,16 @@ class _$_ProfileModel implements _ProfileModel {
 
 abstract class _ProfileModel implements ProfileModel {
   const factory _ProfileModel(
-      {required final String id,
+      {required final int id,
       required final String name,
-      required final ImageProvider<Object> profilePicture}) = _$_ProfileModel;
+      required final int selectedImageIndex}) = _$_ProfileModel;
 
   @override
-  String get id;
+  int get id;
   @override
   String get name;
   @override
-  ImageProvider<Object> get profilePicture;
+  int get selectedImageIndex;
   @override
   @JsonKey(ignore: true)
   _$$_ProfileModelCopyWith<_$_ProfileModel> get copyWith =>

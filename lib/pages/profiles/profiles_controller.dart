@@ -1,45 +1,43 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gruppe4/pages/settings/settings_view.dart';
 
 import 'profile_model.dart';
 import 'profiles_view.dart';
+import '/pages/settings/settings_model.dart';
 import '/common/provider.dart';
-
-// TODO: add a default profile for when none has been created yet
-// maybe create one on first app start?
+import '/common/services/persistence/persistence_service.dart';
 
 class ProfilesControllerImpl extends ProfilesController {
-  ProfilesControllerImpl({List<ProfileModel>? model, required Ref ref})
+  ProfilesControllerImpl(
+      {List<ProfileModel>? model,
+      required PersistenceService persistence,
+      required Ref ref})
       : _ref = ref,
+        _persistence = persistence,
         super(model ?? []) {
     _loadProfiles();
   }
 
   final Ref _ref;
+  final PersistenceService _persistence;
 
   void _loadProfiles() async {
-    SettingsController controller =
-        _ref.read(Providers.settingsControllerProvider.notifier);
-    List<ProfileModel> profiles = await controller.getAvailableProfies();
+    List<ProfileModel> profiles = await _persistence.getAllProfiles();
     state = profiles;
   }
 
   @override
   Image? getProfilePicture(ProfileModel profile) {
-    return Image(image: profile.profilePicture);
+    return Image(
+      image: PersistenceService
+          .selectableProfilePictures[profile.selectedImageIndex],
+    );
   }
 
   @override
-  void createProfile(String name, ImageProvider<Object> image) {
-    ProfileModel newProfile = ProfileModel(
-      id: state.length.toString(),
-      name: name,
-      profilePicture: image,
-    );
-    _ref.read(Providers.settingsControllerProvider.notifier).createProfile(
-          newProfile,
-        );
+  Future<void> createProfile(String name, int selectedImageIndex) async {
+    ProfileModel newProfile = await _persistence.createProfile(
+        name: name, selectedImageIndex: selectedImageIndex);
     state = [
       ...state,
       newProfile,
@@ -48,17 +46,13 @@ class ProfilesControllerImpl extends ProfilesController {
 
   @override
   void updateProfile(ProfileModel profile,
-      {String? newName, ImageProvider<Object>? image}) {
-    _ref.read(Providers.settingsControllerProvider.notifier).updateProfile(
-          profile,
-          newName: newName,
-          image: image,
-        );
+      {String? newName, int? selectedImageIndex}) {
+    _persistence.updateProfile(profile);
     state = [
       ...state.take(state.indexOf(profile)),
       profile.copyWith(
         name: newName ?? profile.name,
-        profilePicture: image ?? profile.profilePicture,
+        selectedImageIndex: selectedImageIndex ?? profile.selectedImageIndex,
       ),
       ...state.skip(state.indexOf(profile) + 1),
     ];
@@ -73,13 +67,26 @@ class ProfilesControllerImpl extends ProfilesController {
       ];
 
   @override
-  void deleteProfile(int index) {
-    _ref
-        .read(Providers.settingsControllerProvider.notifier)
-        .deleteProfile(index);
-    state = [
-      ...state.take(index),
-      ...state.skip(index + 1),
-    ];
+  Future<void> deleteProfile(ProfileModel profile) async {
+    final List<ProfileModel> profiles = await _persistence.getAllProfiles();
+    await _persistence.deleteProfile(profile);
+    SettingsModel settings = _ref.read(Providers.settingsControllerProvider);
+    if (settings.selectedProfileId == profile.id) {
+      final int profileIndex = profiles.indexOf(profile);
+      final ProfileModel nextProfile =
+          profiles[(profileIndex + 1) % profiles.length];
+
+      _ref
+          .read(Providers.settingsControllerProvider.notifier)
+          .setProfileId(nextProfile.id);
+    }
+    state = [...state.where((p) => p != profile)];
   }
+
+  @override
+  ProfileModel getSelectedProfile() => state
+      .where((p) =>
+          p.id ==
+          _ref.read(Providers.settingsControllerProvider).selectedProfileId)
+      .first;
 }

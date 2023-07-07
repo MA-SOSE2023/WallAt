@@ -1,6 +1,7 @@
 import 'package:device_calendar/device_calendar.dart';
 import 'package:isar/isar.dart';
 
+import 'isar_profile.dart';
 import 'isar_single_item.dart';
 import '/pages/single_item/model/item_event.dart';
 
@@ -23,7 +24,9 @@ class IsarItemEvent {
   late DateTime end;
 
   @Backlink(to: "events")
-  final parentItem = IsarLink<IsarSingleItem>();
+  final IsarLink<IsarSingleItem> parentItem = IsarLink<IsarSingleItem>();
+
+  final IsarLink<IsarProfile> profile = IsarLink<IsarProfile>();
 
   ItemEvent toItemEvent() => ItemEvent(
         id: id,

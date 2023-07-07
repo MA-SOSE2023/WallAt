@@ -8,6 +8,7 @@ import '/common/services/persistence/persistence_service.dart';
 import '/common/services/persistence/isar/schemas/isar_folder.dart';
 import '/common/services/persistence/isar/schemas/isar_item_event.dart';
 import '/common/services/persistence/isar/schemas/isar_single_item.dart';
+import '/common/services/persistence/isar/schemas/isar_profile.dart';
 
 class IsarSingleItemDao extends SingleItemDao {
   IsarSingleItemDao({required Isar db}) : _isar = db;
@@ -15,14 +16,17 @@ class IsarSingleItemDao extends SingleItemDao {
   final Isar _isar;
 
   @override
-  Future<SingleItem> create(
-      {required String title,
-      required String imagePath,
-      required String description,
-      required bool isFavorite,
-      required int parentFolderId}) async {
+  Future<SingleItem> create({
+    required String title,
+    required String imagePath,
+    required String description,
+    required bool isFavorite,
+    required int parentFolderId,
+    required int profileId,
+  }) async {
     final IsarFolder? parentFolder =
         await _isarReadParentFolder(parentFolderId);
+    final IsarProfile? profile = await _isar.isarProfiles.get(profileId);
     final Id createdItemId = await _isar.writeTxnSync(
       () => _isar.isarSingleItems.putSync(
         IsarSingleItem()
@@ -30,7 +34,8 @@ class IsarSingleItemDao extends SingleItemDao {
           ..imagePath = imagePath
           ..description = description
           ..isFavorite = isFavorite
-          ..parentFolder.value = parentFolder,
+          ..parentFolder.value = parentFolder
+          ..profile.value = profile,
       ),
     );
     return SingleItem(
@@ -56,42 +61,97 @@ class IsarSingleItemDao extends SingleItemDao {
       .then((isarItem) => isarItem?.toSingleItem());
 
   @override
-  Future<List<SingleItem>> readAll() =>
-      _isar.isarSingleItems.where().findAll().then((isarItems) =>
-          isarItems.map((isarItem) => isarItem.toSingleItem()).toList());
-
-  @override
-  Future<List<SingleItem>> readAllFavorites() => _isar.isarSingleItems
-      .filter()
-      .isFavoriteEqualTo(true)
-      .findAll()
-      .then((isarItems) =>
-          isarItems.map((isarItem) => isarItem.toSingleItem()).toList());
-
-  @override
-  Future<List<SingleItem>> readAllFavoritesMatching(String query) =>
-      _isar.isarSingleItems
+  Future<List<SingleItem>> readAll(int? profileId) {
+    if (profileId != null) {
+      return _isar.isarSingleItems
           .filter()
-          .isFavoriteEqualTo(true)
-          .titleMatches(query)
+          .profile((p) => p.idEqualTo(profileId))
           .findAll()
           .then((isarItems) =>
               isarItems.map((isarItem) => isarItem.toSingleItem()).toList());
+    }
+    // Return all items from all profiles
+    return _isar.isarSingleItems.where().findAll().then((isarItems) =>
+        isarItems.map((isarItem) => isarItem.toSingleItem()).toList());
+  }
 
   @override
-  Future<List<SingleItem>> readAllMatching(String query) =>
-      _isar.isarSingleItems.filter().titleMatches(query).findAll().then(
-          (isarItems) =>
+  Future<List<SingleItem>> readAllFavorites(int? profileId) {
+    if (profileId != null) {
+      return _isar.isarSingleItems
+          .filter()
+          .isFavoriteEqualTo(true)
+          .profile((p) => p.idEqualTo(profileId))
+          .findAll()
+          .then((isarItems) =>
               isarItems.map((isarItem) => isarItem.toSingleItem()).toList());
+    }
+    return _isar.isarSingleItems
+        .filter()
+        .isFavoriteEqualTo(true)
+        .findAll()
+        .then((isarItems) =>
+            isarItems.map((isarItem) => isarItem.toSingleItem()).toList());
+  }
 
   @override
-  Future<List<SingleItem>> readAllRecent(int count) => _isar.isarSingleItems
-      .where()
-      .sortByLastAccessedOrModifiedDesc()
-      .limit(count)
-      .findAll()
-      .then((isarItems) =>
-          isarItems.map((isarItem) => isarItem.toSingleItem()).toList());
+  Future<List<SingleItem>> readAllFavoritesMatching(
+      String query, int? profileId) {
+    if (profileId != null) {
+      return _isar.isarSingleItems
+          .filter()
+          .isFavoriteEqualTo(true)
+          .titleMatches(query)
+          .profile((p) => p.idEqualTo(profileId))
+          .findAll()
+          .then((isarItems) =>
+              isarItems.map((isarItem) => isarItem.toSingleItem()).toList());
+    }
+    return _isar.isarSingleItems
+        .filter()
+        .isFavoriteEqualTo(true)
+        .titleMatches(query)
+        .findAll()
+        .then((isarItems) =>
+            isarItems.map((isarItem) => isarItem.toSingleItem()).toList());
+  }
+
+  @override
+  Future<List<SingleItem>> readAllMatching(String query, int? profileId) {
+    if (profileId != null) {
+      return _isar.isarSingleItems
+          .filter()
+          .titleMatches(query)
+          .profile((p) => p.idEqualTo(profileId))
+          .findAll()
+          .then((isarItems) =>
+              isarItems.map((isarItem) => isarItem.toSingleItem()).toList());
+    }
+    return _isar.isarSingleItems.filter().titleMatches(query).findAll().then(
+        (isarItems) =>
+            isarItems.map((isarItem) => isarItem.toSingleItem()).toList());
+  }
+
+  @override
+  Future<List<SingleItem>> readAllRecent(int count, int? profileId) {
+    if (profileId != null) {
+      return _isar.isarSingleItems
+          .filter()
+          .profile((p) => p.idEqualTo(profileId))
+          .sortByLastAccessedOrModifiedDesc()
+          .limit(count)
+          .findAll()
+          .then((isarItems) =>
+              isarItems.map((isarItem) => isarItem.toSingleItem()).toList());
+    }
+    return _isar.isarSingleItems
+        .where()
+        .sortByLastAccessedOrModifiedDesc()
+        .limit(count)
+        .findAll()
+        .then((isarItems) =>
+            isarItems.map((isarItem) => isarItem.toSingleItem()).toList());
+  }
 
   @override
   Future<void> update(SingleItem item) async {
@@ -135,4 +195,14 @@ class IsarSingleItemDao extends SingleItemDao {
             ..parentFolder.value = _isar.isarFolders.getSync(newParent.id)));
         }
       });
+
+  @override
+  Future<void> moveToProfile(SingleItem item, int newProfile) async {
+    final IsarSingleItem? isarItem = await _isar.isarSingleItems.get(item.id);
+    final IsarProfile? profile = await _isar.isarProfiles.get(newProfile);
+    if (isarItem != null && profile != null) {
+      _isar.writeTxnSync(() =>
+          _isar.isarSingleItems.putSync(isarItem..profile.value = profile));
+    }
+  }
 }

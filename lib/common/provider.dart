@@ -128,11 +128,11 @@ class Providers {
 
   static final enableHeroAnimationProvider = StateProvider<bool>((ref) => true);
 
-  // TODO: make dependent on currently selected profile
   static final Provider<PersistenceService> persistenceServiceProvider =
       Provider<PersistenceService>(
-    (ref) =>
-        PersistenceService(controller: ref.read(dbControllerProvider.notifier)),
+    (ref) => PersistenceService(
+        controller: ref.read(dbControllerProvider.notifier),
+        profileId: ref.watch(settingsControllerProvider).selectedProfileId),
   );
 
   /// Provider for [SettingsScreen]
@@ -157,6 +157,7 @@ class Providers {
   static final StateNotifierProvider<ProfilesController, List<ProfileModel>>
       profilesControllerProvider =
       StateNotifierProvider<ProfilesController, List<ProfileModel>>((ref) {
-    return ProfilesControllerImpl(ref: ref);
+    return ProfilesControllerImpl(
+        ref: ref, persistence: ref.watch(persistenceServiceProvider));
   });
 }

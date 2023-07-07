@@ -92,16 +92,16 @@ class SettingsPage extends ConsumerWidget {
                 ),
                 CupertinoListTile.notched(
                   title: const Text("User Profile"),
-                  subtitle:
-                      profiles.isNotEmpty && settings.selectedProfileIndex >= 0
-                          ? Text(
-                              "Current Profile: ${profiles[settings.selectedProfileIndex].name}",
-                            )
-                          : null,
+                  subtitle: profiles.isNotEmpty &&
+                          (settings.selectedProfileId ?? -1) > 0
+                      ? Text(
+                          "Current Profile: ${profilesController.getSelectedProfile().name}",
+                        )
+                      : null,
                   trailing: Row(
                     children: [
                       if (profiles.isNotEmpty &&
-                          settings.selectedProfileIndex >= 0)
+                          (settings.selectedProfileId ?? -1) > 0)
                         Container(
                           height: 40,
                           width: 40,
@@ -113,7 +113,7 @@ class SettingsPage extends ConsumerWidget {
                             image: DecorationImage(
                               image: profilesController
                                   .getProfilePicture(
-                                    profiles[settings.selectedProfileIndex],
+                                    profilesController.getSelectedProfile(),
                                   )!
                                   .image,
                               fit: BoxFit.fill,
@@ -131,17 +131,16 @@ class SettingsPage extends ConsumerWidget {
                       context: context,
                       builder: (BuildContext context) {
                         if (profiles.isEmpty) {
-                          return AddorEditProfileDialog();
+                          return const AddOrEditProfileDialog();
                         }
                         return SelectionDialog(
                           title: 'Select a profile',
                           selectables: profiles,
-                          onTapped: (profile) => controller.setProfileIndex(
-                            profiles.indexOf(profile),
+                          onTapped: (profile) => controller.setProfileId(
+                            profile.id,
                           ),
                           isSelected: (profile) =>
-                              profile ==
-                              profiles[settings.selectedProfileIndex],
+                              profile.id == settings.selectedProfileId,
                           builder: (profile) => Row(children: [
                             Container(
                               height: 30,
@@ -182,14 +181,5 @@ abstract class SettingsController extends StateNotifier<SettingsModel> {
 
   void changeThemeIndex(int index);
 
-  void setProfileIndex(int index);
-
-  Future<List<ProfileModel>> getAvailableProfies();
-
-  void createProfile(ProfileModel profile);
-
-  void updateProfile(ProfileModel profile,
-      {String? newName, ImageProvider<Object>? image});
-
-  void deleteProfile(int index);
+  void setProfileId(int profileId);
 }

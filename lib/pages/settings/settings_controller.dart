@@ -1,6 +1,4 @@
 import 'package:device_calendar/device_calendar.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:gruppe4/pages/profiles/profile_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'settings_model.dart';
@@ -11,14 +9,12 @@ enum Settings {
   calendar,
   selectedColorTheme,
   selectedProfile,
-  availableProfileNames,
-  availableProfilePictures,
 }
 
 SettingsModel _settings = const SettingsModel(
   calendar: null,
   selectedThemeIndex: 1,
-  selectedProfileIndex: 0,
+  selectedProfileId: null,
 );
 
 class SettingsControllerImpl extends SettingsController
@@ -31,8 +27,8 @@ class SettingsControllerImpl extends SettingsController
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     state = state.copyWith(
       calendar: await getCalendarById(prefs.getString(Settings.calendar.name)),
-      selectedThemeIndex: prefs.getInt('selectedThemeIndex') ?? 1,
-      selectedProfileIndex: prefs.getInt('selectedProfileIndex') ?? 0,
+      selectedThemeIndex: prefs.getInt(Settings.selectedColorTheme.name) ?? 1,
+      selectedProfileId: prefs.getInt(Settings.selectedProfile.name),
     );
   }
 
@@ -53,93 +49,7 @@ class SettingsControllerImpl extends SettingsController
   }
 
   @override
-  void createProfile(ProfileModel profile) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final List<String> profiles =
-        prefs.getStringList(Settings.availableProfileNames.name) ?? [];
-    prefs.setStringList(
-        Settings.availableProfileNames.name, [...profiles, profile.name]);
-    final List<String> profilePictures =
-        prefs.getStringList(Settings.availableProfilePictures.name) ?? [];
-    prefs.setStringList(Settings.availableProfilePictures.name,
-        [...profilePictures, (profile.profilePicture as AssetImage).assetName]);
-  }
-
-  @override
-  Future<List<ProfileModel>> getAvailableProfies() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final List<String> profileNames =
-        prefs.getStringList(Settings.availableProfileNames.name) ?? [];
-    final List<ImageProvider> profilePictures =
-        (prefs.getStringList(Settings.availableProfilePictures.name) ?? [])
-            .map((path) => AssetImage(path))
-            .toList();
-    return List.generate(
-      profileNames.length,
-      (index) => ProfileModel(
-        id: profileNames[index],
-        name: profileNames[index],
-        profilePicture: profilePictures[index],
-      ),
-    );
-  }
-
-  @override
-  void setProfileIndex(int index) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setInt(Settings.selectedProfile.name, index);
-    state = state.copyWith(selectedProfileIndex: index);
-  }
-
-  @override
-  void deleteProfile(int index) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final List<String> profileNames =
-        prefs.getStringList(Settings.availableProfileNames.name) ?? [];
-    final List<String> profilePictures =
-        prefs.getStringList(Settings.availableProfilePictures.name) ?? [];
-    prefs.setStringList(
-      Settings.availableProfileNames.name,
-      [...profileNames.take(index), ...profileNames.skip(index + 1)],
-    );
-    prefs.setStringList(
-      Settings.availableProfilePictures.name,
-      [...profilePictures.take(index), ...profilePictures.skip(index + 1)],
-    );
-    if (index == state.selectedProfileIndex && profileNames.length > 1) {
-      final int newSelectedIndex =
-          (state.selectedProfileIndex + 1) % (profileNames.length - 1);
-      prefs.setInt(Settings.selectedProfile.name, newSelectedIndex);
-      state = state.copyWith(selectedProfileIndex: newSelectedIndex);
-    }
-    if (profileNames.length == 1) {
-      state = state.copyWith(selectedProfileIndex: 0);
-    }
-  }
-
-  @override
-  void updateProfile(ProfileModel profile,
-      {String? newName, ImageProvider<Object>? image}) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final List<String> profileNames =
-        prefs.getStringList(Settings.availableProfileNames.name) ?? [];
-    final List<String> profilePictures =
-        prefs.getStringList(Settings.availableProfilePictures.name) ?? [];
-    prefs.setStringList(
-      Settings.availableProfileNames.name,
-      [
-        ...profileNames.take(profileNames.indexOf(profile.name)),
-        newName ?? profile.name,
-        ...profileNames.skip(profileNames.indexOf(profile.name) + 1),
-      ],
-    );
-    prefs.setStringList(
-      Settings.availableProfilePictures.name,
-      [
-        ...profilePictures.take(profileNames.indexOf(profile.name)),
-        ((image ?? profile.profilePicture) as AssetImage).assetName,
-        ...profilePictures.skip(profileNames.indexOf(profile.name) + 1),
-      ],
-    );
+  void setProfileId(int profileId) async {
+    state = state.copyWith(selectedProfileId: profileId);
   }
 }

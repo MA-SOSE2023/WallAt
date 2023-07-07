@@ -5,11 +5,10 @@ import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'add_or_edit_profile_dialog.dart';
+import 'profile_container.dart';
 import 'profile_model.dart';
 
 import '/pages/home/home_model.dart';
-import '/pages/settings/settings_model.dart';
-import '/pages/settings/settings_view.dart';
 import '/common/theme/custom_theme_data.dart';
 import '/common/provider.dart';
 import '/common/custom_widgets/all_custom_widgets.dart'
@@ -28,10 +27,6 @@ class ProfilesPage extends ConsumerWidget {
         ref.read(Providers.profilesControllerProvider.notifier);
     List<ProfileModel> profiles =
         ref.watch(Providers.profilesControllerProvider);
-
-    SettingsModel settings = ref.watch(Providers.settingsControllerProvider);
-    SettingsController settingsController =
-        ref.read(Providers.settingsControllerProvider.notifier);
 
     AsyncValue<HomeModel> homeModel =
         ref.watch(Providers.homeControllerProvider);
@@ -112,7 +107,7 @@ class ProfilesPage extends ConsumerWidget {
                     showCupertinoDialog(
                         context: context,
                         builder: (context) {
-                          return const AddorEditProfileDialog();
+                          return const AddOrEditProfileDialog();
                         });
                   },
                 ),
@@ -133,90 +128,45 @@ class ProfilesPage extends ConsumerWidget {
                 crossAxisSpacing: 6.0,
               ),
               delegate: SliverChildBuilderDelegate(
-                (context, index) => Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  // Context menu to delete or edit profile
-                  // Accessed by long pressing on a profile
-                  child: CupertinoContextMenu(
-                    actions: [
-                      CupertinoContextMenuAction(
-                        trailingIcon: CupertinoIcons.pencil,
-                        onPressed: () {
-                          showCupertinoDialog(
-                              context: context,
-                              builder: (context) {
-                                return AddorEditProfileDialog(
-                                  isAddDialog: false,
-                                  editProfile: profiles[index],
-                                );
-                              });
-                        },
-                        child: const Text('Edit'),
-                      ),
-                      CupertinoContextMenuAction(
-                        isDestructiveAction: true,
-                        onPressed: () {
-                          profilesController.deleteProfile(index);
-                          context.beamBack();
-                        },
-                        trailingIcon: CupertinoIcons.trash,
-                        child: const Text('Delete'),
-                      ),
-                    ],
-                    child: Container(
-                      decoration: BoxDecoration(
-                          color: theme.groupingColor,
-                          borderRadius: BorderRadius.circular(10)),
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(
-                              height: 80,
-                              width: 80,
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                    color: theme.accentColor, width: 2),
-                                shape: BoxShape.circle,
-                                image: DecorationImage(
-                                    image: profilesController
-                                        .getProfilePicture(profiles[index])!
-                                        .image,
-                                    fit: BoxFit.fill),
+                (context, index) {
+                  final ProfileModel profile = profiles[index];
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    // Context menu to delete or edit profile
+                    // Accessed by long pressing on a profile
+                    // Should not be available for the default profile
+                    child: profile.selectedImageIndex < 0
+                        ? ProfileContainer(profile: profile)
+                        : CupertinoContextMenu(
+                            actions: [
+                              CupertinoContextMenuAction(
+                                trailingIcon: CupertinoIcons.pencil,
+                                onPressed: () {
+                                  showCupertinoDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AddOrEditProfileDialog(
+                                          isAddDialog: false,
+                                          editProfile: profile,
+                                        );
+                                      });
+                                },
+                                child: const Text('Edit'),
                               ),
-                            ),
+                              CupertinoContextMenuAction(
+                                isDestructiveAction: true,
+                                onPressed: () {
+                                  profilesController.deleteProfile(profile);
+                                  context.beamBack();
+                                },
+                                trailingIcon: CupertinoIcons.trash,
+                                child: const Text('Delete'),
+                              ),
+                            ],
+                            child: ProfileContainer(profile: profile),
                           ),
-                          Text(profiles[index].name,
-                              style: TextStyle(color: theme.textColor)),
-                          if (index == settings.selectedProfileIndex)
-                            Padding(
-                              padding: const EdgeInsets.only(top: 10),
-                              child: Container(
-                                padding: const EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: theme.backgroundColor,
-                                ),
-                                child: Text(
-                                  "Currently Selected",
-                                  style: TextStyle(color: theme.textColor),
-                                ),
-                              ),
-                            )
-                          else
-                            CupertinoButton(
-                              padding: EdgeInsets.zero,
-                              child: const Text("Select this profile"),
-                              onPressed: () => {
-                                settingsController.setProfileIndex(index),
-                                context.beamBack(),
-                              },
-                            )
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
+                  );
+                },
                 childCount: profiles.length,
               ),
             )
@@ -229,11 +179,12 @@ class ProfilesPage extends ConsumerWidget {
 abstract class ProfilesController extends StateNotifier<List<ProfileModel>> {
   ProfilesController(List<ProfileModel> state) : super(state);
 
-  void createProfile(String name, ImageProvider image);
+  void createProfile(String name, int selectedImageIndex);
   void updateProfile(ProfileModel profile,
-      {String? newName, ImageProvider? image});
-  void deleteProfile(int index);
+      {String? newName, int? selectedImageIndex});
+  void deleteProfile(ProfileModel profile);
   Image? getProfilePicture(ProfileModel profile);
+  ProfileModel getSelectedProfile();
 
   List<ImageProvider> getSelectableProfilePictures();
 }

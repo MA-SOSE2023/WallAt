@@ -7,8 +7,8 @@ import 'profile_model.dart';
 import '/common/provider.dart';
 import '/common/theme/custom_theme_data.dart';
 
-class AddorEditProfileDialog extends ConsumerStatefulWidget {
-  const AddorEditProfileDialog({
+class AddOrEditProfileDialog extends ConsumerStatefulWidget {
+  const AddOrEditProfileDialog({
     bool isAddDialog = true,
     ProfileModel? editProfile,
     super.key,
@@ -24,7 +24,7 @@ class AddorEditProfileDialog extends ConsumerStatefulWidget {
 }
 
 class _AddorEditProfileDialogState
-    extends ConsumerState<AddorEditProfileDialog> {
+    extends ConsumerState<AddOrEditProfileDialog> {
   String? newProfileName;
   TextEditingController? profileNameTextController;
   int newProfilePictureIndex = 0;
@@ -50,9 +50,9 @@ class _AddorEditProfileDialogState
     final Widget addDialogAction = CupertinoDialogAction(
       child: const Text('Add'),
       onPressed: () {
-        ref.read(Providers.profilesControllerProvider.notifier).createProfile(
-            newProfileName ?? 'Profile',
-            availableProfilePictures[newProfilePictureIndex]);
+        ref
+            .read(Providers.profilesControllerProvider.notifier)
+            .createProfile(newProfileName ?? 'Profile', newProfilePictureIndex);
         Navigator.of(context).pop();
       },
     );
@@ -63,7 +63,7 @@ class _AddorEditProfileDialogState
         ref.read(Providers.profilesControllerProvider.notifier).updateProfile(
               widget._editProfile!,
               newName: newProfileName,
-              image: availableProfilePictures[newProfilePictureIndex],
+              selectedImageIndex: newProfilePictureIndex,
             );
         Navigator.of(context).pop();
       },
