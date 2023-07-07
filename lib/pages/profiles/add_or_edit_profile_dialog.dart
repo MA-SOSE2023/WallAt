@@ -47,7 +47,7 @@ class _AddorEditProfileDialogState
 
     CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
 
-    final Widget _addDialogAction = CupertinoDialogAction(
+    final Widget addDialogAction = CupertinoDialogAction(
       child: const Text('Add'),
       onPressed: () {
         ref.read(Providers.profilesControllerProvider.notifier).createProfile(
@@ -57,7 +57,7 @@ class _AddorEditProfileDialogState
       },
     );
 
-    final Widget _editDialogAction = CupertinoDialogAction(
+    final Widget editDialogAction = CupertinoDialogAction(
       child: const Text('Edit'),
       onPressed: () {
         ref.read(Providers.profilesControllerProvider.notifier).updateProfile(
@@ -120,7 +120,7 @@ class _AddorEditProfileDialogState
                     width: 40,
                     alignment: Alignment.centerLeft,
                     decoration: BoxDecoration(
-                      color: theme.groupingColor.withOpacity(0.85),
+                      color: theme.groupingColor.withOpacity(0.95),
                       shape: BoxShape.circle,
                     ),
                     child: CupertinoButton(
@@ -146,12 +146,12 @@ class _AddorEditProfileDialogState
                     width: 40,
                     alignment: Alignment.centerLeft,
                     decoration: BoxDecoration(
-                      color: theme.groupingColor.withOpacity(0.85),
+                      color: theme.groupingColor.withOpacity(0.95),
                       shape: BoxShape.circle,
                     ),
                     child: CupertinoButton(
                         minSize: 30,
-                        padding: const EdgeInsets.only(left: 5),
+                        padding: const EdgeInsets.only(left: 6),
                         child: Icon(
                           CupertinoIcons.forward,
                           color: theme.accentColor,
@@ -177,7 +177,7 @@ class _AddorEditProfileDialogState
           child: const Text('Cancel'),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        if (widget._isAddDialog) _addDialogAction else _editDialogAction,
+        if (widget._isAddDialog) addDialogAction else editDialogAction,
       ],
     );
   }
