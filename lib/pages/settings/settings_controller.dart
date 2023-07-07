@@ -50,6 +50,8 @@ class SettingsControllerImpl extends SettingsController
 
   @override
   void setProfileId(int profileId) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setInt(Settings.selectedProfile.name, profileId);
     state = state.copyWith(selectedProfileId: profileId);
   }
 }
