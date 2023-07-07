@@ -3,11 +3,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'settings_model.dart';
+import '/pages/profiles/profile_model.dart';
+import '/pages/profiles/profiles_view.dart';
+import '/pages/profiles/add_or_edit_profile_dialog.dart';
 import '/common/custom_widgets/all_custom_widgets.dart';
 import '/common/theme/custom_theme_data.dart';
 import '/common/provider.dart';
-import '/pages/profiles/profile_model.dart';
-import '/pages/profiles/profiles_view.dart';
 
 class SettingsPage extends ConsumerWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -91,36 +92,47 @@ class SettingsPage extends ConsumerWidget {
                 ),
                 CupertinoListTile.notched(
                   title: const Text("User Profile"),
-                  subtitle: Text(
-                    "Current Profile: ${profiles[settings.selectedProfileIndex].name}",
-                  ),
+                  subtitle:
+                      profiles.isNotEmpty && settings.selectedProfileIndex >= 0
+                          ? Text(
+                              "Current Profile: ${profiles[settings.selectedProfileIndex].name}",
+                            )
+                          : null,
                   trailing: Row(
                     children: [
-                      Container(
-                        height: 40,
-                        width: 40,
-                        margin: const EdgeInsets.only(right: 8),
-                        decoration: BoxDecoration(
-                          border:
-                              Border.all(color: theme.accentColor, width: 2),
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                            image: profilesController
-                                .getProfilePicture(
-                                  profiles[settings.selectedProfileIndex],
-                                )!
-                                .image,
-                            fit: BoxFit.fill,
+                      if (profiles.isNotEmpty &&
+                          settings.selectedProfileIndex >= 0)
+                        Container(
+                          height: 40,
+                          width: 40,
+                          margin: const EdgeInsets.only(right: 8),
+                          decoration: BoxDecoration(
+                            border:
+                                Border.all(color: theme.accentColor, width: 2),
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                              image: profilesController
+                                  .getProfilePicture(
+                                    profiles[settings.selectedProfileIndex],
+                                  )!
+                                  .image,
+                              fit: BoxFit.fill,
+                            ),
                           ),
                         ),
-                      ),
-                      const Icon(CupertinoIcons.forward),
+                      if (profiles.isNotEmpty)
+                        const Icon(CupertinoIcons.forward)
+                      else
+                        const Icon(CupertinoIcons.add),
                     ],
                   ),
                   onTap: () => {
                     showCupertinoDialog(
                       context: context,
                       builder: (BuildContext context) {
+                        if (profiles.isEmpty) {
+                          return AddorEditProfileDialog();
+                        }
                         return SelectionDialog(
                           title: 'Select a profile',
                           selectables: profiles,
@@ -175,6 +187,9 @@ abstract class SettingsController extends StateNotifier<SettingsModel> {
   Future<List<ProfileModel>> getAvailableProfies();
 
   void createProfile(ProfileModel profile);
+
+  void updateProfile(ProfileModel profile,
+      {String? newName, ImageProvider<Object>? image});
 
   void deleteProfile(int index);
 }

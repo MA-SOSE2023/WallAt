@@ -6,6 +6,9 @@ import 'profile_model.dart';
 import 'profiles_view.dart';
 import '/common/provider.dart';
 
+// TODO: add a default profile for when none has been created yet
+// maybe create one on first app start?
+
 class ProfilesControllerImpl extends ProfilesController {
   ProfilesControllerImpl({List<ProfileModel>? model, required Ref ref})
       : _ref = ref,
@@ -40,6 +43,24 @@ class ProfilesControllerImpl extends ProfilesController {
     state = [
       ...state,
       newProfile,
+    ];
+  }
+
+  @override
+  void updateProfile(ProfileModel profile,
+      {String? newName, ImageProvider<Object>? image}) {
+    _ref.read(Providers.settingsControllerProvider.notifier).updateProfile(
+          profile,
+          newName: newName,
+          image: image,
+        );
+    state = [
+      ...state.take(state.indexOf(profile)),
+      profile.copyWith(
+        name: newName ?? profile.name,
+        profilePicture: image ?? profile.profilePicture,
+      ),
+      ...state.skip(state.indexOf(profile) + 1),
     ];
   }
 

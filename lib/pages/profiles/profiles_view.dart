@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'add_or_edit_profile_dialog.dart';
 import 'profile_model.dart';
 
 import '/pages/home/home_model.dart';
@@ -34,9 +35,6 @@ class ProfilesPage extends ConsumerWidget {
 
     AsyncValue<HomeModel> homeModel =
         ref.watch(Providers.homeControllerProvider);
-
-    List<ImageProvider> availableProfilePictures =
-        profilesController.getSelectableProfilePictures();
 
     CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
 
@@ -112,143 +110,10 @@ class ProfilesPage extends ConsumerWidget {
                   ),
                   onPressed: () {
                     showCupertinoDialog(
-                      context: context,
-                      builder: (context) {
-                        String? newProfileName;
-                        int newProfilePictureIndex = 0;
-                        CarouselController carouselController =
-                            CarouselController();
-                        return CupertinoAlertDialog(
-                          title: const Text('Add profile'),
-                          content: Column(
-                            children: [
-                              CupertinoTextField(
-                                placeholder: 'Profile name',
-                                onChanged: (value) => newProfileName = value,
-                              ),
-                              Stack(
-                                alignment: Alignment.centerLeft,
-                                children: [
-                                  FlutterCarousel.builder(
-                                    itemCount: availableProfilePictures.length,
-                                    itemBuilder: (context, index, realIndex) =>
-                                        // Empty gesture detector to disable
-                                        // swipe gestures on the carousel
-                                        GestureDetector(
-                                      onHorizontalDragEnd: (details) => {},
-                                      onHorizontalDragCancel: () => {},
-                                      onHorizontalDragUpdate: (details) => {},
-                                      onHorizontalDragStart: (details) => {},
-                                      onHorizontalDragDown: (details) => {},
-                                      child: Image(
-                                        height: 40,
-                                        image: availableProfilePictures[index],
-                                      ),
-                                    ),
-                                    options: CarouselOptions(
-                                      enableInfiniteScroll: true,
-                                      enlargeCenterPage: true,
-                                      showIndicator: true,
-                                      controller: carouselController,
-                                      slideIndicator:
-                                          CircularWaveSlideIndicator(
-                                        currentIndicatorColor:
-                                            theme.accentColor,
-                                        indicatorBackgroundColor:
-                                            theme.groupingColor,
-                                      ),
-                                      viewportFraction: 0.4,
-                                      height: 150,
-                                    ),
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Container(
-                                        height: 40,
-                                        width: 40,
-                                        alignment: Alignment.centerLeft,
-                                        decoration: BoxDecoration(
-                                          color: theme.groupingColor
-                                              .withOpacity(0.85),
-                                          shape: BoxShape.circle,
-                                        ),
-                                        child: CupertinoButton(
-                                          padding:
-                                              const EdgeInsets.only(left: 5),
-                                          minSize: 30,
-                                          child: Icon(
-                                            CupertinoIcons.back,
-                                            color: theme.accentColor,
-                                            size: 30,
-                                          ),
-                                          onPressed: () {
-                                            carouselController.previousPage();
-                                            newProfilePictureIndex =
-                                                newProfilePictureIndex == 0
-                                                    ? availableProfilePictures
-                                                            .length -
-                                                        1
-                                                    : newProfilePictureIndex -
-                                                        1;
-                                          },
-                                        ),
-                                      ),
-                                      Container(
-                                        height: 40,
-                                        width: 40,
-                                        alignment: Alignment.centerLeft,
-                                        decoration: BoxDecoration(
-                                          color: theme.groupingColor
-                                              .withOpacity(0.85),
-                                          shape: BoxShape.circle,
-                                        ),
-                                        child: CupertinoButton(
-                                            minSize: 30,
-                                            padding:
-                                                const EdgeInsets.only(left: 5),
-                                            child: Icon(
-                                              CupertinoIcons.forward,
-                                              color: theme.accentColor,
-                                              size: 30,
-                                            ),
-                                            onPressed: () {
-                                              carouselController.nextPage();
-                                              newProfilePictureIndex =
-                                                  (newProfilePictureIndex + 1) %
-                                                      availableProfilePictures
-                                                          .length;
-                                            }),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          actions: [
-                            CupertinoDialogAction(
-                              child: const Text('Cancel'),
-                              onPressed: () => Navigator.of(context).pop(),
-                            ),
-                            CupertinoDialogAction(
-                              child: const Text('Add'),
-                              onPressed: () {
-                                ref
-                                    .read(Providers
-                                        .profilesControllerProvider.notifier)
-                                    .createProfile(
-                                        newProfileName ?? 'Profile',
-                                        availableProfilePictures[
-                                            newProfilePictureIndex]);
-                                Navigator.of(context).pop();
-                              },
-                            ),
-                          ],
-                        );
-                      },
-                    );
+                        context: context,
+                        builder: (context) {
+                          return const AddorEditProfileDialog();
+                        });
                   },
                 ),
               ],
@@ -257,7 +122,7 @@ class ProfilesPage extends ConsumerWidget {
           if (profiles.isEmpty)
             const SliverNoElementsMessage(
               message:
-                  'Profiles are a way to categorize your data in a broad way.\nEach profile will have different data.',
+                  'Profiles are a way to categorize your data in a broad way.\nEach profile will have different data.\n\nTry creating one by tapping the  +  above',
               minPadding: 50.0,
             )
           else
@@ -270,14 +135,31 @@ class ProfilesPage extends ConsumerWidget {
               delegate: SliverChildBuilderDelegate(
                 (context, index) => Padding(
                   padding: const EdgeInsets.all(8.0),
+                  // Context menu to delete or edit profile
+                  // Accessed by long pressing on a profile
                   child: CupertinoContextMenu(
                     actions: [
+                      CupertinoContextMenuAction(
+                        trailingIcon: CupertinoIcons.pencil,
+                        onPressed: () {
+                          showCupertinoDialog(
+                              context: context,
+                              builder: (context) {
+                                return AddorEditProfileDialog(
+                                  isAddDialog: false,
+                                  editProfile: profiles[index],
+                                );
+                              });
+                        },
+                        child: const Text('Edit'),
+                      ),
                       CupertinoContextMenuAction(
                         isDestructiveAction: true,
                         onPressed: () {
                           profilesController.deleteProfile(index);
                           context.beamBack();
                         },
+                        trailingIcon: CupertinoIcons.trash,
                         child: const Text('Delete'),
                       ),
                     ],
@@ -348,6 +230,8 @@ abstract class ProfilesController extends StateNotifier<List<ProfileModel>> {
   ProfilesController(List<ProfileModel> state) : super(state);
 
   void createProfile(String name, ImageProvider image);
+  void updateProfile(ProfileModel profile,
+      {String? newName, ImageProvider? image});
   void deleteProfile(int index);
   Image? getProfilePicture(ProfileModel profile);
 

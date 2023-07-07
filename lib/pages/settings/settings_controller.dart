@@ -112,5 +112,34 @@ class SettingsControllerImpl extends SettingsController
       prefs.setInt(Settings.selectedProfile.name, newSelectedIndex);
       state = state.copyWith(selectedProfileIndex: newSelectedIndex);
     }
+    if (profileNames.length == 1) {
+      state = state.copyWith(selectedProfileIndex: 0);
+    }
+  }
+
+  @override
+  void updateProfile(ProfileModel profile,
+      {String? newName, ImageProvider<Object>? image}) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final List<String> profileNames =
+        prefs.getStringList(Settings.availableProfileNames.name) ?? [];
+    final List<String> profilePictures =
+        prefs.getStringList(Settings.availableProfilePictures.name) ?? [];
+    prefs.setStringList(
+      Settings.availableProfileNames.name,
+      [
+        ...profileNames.take(profileNames.indexOf(profile.name)),
+        newName ?? profile.name,
+        ...profileNames.skip(profileNames.indexOf(profile.name) + 1),
+      ],
+    );
+    prefs.setStringList(
+      Settings.availableProfilePictures.name,
+      [
+        ...profilePictures.take(profileNames.indexOf(profile.name)),
+        ((image ?? profile.profilePicture) as AssetImage).assetName,
+        ...profilePictures.skip(profileNames.indexOf(profile.name) + 1),
+      ],
+    );
   }
 }
