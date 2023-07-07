@@ -44,6 +44,5 @@ export 'futures/async/async_sliver_folder_builder.dart';
 export 'futures/async/async_sliver_list_builder.dart';
 // Custom External Resource Loading
 export 'futures/loading/loading_option_builder.dart';
-export 'futures/loading/loading_option_list_builder.dart';
 export 'futures/loading/loading_sliver_folder_builder.dart';
 export 'futures/loading/loading_sliver_list_builder.dart';

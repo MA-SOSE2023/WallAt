@@ -33,9 +33,7 @@ class AsyncOptionListBuilder<T> extends StatelessWidget {
     return AsyncOptionBuilder(
       future: _future,
       success: (data) {
-        if (data == null) {
-          return NoElementsMessage(message: onNullMessage);
-        } else if (data.isEmpty) {
+        if (data.isEmpty) {
           return empty == null
               ? NoElementsMessage(message: emptyMessage)
               : empty!(emptyMessage);

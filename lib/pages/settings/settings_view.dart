@@ -1,6 +1,5 @@
 import 'package:device_calendar/device_calendar.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'settings_model.dart';

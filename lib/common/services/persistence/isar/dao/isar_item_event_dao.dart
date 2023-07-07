@@ -2,7 +2,6 @@ import 'package:device_calendar/device_calendar.dart';
 import 'package:gruppe4/common/services/persistence/isar/schemas/isar_single_item.dart';
 import 'package:isar/isar.dart';
 
-import '/pages/single_item/model/single_item.dart';
 import '/pages/single_item/model/item_event.dart';
 import '/common/services/persistence/isar/schemas/isar_item_event.dart';
 import '/common/services/persistence/persistence_service.dart';

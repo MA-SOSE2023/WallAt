@@ -1,7 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import 'home_model.dart';
 import 'home_view.dart';
 import '/pages/single_item/model/item_event.dart';

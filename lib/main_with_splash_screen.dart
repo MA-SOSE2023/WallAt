@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:timezone/data/latest.dart' as tz;
-import 'splash_screen.dart';
 
 import 'package:beamer/beamer.dart';
 import 'package:flutter/cupertino.dart';

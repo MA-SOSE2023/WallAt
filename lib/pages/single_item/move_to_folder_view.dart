@@ -24,9 +24,6 @@ class MoveToFolderScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
 
-    print('received item: $_item');
-    print('received folder: $_folder');
-
     final Folder folder =
         ref.watch(Providers.foldersControllerProvider(_folder?.id));
 

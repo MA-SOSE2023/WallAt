@@ -3,7 +3,6 @@ import 'package:gruppe4/pages/home/home_controller.dart';
 import 'package:gruppe4/pages/single_item/model/edit_single_item.dart';
 
 // Single Item
-import '/pages/single_item/model/item_event.dart';
 import '/pages/single_item/single_item_view.dart';
 import '/pages/single_item/single_item_controller.dart';
 import '/pages/single_item/edit_single_item_controller.dart';
@@ -129,6 +128,7 @@ class Providers {
 
   static final enableHeroAnimationProvider = StateProvider<bool>((ref) => true);
 
+  // TODO: make dependent on currently selected profile
   static final Provider<PersistenceService> persistenceServiceProvider =
       Provider<PersistenceService>(
     (ref) =>
