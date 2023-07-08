@@ -84,7 +84,8 @@ class Providers {
   );
 
   static final StateNotifierProvider<FoldersController, Folder>
-      _rootFolderProvider = _foldersControllerProvider(-1);
+      _rootFolderProvider =
+      _foldersControllerProvider(PersistenceService.rootFolderId);
 
   /// Provider for [FoldersScreen]
   /// - Provides a [FoldersController] for a [Folder]
