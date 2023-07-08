@@ -134,6 +134,27 @@ class PersistenceService {
   Future<Folder?> getFolder(int folderId) async {
     if (folderId == _rootFolderIdPlaceholder) {
       folderId = await _realRootFolderId;
+      // Concatenate all root folders if the default profile is selected
+      if (_selectedProfileId == await _defaultProfileId) {
+        final List<ProfileModel> allProfiles = await getAllProfiles();
+        final List<Future<Folder?>> allRootFolders = allProfiles
+            .map((p) async => getFolder(await _controller.rootFolderId(p.id)))
+            .toList();
+
+        final Folder? rootFolder = await getFolder(folderId);
+
+        return Future.wait(allRootFolders).then<Folder?>(
+          (folders) => folders.fold<Folder?>(
+            Folder(id: rootFolder!.id, title: rootFolder.title, contents: []),
+            (previousValue, element) => previousValue?.copyWith(
+              contents: [
+                ...(previousValue.contents ?? []),
+                ...(element?.contents ?? [])
+              ],
+            ),
+          ),
+        );
+      }
     }
     return _folderDao((dao) => dao.read(folderId));
   }
