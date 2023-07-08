@@ -29,25 +29,17 @@ class ProfileContainer extends ConsumerWidget {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Container(
-                height: 80,
-                width: 80,
-                decoration: BoxDecoration(
-                  border: Border.all(color: theme.accentColor, width: 2),
-                  shape: BoxShape.circle,
-                  image: _profile.selectedImageIndex < 0
-                      ? null
-                      : DecorationImage(
-                          image: profilesController
-                              .getProfilePicture(_profile)!
-                              .image,
-                          fit: BoxFit.fill),
-                ),
-                child: _profile.selectedImageIndex < 0
-                    ? const Icon(
-                        CupertinoIcons.person,
-                        size: 70,
-                      )
-                    : null),
+              height: 80,
+              width: 80,
+              decoration: BoxDecoration(
+                border: Border.all(color: theme.accentColor, width: 2),
+                shape: BoxShape.circle,
+                image: DecorationImage(
+                    image:
+                        profilesController.getProfilePicture(_profile)!.image,
+                    fit: BoxFit.fill),
+              ),
+            ),
           ),
           Text(_profile.name, style: TextStyle(color: theme.textColor)),
           if (_profile.id == settings.selectedProfileId)

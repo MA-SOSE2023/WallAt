@@ -8,6 +8,7 @@ import 'add_or_edit_profile_dialog.dart';
 import 'profile_container.dart';
 import 'profile_model.dart';
 
+import '/pages/settings/settings_model.dart';
 import '/pages/home/home_model.dart';
 import '/common/theme/custom_theme_data.dart';
 import '/common/provider.dart';
@@ -15,6 +16,7 @@ import '/common/custom_widgets/all_custom_widgets.dart'
     show
         AsyncSliverListBuilder,
         EventCard,
+        FutureOptionBuilder,
         SliverActivityIndicator,
         SliverNoElementsMessage;
 
@@ -27,17 +29,16 @@ class ProfilesPage extends ConsumerWidget {
         ref.read(Providers.profilesControllerProvider.notifier);
     List<ProfileModel> profiles =
         ref.watch(Providers.profilesControllerProvider);
+    final SettingsModel settings =
+        ref.watch(Providers.settingsControllerProvider);
+
+    Future<ProfileModel?> defaultProfile =
+        ref.read(Providers.persistenceServiceProvider).getDefaultProfile();
 
     AsyncValue<HomeModel> homeModel =
         ref.watch(Providers.homeControllerProvider);
 
     CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
-
-    // TODO: add more info for default profile. maybe change name to 'Global'
-    // and place it somewhere else
-
-    // TODO: make sure that on first app start, the default profile is not
-    // only created but also selected
 
     return Scaffold(
       backgroundColor: theme.backgroundColor,
@@ -120,6 +121,46 @@ class ProfilesPage extends ConsumerWidget {
               ],
             ),
           ),
+          // Display a special button to change to the default profile
+          // Allowing the user to see all items globally
+          SliverToBoxAdapter(
+            child: FutureOptionBuilder(
+              future: defaultProfile,
+              success: (defaultProfile) => Padding(
+                padding: const EdgeInsets.fromLTRB(32.0, 0.0, 32.0, 10.0),
+                child: CupertinoButton(
+                  padding: const EdgeInsets.all(0.0),
+                  minSize: 32,
+                  color: theme.groupingColor,
+                  child: settings.selectedProfileId == defaultProfile.id
+                      ? Container(
+                          margin: const EdgeInsets.all(4),
+                          padding: const EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: theme.backgroundColor,
+                          ),
+                          child: Text(
+                            "Currently using global view",
+                            style: TextStyle(color: theme.textColor),
+                          ),
+                        )
+                      : Text(
+                          'Switch to global view',
+                          style: TextStyle(
+                            color: theme.accentColor,
+                          ),
+                        ),
+                  onPressed: () {
+                    ref
+                        .read(Providers.settingsControllerProvider.notifier)
+                        .setProfileId(defaultProfile.id);
+                    context.beamBack();
+                  },
+                ),
+              ),
+            ),
+          ),
           if (profiles.isEmpty)
             const SliverNoElementsMessage(
               message:
@@ -138,39 +179,34 @@ class ProfilesPage extends ConsumerWidget {
                   final ProfileModel profile = profiles[index];
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
-                    // Context menu to delete or edit profile
-                    // Accessed by long pressing on a profile
-                    // Should not be available for the default profile
-                    child: profile.selectedImageIndex < 0
-                        ? ProfileContainer(profile: profile)
-                        : CupertinoContextMenu(
-                            actions: [
-                              CupertinoContextMenuAction(
-                                trailingIcon: CupertinoIcons.pencil,
-                                onPressed: () {
-                                  showCupertinoDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        return AddOrEditProfileDialog(
-                                          isAddDialog: false,
-                                          editProfile: profile,
-                                        );
-                                      });
-                                },
-                                child: const Text('Edit'),
-                              ),
-                              CupertinoContextMenuAction(
-                                isDestructiveAction: true,
-                                onPressed: () {
-                                  profilesController.deleteProfile(profile);
-                                  context.beamBack();
-                                },
-                                trailingIcon: CupertinoIcons.trash,
-                                child: const Text('Delete'),
-                              ),
-                            ],
-                            child: ProfileContainer(profile: profile),
-                          ),
+                    child: CupertinoContextMenu(
+                      actions: [
+                        CupertinoContextMenuAction(
+                          trailingIcon: CupertinoIcons.pencil,
+                          onPressed: () {
+                            showCupertinoDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AddOrEditProfileDialog(
+                                    isAddDialog: false,
+                                    editProfile: profile,
+                                  );
+                                });
+                          },
+                          child: const Text('Edit'),
+                        ),
+                        CupertinoContextMenuAction(
+                          isDestructiveAction: true,
+                          onPressed: () {
+                            profilesController.deleteProfile(profile);
+                            context.beamBack();
+                          },
+                          trailingIcon: CupertinoIcons.trash,
+                          child: const Text('Delete'),
+                        ),
+                      ],
+                      child: ProfileContainer(profile: profile),
+                    ),
                   );
                 },
                 childCount: profiles.length,
