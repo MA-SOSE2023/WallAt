@@ -145,7 +145,7 @@ class PersistenceService {
 
         return Future.wait(allRootFolders).then<Folder?>(
           (folders) => folders.fold<Folder?>(
-            Folder(id: rootFolder!.id, title: rootFolder.title, contents: []),
+            rootFolder,
             (previousValue, element) => previousValue?.copyWith(
               contents: [
                 ...(previousValue.contents ?? []),
@@ -182,6 +182,9 @@ class PersistenceService {
 
   Future<List<ItemEvent>> getAllEvents() =>
       _eventDao((dao) async => dao.readAll(await _profileId));
+
+  Future<List<ItemEvent>> getGlobalSoonEvents() =>
+      _eventDao((dao) async => dao.readAllSoon(const Duration(days: 7), null));
 
   Future<List<ItemEvent>> getSoonEvents() => _eventDao((dao) async =>
       dao.readAllSoon(const Duration(days: 7), await _profileId));
