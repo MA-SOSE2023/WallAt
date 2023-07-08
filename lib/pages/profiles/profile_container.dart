@@ -59,18 +59,7 @@ class ProfileContainer extends ConsumerWidget {
           children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Container(
-                height: 80,
-                width: 80,
-                decoration: BoxDecoration(
-                  border: Border.all(color: theme.accentColor, width: 2),
-                  shape: BoxShape.circle,
-                  image: DecorationImage(
-                      image:
-                          profilesController.getProfilePicture(_profile)!.image,
-                      fit: BoxFit.fill),
-                ),
-              ),
+              child: profilesController.getProfilePicture(_profile, size: 80.0),
             ),
             Text(
               _profile.name,

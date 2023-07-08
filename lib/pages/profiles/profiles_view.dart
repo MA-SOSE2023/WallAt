@@ -10,7 +10,6 @@ import 'profile_container.dart';
 import 'profile_model.dart';
 
 import '/pages/settings/settings_model.dart';
-import '/pages/home/home_model.dart';
 import '/common/theme/custom_theme_data.dart';
 import '/common/provider.dart';
 import '/common/custom_widgets/all_custom_widgets.dart'
@@ -57,7 +56,6 @@ class ProfilesPage extends ConsumerWidget {
                     items:
                         events.map((event) => EventCard(event: event)).toList(),
                     options: CarouselOptions(
-                      initialPage: 0,
                       enableInfiniteScroll: events.length > 1,
                       enlargeCenterPage: true,
                       showIndicator: true,
@@ -186,6 +184,6 @@ abstract class ProfilesController extends StateNotifier<List<ProfileModel>> {
   void updateProfile(ProfileModel profile,
       {String? newName, int? selectedImageIndex});
   void deleteProfile(ProfileModel profile);
-  Image? getProfilePicture(ProfileModel profile);
+  Widget getProfilePicture(ProfileModel profile, {double size});
   ProfileModel getSelectedProfile();
 }

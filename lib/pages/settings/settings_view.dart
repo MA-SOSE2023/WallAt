@@ -102,23 +102,8 @@ class SettingsPage extends ConsumerWidget {
                     children: [
                       if (profiles.isNotEmpty &&
                           (settings.selectedProfileId ?? -1) > 0)
-                        Container(
-                          height: 40,
-                          width: 40,
-                          margin: const EdgeInsets.only(right: 8),
-                          decoration: BoxDecoration(
-                            border:
-                                Border.all(color: theme.accentColor, width: 2),
-                            shape: BoxShape.circle,
-                            image: DecorationImage(
-                              image: profilesController
-                                  .getProfilePicture(
-                                    profilesController.getSelectedProfile(),
-                                  )!
-                                  .image,
-                              fit: BoxFit.fill,
-                            ),
-                          ),
+                        profilesController.getProfilePicture(
+                          profilesController.getSelectedProfile(),
                         ),
                       if (profiles.isNotEmpty)
                         const Icon(CupertinoIcons.forward)
@@ -142,22 +127,8 @@ class SettingsPage extends ConsumerWidget {
                           isSelected: (profile) =>
                               profile.id == settings.selectedProfileId,
                           builder: (profile) => Row(children: [
-                            Container(
-                              height: 30,
-                              width: 30,
-                              margin: const EdgeInsets.only(right: 8),
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                    color: theme.accentColor, width: 2),
-                                shape: BoxShape.circle,
-                                image: DecorationImage(
-                                  image: profilesController
-                                      .getProfilePicture(profile)!
-                                      .image,
-                                  fit: BoxFit.fill,
-                                ),
-                              ),
-                            ),
+                            profilesController.getProfilePicture(profile,
+                                size: 30.0),
                             Text(profile.name)
                           ]),
                         );

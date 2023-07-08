@@ -9,4 +9,10 @@ class ProfileModel with _$ProfileModel {
     required String name,
     required int selectedImageIndex,
   }) = _ProfileModel;
+
+  factory ProfileModel.defaultPlaceholder() => const ProfileModel(
+        id: 0,
+        name: 'Global view',
+        selectedImageIndex: -1,
+      );
 }

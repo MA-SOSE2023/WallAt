@@ -27,10 +27,39 @@ class ProfilesControllerImpl extends ProfilesController {
   }
 
   @override
-  Image? getProfilePicture(ProfileModel profile) {
-    return Image(
-      image: PersistenceService
-          .selectableProfilePictures[profile.selectedImageIndex],
+  Widget getProfilePicture(ProfileModel profile, {double size = 40.0}) {
+    if (profile == ProfileModel.defaultPlaceholder()) {
+      return Container(
+        height: size,
+        width: size,
+        margin: const EdgeInsets.only(right: 8),
+        decoration: BoxDecoration(
+          border: Border.all(
+              color: _ref.watch(Providers.themeControllerProvider).accentColor,
+              width: 2),
+          shape: BoxShape.circle,
+        ),
+        child: Icon(
+          CupertinoIcons.person,
+          size: size - 8,
+        ),
+      );
+    }
+    return Container(
+      height: size,
+      width: size,
+      margin: const EdgeInsets.only(right: 8),
+      decoration: BoxDecoration(
+        border: Border.all(
+            color: _ref.watch(Providers.themeControllerProvider).accentColor,
+            width: 2),
+        shape: BoxShape.circle,
+        image: DecorationImage(
+          image: PersistenceService
+              .selectableProfilePictures[profile.selectedImageIndex],
+          fit: BoxFit.fill,
+        ),
+      ),
     );
   }
 
@@ -76,9 +105,9 @@ class ProfilesControllerImpl extends ProfilesController {
   }
 
   @override
-  ProfileModel getSelectedProfile() => state
-      .where((p) =>
+  ProfileModel getSelectedProfile() => state.firstWhere(
+      (p) =>
           p.id ==
-          _ref.read(Providers.settingsControllerProvider).selectedProfileId)
-      .first;
+          _ref.read(Providers.settingsControllerProvider).selectedProfileId,
+      orElse: () => ProfileModel.defaultPlaceholder());
 }
