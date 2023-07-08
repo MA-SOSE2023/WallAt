@@ -33,12 +33,7 @@ class FutureSliverListBuilder<T> extends StatelessWidget {
     return FutureOptionBuilder(
         future: _future,
         success: (data) {
-          if (data == null) {
-            return SliverErrorMessage(
-              message: onNullMessage,
-              minPadding: errorMessagesPadding,
-            );
-          } else if (data.isEmpty) {
+          if (data.isEmpty) {
             return SliverNoElementsMessage(
               message: emptyMessage,
               minPadding: errorMessagesPadding,

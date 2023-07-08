@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gruppe4/pages/profiles/profiles_view.dart';
 
 import 'profile_model.dart';
 import '/common/provider.dart';
@@ -41,8 +40,6 @@ class _AddorEditProfileDialogState
 
   @override
   Widget build(BuildContext context) {
-    ProfilesController profilesController =
-        ref.read(Providers.profilesControllerProvider.notifier);
     List<ImageProvider> availableProfilePictures =
         PersistenceService.selectableProfilePictures;
 

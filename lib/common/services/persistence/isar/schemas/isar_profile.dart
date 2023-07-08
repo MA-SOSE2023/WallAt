@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:isar/isar.dart';
 
 import '/pages/profiles/profile_model.dart';

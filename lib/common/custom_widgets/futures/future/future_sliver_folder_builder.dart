@@ -36,14 +36,14 @@ class FutureSliverFolderBuilder extends ConsumerWidget {
     return FutureOptionBuilder(
       future: _future,
       success: (folder) {
-        final List<FolderItem>? contents = folder?.contents;
+        final List<FolderItem>? contents = folder.contents;
         return CustomScrollView(
           slivers: [
             CupertinoSliverNavigationBar(
               backgroundColor: theme.navBarColor,
-              largeTitle: Text(folder?.title ?? 'Folders'),
+              largeTitle: Text(folder.title),
             ),
-            if (folder == null || contents == null)
+            if (contents == null)
               SliverErrorMessage(
                 message: _onNullMessage,
               )

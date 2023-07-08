@@ -7,7 +7,6 @@ import 'camera_model.dart';
 import '/pages/single_item/model/single_item.dart';
 import '/pages/single_item/edit_single_item_view.dart';
 import '/common/provider.dart';
-import '/common/theme/custom_theme_data.dart';
 import '/common/custom_widgets/all_custom_widgets.dart'
     show FutureOptionBuilder, ErrorMessage, ActivityIndicator;
 
@@ -20,8 +19,6 @@ class SaveItemScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
-
     return FutureOptionBuilder(
       future: _futureItem,
       loading: () => const CupertinoPageScaffold(
@@ -32,15 +29,6 @@ class SaveItemScreen extends ConsumerWidget {
             ErrorMessage(message: "Something went wrong.\nPlease try again."),
       ),
       success: (item) {
-        if (item == null) {
-          return CupertinoPageScaffold(
-            navigationBar:
-                CupertinoNavigationBar(backgroundColor: theme.navBarColor),
-            backgroundColor: theme.backgroundColor,
-            child: const ErrorMessage(
-                message: "Images could not be captured.\nPlease try again."),
-          );
-        }
         return EditSingleItemPage(
           singleItem: item,
           draggable: false,
