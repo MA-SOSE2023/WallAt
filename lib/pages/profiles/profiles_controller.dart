@@ -59,14 +59,6 @@ class ProfilesControllerImpl extends ProfilesController {
   }
 
   @override
-  List<ImageProvider> getSelectableProfilePictures() => [
-        const AssetImage('assets/dev_debug_images/mom.png'),
-        const AssetImage('assets/dev_debug_images/dad.png'),
-        const AssetImage('assets/dev_debug_images/daughter.png'),
-        const AssetImage('assets/dev_debug_images/son.png'),
-      ];
-
-  @override
   Future<void> deleteProfile(ProfileModel profile) async {
     final List<ProfileModel> profiles = await _persistence.getAllProfiles();
     await _persistence.deleteProfile(profile);

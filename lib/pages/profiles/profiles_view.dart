@@ -33,6 +33,12 @@ class ProfilesPage extends ConsumerWidget {
 
     CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
 
+    // TODO: add more info for default profile. maybe change name to 'Global'
+    // and place it somewhere else
+
+    // TODO: make sure that on first app start, the default profile is not
+    // only created but also selected
+
     return Scaffold(
       backgroundColor: theme.backgroundColor,
       body: CustomScrollView(
@@ -185,6 +191,4 @@ abstract class ProfilesController extends StateNotifier<List<ProfileModel>> {
   void deleteProfile(ProfileModel profile);
   Image? getProfilePicture(ProfileModel profile);
   ProfileModel getSelectedProfile();
-
-  List<ImageProvider> getSelectableProfilePictures();
 }

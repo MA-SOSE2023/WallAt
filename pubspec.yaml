@@ -49,6 +49,7 @@ dev_dependencies:
 
 flutter:
   assets:
+    - assets/profile_pictures/
     - assets/dev_debug_images/
   uses-material-design: true
 

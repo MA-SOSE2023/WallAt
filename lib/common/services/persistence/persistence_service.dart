@@ -193,10 +193,11 @@ class PersistenceService {
       _profileDao((dao) => dao.readAll());
 
   static List<ImageProvider> get selectableProfilePictures => const [
-        AssetImage('assets/dev_debug_images/mom.png'),
-        AssetImage('assets/dev_debug_images/dad.png'),
-        AssetImage('assets/dev_debug_images/daughter.png'),
-        AssetImage('assets/dev_debug_images/son.png'),
+        AssetImage('assets/profile_pictures/20190916_104222.jpg'),
+        AssetImage('assets/profile_pictures/20190916_104233.jpg'),
+        AssetImage('assets/profile_pictures/20190916_172135.jpg'),
+        AssetImage('assets/profile_pictures/20191025_144914.jpg'),
+        AssetImage('assets/profile_pictures/kawaii.jpg'),
       ];
 
   // ====================== SETTERS ====================== //

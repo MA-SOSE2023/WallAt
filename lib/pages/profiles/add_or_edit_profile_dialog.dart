@@ -6,6 +6,7 @@ import 'package:gruppe4/pages/profiles/profiles_view.dart';
 import 'profile_model.dart';
 import '/common/provider.dart';
 import '/common/theme/custom_theme_data.dart';
+import '/common/services/persistence/persistence_service.dart';
 
 class AddOrEditProfileDialog extends ConsumerStatefulWidget {
   const AddOrEditProfileDialog({
@@ -43,7 +44,7 @@ class _AddorEditProfileDialogState
     ProfilesController profilesController =
         ref.read(Providers.profilesControllerProvider.notifier);
     List<ImageProvider> availableProfilePictures =
-        profilesController.getSelectableProfilePictures();
+        PersistenceService.selectableProfilePictures;
 
     CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
 
