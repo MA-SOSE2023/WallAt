@@ -37,8 +37,11 @@ class IsarProfileDao extends ProfileDao {
       _isar.isarProfiles.get(id).then((profile) => profile?.toProfileModel());
 
   @override
-  Future<List<ProfileModel>> readAll() =>
-      _isar.isarProfiles.where().findAll().then((profiles) =>
+  Future<List<ProfileModel>> readAll() => _isar.isarProfiles
+      .filter()
+      .isDefaultEqualTo(false)
+      .findAll()
+      .then((profiles) =>
           profiles.map((profile) => profile.toProfileModel()).toList());
 
   @override

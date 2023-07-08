@@ -192,6 +192,9 @@ class PersistenceService {
   Future<List<ProfileModel>> getAllProfiles() =>
       _profileDao((dao) => dao.readAll());
 
+  Future<ProfileModel?> getDefaultProfile() async =>
+      getProfile(await _defaultProfileId);
+
   static List<ImageProvider> get selectableProfilePictures => const [
         AssetImage('assets/profile_pictures/20190916_104222.jpg'),
         AssetImage('assets/profile_pictures/20190916_104233.jpg'),
@@ -363,7 +366,7 @@ abstract class ProfileDao extends Dao<ProfileModel> {
   /// On first ever app start, creates a default profile and then return its id.
   Future<int> createOrFindDefault();
 
-  /// Returns all profiles.
+  /// Returns all profiles except for the default one.
   Future<List<ProfileModel>> readAll();
 }
 
