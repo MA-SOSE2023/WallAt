@@ -5,7 +5,7 @@ import '/common/custom_widgets/all_custom_widgets.dart'
 
 class FutureOptionBuilder<T> extends StatelessWidget {
   const FutureOptionBuilder({
-    required Future<T> future,
+    required Future<T?> future,
     required Widget Function(T) success,
     Widget Function()? loading,
     Widget Function(Object?)? error,
@@ -20,7 +20,7 @@ class FutureOptionBuilder<T> extends StatelessWidget {
         _initialData = initialData,
         _errorMessage = errorMessage;
 
-  final Future<T> _future;
+  final Future<T?> _future;
 
   final Widget Function(T) _onSuccessBuilder;
   final Widget Function()? _onLoadingBuilder;
