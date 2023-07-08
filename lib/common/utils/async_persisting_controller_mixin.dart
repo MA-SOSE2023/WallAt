@@ -33,7 +33,7 @@ mixin AsyncPersistingControllerMixin<State, Arg>
   }
 }
 
-// The same logic has to be coped to the async version of the mixin
+// The same logic has to be copied to the autoDispose version of the mixin
 // since dart does not support multiple inheritance
 mixin AutoDisposeAsyncPersistingControllerMixin<State, Arg>
     on AutoDisposeFamilyAsyncNotifier<State?, Arg> {
