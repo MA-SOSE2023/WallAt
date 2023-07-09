@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
+import 'package:gruppe4/common/services/persistence/isar/schemas/isar_profile.dart';
 import 'package:isar/isar.dart';
 
 import 'isar_folder.dart';
@@ -25,9 +26,11 @@ class IsarSingleItem {
   DateTime lastAccessedOrModified = DateTime.now();
 
   @Backlink(to: "items")
-  final parentFolder = IsarLink<IsarFolder>();
+  final IsarLink<IsarFolder> parentFolder = IsarLink<IsarFolder>();
 
-  final events = IsarLinks<IsarItemEvent>();
+  final IsarLinks<IsarItemEvent> events = IsarLinks<IsarItemEvent>();
+
+  final IsarLink<IsarProfile> profile = IsarLink<IsarProfile>();
 
   SingleItem toSingleItem() => SingleItem(
         id: id,

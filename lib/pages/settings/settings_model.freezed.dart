@@ -18,7 +18,7 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$SettingsModel {
   Calendar? get calendar => throw _privateConstructorUsedError;
   int get selectedThemeIndex => throw _privateConstructorUsedError;
-  int get selectedProfileIndex => throw _privateConstructorUsedError;
+  int? get selectedProfileId => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $SettingsModelCopyWith<SettingsModel> get copyWith =>
@@ -32,7 +32,7 @@ abstract class $SettingsModelCopyWith<$Res> {
       _$SettingsModelCopyWithImpl<$Res, SettingsModel>;
   @useResult
   $Res call(
-      {Calendar? calendar, int selectedThemeIndex, int selectedProfileIndex});
+      {Calendar? calendar, int selectedThemeIndex, int? selectedProfileId});
 }
 
 /// @nodoc
@@ -50,7 +50,7 @@ class _$SettingsModelCopyWithImpl<$Res, $Val extends SettingsModel>
   $Res call({
     Object? calendar = freezed,
     Object? selectedThemeIndex = null,
-    Object? selectedProfileIndex = null,
+    Object? selectedProfileId = freezed,
   }) {
     return _then(_value.copyWith(
       calendar: freezed == calendar
@@ -61,10 +61,10 @@ class _$SettingsModelCopyWithImpl<$Res, $Val extends SettingsModel>
           ? _value.selectedThemeIndex
           : selectedThemeIndex // ignore: cast_nullable_to_non_nullable
               as int,
-      selectedProfileIndex: null == selectedProfileIndex
-          ? _value.selectedProfileIndex
-          : selectedProfileIndex // ignore: cast_nullable_to_non_nullable
-              as int,
+      selectedProfileId: freezed == selectedProfileId
+          ? _value.selectedProfileId
+          : selectedProfileId // ignore: cast_nullable_to_non_nullable
+              as int?,
     ) as $Val);
   }
 }
@@ -78,7 +78,7 @@ abstract class _$$_SettingsModelCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {Calendar? calendar, int selectedThemeIndex, int selectedProfileIndex});
+      {Calendar? calendar, int selectedThemeIndex, int? selectedProfileId});
 }
 
 /// @nodoc
@@ -94,7 +94,7 @@ class __$$_SettingsModelCopyWithImpl<$Res>
   $Res call({
     Object? calendar = freezed,
     Object? selectedThemeIndex = null,
-    Object? selectedProfileIndex = null,
+    Object? selectedProfileId = freezed,
   }) {
     return _then(_$_SettingsModel(
       calendar: freezed == calendar
@@ -105,10 +105,10 @@ class __$$_SettingsModelCopyWithImpl<$Res>
           ? _value.selectedThemeIndex
           : selectedThemeIndex // ignore: cast_nullable_to_non_nullable
               as int,
-      selectedProfileIndex: null == selectedProfileIndex
-          ? _value.selectedProfileIndex
-          : selectedProfileIndex // ignore: cast_nullable_to_non_nullable
-              as int,
+      selectedProfileId: freezed == selectedProfileId
+          ? _value.selectedProfileId
+          : selectedProfileId // ignore: cast_nullable_to_non_nullable
+              as int?,
     ));
   }
 }
@@ -119,18 +119,18 @@ class _$_SettingsModel implements _SettingsModel {
   const _$_SettingsModel(
       {this.calendar,
       required this.selectedThemeIndex,
-      required this.selectedProfileIndex});
+      this.selectedProfileId});
 
   @override
   final Calendar? calendar;
   @override
   final int selectedThemeIndex;
   @override
-  final int selectedProfileIndex;
+  final int? selectedProfileId;
 
   @override
   String toString() {
-    return 'SettingsModel(calendar: $calendar, selectedThemeIndex: $selectedThemeIndex, selectedProfileIndex: $selectedProfileIndex)';
+    return 'SettingsModel(calendar: $calendar, selectedThemeIndex: $selectedThemeIndex, selectedProfileId: $selectedProfileId)';
   }
 
   @override
@@ -142,13 +142,13 @@ class _$_SettingsModel implements _SettingsModel {
                 other.calendar == calendar) &&
             (identical(other.selectedThemeIndex, selectedThemeIndex) ||
                 other.selectedThemeIndex == selectedThemeIndex) &&
-            (identical(other.selectedProfileIndex, selectedProfileIndex) ||
-                other.selectedProfileIndex == selectedProfileIndex));
+            (identical(other.selectedProfileId, selectedProfileId) ||
+                other.selectedProfileId == selectedProfileId));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType, calendar, selectedThemeIndex, selectedProfileIndex);
+  int get hashCode =>
+      Object.hash(runtimeType, calendar, selectedThemeIndex, selectedProfileId);
 
   @JsonKey(ignore: true)
   @override
@@ -161,14 +161,14 @@ abstract class _SettingsModel implements SettingsModel {
   const factory _SettingsModel(
       {final Calendar? calendar,
       required final int selectedThemeIndex,
-      required final int selectedProfileIndex}) = _$_SettingsModel;
+      final int? selectedProfileId}) = _$_SettingsModel;
 
   @override
   Calendar? get calendar;
   @override
   int get selectedThemeIndex;
   @override
-  int get selectedProfileIndex;
+  int? get selectedProfileId;
   @override
   @JsonKey(ignore: true)
   _$$_SettingsModelCopyWith<_$_SettingsModel> get copyWith =>

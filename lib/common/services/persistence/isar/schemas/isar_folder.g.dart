@@ -67,6 +67,12 @@ const IsarFolderSchema = CollectionSchema(
       name: r'items',
       target: r'IsarSingleItem',
       single: false,
+    ),
+    r'profile': LinkSchema(
+      id: 3636907989367866104,
+      name: r'profile',
+      target: r'IsarProfile',
+      single: true,
     )
   },
   embeddedSchemas: {},
@@ -130,7 +136,7 @@ Id _isarFolderGetId(IsarFolder object) {
 }
 
 List<IsarLinkBase<dynamic>> _isarFolderGetLinks(IsarFolder object) {
-  return [object.folders, object.parentFolder, object.items];
+  return [object.folders, object.parentFolder, object.items, object.profile];
 }
 
 void _isarFolderAttach(IsarCollection<dynamic> col, Id id, IsarFolder object) {
@@ -139,6 +145,8 @@ void _isarFolderAttach(IsarCollection<dynamic> col, Id id, IsarFolder object) {
   object.parentFolder
       .attach(col, col.isar.collection<IsarFolder>(), r'parentFolder', id);
   object.items.attach(col, col.isar.collection<IsarSingleItem>(), r'items', id);
+  object.profile
+      .attach(col, col.isar.collection<IsarProfile>(), r'profile', id);
 }
 
 extension IsarFolderQueryWhereSort
@@ -695,6 +703,19 @@ extension IsarFolderQueryLinks
     return QueryBuilder.apply(this, (query) {
       return query.linkLength(
           r'items', lower, includeLower, upper, includeUpper);
+    });
+  }
+
+  QueryBuilder<IsarFolder, IsarFolder, QAfterFilterCondition> profile(
+      FilterQuery<IsarProfile> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'profile');
+    });
+  }
+
+  QueryBuilder<IsarFolder, IsarFolder, QAfterFilterCondition> profileIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'profile', 0, true, 0, true);
     });
   }
 }

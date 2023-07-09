@@ -33,8 +33,7 @@ class TakePictureControllerImpl extends TakePictureController {
             }
           }));
     } catch (exception) {
-      // TODO: Handle exception
-      print(exception);
+      Routers.globalRouterDelegate.beamBack();
     }
   }
 

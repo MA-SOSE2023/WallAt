@@ -9,7 +9,9 @@ import '/common/custom_widgets/all_custom_widgets.dart'
         DocumentCardContainerList,
         CameraButtonHeroDestination,
         SearchBarContainer,
-        FutureSliverListBuilder;
+        FutureSliverListBuilder,
+        ProfilesButton;
+
 import '/pages/single_item/model/single_item.dart';
 
 class FavoritesScreen extends ConsumerStatefulWidget {
@@ -50,6 +52,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
               CupertinoSliverNavigationBar(
                 backgroundColor: theme.navBarColor,
                 largeTitle: const Text('Favorites'),
+                trailing: const ProfilesButton(),
               ),
               SliverAppBar(
                 pinned: true,

@@ -1,5 +1,6 @@
 import 'package:isar/isar.dart';
 
+import 'isar_profile.dart';
 import 'isar_single_item.dart';
 import '/pages/folders/folder_model.dart';
 
@@ -20,6 +21,8 @@ class IsarFolder {
   IsarLink<IsarFolder> parentFolder = IsarLink<IsarFolder>();
 
   IsarLinks<IsarSingleItem> items = IsarLinks<IsarSingleItem>();
+
+  IsarLink<IsarProfile> profile = IsarLink<IsarProfile>();
 
   Folder toFolder() => Folder(
         id: id,

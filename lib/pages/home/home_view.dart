@@ -8,10 +8,12 @@ import '/common/provider.dart';
 import '/common/theme/custom_theme_data.dart';
 import '/common/custom_widgets/all_custom_widgets.dart'
     show
-        EventCard,
-        DocumentCardContainerList,
         AsyncSliverListBuilder,
+        DocumentCardContainerList,
+        EventCard,
         ProfilesButton,
+        SliverActivityIndicator,
+        SliverNoElementsMessage,
         cameraButtonHeroTag;
 
 class HomeScreen extends ConsumerWidget {
@@ -48,6 +50,16 @@ class HomeScreen extends ConsumerWidget {
           ),
           AsyncSliverListBuilder(
             future: model.whenData((m) => m.events),
+            loading: () => const SliverActivityIndicator(
+              padding: EdgeInsets.only(
+                top: 60.0,
+                bottom: 60.0,
+              ),
+            ),
+            empty: (emptyMessage) => SliverNoElementsMessage(
+              message: emptyMessage,
+              minPadding: 50.0,
+            ),
             success: (events) => SliverToBoxAdapter(
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxHeight: 180),

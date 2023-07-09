@@ -4,35 +4,37 @@ import 'package:flutter/material.dart';
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../single_item/model/item_event.dart';
+import 'add_or_edit_profile_dialog.dart';
+import 'profile_container.dart';
 import 'profile_model.dart';
 
-import '/pages/home/home_model.dart';
 import '/pages/settings/settings_model.dart';
-import '/pages/settings/settings_view.dart';
 import '/common/theme/custom_theme_data.dart';
 import '/common/provider.dart';
 import '/common/custom_widgets/all_custom_widgets.dart'
-    show AsyncOptionBuilder, EventCard, ActivityIndicator, ErrorMessage;
+    show
+        EventCard,
+        FutureSliverListBuilder,
+        FutureOptionBuilder,
+        SliverNoElementsMessage;
 
 class ProfilesPage extends ConsumerWidget {
   const ProfilesPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ProfilesController controller =
-        ref.read(Providers.profilesControllerProvider.notifier);
     List<ProfileModel> profiles =
         ref.watch(Providers.profilesControllerProvider);
-    SettingsModel settings = ref.watch(Providers.settingsControllerProvider);
-    SettingsController settingsController =
-        ref.read(Providers.settingsControllerProvider.notifier);
-    AsyncValue<HomeModel> model = ref.watch(Providers.homeControllerProvider);
-    final AsyncValue<List<EventCard>> eventCards =
-        model.whenData((m) => m.events
-            .map((event) => EventCard(
-                  event: event,
-                ))
-            .toList());
+    final SettingsModel settings =
+        ref.watch(Providers.settingsControllerProvider);
+
+    Future<ProfileModel?> defaultProfile =
+        ref.read(Providers.persistenceServiceProvider).getDefaultProfile();
+
+    Future<List<ItemEvent>> events =
+        ref.read(Providers.persistenceServiceProvider).getGlobalSoonEvents();
+
     CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
 
     return Scaffold(
@@ -43,28 +45,24 @@ class ProfilesPage extends ConsumerWidget {
             backgroundColor: theme.navBarColor,
             largeTitle: const Text('Profiles'),
           ),
-          SliverToBoxAdapter(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                  maxHeight: MediaQuery.of(context).size.height / 4),
-              child: Padding(
-                padding: const EdgeInsets.only(top: 10, bottom: 10),
-                child: AsyncOptionBuilder(
-                  future: eventCards,
-                  loading: () => const ActivityIndicator(),
-                  error: (error) => const ErrorMessage(
-                      message:
-                          "Something went wrong.\nPlease try again later."),
-                  success: (eventCards) => FlutterCarousel(
-                    items: eventCards,
+          FutureSliverListBuilder(
+            future: events,
+            success: (events) => SliverToBoxAdapter(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxHeight: 180),
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+                  child: FlutterCarousel(
+                    items:
+                        events.map((event) => EventCard(event: event)).toList(),
                     options: CarouselOptions(
-                      initialPage: 0,
-                      enableInfiniteScroll: true,
+                      enableInfiniteScroll: events.length > 1,
                       enlargeCenterPage: true,
                       showIndicator: true,
                       slideIndicator: CircularWaveSlideIndicator(
-                          currentIndicatorColor: theme.accentColor,
-                          indicatorBackgroundColor: theme.groupingColor),
+                        currentIndicatorColor: theme.accentColor,
+                        indicatorBackgroundColor: theme.groupingColor,
+                      ),
                       viewportFraction: 0.85,
                       height: double.infinity,
                     ),
@@ -72,71 +70,107 @@ class ProfilesPage extends ConsumerWidget {
                 ),
               ),
             ),
+            emptyMessage: 'Events that are nearly due will be displayed here.'
+                '\nTry adding some from the detailed view of an item.',
+            errorMessage: 'An error occurred while loading events.\n'
+                'Try restarting the app.',
+            onNullMessage: 'Something went wrong while loading events.\n'
+                'Try restarting the app.',
+            errorMessagesPadding: 60.0,
           ),
-          SliverGrid(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              mainAxisSpacing: 6.0,
-              crossAxisSpacing: 6.0,
+          SliverPadding(
+            padding: const EdgeInsets.only(bottom: 10.0),
+            sliver: SliverAppBar(
+              automaticallyImplyLeading: false,
+              pinned: true,
+              primary: false,
+              toolbarHeight: 30.0,
+              backgroundColor: theme.groupingColor,
+              title: Text('Profiles',
+                  style: TextStyle(fontSize: 16, color: theme.textColor)),
+              centerTitle: true,
+              actions: [
+                CupertinoButton(
+                  padding: const EdgeInsets.only(right: 5),
+                  child: Icon(
+                    CupertinoIcons.plus,
+                    color: theme.accentColor,
+                  ),
+                  onPressed: () {
+                    showCupertinoDialog(
+                        context: context,
+                        builder: (context) {
+                          return const AddOrEditProfileDialog();
+                        });
+                  },
+                ),
+              ],
             ),
-            delegate: SliverChildBuilderDelegate(
-              (context, index) => Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: theme.groupingColor,
-                      borderRadius: BorderRadius.circular(10)),
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          height: 80,
-                          width: 80,
+          ),
+          // Display a special button to change to the default profile
+          // Allowing the user to see all items globally
+          SliverToBoxAdapter(
+            child: FutureOptionBuilder(
+              future: defaultProfile,
+              success: (defaultProfile) => Padding(
+                padding: const EdgeInsets.fromLTRB(32.0, 0.0, 32.0, 10.0),
+                child: CupertinoButton(
+                  padding: const EdgeInsets.all(0.0),
+                  minSize: 32,
+                  color: theme.groupingColor,
+                  child: settings.selectedProfileId == defaultProfile.id
+                      ? Container(
+                          margin: const EdgeInsets.all(4),
+                          padding: const EdgeInsets.all(4),
                           decoration: BoxDecoration(
-                            border:
-                                Border.all(color: theme.accentColor, width: 2),
-                            shape: BoxShape.circle,
-                            image: DecorationImage(
-                                image: controller
-                                    .getProfilePicture(profiles[index])!
-                                    .image,
-                                fit: BoxFit.fill),
+                            borderRadius: BorderRadius.circular(10),
+                            color: theme.backgroundColor,
+                          ),
+                          child: Text(
+                            "Currently using global view",
+                            style: TextStyle(color: theme.textColor),
+                          ),
+                        )
+                      : Text(
+                          'Switch to global view',
+                          style: TextStyle(
+                            color: theme.accentColor,
                           ),
                         ),
-                      ),
-                      Text(profiles[index].name,
-                          style: TextStyle(color: theme.textColor)),
-                      if (index == settings.selectedProfileIndex)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10),
-                          child: Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: theme.backgroundColor,
-                            ),
-                            child: Text(
-                              "Currently Selected",
-                              style: TextStyle(color: theme.textColor),
-                            ),
-                          ),
-                        )
-                      else
-                        CupertinoButton(
-                          child: const Text("Select this profile"),
-                          onPressed: () => {
-                            settingsController.setProfileIndex(index),
-                            context.beamBack(),
-                          },
-                        )
-                    ],
-                  ),
+                  onPressed: () {
+                    ref
+                        .read(Providers.settingsControllerProvider.notifier)
+                        .setProfileId(defaultProfile.id);
+                    context.beamBack();
+                  },
                 ),
               ),
-              childCount: profiles.length,
             ),
-          )
+          ),
+          if (profiles.isEmpty)
+            const SliverNoElementsMessage(
+              message:
+                  'Profiles are a way to categorize your data in a broad way.\nEach profile will have different data.\n\nTry creating one by tapping the  +  above',
+              minPadding: 50.0,
+            )
+          else
+            SliverGrid(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisSpacing: 6.0,
+                crossAxisSpacing: 6.0,
+              ),
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  final ProfileModel profile = profiles[index];
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ProfileContainer(profile: profile),
+                  );
+                },
+                childCount: profiles.length,
+              ),
+            )
         ],
       ),
     );
@@ -146,7 +180,10 @@ class ProfilesPage extends ConsumerWidget {
 abstract class ProfilesController extends StateNotifier<List<ProfileModel>> {
   ProfilesController(List<ProfileModel> state) : super(state);
 
-  void setCurrentProfile(ProfileModel profile);
-
-  Image? getProfilePicture(ProfileModel profile);
+  void createProfile(String name, int selectedImageIndex);
+  void updateProfile(ProfileModel profile,
+      {String? newName, int? selectedImageIndex});
+  void deleteProfile(ProfileModel profile);
+  Widget getProfilePicture(ProfileModel profile, {double size});
+  ProfileModel getSelectedProfile();
 }
