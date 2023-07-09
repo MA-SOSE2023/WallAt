@@ -148,9 +148,6 @@ class CalendarButton extends ConsumerWidget {
               onCalendarSelected: (calendar) {
                 controller.setUsedCalendar(calendar);
               },
-              onCancel: () {
-                Navigator.pop(context);
-              },
             );
           },
         );
