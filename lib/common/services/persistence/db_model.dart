@@ -11,6 +11,6 @@ class DbModel with _$DbModel {
     FolderDao? folderDao,
     SingleItemDao? singleItemDao,
     ItemEventDao? eventDao,
-    int? rootFolderId,
+    ProfileDao? profileDao,
   }) = _DbModel;
 }

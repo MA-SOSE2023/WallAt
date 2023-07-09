@@ -66,7 +66,7 @@ class FoldersScreen extends ConsumerWidget {
                               onPressed: () {
                                 ref
                                     .read(Providers.foldersControllerProvider(
-                                            folder.id)
+                                            _folder?.id)
                                         .notifier)
                                     .addSubFolder(newFolderName ?? 'Folder');
                                 Navigator.of(context).pop();

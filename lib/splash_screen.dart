@@ -24,7 +24,12 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     // Initialize the database
     ref.read(Providers.dbControllerProvider);
     // Wait for root folder to be loaded or created
-    await ref.read(Providers.dbControllerProvider.notifier).rootFolderId;
+    await ref.read(Providers.dbControllerProvider.notifier).rootFolderId(
+          (await ref
+                  .read(Providers.persistenceServiceProvider)
+                  .getDefaultProfile())!
+              .id,
+        );
     // Add puffer delay to reduce lag
     await Future.delayed(const Duration(seconds: 2));
 

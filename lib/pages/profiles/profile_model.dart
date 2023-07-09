@@ -1,5 +1,3 @@
-import 'package:device_calendar/device_calendar.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'profile_model.freezed.dart';
@@ -7,8 +5,14 @@ part 'profile_model.freezed.dart';
 @freezed
 class ProfileModel with _$ProfileModel {
   const factory ProfileModel({
-    required String id,
+    required int id,
     required String name,
-    required ImageProvider profilePicture,
+    required int selectedImageIndex,
   }) = _ProfileModel;
+
+  factory ProfileModel.defaultPlaceholder() => const ProfileModel(
+        id: 0,
+        name: 'Global view',
+        selectedImageIndex: -1,
+      );
 }

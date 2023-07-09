@@ -3,7 +3,6 @@ import 'package:gruppe4/pages/home/home_controller.dart';
 import 'package:gruppe4/pages/single_item/model/edit_single_item.dart';
 
 // Single Item
-import '/pages/single_item/model/item_event.dart';
 import '/pages/single_item/single_item_view.dart';
 import '/pages/single_item/single_item_controller.dart';
 import '/pages/single_item/edit_single_item_controller.dart';
@@ -85,7 +84,8 @@ class Providers {
   );
 
   static final StateNotifierProvider<FoldersController, Folder>
-      _rootFolderProvider = _foldersControllerProvider(-1);
+      _rootFolderProvider =
+      _foldersControllerProvider(PersistenceService.rootFolderId);
 
   /// Provider for [FoldersScreen]
   /// - Provides a [FoldersController] for a [Folder]
@@ -131,8 +131,9 @@ class Providers {
 
   static final Provider<PersistenceService> persistenceServiceProvider =
       Provider<PersistenceService>(
-    (ref) =>
-        PersistenceService(controller: ref.read(dbControllerProvider.notifier)),
+    (ref) => PersistenceService(
+        controller: ref.read(dbControllerProvider.notifier),
+        profileId: ref.watch(settingsControllerProvider).selectedProfileId),
   );
 
   /// Provider for [SettingsScreen]
@@ -157,6 +158,7 @@ class Providers {
   static final StateNotifierProvider<ProfilesController, List<ProfileModel>>
       profilesControllerProvider =
       StateNotifierProvider<ProfilesController, List<ProfileModel>>((ref) {
-    return ProfilesControllerImpl();
+    return ProfilesControllerImpl(
+        ref: ref, persistence: ref.watch(persistenceServiceProvider));
   });
 }

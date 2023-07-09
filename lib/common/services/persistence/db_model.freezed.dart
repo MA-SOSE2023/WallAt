@@ -20,7 +20,7 @@ mixin _$DbModel {
   FolderDao? get folderDao => throw _privateConstructorUsedError;
   SingleItemDao? get singleItemDao => throw _privateConstructorUsedError;
   ItemEventDao? get eventDao => throw _privateConstructorUsedError;
-  int? get rootFolderId => throw _privateConstructorUsedError;
+  ProfileDao? get profileDao => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $DbModelCopyWith<DbModel> get copyWith => throw _privateConstructorUsedError;
@@ -36,7 +36,7 @@ abstract class $DbModelCopyWith<$Res> {
       FolderDao? folderDao,
       SingleItemDao? singleItemDao,
       ItemEventDao? eventDao,
-      int? rootFolderId});
+      ProfileDao? profileDao});
 }
 
 /// @nodoc
@@ -56,7 +56,7 @@ class _$DbModelCopyWithImpl<$Res, $Val extends DbModel>
     Object? folderDao = freezed,
     Object? singleItemDao = freezed,
     Object? eventDao = freezed,
-    Object? rootFolderId = freezed,
+    Object? profileDao = freezed,
   }) {
     return _then(_value.copyWith(
       db: freezed == db
@@ -75,10 +75,10 @@ class _$DbModelCopyWithImpl<$Res, $Val extends DbModel>
           ? _value.eventDao
           : eventDao // ignore: cast_nullable_to_non_nullable
               as ItemEventDao?,
-      rootFolderId: freezed == rootFolderId
-          ? _value.rootFolderId
-          : rootFolderId // ignore: cast_nullable_to_non_nullable
-              as int?,
+      profileDao: freezed == profileDao
+          ? _value.profileDao
+          : profileDao // ignore: cast_nullable_to_non_nullable
+              as ProfileDao?,
     ) as $Val);
   }
 }
@@ -95,7 +95,7 @@ abstract class _$$_DbModelCopyWith<$Res> implements $DbModelCopyWith<$Res> {
       FolderDao? folderDao,
       SingleItemDao? singleItemDao,
       ItemEventDao? eventDao,
-      int? rootFolderId});
+      ProfileDao? profileDao});
 }
 
 /// @nodoc
@@ -112,7 +112,7 @@ class __$$_DbModelCopyWithImpl<$Res>
     Object? folderDao = freezed,
     Object? singleItemDao = freezed,
     Object? eventDao = freezed,
-    Object? rootFolderId = freezed,
+    Object? profileDao = freezed,
   }) {
     return _then(_$_DbModel(
       db: freezed == db
@@ -131,10 +131,10 @@ class __$$_DbModelCopyWithImpl<$Res>
           ? _value.eventDao
           : eventDao // ignore: cast_nullable_to_non_nullable
               as ItemEventDao?,
-      rootFolderId: freezed == rootFolderId
-          ? _value.rootFolderId
-          : rootFolderId // ignore: cast_nullable_to_non_nullable
-              as int?,
+      profileDao: freezed == profileDao
+          ? _value.profileDao
+          : profileDao // ignore: cast_nullable_to_non_nullable
+              as ProfileDao?,
     ));
   }
 }
@@ -147,7 +147,7 @@ class _$_DbModel implements _DbModel {
       this.folderDao,
       this.singleItemDao,
       this.eventDao,
-      this.rootFolderId});
+      this.profileDao});
 
   @override
   final Future<Db>? db;
@@ -158,11 +158,11 @@ class _$_DbModel implements _DbModel {
   @override
   final ItemEventDao? eventDao;
   @override
-  final int? rootFolderId;
+  final ProfileDao? profileDao;
 
   @override
   String toString() {
-    return 'DbModel(db: $db, folderDao: $folderDao, singleItemDao: $singleItemDao, eventDao: $eventDao, rootFolderId: $rootFolderId)';
+    return 'DbModel(db: $db, folderDao: $folderDao, singleItemDao: $singleItemDao, eventDao: $eventDao, profileDao: $profileDao)';
   }
 
   @override
@@ -177,13 +177,13 @@ class _$_DbModel implements _DbModel {
                 other.singleItemDao == singleItemDao) &&
             (identical(other.eventDao, eventDao) ||
                 other.eventDao == eventDao) &&
-            (identical(other.rootFolderId, rootFolderId) ||
-                other.rootFolderId == rootFolderId));
+            (identical(other.profileDao, profileDao) ||
+                other.profileDao == profileDao));
   }
 
   @override
   int get hashCode => Object.hash(
-      runtimeType, db, folderDao, singleItemDao, eventDao, rootFolderId);
+      runtimeType, db, folderDao, singleItemDao, eventDao, profileDao);
 
   @JsonKey(ignore: true)
   @override
@@ -198,7 +198,7 @@ abstract class _DbModel implements DbModel {
       final FolderDao? folderDao,
       final SingleItemDao? singleItemDao,
       final ItemEventDao? eventDao,
-      final int? rootFolderId}) = _$_DbModel;
+      final ProfileDao? profileDao}) = _$_DbModel;
 
   @override
   Future<Db>? get db;
@@ -209,7 +209,7 @@ abstract class _DbModel implements DbModel {
   @override
   ItemEventDao? get eventDao;
   @override
-  int? get rootFolderId;
+  ProfileDao? get profileDao;
   @override
   @JsonKey(ignore: true)
   _$$_DbModelCopyWith<_$_DbModel> get copyWith =>

@@ -8,16 +8,13 @@ import 'edit_single_item_view.dart';
 import 'model/item_event.dart';
 import '/common/utils/device_calendar_mixin.dart';
 import '/pages/single_item/single_item_view.dart';
-import 'model/single_item.dart';
 
 class EditSingleItemControllerImpl extends EditSingleItemController
     with DeviceCalendarMixin {
   EditSingleItemControllerImpl(super.state,
       {required SingleItemController controller})
-      : _singleItemController = controller,
-        _previousState = state.toSingleItem();
+      : _singleItemController = controller;
 
-  final SingleItem _previousState;
   final SingleItemController _singleItemController;
 
   @override

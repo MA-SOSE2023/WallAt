@@ -1,6 +1,5 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'bottom_nav_bar_view.dart';
@@ -11,28 +10,28 @@ class CustomBottomNavBarControllerImpl extends CustomBottomNavBarController {
 
   static const List<CustomBottomNavBarItem> _baseItems = [
     CustomBottomNavBarItem(
-      icon: Icon(Icons.home_outlined),
-      activeIcon: Icon(Icons.home),
+      icon: Icon(CupertinoIcons.home),
+      activeIcon: Icon(CupertinoIcons.house_fill),
       label: 'HOME',
       initialLocation: '/home',
     ),
     CustomBottomNavBarItem(
       icon: Icon(CupertinoIcons.heart),
-      activeIcon: Icon(Icons.favorite),
+      activeIcon: Icon(CupertinoIcons.heart_fill),
       label: 'FAVORITES',
       initialLocation: '/favorites',
     ),
     CustomBottomNavBarItem(
-      icon: Icon(Icons.folder_open),
-      activeIcon: Icon(Icons.folder),
+      icon: Icon(CupertinoIcons.folder),
+      activeIcon: Icon(CupertinoIcons.folder_fill),
       label: 'FOLDERS',
       initialLocation: '/folders',
     ),
   ];
 
   static final CustomBottomNavBarItem _cameraItem = CustomBottomNavBarItem(
-    icon: const Icon(Icons.camera_alt_outlined),
-    activeIcon: const Icon(Icons.camera_alt),
+    icon: const Icon(CupertinoIcons.camera),
+    activeIcon: const Icon(CupertinoIcons.camera_fill),
     label: 'CAMERA',
     initialLocation: '/camera',
     onTap: (ref) => ref
@@ -41,8 +40,8 @@ class CustomBottomNavBarControllerImpl extends CustomBottomNavBarController {
   );
 
   static const CustomBottomNavBarItem _settingsItem = CustomBottomNavBarItem(
-    icon: Icon(Icons.settings_outlined),
-    activeIcon: Icon(Icons.settings),
+    icon: Icon(CupertinoIcons.gear),
+    activeIcon: Icon(CupertinoIcons.gear_solid),
     label: 'SETTINGS',
     initialLocation: '/settings',
   );

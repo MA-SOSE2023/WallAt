@@ -61,6 +61,12 @@ const IsarItemEventSchema = CollectionSchema(
       target: r'IsarSingleItem',
       single: true,
       linkName: r'events',
+    ),
+    r'profile': LinkSchema(
+      id: 7003002511743221420,
+      name: r'profile',
+      target: r'IsarProfile',
+      single: true,
     )
   },
   embeddedSchemas: {},
@@ -153,7 +159,7 @@ Id _isarItemEventGetId(IsarItemEvent object) {
 }
 
 List<IsarLinkBase<dynamic>> _isarItemEventGetLinks(IsarItemEvent object) {
-  return [object.parentItem];
+  return [object.parentItem, object.profile];
 }
 
 void _isarItemEventAttach(
@@ -161,6 +167,8 @@ void _isarItemEventAttach(
   object.id = id;
   object.parentItem
       .attach(col, col.isar.collection<IsarSingleItem>(), r'parentItem', id);
+  object.profile
+      .attach(col, col.isar.collection<IsarProfile>(), r'profile', id);
 }
 
 extension IsarItemEventQueryWhereSort
@@ -1007,6 +1015,20 @@ extension IsarItemEventQueryLinks
       parentItemIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.linkLength(r'parentItem', 0, true, 0, true);
+    });
+  }
+
+  QueryBuilder<IsarItemEvent, IsarItemEvent, QAfterFilterCondition> profile(
+      FilterQuery<IsarProfile> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'profile');
+    });
+  }
+
+  QueryBuilder<IsarItemEvent, IsarItemEvent, QAfterFilterCondition>
+      profileIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'profile', 0, true, 0, true);
     });
   }
 }

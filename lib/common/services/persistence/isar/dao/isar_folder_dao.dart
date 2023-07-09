@@ -1,3 +1,4 @@
+import 'package:gruppe4/common/services/persistence/isar/schemas/isar_profile.dart';
 import 'package:isar/isar.dart';
 
 import '/pages/single_item/model/single_item.dart';
@@ -13,13 +14,21 @@ class IsarFolderDao extends FolderDao {
   int? _rootFolderId;
 
   @override
-  Future<Folder> create({required String title, int? parentFolderId}) async {
+  Future<Folder> create({
+    required String title,
+    int? parentFolderId,
+    required int profileId,
+  }) async {
     final IsarFolder? parentFolder = await _isarRead(
-        parentFolderId ?? _rootFolderId ?? (await createOrFindRoot()));
+        parentFolderId ?? _rootFolderId ?? (await createOrFindRoot(profileId)));
+    final IsarProfile? profile = await _isar.isarProfiles.get(profileId);
     return _isar.writeTxnSync(() {
-      Id createdFolder = _isar.isarFolders.putSync(IsarFolder()
-        ..title = title
-        ..parentFolder.value = parentFolder);
+      Id createdFolder = _isar.isarFolders.putSync(
+        IsarFolder()
+          ..title = title
+          ..parentFolder.value = parentFolder
+          ..profile.value = profile,
+      );
       return Folder(
         id: createdFolder,
         title: title,
@@ -29,21 +38,27 @@ class IsarFolderDao extends FolderDao {
   }
 
   @override
-  Future<Id> createOrFindRoot() async {
-    IsarFolder? root =
-        _isar.isarFolders.filter().isRootEqualTo(true).findFirstSync();
-    root ??= _isar.isarFolders.getSync(await _createRoot())!;
+  Future<Id> createOrFindRoot(int profileId) async {
+    IsarFolder? root = _isar.isarFolders
+        .filter()
+        .isRootEqualTo(true)
+        .profile((q) => q.idEqualTo(profileId))
+        .findFirstSync();
+    root ??= _isar.isarFolders.getSync(await _createRoot(profileId))!;
     _rootFolderId = root.id;
     return root.id;
   }
 
-  Future<Id> _createRoot() =>
-      _isar.writeTxnSync(() async => _isar.isarFolders.putSync(
-            IsarFolder()
-              ..title = 'Folders'
-              ..isRoot = true
-              ..parentFolder.value = null,
-          ));
+  Future<Id> _createRoot(int profileId) {
+    final IsarProfile? profile = _isar.isarProfiles.getSync(profileId);
+    return _isar.writeTxnSync(() async => _isar.isarFolders.putSync(
+          IsarFolder()
+            ..title = 'Folders'
+            ..isRoot = true
+            ..parentFolder.value = null
+            ..profile.value = profile,
+        ));
+  }
 
   @override
   Future<bool> delete(Id id) =>
@@ -56,13 +71,29 @@ class IsarFolderDao extends FolderDao {
   Future<IsarFolder?> _isarRead(Id id) => _isar.isarFolders.get(id);
 
   @override
-  Future<List<Folder>> readAll() => _isar.isarFolders.where().findAll().then(
-      (folders) => folders.map((isarFolder) => isarFolder.toFolder()).toList());
+  Future<List<Folder>> readAll(int? profileId) {
+    if (profileId != null) {
+      return _isar.isarFolders
+          .filter()
+          .profile((q) => q.idEqualTo(profileId))
+          .findAll()
+          .then((folders) =>
+              folders.map((isarFolder) => isarFolder.toFolder()).toList());
+    }
+    return _isar.isarFolders.where().findAll().then((folders) =>
+        folders.map((isarFolder) => isarFolder.toFolder()).toList());
+  }
 
   @override
-  Future<int?> findParentId(Id id) async {
-    final IsarSingleItem? isarItem = await _isar.isarSingleItems.get(id);
+  Future<int?> findItemParentId(Id childId) async {
+    final IsarSingleItem? isarItem = await _isar.isarSingleItems.get(childId);
     return isarItem?.parentFolder.value?.id;
+  }
+
+  @override
+  Future<int?> findFolderParentId(Id childId) async {
+    final IsarFolder? isarFolder = await _isar.isarFolders.get(childId);
+    return isarFolder?.parentFolder.value?.id;
   }
 
   @override
@@ -90,5 +121,16 @@ class IsarFolderDao extends FolderDao {
           .writeTxnSync(() => _isar.isarSingleItems.deleteSync(item.id));
     }
     return false;
+  }
+
+  @override
+  Future<void> moveToProfile(Folder folder, int newProfile) async {
+    final IsarFolder? isarFolder = await _isar.isarFolders.get(folder.id);
+    final IsarProfile? profile = await _isar.isarProfiles.get(newProfile);
+    if (isarFolder != null && profile != null) {
+      _isar.writeTxnSync(() {
+        _isar.isarFolders.putSync(isarFolder..profile.value = profile);
+      });
+    }
   }
 }
