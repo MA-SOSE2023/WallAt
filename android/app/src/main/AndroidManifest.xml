@@ -17,7 +17,7 @@
    <application
         android:label="Wall@"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/app_icon">
 
         <!-- Provider for "add_2_calendar" plugin -->
         <provider
