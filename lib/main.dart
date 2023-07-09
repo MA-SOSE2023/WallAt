@@ -5,8 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:timezone/data/latest.dart' as tz;
 
 import '/common/theme/custom_theme_data.dart';
-import 'common/provider.dart';
-import 'router/router.dart';
+import '/common/provider.dart';
+import '/router/router.dart';
 
 class App extends ConsumerWidget {
   const App({super.key});
