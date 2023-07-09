@@ -89,7 +89,7 @@ class ProfileContainer extends ConsumerWidget {
                   ref
                       .read(Providers.settingsControllerProvider.notifier)
                       .setProfileId(_profile.id),
-                  context.beamBack(),
+                  context.beamToNamed('/home'),
                 },
               )
           ],

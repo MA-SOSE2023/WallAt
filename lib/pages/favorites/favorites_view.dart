@@ -76,7 +76,6 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
                     items: favorites, borderlessCards: true),
                 emptyMessage: emptyListMessage,
                 errorMessage: language.errApplyFilter,
-                onNullMessage: language.errLoadFavorites,
                 errorMessagesPadding: 25,
               )
             ],

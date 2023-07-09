@@ -1,4 +1,3 @@
-import 'package:intl/intl.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

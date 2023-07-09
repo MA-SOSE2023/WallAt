@@ -75,7 +75,6 @@ class ProfilesPage extends ConsumerWidget {
             ),
             emptyMessage: language.infoNoEventsYet,
             errorMessage: language.errLoadEvents,
-            onNullMessage: language.errLoadEvents,
             errorMessagesPadding: 60.0,
           ),
           SliverPadding(
