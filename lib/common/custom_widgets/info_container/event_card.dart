@@ -8,15 +8,16 @@ import '/pages/single_item/model/item_event.dart';
 import '/common/theme/custom_theme_data.dart';
 
 class EventCard extends ConsumerWidget {
-  const EventCard({required this.event, super.key});
+  const EventCard({required ItemEvent event, super.key})
+    : _event = event;
 
-  final ItemEvent event;
+  final ItemEvent _event;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final TZDateTime date = event.event.start!;
-    final String description = event.event.description ?? '';
-    final String title = event.event.title ?? 'Event';
+    final TZDateTime date = _event.event.start!;
+    final String description = _event.event.description ?? '';
+    final String title = _event.event.title ?? 'Event';
 
     final CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
     return Column(
@@ -60,7 +61,7 @@ class EventCard extends ConsumerWidget {
                 onTap: () {
                   ref
                       .read(
-                          Providers.singleItemControllerProvider(event.parentId)
+                          Providers.singleItemControllerProvider(_event.parentId)
                               .notifier)
                       .navigateToThisItem();
                 },

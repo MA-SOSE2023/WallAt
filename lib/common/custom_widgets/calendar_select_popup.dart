@@ -5,12 +5,14 @@ import 'package:flutter/material.dart';
 class SelectCalendarPopup extends StatelessWidget {
   const SelectCalendarPopup({
     Key? key,
-    required this.onCalendarSelected,
-    this.onCancel,
-  }) : super(key: key);
+    required Function(Calendar) onCalendarSelected,
+    Function()? onCancel,
+  })  : _onCalendarSelected = onCalendarSelected,
+        _onCancel = onCancel,
+        super(key: key);
 
-  final Function(Calendar) onCalendarSelected;
-  final Function()? onCancel;
+  final Function(Calendar) _onCalendarSelected;
+  final Function()? _onCancel;
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +67,7 @@ class SelectCalendarPopup extends StatelessWidget {
                             ),
                             title: Text(calendar.name!),
                             onTap: () {
-                              onCalendarSelected(calendar);
+                              _onCalendarSelected(calendar);
                               Navigator.pop(context);
                             },
                           ),
@@ -80,7 +82,7 @@ class SelectCalendarPopup extends StatelessWidget {
                 child: const Text('Cancel'),
                 onPressed: () {
                   Navigator.pop(context);
-                  onCancel?.call();
+                  _onCancel?.call();
                 },
               ),
             ],

@@ -13,10 +13,7 @@ import '/common/custom_widgets/all_custom_widgets.dart'
 import '/pages/single_item/model/single_item.dart';
 
 class FavoritesScreen extends ConsumerStatefulWidget {
-  const FavoritesScreen({bool borderlessCards = true, super.key})
-      : _borderlessCards = borderlessCards;
-
-  final bool _borderlessCards;
+  const FavoritesScreen({super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -70,7 +67,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
               FutureSliverListBuilder(
                 future: favoritesFuture,
                 success: (favorites) => DocumentCardContainerList(
-                    items: favorites, borderlessCards: widget._borderlessCards),
+                    items: favorites, borderlessCards: true),
                 emptyMessage: emptyListMessage,
                 errorMessage: 'Filter could not be applied',
                 onNullMessage:

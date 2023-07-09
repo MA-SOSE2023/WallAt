@@ -7,21 +7,24 @@ import '../provider.dart';
 
 class DatePicker extends ConsumerWidget {
   const DatePicker(
-      {required this.description,
-      required this.dateTime,
-      required this.onDateTimeChanged,
-      super.key});
+      {required String description,
+      required DateTime dateTime,
+      required Function(DateTime) onDateTimeChanged,
+      super.key})
+      : _description = description,
+        _dateTime = dateTime,
+        _onDateTimeChanged = onDateTimeChanged;
 
-  final String description;
-  final DateTime dateTime;
-  final void Function(DateTime) onDateTimeChanged;
+  final String _description;
+  final DateTime _dateTime;
+  final void Function(DateTime) _onDateTimeChanged;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     CustomThemeData theme = ref.read(Providers.themeControllerProvider);
     return Row(
       children: [
-        Text('$description:'),
+        Text('$_description:'),
         const SizedBox(width: 8),
         Expanded(
           child: GestureDetector(
@@ -36,10 +39,10 @@ class DatePicker extends ConsumerWidget {
                     height: 216,
                     child: CupertinoDatePicker(
                       mode: CupertinoDatePickerMode.dateAndTime,
-                      initialDateTime: dateTime,
+                      initialDateTime: _dateTime,
                       onDateTimeChanged: (DateTime? dateTime) {
                         if (dateTime != null) {
-                          return onDateTimeChanged(dateTime);
+                          return _onDateTimeChanged(dateTime);
                         }
                       },
                     ),
@@ -48,7 +51,7 @@ class DatePicker extends ConsumerWidget {
               );
             },
             child: Text(
-              formatDate(dateTime),
+              formatDate(_dateTime),
               style: const TextStyle(
                 color: CupertinoColors.systemBlue,
                 fontWeight: FontWeight.bold,

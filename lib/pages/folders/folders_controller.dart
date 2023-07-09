@@ -12,8 +12,9 @@ class FoldersControllerImpl extends FoldersController
   FoldersControllerImpl(
       {required int folderId,
       required PersistenceService persistence,
-      required this.ref})
+      required Ref ref})
       : _service = persistence,
+        _ref = ref,
         super(Folder.loading(id: folderId)) {
     persistence
         .getFolder(folderId)
@@ -26,7 +27,7 @@ class FoldersControllerImpl extends FoldersController
     }).whenComplete(() => state = state.copyWith(isLoading: false));
   }
 
-  final Ref ref;
+  final Ref _ref;
   final PersistenceService _service;
   @override
   PersistenceService get persistence => _service;
@@ -48,7 +49,7 @@ class FoldersControllerImpl extends FoldersController
   }
 
   FoldersControllerImpl _getOtherController(int parentId) =>
-      ref.read(Providers.foldersControllerProvider(parentId).notifier)
+      _ref.read(Providers.foldersControllerProvider(parentId).notifier)
           as FoldersControllerImpl;
 
   /// Creates a folder from the given title and adds it to this folders state
@@ -78,7 +79,7 @@ class FoldersControllerImpl extends FoldersController
     await persistence.moveFolder(state, newParent);
     _getOtherController(newParent.id).receiveItem(state);
     // invalidate own state to trigger refresh in parent folder
-    ref.invalidateSelf();
+    _ref.invalidateSelf();
   }
 
   @override
@@ -115,7 +116,7 @@ class FoldersControllerImpl extends FoldersController
         contents:
             state.contents?.where((element) => element.id != item.id).toList(),
       );
-      ref.invalidateSelf;
+      _ref.invalidateSelf();
     }
     return deleteResult;
   }
