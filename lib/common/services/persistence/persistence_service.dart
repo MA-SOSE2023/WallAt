@@ -4,22 +4,28 @@ import 'package:device_calendar/device_calendar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'db_model.dart';
+
 import '/pages/folders/folder_item.dart';
 import '/pages/folders/folder_model.dart';
 import '/pages/profiles/profile_model.dart';
 import '/pages/single_item/model/single_item.dart';
 import '/pages/single_item/model/item_event.dart';
-import 'db_model.dart';
+import '/common/localization/language.dart';
+import '/common/provider.dart';
 
 /// App service for accessing and modifying persistent data
 class PersistenceService {
   final DbController _controller;
+  final Ref _ref;
   final int? _selectedProfileId;
 
   PersistenceService({
     required DbController controller,
+    required Ref ref,
     int? profileId,
   })  : _controller = controller,
+        _ref = ref,
         _selectedProfileId = profileId;
 
   Future<R> _singleItemDao<R>(Future<R> Function(SingleItemDao) callback) =>
@@ -133,6 +139,8 @@ class PersistenceService {
   /// Returns null if no folder with the given [folderId] exists
   Future<Folder?> getFolder(int folderId) async {
     if (folderId == _rootFolderIdPlaceholder) {
+      final Language language =
+          _ref.watch(Providers.settingsControllerProvider).language;
       folderId = await _realRootFolderId;
       // Concatenate all root folders if the default profile is selected
       if (_selectedProfileId == await _defaultProfileId) {
@@ -145,7 +153,7 @@ class PersistenceService {
 
         return Future.wait(allRootFolders).then<Folder?>(
           (folders) => folders.fold<Folder?>(
-            rootFolder,
+            rootFolder?.copyWith(title: language.titleFolders),
             (previousValue, element) => previousValue?.copyWith(
               contents: [
                 ...(previousValue.contents ?? []),
@@ -154,6 +162,10 @@ class PersistenceService {
             ),
           ),
         );
+      } else {
+        return _folderDao((dao) => dao
+            .read(folderId)
+            .then((folder) => folder?.copyWith(title: language.titleFolders)));
       }
     }
     return _folderDao((dao) => dao.read(folderId));

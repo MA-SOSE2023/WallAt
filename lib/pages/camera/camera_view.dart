@@ -7,6 +7,7 @@ import 'camera_model.dart';
 import '/pages/single_item/model/single_item.dart';
 import '/pages/single_item/edit_single_item_view.dart';
 import '/common/provider.dart';
+import '/common/localization/language.dart';
 import '/common/custom_widgets/all_custom_widgets.dart'
     show FutureOptionBuilder, ErrorMessage, ActivityIndicator;
 
@@ -19,14 +20,15 @@ class SaveItemScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final Language language =
+        ref.watch(Providers.settingsControllerProvider).language;
     return FutureOptionBuilder(
       future: _futureItem,
       loading: () => const CupertinoPageScaffold(
         child: ActivityIndicator(),
       ),
-      error: (_) => const CupertinoPageScaffold(
-        child:
-            ErrorMessage(message: "Something went wrong.\nPlease try again."),
+      error: (_) => CupertinoPageScaffold(
+        child: ErrorMessage(message: language.errGenericLoad),
       ),
       success: (item) {
         return EditSingleItemPage(

@@ -1,15 +1,19 @@
 import 'package:device_calendar/device_calendar.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+
+import '/common/localization/language.dart';
 
 part 'calendar_model.freezed.dart';
 
-final Map<RecurrenceRule?, String> recurrenceOptions = {
-  null: 'None',
-  RecurrenceRule(RecurrenceFrequency.Daily): 'Daily',
-  RecurrenceRule(RecurrenceFrequency.Weekly): 'Weekly',
-  RecurrenceRule(RecurrenceFrequency.Monthly): 'Monthly',
-  RecurrenceRule(RecurrenceFrequency.Yearly): 'Yearly',
-};
+Map<RecurrenceRule?, String> recurrenceOptions(Language language) => {
+      null: language.lblRecurrenceNever,
+      RecurrenceRule(RecurrenceFrequency.Daily): language.lblRecurrenceDaily,
+      RecurrenceRule(RecurrenceFrequency.Weekly): language.lblRecurrenceWeekly,
+      RecurrenceRule(RecurrenceFrequency.Monthly):
+          language.lblRecurrenceMonthly,
+      RecurrenceRule(RecurrenceFrequency.Yearly): language.lblRecurrenceYearly,
+    };
 
 @freezed
 class CalendarModel with _$CalendarModel {

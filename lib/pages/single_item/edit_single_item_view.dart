@@ -7,6 +7,7 @@ import 'model/edit_single_item.dart';
 import '/pages/single_item/single_item_view.dart';
 import '/common/provider.dart';
 import '/common/theme/custom_theme_data.dart';
+import '/common/localization/language.dart';
 import '/common/custom_widgets/all_custom_widgets.dart' show EventsContainer;
 
 Widget makeDismissable(
@@ -49,6 +50,8 @@ class EditSingleItemPage extends ConsumerWidget {
         ref.read(Providers.editSingleItemControllerProvider(_item).notifier);
 
     final CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
+    final Language language =
+        ref.watch(Providers.settingsControllerProvider).language;
 
     Widget editPageBody(ScrollController? scrollController) => Stack(
           children: [
@@ -84,7 +87,7 @@ class EditSingleItemPage extends ConsumerWidget {
                               color: Colors.transparent,
                             ),
                           ),
-                          placeholder: 'Title',
+                          placeholder: language.txtTitle,
                           prefix: const Icon(CupertinoIcons.pencil),
                           // TODO check, if not possible with just onSubmitted
                           // currently problematic, since switching textfields does not count as
@@ -108,7 +111,7 @@ class EditSingleItemPage extends ConsumerWidget {
                               color: Colors.transparent,
                             ),
                           ),
-                          placeholder: "Description",
+                          placeholder: language.txtDescription,
                           prefix: const Icon(CupertinoIcons.pencil),
                           onChanged: (value) =>
                               controller.setDescription(value),
@@ -179,12 +182,12 @@ class EditSingleItemPage extends ConsumerWidget {
                     CupertinoButton(
                       onPressed:
                           _onDismiss ?? () => Navigator.of(context).pop(),
-                      child: const Text(
-                        'Cancel',
-                        style: TextStyle(fontSize: 14),
+                      child: Text(
+                        language.lblCancel,
+                        style: const TextStyle(fontSize: 14),
                       ),
                     ),
-                    Text('Edit Item',
+                    Text(language.titleEditItem,
                         style: TextStyle(color: theme.textColor, fontSize: 18)),
                     CupertinoButton(
                       onPressed: () async {
@@ -197,9 +200,9 @@ class EditSingleItemPage extends ConsumerWidget {
                         });
                         _onSave?.call(item.toSingleItem());
                       },
-                      child: const Text(
-                        'Save',
-                        style: TextStyle(fontSize: 14),
+                      child: Text(
+                        language.lblSave,
+                        style: const TextStyle(fontSize: 14),
                       ),
                     ),
                   ],

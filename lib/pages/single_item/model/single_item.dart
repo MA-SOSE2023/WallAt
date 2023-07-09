@@ -4,6 +4,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'item_event.dart';
 import '/pages/folders/folder_item.dart';
 import '/pages/single_item/single_item_view.dart';
+import '/common/localization/language.dart';
 
 part 'single_item.freezed.dart';
 
@@ -50,10 +51,10 @@ class SingleItem extends FolderItem with _$SingleItem {
         events: [],
       );
 
-  factory SingleItem.error() => SingleItem(
+  factory SingleItem.error(Language language) => SingleItem(
         id: -1,
-        title: 'Item could not be loaded',
-        description: 'Something went wrong',
+        title: language.errLoadItem,
+        description: language.errGenericLoad,
         image: const AssetImage('assets/dev_debug_images/hampter1.jpg'),
         isFavorite: false,
         events: [],

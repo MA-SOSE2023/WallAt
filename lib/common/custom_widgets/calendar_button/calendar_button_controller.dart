@@ -1,5 +1,7 @@
 import 'package:device_calendar/device_calendar.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '/common/provider.dart';
 import '/common/custom_widgets/calendar_button/calendar_model.dart';
 import '/common/custom_widgets/calendar_button/calendar_button.dart';
 
@@ -13,8 +15,11 @@ var calendarModelMock = CalendarModel(
 );
 
 class CalendarButtonControllerImpl extends CalendarButtonController {
-  CalendarButtonControllerImpl({CalendarModel? model})
-      : super(model ?? calendarModelMock);
+  CalendarButtonControllerImpl({CalendarModel? model, required Ref ref})
+      : _ref = ref,
+        super(model ?? calendarModelMock);
+
+  final Ref _ref;
 
   @override
   void setTitle(String title) {
@@ -85,7 +90,10 @@ class CalendarButtonControllerImpl extends CalendarButtonController {
       description: getDescription(),
       start: TZDateTime.from(getStartDate()!, local),
       end: TZDateTime.from(getEndDate()!, local),
-      recurrenceRule: recurrenceOptions.keys.elementAt(getRecurrenceIndex()),
+      recurrenceRule: recurrenceOptions(
+              _ref.read(Providers.settingsControllerProvider).language)
+          .keys
+          .elementAt(getRecurrenceIndex()),
       reminders: [
         Reminder(minutes: getReminderMinutes()),
       ],

@@ -1,16 +1,22 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '/common/provider.dart';
+import '/common/localization/language.dart';
 import '/common/custom_widgets/all_custom_widgets.dart'
-    show FutureOptionBuilder;
+    show
+        FutureOptionBuilder,
+        NoElementsMessage,
+        ErrorMessage,
+        ActivityIndicator;
 
-class FutureOptionListBuilder<T> extends StatelessWidget {
+class FutureOptionListBuilder<T> extends ConsumerWidget {
   const FutureOptionListBuilder({
     required Future<List<T>?> future,
     required Widget Function(List<T>) success,
     this.empty,
-    this.emptyMessage = 'There are no entries yet.\nTry adding some items.',
-    this.errorMessage =
-        'An error occurred while loading.\nTry restarting the app.',
+    this.emptyMessage,
+    this.errorMessage,
     this.errorMessagesPadding,
     super.key,
   })  : _future = future,
@@ -21,30 +27,29 @@ class FutureOptionListBuilder<T> extends StatelessWidget {
 
   final Widget Function(String)? empty;
 
-  final String emptyMessage;
-  final String errorMessage;
+  final String? emptyMessage;
+  final String? errorMessage;
   final double? errorMessagesPadding;
 
-  Widget _centerAligned({required Widget child}) => Align(
-        alignment: Alignment.center,
-        child: Padding(padding: const EdgeInsets.all(8.0), child: child),
-      );
-
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final Language language =
+        ref.watch(Providers.settingsControllerProvider).language;
     return FutureOptionBuilder(
       future: _future,
       success: (data) {
         if (data.isEmpty) {
           return empty == null
-              ? _centerAligned(child: Text(emptyMessage))
-              : empty!(emptyMessage);
+              ? NoElementsMessage(
+                  message: emptyMessage ?? language.infoGenericEmpty)
+              : empty!(emptyMessage ?? language.infoGenericEmpty);
         } else {
           return _onSuccessBuilder(data);
         }
       },
-      error: (_) => _centerAligned(child: Text(errorMessage)),
-      loading: () => _centerAligned(child: const CupertinoActivityIndicator()),
+      error: (_) =>
+          ErrorMessage(message: errorMessage ?? language.errGenericLoad),
+      loading: () => const ActivityIndicator(),
     );
   }
 }

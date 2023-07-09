@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '/common/localization/language.dart';
 import '/common/provider.dart';
 import '/common/theme/custom_theme_data.dart';
 import '/common/custom_widgets/all_custom_widgets.dart'
@@ -37,11 +38,13 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
         .watch(Providers.favoritesControllerProvider.notifier)
         .filterFavorites(searchString);
 
+    final Language language =
+        ref.watch(Providers.settingsControllerProvider).language;
     final CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
 
     final emptyListMessage = searchString.isEmpty
-        ? 'No favorites yet.\nTry adding some by tapping the heart icon.'
-        : 'No items found for "$searchString".';
+        ? language.infoFavoritesEmpty
+        : '${language.infoNoItemsFoundForFilter} "$searchString".';
 
     return CupertinoPageScaffold(
       backgroundColor: theme.backgroundColor,
@@ -51,7 +54,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
             slivers: [
               CupertinoSliverNavigationBar(
                 backgroundColor: theme.navBarColor,
-                largeTitle: const Text('Favorites'),
+                largeTitle: Text(language.titleFavorites),
                 trailing: const ProfilesButton(),
               ),
               SliverAppBar(
@@ -72,9 +75,9 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
                 success: (favorites) => DocumentCardContainerList(
                     items: favorites, borderlessCards: true),
                 emptyMessage: emptyListMessage,
-                errorMessage: 'Filter could not be applied',
-                onNullMessage:
-                    'Something went wrong while loading your favorites.\nTry restarting the app.',
+                errorMessage: language.errApplyFilter,
+                onNullMessage: language.errLoadFavorites,
+                errorMessagesPadding: 25,
               )
             ],
           ),

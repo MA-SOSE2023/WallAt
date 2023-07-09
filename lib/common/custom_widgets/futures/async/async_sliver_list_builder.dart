@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '/common/provider.dart';
+import '/common/localization/language.dart';
 import '/common/custom_widgets/all_custom_widgets.dart'
     show
         SliverErrorMessage,
@@ -8,17 +10,16 @@ import '/common/custom_widgets/all_custom_widgets.dart'
         AsyncOptionBuilder,
         SliverActivityIndicator;
 
-class AsyncSliverListBuilder<T> extends StatelessWidget {
+class AsyncSliverListBuilder<T> extends ConsumerWidget {
   const AsyncSliverListBuilder({
     required AsyncValue<List<T>?> future,
     required Widget Function(List<T>) success,
     Widget Function()? loading,
     Widget Function(String emptyMessage)? empty,
     Widget Function(Object?)? error,
-    this.onNullMessage = 'No matching item was found.\nTry restarting the app.',
-    this.emptyMessage = 'There are no entries yet.\nTry adding some items.',
-    this.errorMessage =
-        'An error occurred while loading.\nTry restarting the app.',
+    this.onNullMessage,
+    this.emptyMessage,
+    this.errorMessage,
     this.errorMessagesPadding,
     super.key,
   })  : _future = future,
@@ -33,20 +34,23 @@ class AsyncSliverListBuilder<T> extends StatelessWidget {
   final Widget Function(String emptyMessage)? _onEmptyBuilder;
   final Widget Function(Object?)? _onErrorBuilder;
 
-  final String onNullMessage;
-  final String emptyMessage;
-  final String errorMessage;
+  final String? onNullMessage;
+  final String? emptyMessage;
+  final String? errorMessage;
   final double? errorMessagesPadding;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final Language language =
+        ref.watch(Providers.settingsControllerProvider).language;
     return AsyncOptionBuilder(
         future: _future,
         success: (data) {
           if (data.isEmpty) {
-            return _onEmptyBuilder?.call(emptyMessage) ??
+            return _onEmptyBuilder
+                    ?.call(emptyMessage ?? language.infoGenericEmpty) ??
                 SliverNoElementsMessage(
-                  message: emptyMessage,
+                  message: emptyMessage ?? language.infoGenericEmpty,
                   minPadding: errorMessagesPadding,
                 );
           } else {
@@ -55,7 +59,7 @@ class AsyncSliverListBuilder<T> extends StatelessWidget {
         },
         error: _onErrorBuilder ??
             (_) => SliverErrorMessage(
-                  message: errorMessage,
+                  message: errorMessage ?? language.errGenericLoad,
                   minPadding: errorMessagesPadding,
                 ),
         loading: _onLoadingBuilder ?? () => const SliverActivityIndicator());

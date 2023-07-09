@@ -30,7 +30,7 @@ class Folder extends FolderItem with _$Folder, ExternalResource {
   factory Folder.loading({required int id}) => Folder(
         isLoading: true,
         id: id,
-        title: 'Folders',
+        title: '',
         contents: [],
       );
 

@@ -4,14 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../single_item/model/item_event.dart';
 import 'add_or_edit_profile_dialog.dart';
 import 'profile_container.dart';
 import 'profile_model.dart';
 
+import '/pages/single_item/model/item_event.dart';
 import '/pages/settings/settings_model.dart';
 import '/common/theme/custom_theme_data.dart';
 import '/common/provider.dart';
+import '/common/localization/language.dart';
 import '/common/custom_widgets/all_custom_widgets.dart'
     show
         EventCard,
@@ -35,7 +36,9 @@ class ProfilesPage extends ConsumerWidget {
     Future<List<ItemEvent>> events =
         ref.read(Providers.persistenceServiceProvider).getGlobalSoonEvents();
 
-    CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
+    final CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
+    final Language language =
+        ref.watch(Providers.settingsControllerProvider).language;
 
     return Scaffold(
       backgroundColor: theme.backgroundColor,
@@ -43,7 +46,7 @@ class ProfilesPage extends ConsumerWidget {
         slivers: [
           CupertinoSliverNavigationBar(
             backgroundColor: theme.navBarColor,
-            largeTitle: const Text('Profiles'),
+            largeTitle: Text(language.titleProfile),
           ),
           FutureSliverListBuilder(
             future: events,
@@ -70,12 +73,9 @@ class ProfilesPage extends ConsumerWidget {
                 ),
               ),
             ),
-            emptyMessage: 'Events that are nearly due will be displayed here.'
-                '\nTry adding some from the detailed view of an item.',
-            errorMessage: 'An error occurred while loading events.\n'
-                'Try restarting the app.',
-            onNullMessage: 'Something went wrong while loading events.\n'
-                'Try restarting the app.',
+            emptyMessage: language.infoNoEventsYet,
+            errorMessage: language.errLoadEvents,
+            onNullMessage: language.errLoadEvents,
             errorMessagesPadding: 60.0,
           ),
           SliverPadding(
@@ -86,7 +86,7 @@ class ProfilesPage extends ConsumerWidget {
               primary: false,
               toolbarHeight: 30.0,
               backgroundColor: theme.groupingColor,
-              title: Text('Profiles',
+              title: Text(language.titleProfile,
                   style: TextStyle(fontSize: 16, color: theme.textColor)),
               centerTitle: true,
               actions: [
@@ -127,12 +127,12 @@ class ProfilesPage extends ConsumerWidget {
                             color: theme.backgroundColor,
                           ),
                           child: Text(
-                            "Currently using global view",
+                            language.lblGlobalProfileIsSelected,
                             style: TextStyle(color: theme.textColor),
                           ),
                         )
                       : Text(
-                          'Switch to global view',
+                          language.btnGlobalProfile,
                           style: TextStyle(
                             color: theme.accentColor,
                           ),
@@ -148,9 +148,8 @@ class ProfilesPage extends ConsumerWidget {
             ),
           ),
           if (profiles.isEmpty)
-            const SliverNoElementsMessage(
-              message:
-                  'Profiles are a way to categorize your data in a broad way.\nEach profile will have different data.\n\nTry creating one by tapping the  +  above',
+            SliverNoElementsMessage(
+              message: language.infoNoProfiles,
               minPadding: 50.0,
             )
           else

@@ -9,6 +9,7 @@ import '/pages/single_item/single_item_view.dart';
 import '/pages/single_item/model/single_item.dart';
 import '/pages/single_item/edit_single_item_view.dart';
 import '/common/provider.dart';
+import '/common/localization/language.dart';
 import '/common/theme/custom_theme_data.dart';
 import '/common/custom_widgets/all_custom_widgets.dart'
     show AsyncOptionBuilder, CalendarButton;
@@ -17,6 +18,7 @@ Widget _eventSection({
   required CalendarButton calendarButton,
   required List<Widget> children,
   required CustomThemeData theme,
+  required Language language,
 }) =>
     CupertinoListSection.insetGrouped(
         margin: const EdgeInsets.all(8),
@@ -26,7 +28,7 @@ Widget _eventSection({
         ),
         header:
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          const Text("Events"),
+          Text(language.titleEvents),
           calendarButton,
         ]),
         children: children.isEmpty
@@ -34,7 +36,7 @@ Widget _eventSection({
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    "No events",
+                    language.lblNoEvents,
                     style: TextStyle(
                       fontSize: 16,
                       color: theme.textColor,
@@ -47,6 +49,7 @@ Widget _eventSection({
 Widget _eventTile({
   required ItemEvent event,
   required Function(ItemEvent event) deleteEvent,
+  required Language language,
   bool editable = false,
 }) {
   return CupertinoListTile(
@@ -65,7 +68,8 @@ Widget _eventTile({
       ),
     ),
     subtitle: Text(
-      'from: ${DateFormat('dd/MM/yyyy - HH:mm').format(event.event.start!)}\nto: ${DateFormat('dd/MM/yyyy - HH:mm').format(event.event.end!)}',
+      '${language.lblEventFrom}: ${language.formatDateTime(event.event.start!)}\n'
+      '${language.lblEventTo}: ${language.formatDateTime(event.event.end!)}',
       maxLines: 2,
     ),
   );
@@ -104,21 +108,26 @@ class _EventsContainer extends ConsumerWidget {
         ref.watch(Providers.singleItemControllerProvider(_item.id));
     final SingleItemController controller =
         ref.read(Providers.singleItemControllerProvider(_item.id).notifier);
+    final Language language =
+        ref.watch(Providers.settingsControllerProvider).language;
 
     return AsyncOptionBuilder(
       future: item,
       initialData: _item,
-      errorMessage: "Failed to load events.\nTry re-opening this page.",
+      errorMessage: language.errLoadEvents,
       success: (item) {
         return _eventSection(
           calendarButton: CalendarButton(
             onSave: (event) =>
                 controller.addEvent(event: event, parentId: item.id),
           ),
+          language: language,
           theme: theme,
           children: item.events.map((itemEvent) {
             return _eventTile(
-                event: itemEvent, deleteEvent: controller.removeEvent);
+                event: itemEvent,
+                deleteEvent: controller.removeEvent,
+                language: language);
           }).toList(),
         );
       },
@@ -143,15 +152,20 @@ class _EditEventsContainer extends ConsumerWidget {
     final EditSingleItemController controller =
         ref.read(Providers.editSingleItemControllerProvider(_item).notifier);
 
+    final Language language =
+        ref.watch(Providers.settingsControllerProvider).language;
+
     return _eventSection(
       calendarButton: CalendarButton(
           onSave: (event) =>
               controller.addEvent(event: event, parentId: item.id)),
+      language: language,
       theme: theme,
       children: item.events.map((itemEvent) {
         return _eventTile(
           event: itemEvent,
           deleteEvent: controller.removeEvent,
+          language: language,
           editable: true,
         );
       }).toList(),

@@ -103,8 +103,11 @@ class Providers {
   /// - Provides a [CustomBottomNavBarController] for a [CustomBottomNavBarModel]
   static final StateNotifierProvider<CustomBottomNavBarController,
           CustomBottomNavBarModel> customBottomNavBarControllerProvider =
-      StateNotifierProvider<CustomBottomNavBarController,
-          CustomBottomNavBarModel>((ref) => CustomBottomNavBarControllerImpl());
+      StateNotifierProvider<
+              CustomBottomNavBarController, CustomBottomNavBarModel>(
+          (ref) => CustomBottomNavBarControllerImpl(
+                language: ref.watch(settingsControllerProvider).language,
+              ));
 
   /// Provider for [TakePictureController]
   /// - Provides a [TakePictureController] for a [TakePictureModel]
@@ -119,7 +122,7 @@ class Providers {
   static final AutoDisposeStateNotifierProvider<CalendarButtonController,
           CalendarModel> calendarButtonControllerProvider =
       StateNotifierProvider.autoDispose<CalendarButtonController,
-          CalendarModel>((ref) => CalendarButtonControllerImpl());
+          CalendarModel>((ref) => CalendarButtonControllerImpl(ref: ref));
 
   static final StateNotifierProvider<DbController, DbModel>
       dbControllerProvider =
@@ -132,8 +135,10 @@ class Providers {
   static final Provider<PersistenceService> persistenceServiceProvider =
       Provider<PersistenceService>(
     (ref) => PersistenceService(
-        controller: ref.read(dbControllerProvider.notifier),
-        profileId: ref.watch(settingsControllerProvider).selectedProfileId),
+      controller: ref.read(dbControllerProvider.notifier),
+      profileId: ref.watch(settingsControllerProvider).selectedProfileId,
+      ref: ref,
+    ),
   );
 
   /// Provider for [SettingsScreen]
@@ -150,7 +155,8 @@ class Providers {
       themeControllerProvider =
       StateNotifierProvider<ThemeController, CustomThemeData>((ref) {
     return ThemeControllerImpl(
-        index: ref.watch(settingsControllerProvider).selectedThemeIndex);
+        index: ref.watch(settingsControllerProvider).selectedThemeIndex,
+        language: ref.watch(settingsControllerProvider).language);
   });
 
   /// Provider for [SettingsScreen]

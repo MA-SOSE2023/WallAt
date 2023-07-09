@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gruppe4/common/theme/custom_theme_data.dart';
 
 import '/pages/single_item/model/single_item.dart';
 import '/common/provider.dart';
+import '/common/localization/language.dart';
+import '/common/theme/custom_theme_data.dart';
 import '/common/custom_widgets/all_custom_widgets.dart'
     show AsyncOptionBuilder, DocumentCard;
 
@@ -41,6 +42,8 @@ class DocumentCardContainer extends ConsumerWidget {
     final AsyncValue<SingleItem?> itemFuture =
         ref.watch(Providers.singleItemControllerProvider(_item.id));
     final CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
+    final Language language =
+        ref.watch(Providers.settingsControllerProvider).language;
     Widget documentCardRow(SingleItem item) => Row(
           children: [
             Expanded(child: DocumentCard(item: item)),
@@ -72,7 +75,7 @@ class DocumentCardContainer extends ConsumerWidget {
         initialData: _item,
         loading: () => DocumentCard(item: _item),
         onNull: () => DocumentCard(item: SingleItem.placeholder(id: _item.id)),
-        error: (_) => DocumentCard(item: SingleItem.error()),
+        error: (_) => DocumentCard(item: SingleItem.error(language)),
         success: (item) => documentCardRow(item),
       ),
     );

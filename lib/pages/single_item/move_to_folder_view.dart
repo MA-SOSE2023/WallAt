@@ -7,6 +7,7 @@ import 'model/single_item.dart';
 
 import '/pages/folders/folder_model.dart';
 import '/common/provider.dart';
+import '/common/localization/language.dart';
 import '/common/theme/custom_theme_data.dart';
 import '/common/custom_widgets/all_custom_widgets.dart'
     show LoadingOptionBuilder;
@@ -23,6 +24,8 @@ class MoveToFolderScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
+    final Language language =
+        ref.watch(Providers.settingsControllerProvider).language;
 
     final Folder folder =
         ref.watch(Providers.foldersControllerProvider(_folder?.id));
@@ -44,7 +47,8 @@ class MoveToFolderScreen extends ConsumerWidget {
                 backgroundColor: theme.navBarColor,
                 leading: CupertinoButton(
                   padding: const EdgeInsets.all(10),
-                  child: const Text('Cancel', style: TextStyle(fontSize: 15)),
+                  child: Text(language.lblCancel,
+                      style: const TextStyle(fontSize: 15)),
                   onPressed: () {
                     // Cancel the item
                     ref
@@ -56,7 +60,8 @@ class MoveToFolderScreen extends ConsumerWidget {
                 ),
                 trailing: CupertinoButton(
                   padding: const EdgeInsets.all(10),
-                  child: const Text('Save', style: TextStyle(fontSize: 15)),
+                  child: Text(language.lblSave,
+                      style: const TextStyle(fontSize: 15)),
                   onPressed: () {
                     // get controller for root folder in which we placed the
                     // item preemtively, and move it to the selected folder

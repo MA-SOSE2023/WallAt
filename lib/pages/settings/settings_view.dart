@@ -6,6 +6,7 @@ import 'settings_model.dart';
 import '/pages/profiles/profile_model.dart';
 import '/pages/profiles/profiles_view.dart';
 import '/pages/profiles/add_or_edit_profile_dialog.dart';
+import '/common/localization/language.dart';
 import '/common/custom_widgets/all_custom_widgets.dart';
 import '/common/theme/custom_theme_data.dart';
 import '/common/provider.dart';
@@ -16,6 +17,7 @@ class SettingsPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     SettingsModel settings = ref.watch(Providers.settingsControllerProvider);
+    Language language = settings.language;
     SettingsController controller =
         ref.read(Providers.settingsControllerProvider.notifier);
     List<ProfileModel> profiles =
@@ -24,12 +26,13 @@ class SettingsPage extends ConsumerWidget {
         ref.read(Providers.profilesControllerProvider.notifier);
 
     CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
+    final List<CustomThemeData> availableThemes = selectableThemes(language);
 
     return CupertinoPageScaffold(
       backgroundColor: theme.groupingColor,
       navigationBar: CupertinoNavigationBar(
         backgroundColor: theme.navBarColor,
-        middle: const Text("Settings"),
+        middle: Text(language.titleSettings),
       ),
       child: SafeArea(
         child: CustomScrollView(
@@ -38,9 +41,9 @@ class SettingsPage extends ConsumerWidget {
             SliverToBoxAdapter(
               child: CustomFormSection(children: [
                 CupertinoListTile.notched(
-                  title: const Text("Custom Theme"),
+                  title: Text(language.lblThemeSetting),
                   subtitle: Text(
-                    "Current Theme: ${ref.watch(Providers.themeControllerProvider).name}",
+                    "${language.lblCurrentTheme}: ${ref.watch(Providers.themeControllerProvider).name}",
                   ),
                   trailing: const Icon(CupertinoIcons.forward),
                   onTap: () {
@@ -48,14 +51,14 @@ class SettingsPage extends ConsumerWidget {
                       context: context,
                       builder: (BuildContext context) {
                         return SelectionDialog(
-                          title: 'Select a theme',
-                          selectables: selectableThemes,
+                          title: language.lblSelectTheme,
+                          selectables: availableThemes,
                           onTapped: (theme) => controller.changeThemeIndex(
-                            selectableThemes.indexOf(theme),
+                            availableThemes.indexOf(theme),
                           ),
                           isSelected: (theme) =>
                               theme ==
-                              selectableThemes[settings.selectedThemeIndex],
+                              availableThemes[settings.selectedThemeIndex],
                           builder: (theme) => Text(theme.name),
                         );
                       },
@@ -67,11 +70,11 @@ class SettingsPage extends ConsumerWidget {
             SliverToBoxAdapter(
               child: CustomFormSection(children: [
                 CupertinoListTile.notched(
-                  title: const Text("System Calendar"),
+                  title: Text(language.lblCalendarSetting),
                   subtitle: Text(
                     (settings.calendar == null)
-                        ? "No calendar selected"
-                        : "Selected calendar: ${settings.calendar!.name}",
+                        ? language.lblNoCurrentCalendar
+                        : "${language.lblCurrentCalendar}: ${settings.calendar!.name}",
                     maxLines: 2,
                   ),
                   trailing: Icon(settings.calendar == null
@@ -91,11 +94,11 @@ class SettingsPage extends ConsumerWidget {
                   },
                 ),
                 CupertinoListTile.notched(
-                  title: const Text("User Profile"),
+                  title: Text(language.lblProfileSetting),
                   subtitle: profiles.isNotEmpty &&
                           (settings.selectedProfileId ?? -1) > 0
                       ? Text(
-                          "Current Profile: ${profilesController.getSelectedProfile().name}",
+                          "${language.lblCurrentProfile}: ${profilesController.getSelectedProfile().name}",
                         )
                       : null,
                   trailing: Row(
@@ -119,7 +122,7 @@ class SettingsPage extends ConsumerWidget {
                           return const AddOrEditProfileDialog();
                         }
                         return SelectionDialog(
-                          title: 'Select a profile',
+                          title: language.lblSelectProfile,
                           selectables: profiles,
                           onTapped: (profile) => controller.setProfileId(
                             profile.id,
@@ -131,6 +134,32 @@ class SettingsPage extends ConsumerWidget {
                                 size: 30.0),
                             Text(profile.name)
                           ]),
+                        );
+                      },
+                    )
+                  },
+                ),
+                CupertinoListTile.notched(
+                  title: Text(language.lblLanguageSetting),
+                  subtitle: Text(
+                    "${language.lblCurrentLanguage}: $language",
+                  ),
+                  trailing: const Icon(CupertinoIcons.forward),
+                  onTap: () => {
+                    showCupertinoDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return SelectionDialog(
+                          title: language.lblSelectLanguage,
+                          selectables: Language.supportedLocales
+                              .map((locale) => Language.of(locale.languageCode))
+                              .toList(),
+                          onTapped: (language) => controller.setLanguage(
+                            language,
+                          ),
+                          isSelected: (selectLanguague) =>
+                              selectLanguague.locale.languageCode ==
+                              language.locale.languageCode,
                         );
                       },
                     )
@@ -153,4 +182,6 @@ abstract class SettingsController extends StateNotifier<SettingsModel> {
   void changeThemeIndex(int index);
 
   void setProfileId(int profileId);
+
+  void setLanguage(Language language);
 }

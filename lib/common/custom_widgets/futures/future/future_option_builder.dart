@@ -1,16 +1,18 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '/common/localization/language.dart';
+import '/common/provider.dart';
 import '/common/custom_widgets/all_custom_widgets.dart'
     show ActivityIndicator, ErrorMessage;
 
-class FutureOptionBuilder<T> extends StatelessWidget {
+class FutureOptionBuilder<T> extends ConsumerWidget {
   const FutureOptionBuilder({
     required Future<T?> future,
     required Widget Function(T) success,
     Widget Function()? loading,
     Widget Function(Object?)? error,
-    String errorMessage =
-        'Something went wrong while loading.\nTry restarting the app.',
+    String? errorMessage,
     T? initialData,
     super.key,
   })  : _future = future,
@@ -24,12 +26,14 @@ class FutureOptionBuilder<T> extends StatelessWidget {
 
   final Widget Function(T) _onSuccessBuilder;
   final Widget Function()? _onLoadingBuilder;
-  final String _errorMessage;
+  final String? _errorMessage;
   final Widget Function(Object?)? _onErrorBuilder;
   final T? _initialData;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final Language language =
+        ref.watch(Providers.settingsControllerProvider).language;
     return FutureBuilder(
       future: _future,
       initialData: _initialData,
@@ -38,7 +42,8 @@ class FutureOptionBuilder<T> extends StatelessWidget {
           final data = snapshot.data;
           if (data == null) {
             return _onErrorBuilder == null
-                ? ErrorMessage(message: _errorMessage)
+                ? ErrorMessage(
+                    message: _errorMessage ?? language.errGenericLoad)
                 : _onErrorBuilder!(snapshot.error);
           } else {
             return _onSuccessBuilder(data);
@@ -47,7 +52,7 @@ class FutureOptionBuilder<T> extends StatelessWidget {
           print(snapshot.error);
           print(snapshot.stackTrace); // TODO: look into logging framework
           return _onErrorBuilder == null
-              ? ErrorMessage(message: _errorMessage)
+              ? ErrorMessage(message: _errorMessage ?? language.errGenericLoad)
               : _onErrorBuilder!(snapshot.error);
         } else {
           // (unnecessary) assignment to local variable to satisfy null safety

@@ -1,10 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gruppe4/common/theme/custom_theme_data.dart';
 
 import '/pages/folders/folder_item.dart';
 import '/pages/folders/folder_model.dart';
 import '/common/provider.dart';
+import '/common/localization/language.dart';
+import '/common/theme/custom_theme_data.dart';
 import '/common/custom_widgets/all_custom_widgets.dart'
     show
         SliverErrorMessage,
@@ -23,16 +24,15 @@ class FutureSliverFolderBuilder extends ConsumerWidget {
   final Future<Folder?> _future;
   final List<Widget> Function(List<FolderItem>, Folder) _onSuccessBuilder;
 
-  final String _onNullMessage =
-      'No matching folder was found.\nTry restarting the app.';
-  final String _emptyListMessage =
-      'This folder is empty.\nTry adding some items.';
-  final String _errorMessage =
-      'An error occurred while loading the folder.\nTry restarting the app.';
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
+    final Language language =
+        ref.watch(Providers.settingsControllerProvider).language;
+
+    final String onNullMessage = language.errNullFolder;
+    final String emptyListMessage = language.infoFolderEmpty;
+    final String errorMessage = language.errLoadFolder;
     return FutureOptionBuilder(
       future: _future,
       success: (folder) {
@@ -45,12 +45,12 @@ class FutureSliverFolderBuilder extends ConsumerWidget {
             ),
             if (contents == null)
               SliverErrorMessage(
-                message: _onNullMessage,
+                message: onNullMessage,
               )
             else if (contents.isEmpty) ...[
               ..._onSuccessBuilder(contents, folder),
               SliverNoElementsMessage(
-                message: _emptyListMessage,
+                message: emptyListMessage,
               )
             ] else
               ..._onSuccessBuilder(contents, folder),
@@ -61,10 +61,10 @@ class FutureSliverFolderBuilder extends ConsumerWidget {
         slivers: [
           CupertinoSliverNavigationBar(
             backgroundColor: theme.navBarColor,
-            largeTitle: const Text('Folders'),
+            largeTitle: Text(language.titleFolders),
           ),
           SliverErrorMessage(
-            message: _errorMessage,
+            message: errorMessage,
           ),
         ],
       ),
@@ -72,7 +72,7 @@ class FutureSliverFolderBuilder extends ConsumerWidget {
         slivers: [
           CupertinoSliverNavigationBar(
             backgroundColor: theme.navBarColor,
-            largeTitle: const Text('Folders'),
+            largeTitle: Text(language.titleFolders),
           ),
           const SliverActivityIndicator(),
         ],
