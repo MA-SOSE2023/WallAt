@@ -1,6 +1,7 @@
 import 'package:device_calendar/device_calendar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '/common/localization/language.dart';
 import 'settings_model.dart';
 import 'settings_view.dart';
 import '/common/utils/device_calendar_mixin.dart';
@@ -9,12 +10,14 @@ enum Settings {
   calendar,
   selectedColorTheme,
   selectedProfile,
+  language,
 }
 
 SettingsModel _settings = const SettingsModel(
   calendar: null,
   selectedThemeIndex: 1,
   selectedProfileId: null,
+  language: Language.en,
 );
 
 class SettingsControllerImpl extends SettingsController
@@ -29,6 +32,7 @@ class SettingsControllerImpl extends SettingsController
       calendar: await getCalendarById(prefs.getString(Settings.calendar.name)),
       selectedThemeIndex: prefs.getInt(Settings.selectedColorTheme.name) ?? 1,
       selectedProfileId: prefs.getInt(Settings.selectedProfile.name),
+      language: Language.of(prefs.getString(Settings.language.name) ?? 'en'),
     );
   }
 
@@ -53,5 +57,12 @@ class SettingsControllerImpl extends SettingsController
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setInt(Settings.selectedProfile.name, profileId);
     state = state.copyWith(selectedProfileId: profileId);
+  }
+
+  @override
+  void setLanguage(Language language) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString(Settings.language.name, language.locale.languageCode);
+    state = state.copyWith(language: language);
   }
 }

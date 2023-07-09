@@ -21,7 +21,7 @@ dependencies:
   flutter_riverpod: ^2.3.6
   freezed_annotation: ^2.2.0
   json_annotation: ^4.8.1
-  intl: ^0.18.1
+  intl: any
   beamer: ^1.5.5
   cunning_document_scanner: ^1.1.2
   photo_view: ^0.14.0
@@ -37,6 +37,8 @@ dependencies:
   path_provider: ^2.0.15
   flutter_native_splash: ^2.0.1
   shared_preferences: ^2.2.0
+  flutter_localizations: 
+    sdk: flutter
 
 dev_dependencies:
   flutter_test:

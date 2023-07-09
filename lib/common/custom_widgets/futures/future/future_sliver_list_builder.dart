@@ -1,5 +1,8 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '/common/localization/language.dart';
+import '/common/provider.dart';
 import '/common/custom_widgets/all_custom_widgets.dart'
     show
         SliverErrorMessage,
@@ -7,14 +10,12 @@ import '/common/custom_widgets/all_custom_widgets.dart'
         FutureOptionBuilder,
         SliverActivityIndicator;
 
-class FutureSliverListBuilder<T> extends StatelessWidget {
+class FutureSliverListBuilder<T> extends ConsumerWidget {
   const FutureSliverListBuilder({
     required Future<List<T>?> future,
     required Widget Function(List<T>) success,
-    this.onNullMessage = 'No matching item was found.\nTry restarting the app.',
-    this.emptyMessage = 'There are no entries yet.\nTry adding some items.',
-    this.errorMessage =
-        'An error occurred while loading.\nTry restarting the app.',
+    this.emptyMessage,
+    this.errorMessage,
     this.errorMessagesPadding,
     super.key,
   })  : _future = future,
@@ -23,19 +24,20 @@ class FutureSliverListBuilder<T> extends StatelessWidget {
   final Future<List<T>?> _future;
   final Widget Function(List<T>) _onSuccessBuilder;
 
-  final String onNullMessage;
-  final String emptyMessage;
-  final String errorMessage;
+  final String? emptyMessage;
+  final String? errorMessage;
   final double? errorMessagesPadding;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final Language language =
+        ref.watch(Providers.settingsControllerProvider).language;
     return FutureOptionBuilder(
         future: _future,
         success: (data) {
           if (data.isEmpty) {
             return SliverNoElementsMessage(
-              message: emptyMessage,
+              message: emptyMessage ?? language.infoGenericEmpty,
               minPadding: errorMessagesPadding,
             );
           } else {
@@ -43,7 +45,7 @@ class FutureSliverListBuilder<T> extends StatelessWidget {
           }
         },
         error: (_) => SliverErrorMessage(
-              message: errorMessage,
+              message: errorMessage ?? language.errGenericLoad,
               minPadding: errorMessagesPadding,
             ),
         loading: () => const SliverActivityIndicator());

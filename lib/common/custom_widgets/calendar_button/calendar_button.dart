@@ -27,6 +27,7 @@ class CalendarButton extends ConsumerWidget {
       BuildContext context,
     ) {
       final settings = ref.watch(Providers.settingsControllerProvider);
+      final language = settings.language;
 
       showCupertinoDialog(
         context: context,
@@ -38,16 +39,16 @@ class CalendarButton extends ConsumerWidget {
               CalendarButtonController calendarButtonController =
                   ref.read(Providers.calendarButtonControllerProvider.notifier);
               return CupertinoAlertDialog(
-                title: const Padding(
-                  padding: EdgeInsets.only(bottom: 16),
-                  child: Text('Add Event'),
+                title: Padding(
+                  padding: const EdgeInsets.only(bottom: 16),
+                  child: Text(language.lblAddEvent),
                 ),
                 content: Column(
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(bottom: 16),
                       child: CupertinoTextField(
-                        placeholder: 'Event Title',
+                        placeholder: language.txtEventTitle,
                         onChanged: (value) {
                           calendarButtonController.setTitle(value);
                         },
@@ -56,7 +57,7 @@ class CalendarButton extends ConsumerWidget {
                     Padding(
                       padding: const EdgeInsets.only(bottom: 16),
                       child: CupertinoTextField(
-                        placeholder: 'Event Description',
+                        placeholder: language.txtEventDescription,
                         onChanged: (value) {
                           calendarButtonController.setDescription(value);
                         },
@@ -65,7 +66,7 @@ class CalendarButton extends ConsumerWidget {
                     Padding(
                       padding: const EdgeInsets.only(bottom: 16),
                       child: CupertinoTextField(
-                        placeholder: 'Enter reminder minutes',
+                        placeholder: language.txtReminderMinutes,
                         keyboardType: TextInputType.number,
                         onChanged: (value) {
                           calendarButtonController
@@ -76,18 +77,23 @@ class CalendarButton extends ConsumerWidget {
                         ],
                       ),
                     ),
-                    const Text('Recurrence'),
+                    Text(language.lblRecurrence),
                     Padding(
                       padding: const EdgeInsets.only(bottom: 16),
                       child: CupertinoSlidingSegmentedControl<int>(
                         groupValue: calendarModel.selectedRecurrenceIndex,
                         children: {
-                          for (int i = 0; i < recurrenceOptions.length; i++)
+                          for (int i = 0;
+                              i < recurrenceOptions(language).length;
+                              i++)
                             i: Text(
                                 style: const TextStyle(
                                   fontSize: 10,
                                 ),
-                                recurrenceOptions.values.elementAt(i)),
+                                maxLines: 1,
+                                recurrenceOptions(language)
+                                    .values
+                                    .elementAt(i)),
                         },
                         onValueChanged: (int? value) {
                           calendarButtonController
@@ -98,14 +104,14 @@ class CalendarButton extends ConsumerWidget {
                     Padding(
                       padding: const EdgeInsets.only(bottom: 16),
                       child: DatePicker(
-                        description: "Start Time",
+                        description: language.lblEventStart,
                         dateTime: calendarModel.startDate!,
                         onDateTimeChanged:
                             calendarButtonController.setStartDate,
                       ),
                     ),
                     DatePicker(
-                      description: "End Time",
+                      description: language.lblEventEnd,
                       dateTime: calendarModel.endDate!,
                       onDateTimeChanged: calendarButtonController.setEndDate,
                     ),
@@ -113,13 +119,13 @@ class CalendarButton extends ConsumerWidget {
                 ),
                 actions: <Widget>[
                   CupertinoDialogAction(
-                    child: const Text('Cancel'),
+                    child: Text(language.lblCancel),
                     onPressed: () {
                       Navigator.pop(context);
                     },
                   ),
                   CupertinoDialogAction(
-                    child: const Text('Add Event'),
+                    child: Text(language.lblAddEvent),
                     onPressed: () async {
                       SettingsModel settings =
                           ref.watch(Providers.settingsControllerProvider);

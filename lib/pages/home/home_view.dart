@@ -6,6 +6,7 @@ import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 import 'home_model.dart';
 import '/common/provider.dart';
 import '/common/theme/custom_theme_data.dart';
+import '/common/localization/language.dart';
 import '/common/custom_widgets/all_custom_widgets.dart'
     show
         AsyncSliverListBuilder,
@@ -23,6 +24,8 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     AsyncValue<HomeModel> model = ref.watch(Providers.homeControllerProvider);
     final CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
+    final Language language =
+        ref.watch(Providers.settingsControllerProvider).language;
 
     return Scaffold(
       backgroundColor: theme.backgroundColor,
@@ -45,7 +48,7 @@ class HomeScreen extends ConsumerWidget {
         slivers: [
           CupertinoSliverNavigationBar(
             backgroundColor: theme.navBarColor,
-            largeTitle: const Text('Home'),
+            largeTitle: Text(language.titleHome),
             trailing: const ProfilesButton(),
           ),
           AsyncSliverListBuilder(
@@ -84,12 +87,9 @@ class HomeScreen extends ConsumerWidget {
                 ),
               ),
             ),
-            emptyMessage:
-                'Events that are nearly due will be displayed here.\nTry adding some from the edit page of an item.',
-            errorMessage: 'An error occurred while loading events.\n'
-                'Try restarting the app.',
-            onNullMessage: 'Something went wrong while loading events.\n'
-                'Try restarting the app.',
+            emptyMessage: language.infoNoEventsYet,
+            errorMessage: language.errLoadEvents,
+            onNullMessage: language.errLoadEvents,
             errorMessagesPadding: 40.0,
           ),
           SliverAppBar(
@@ -99,7 +99,7 @@ class HomeScreen extends ConsumerWidget {
             flexibleSpace: FlexibleSpaceBar(
               titlePadding: const EdgeInsets.only(left: 20.0, bottom: 10.0),
               title: Text(
-                'Frequently Used',
+                language.lblFrequentlyUsed,
                 style: TextStyle(
                   fontSize: 18,
                   color: theme.textColor,
@@ -113,12 +113,9 @@ class HomeScreen extends ConsumerWidget {
               items: recentItems,
               showFavoriteButton: false,
             ),
-            emptyMessage:
-                'No items yet.\nTry adding some by clicking the camera button.',
-            errorMessage:
-                'Something went wrong while loading your recent items.\nTry restarting the app.',
-            onNullMessage:
-                'Something went wrong while loading your recent items.\nTry restarting the app.',
+            emptyMessage: language.infoNoItemsYet,
+            errorMessage: language.errLoadRecentItems,
+            onNullMessage: language.errLoadRecentItems,
           )
         ],
       ),

@@ -37,7 +37,7 @@ class ProfileContainer extends ConsumerWidget {
                   );
                 });
           },
-          child: const Text('Edit'),
+          child: Text(settings.language.lblEdit),
         ),
         CupertinoContextMenuAction(
           isDestructiveAction: true,
@@ -46,7 +46,7 @@ class ProfileContainer extends ConsumerWidget {
             context.beamBack();
           },
           trailingIcon: CupertinoIcons.trash,
-          child: const Text('Delete'),
+          child: Text(settings.language.lblDelete),
         ),
       ],
       builder: (context, animation) => Container(
@@ -76,7 +76,7 @@ class ProfileContainer extends ConsumerWidget {
                     color: theme.backgroundColor,
                   ),
                   child: Text(
-                    "Currently Selected",
+                    settings.language.lblProfileIsSelected,
                     style: TextStyle(color: theme.textColor),
                   ),
                 ),
@@ -84,7 +84,7 @@ class ProfileContainer extends ConsumerWidget {
             else
               CupertinoButton(
                 padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                child: const Text("Select this profile"),
+                child: Text(settings.language.btnSelectProfile),
                 onPressed: () => {
                   ref
                       .read(Providers.settingsControllerProvider.notifier)

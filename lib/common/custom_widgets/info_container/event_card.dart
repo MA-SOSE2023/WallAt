@@ -3,13 +3,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '/common/provider.dart';
 import '/pages/single_item/model/item_event.dart';
+import '/common/provider.dart';
+import '/common/localization/language.dart';
 import '/common/theme/custom_theme_data.dart';
 
 class EventCard extends ConsumerWidget {
-  const EventCard({required ItemEvent event, super.key})
-    : _event = event;
+  const EventCard({required ItemEvent event, super.key}) : _event = event;
 
   final ItemEvent _event;
 
@@ -20,6 +20,8 @@ class EventCard extends ConsumerWidget {
     final String title = _event.event.title ?? 'Event';
 
     final CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
+    final Language language =
+        ref.watch(Providers.settingsControllerProvider).language;
     return Column(
       children: [
         Container(
@@ -36,8 +38,7 @@ class EventCard extends ConsumerWidget {
             children: [
               CupertinoListTile.notched(
                 backgroundColor: theme.backgroundColor,
-                title: Text(
-                    '${date.day}/${date.month}/${date.year}  -  ${date.hour}:${date.minute}'),
+                title: Text(language.formatDateTime(date)),
                 leading: Container(
                   decoration: BoxDecoration(
                     border: Border.all(
@@ -60,9 +61,9 @@ class EventCard extends ConsumerWidget {
                 leadingSize: 36,
                 onTap: () {
                   ref
-                      .read(
-                          Providers.singleItemControllerProvider(_event.parentId)
-                              .notifier)
+                      .read(Providers.singleItemControllerProvider(
+                              _event.parentId)
+                          .notifier)
                       .navigateToThisItem();
                 },
               ),

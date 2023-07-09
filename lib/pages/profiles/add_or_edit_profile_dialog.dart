@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gruppe4/common/localization/language.dart';
 
 import 'profile_model.dart';
 import '/common/provider.dart';
@@ -43,20 +44,21 @@ class _AddorEditProfileDialogState
     List<ImageProvider> availableProfilePictures =
         PersistenceService.selectableProfilePictures;
 
-    CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
+    final CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
+    final Language language =
+        ref.watch(Providers.settingsControllerProvider).language;
 
     final Widget addDialogAction = CupertinoDialogAction(
-      child: const Text('Add'),
+      child: Text(language.lblAdd),
       onPressed: () {
-        ref
-            .read(Providers.profilesControllerProvider.notifier)
-            .createProfile(newProfileName ?? 'Profile', newProfilePictureIndex);
+        ref.read(Providers.profilesControllerProvider.notifier).createProfile(
+            newProfileName ?? language.nameProfile, newProfilePictureIndex);
         Navigator.of(context).pop();
       },
     );
 
     final Widget editDialogAction = CupertinoDialogAction(
-      child: const Text('Edit'),
+      child: Text(language.lblEdit),
       onPressed: () {
         ref.read(Providers.profilesControllerProvider.notifier).updateProfile(
               widget._editProfile!,
@@ -68,12 +70,13 @@ class _AddorEditProfileDialogState
     );
 
     return CupertinoAlertDialog(
-      title: Text(widget._isAddDialog ? 'Add profile' : 'Edit profile'),
+      title: Text(
+          '${widget._isAddDialog ? language.lblAdd : language.lblEdit} ${language.nameProfile}'),
       content: Column(
         children: [
           CupertinoTextField(
             controller: profileNameTextController,
-            placeholder: 'Profile name',
+            placeholder: language.txtProfileName,
             onChanged: (value) => setState(() {
               newProfileName = value;
             }),
@@ -172,7 +175,7 @@ class _AddorEditProfileDialogState
       ),
       actions: [
         CupertinoDialogAction(
-          child: const Text('Cancel'),
+          child: Text(language.lblCancel),
           onPressed: () => Navigator.of(context).pop(),
         ),
         if (widget._isAddDialog) addDialogAction else editDialogAction,

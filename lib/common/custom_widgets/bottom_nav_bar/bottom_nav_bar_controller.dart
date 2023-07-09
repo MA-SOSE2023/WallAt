@@ -4,47 +4,52 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'bottom_nav_bar_view.dart';
 import '/common/provider.dart';
+import '/common/localization/language.dart';
 
 class CustomBottomNavBarControllerImpl extends CustomBottomNavBarController {
-  CustomBottomNavBarControllerImpl() : super();
+  CustomBottomNavBarControllerImpl({required Language language})
+      : _language = language,
+        super();
 
-  static const List<CustomBottomNavBarItem> _baseItems = [
-    CustomBottomNavBarItem(
-      icon: Icon(CupertinoIcons.home),
-      activeIcon: Icon(CupertinoIcons.house_fill),
-      label: 'HOME',
-      initialLocation: '/home',
-    ),
-    CustomBottomNavBarItem(
-      icon: Icon(CupertinoIcons.heart),
-      activeIcon: Icon(CupertinoIcons.heart_fill),
-      label: 'FAVORITES',
-      initialLocation: '/favorites',
-    ),
-    CustomBottomNavBarItem(
-      icon: Icon(CupertinoIcons.folder),
-      activeIcon: Icon(CupertinoIcons.folder_fill),
-      label: 'FOLDERS',
-      initialLocation: '/folders',
-    ),
-  ];
+  final Language _language;
 
-  static final CustomBottomNavBarItem _cameraItem = CustomBottomNavBarItem(
-    icon: const Icon(CupertinoIcons.camera),
-    activeIcon: const Icon(CupertinoIcons.camera_fill),
-    label: 'CAMERA',
-    initialLocation: '/camera',
-    onTap: (ref) => ref
-        .read(Providers.takePictureControllerProvider(null).notifier)
-        .takePicture(ref),
-  );
+  List<CustomBottomNavBarItem> get _baseItems => [
+        CustomBottomNavBarItem(
+          icon: const Icon(CupertinoIcons.home),
+          activeIcon: const Icon(CupertinoIcons.house_fill),
+          label: _language.lblHome,
+          initialLocation: '/home',
+        ),
+        CustomBottomNavBarItem(
+          icon: const Icon(CupertinoIcons.heart),
+          activeIcon: const Icon(CupertinoIcons.heart_fill),
+          label: _language.lblFavorites,
+          initialLocation: '/favorites',
+        ),
+        CustomBottomNavBarItem(
+          icon: const Icon(CupertinoIcons.folder),
+          activeIcon: const Icon(CupertinoIcons.folder_fill),
+          label: _language.lblFolders,
+          initialLocation: '/folders',
+        ),
+      ];
 
-  static const CustomBottomNavBarItem _settingsItem = CustomBottomNavBarItem(
-    icon: Icon(CupertinoIcons.gear),
-    activeIcon: Icon(CupertinoIcons.gear_solid),
-    label: 'SETTINGS',
-    initialLocation: '/settings',
-  );
+  CustomBottomNavBarItem get _cameraItem => CustomBottomNavBarItem(
+        icon: const Icon(CupertinoIcons.camera),
+        activeIcon: const Icon(CupertinoIcons.camera_fill),
+        label: _language.lblCamera,
+        initialLocation: '/camera',
+        onTap: (ref) => ref
+            .read(Providers.takePictureControllerProvider(null).notifier)
+            .takePicture(ref),
+      );
+
+  CustomBottomNavBarItem get _settingsItem => CustomBottomNavBarItem(
+        icon: const Icon(CupertinoIcons.gear),
+        activeIcon: const Icon(CupertinoIcons.gear_solid),
+        label: _language.lblSettings,
+        initialLocation: '/settings',
+      );
 
   @override
   List<CustomBottomNavBarItem> getNavBarItems() =>

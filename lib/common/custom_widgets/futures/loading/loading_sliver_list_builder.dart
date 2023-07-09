@@ -1,18 +1,20 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gruppe4/common/localization/language.dart';
 
+import '../../../provider.dart';
 import '/common/utils/external_resource_mixin.dart';
 import '/common/custom_widgets/all_custom_widgets.dart'
     show SliverErrorMessage, SliverNoElementsMessage, SliverActivityIndicator;
 
 class LoadingSliverListBuilder<T extends ExternalResource>
-    extends StatelessWidget {
+    extends ConsumerWidget {
   const LoadingSliverListBuilder({
     required List<T>? resources,
     required Widget Function(List<T>) success,
-    this.onNullMessage = 'No matching item was found.\nTry restarting the app.',
-    this.emptyMessage = 'There are no entries yet.\nTry adding some items.',
-    this.errorMessage =
-        'An error occurred while loading.\nTry restarting the app.',
+    this.onNullMessage,
+    this.emptyMessage,
+    this.errorMessage,
     this.errorMessagesPadding,
     super.key,
   })  : _resources = resources,
@@ -21,13 +23,16 @@ class LoadingSliverListBuilder<T extends ExternalResource>
   final List<T>? _resources;
   final Widget Function(List<T>) _onSuccessBuilder;
 
-  final String onNullMessage;
-  final String emptyMessage;
-  final String errorMessage;
+  final String? onNullMessage;
+  final String? emptyMessage;
+  final String? errorMessage;
   final double? errorMessagesPadding;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final Language language =
+        ref.watch(Providers.settingsControllerProvider).language;
+
     bool anyLoading = false;
     bool anyHasError = false;
     for (final resource in _resources ?? []) {
@@ -39,7 +44,7 @@ class LoadingSliverListBuilder<T extends ExternalResource>
     }
     if (anyHasError) {
       return SliverErrorMessage(
-        message: errorMessage,
+        message: errorMessage ?? language.errGenericLoad,
         minPadding: errorMessagesPadding,
       );
     } else if (anyLoading) {
@@ -47,12 +52,12 @@ class LoadingSliverListBuilder<T extends ExternalResource>
     } else {
       if (_resources == null) {
         return SliverErrorMessage(
-          message: onNullMessage,
+          message: onNullMessage ?? language.errGenericLoad,
           minPadding: errorMessagesPadding,
         );
       } else if (_resources!.isEmpty) {
         return SliverNoElementsMessage(
-          message: emptyMessage,
+          message: emptyMessage ?? language.infoGenericEmpty,
           minPadding: errorMessagesPadding,
         );
       } else {

@@ -10,6 +10,7 @@ import 'edit_single_item_view.dart';
 import 'model/single_item.dart';
 import 'model/item_event.dart';
 import '/common/provider.dart';
+import '/common/localization/language.dart';
 import '/common/theme/custom_theme_data.dart';
 import '/common/custom_widgets/all_custom_widgets.dart'
     show EventsContainer, AsyncOptionBuilder;
@@ -30,15 +31,16 @@ class SingleItemPage extends ConsumerWidget {
     final AsyncValue<SingleItem?> item =
         ref.watch(Providers.singleItemControllerProvider(_item.id));
     final CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
+    final Language language =
+        ref.watch(Providers.settingsControllerProvider).language;
 
     return AsyncOptionBuilder(
       future: item,
       initialData: _item,
       loading: () => const Align(
           alignment: Alignment.center, child: CupertinoActivityIndicator()),
-      error: (_) => const Align(
-          alignment: Alignment.center,
-          child: Text("Fatal error, please restart the app")),
+      error: (_) => Align(
+          alignment: Alignment.center, child: Text(language.errGenericLoad)),
       success: (item) => CupertinoPageScaffold(
         backgroundColor: theme.backgroundColor,
         child: SafeArea(
@@ -51,7 +53,6 @@ class SingleItemPage extends ConsumerWidget {
                     pinned: true,
                     stretch: true,
                     leading: CupertinoNavigationBarBackButton(
-                      previousPageTitle: '',
                       onPressed: () => context.beamBack(),
                     ),
                     backgroundColor: theme.navBarColor,

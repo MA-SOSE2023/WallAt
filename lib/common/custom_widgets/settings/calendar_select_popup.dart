@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '/common/localization/language.dart';
 import '/common/provider.dart';
 import '/common/custom_widgets/all_custom_widgets.dart' show SelectionDialog;
 
@@ -19,19 +20,21 @@ class SelectCalendarPopup extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final String? selectedCalendarId =
         ref.watch(Providers.settingsControllerProvider).calendar?.id;
+    final Language language =
+        ref.watch(Providers.settingsControllerProvider).language;
     return FutureBuilder<Result<List<Calendar>>>(
       future: DeviceCalendarPlugin().retrieveCalendars(),
       builder: (BuildContext context,
           AsyncSnapshot<Result<List<Calendar>>> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CupertinoAlertDialog(
-            title: Text('Loading'),
-            content: CircularProgressIndicator(),
+          return CupertinoAlertDialog(
+            title: Text(language.lblLoading),
+            content: const CircularProgressIndicator(),
           );
         } else if (snapshot.hasError) {
           return CupertinoAlertDialog(
-            title: const Text('Error'),
-            content: const Text('Failed to retrieve calendars.'),
+            title: Text(language.lblError),
+            content: Text(language.errLoadCalendar),
             actions: <Widget>[
               CupertinoDialogAction(
                 child: const Text('OK'),
@@ -51,10 +54,10 @@ class SelectCalendarPopup extends ConsumerWidget {
 
           return SelectionDialog(
             selectables: usableCalendars,
-            title: "Select a Calendar",
-            header: "Available Calendars",
+            title: language.lblSelectCalendar,
+            header: language.lblAvailableCalendars,
             onTapped: (calendar) => _onCalendarSelected(calendar),
-            builder: (calendar) => Text(calendar.name ?? '<no name>'),
+            builder: (calendar) => Text(calendar.name ?? '¯\\_(ツ)_/¯'),
             isSelected: (calendar) => calendar.id == selectedCalendarId,
           );
         }

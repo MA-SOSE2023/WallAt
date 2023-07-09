@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gruppe4/common/localization/language.dart';
 import 'package:gruppe4/common/theme/custom_theme_data.dart';
 
 import 'folder_model.dart';
@@ -21,6 +22,8 @@ class FoldersScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
+    final Language language =
+        ref.watch(Providers.settingsControllerProvider).language;
 
     List<Widget> folderViewBody(List<FolderItem> contents, Folder folder) => [
           SliverPadding(
@@ -31,7 +34,7 @@ class FoldersScreen extends ConsumerWidget {
               primary: false,
               toolbarHeight: 30.0,
               backgroundColor: theme.groupingColor,
-              title: Text('Subfolders',
+              title: Text(language.lblSubfolders,
                   style: TextStyle(fontSize: 16, color: theme.textColor)),
               centerTitle: true,
               actions: [
@@ -51,24 +54,25 @@ class FoldersScreen extends ConsumerWidget {
                       builder: (context) {
                         String? newFolderName;
                         return CupertinoAlertDialog(
-                          title: const Text('Add subfolder'),
+                          title: Text(language.lblAddFolder),
                           content: CupertinoTextField(
-                            placeholder: 'Folder title',
+                            placeholder: language.txtFolderTitle,
                             onChanged: (value) => newFolderName = value,
                           ),
                           actions: [
                             CupertinoDialogAction(
-                              child: const Text('Cancel'),
+                              child: Text(language.lblCancel),
                               onPressed: () => Navigator.of(context).pop(),
                             ),
                             CupertinoDialogAction(
-                              child: const Text('Add'),
+                              child: Text(language.lblAdd),
                               onPressed: () {
                                 ref
                                     .read(Providers.foldersControllerProvider(
                                             _folder?.id)
                                         .notifier)
-                                    .addSubFolder(newFolderName ?? 'Folder');
+                                    .addSubFolder(
+                                        newFolderName ?? language.nameFolder);
                                 Navigator.of(context).pop();
                               },
                             ),
