@@ -1,11 +1,10 @@
-
-<span style="color:#a9cce3 ;font-weight:700;font-size:40px">Wall@</span>
+<img align="left" src="doc/figures/logo.png" width="80px">
+# $\textcolor{lightskyblue}{\textsf{    Wall@}}$ 
+<br clear="left"/>
 
 ***
-
+Add badges
 ***
-
-<img align="left" src="doc/figures/logo.png" width="100px" height="100">
 
 Wall@ ist eine innovative mobile App, die das Scannen und Verwalten von Dokumenten auf deinem Smartphone revolutioniert. Mit unserer benutzerfreundlichen und leistungsstarken Anwendung kannst du Dokumente wie Quittungen, Rechnungen, Ausweise und andere wichtige Unterlagen ganz einfach erfassen, speichern und jederzeit griffbereit haben.
 
