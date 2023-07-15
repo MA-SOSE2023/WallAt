@@ -1,15 +1,25 @@
 
 Dieses Kapitel bietet einen Überblick über den Entwicklungsprozess von Wall@. 
 Es behandelt die geplanten User Stories und den Einsatz von GitLab für das Projektmanagement und die Zusammenarbeit im Team.
-
 Die User Stories dienen als Leitfaden für die Entwicklung und beschreiben die Funktionalität von Wall@ aus Benutzersicht. 
 Der Entwicklungsprozess umfasst verschiedene Phasen und Praktiken, die sicherstellen, dass die App erfolgreich entwickelt, getestet und bereitgestellt werden kann.
-
 Zusätzlich wird der Einsatz von GitLab vorgestellt, einer kollaborativen Entwicklungsplattform, die Funktionen zur Versionskontrolle und zum Projektmanagement bietet.
 
 \section{Issues in GitLab}
+Für die Koordination und Verwaltung des Entwicklungsprozesses haben wir das Ticket-System in GitLab genutzt. 
+Mithilfe dieses Systems konnten wir Tickets erstellen, Aufgaben zuweisen und die Entwicklung effektiv koordinieren. 
+Wir haben Funktionen wie Ticketzuweisung (an Verantwortliche), Labeling und Kommentarfunktionen genutzt, 
+um die Zusammenarbeit und den Fortschritt innerhalb des Teams zu erleichtern.
 
 \section{User Stories}
+Aufgrund der Anforderungen an die App haben wir verschiedene User Stories erstellt, 
+die die Funktionalität von Wall@ aus Benutzersicht beschreiben.
+Eine Liste der User Stories spowie der aktuelle Entwicklungsstand der einzelnen Stories ist über ein 
+seperates GitLab Board (siehe \href{https://gitlab.in.htwg-konstanz.de/mobile-anwendungen-ss23/gruppen/gruppe-4/-/boards/272}{User Stories Board}) einzusehen.
 
 \section{GitFlow}
-
+Für eine effiziente Verwaltung des Entwicklungsprozesses haben wir das GitFlow-Modell implementiert. 
+Es ermöglichte uns, den Code in verschiedenen Branches zu organisieren und stabile sowie entwicklungsorientierte Umgebungen aufrechtzuerhalten. 
+Wir haben den "master"-Branch für stabile Versionen, den "develop"-Branch für die Hauptentwicklung und Feature-Branches für neue 
+Funktionen verwendet. Zusätzlich nutzten wir Hotfix-Branches, um kritische Fehler schnell zu beheben und in den "master" und 
+"develop"-Branch zu überführen.
