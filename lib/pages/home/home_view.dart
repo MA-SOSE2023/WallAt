@@ -5,36 +5,38 @@ import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 
 import 'home_model.dart';
 import '/common/provider.dart';
+import '/common/theme/custom_theme_data.dart';
+import '/common/localization/language.dart';
 import '/common/custom_widgets/all_custom_widgets.dart'
-    show EventCard, DocumentCardContainerList, cameraButtonHeroTag;
-import '/router/router.dart';
-import '/pages/single_item/model/single_item.dart';
-import '/pages/single_item/model/item_event.dart';
+    show
+        AsyncSliverListBuilder,
+        DocumentCardContainerList,
+        EventCard,
+        ProfilesButton,
+        SliverActivityIndicator,
+        SliverNoElementsMessage,
+        cameraButtonHeroTag;
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    HomeModel model = ref.watch(Providers.homeControllerProvider);
-    final List<EventCard> eventCards = model.events
-        .map((event) => EventCard(
-              event: event,
-            ))
-        .toList();
-    final List<SingleItem> documentCards = model.recentItems;
+    AsyncValue<HomeModel> model = ref.watch(Providers.homeControllerProvider);
+    final CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
+    final Language language =
+        ref.watch(Providers.settingsControllerProvider).language;
+
     return Scaffold(
-      appBar: const CupertinoNavigationBar(
-        middle: Text('Home'),
-      ),
-      backgroundColor: CupertinoTheme.of(context).scaffoldBackgroundColor,
+      backgroundColor: theme.backgroundColor,
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(right: 10.0, bottom: 15.0),
         child: FloatingActionButton(
-          foregroundColor: CupertinoTheme.of(context).primaryContrastingColor,
-          backgroundColor: CupertinoTheme.of(context).primaryColor,
-          onPressed: () => Routers.globalRouterDelegate.beamToNamed('/camera'),
+          backgroundColor: theme.accentColor,
+          onPressed: () => ref
+              .read(Providers.takePictureControllerProvider(null).notifier)
+              .takePicture(ref),
           heroTag: cameraButtonHeroTag,
           child: const Icon(
             CupertinoIcons.camera,
@@ -42,81 +44,83 @@ class HomeScreen extends ConsumerWidget {
           ),
         ),
       ),
-      body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            ConstrainedBox(
-              constraints: BoxConstraints(
-                  maxHeight: MediaQuery.of(context).size.height / 4),
-              child: Padding(
-                padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
-                child: FlutterCarousel(
-                  items: eventCards,
-                  options: CarouselOptions(
-                    initialPage: 0,
-                    enableInfiniteScroll: true,
-                    enlargeCenterPage: true,
-                    showIndicator: true,
-                    slideIndicator: CircularWaveSlideIndicator(
-                      currentIndicatorColor: CupertinoDynamicColor.resolve(
-                          CupertinoColors.activeBlue, context),
-                      indicatorBackgroundColor: CupertinoDynamicColor.resolve(
-                          CupertinoColors.systemGrey3, context),
+      body: CustomScrollView(
+        slivers: [
+          CupertinoSliverNavigationBar(
+            backgroundColor: theme.navBarColor,
+            largeTitle: Text(language.titleHome),
+            trailing: const ProfilesButton(),
+          ),
+          AsyncSliverListBuilder(
+            future: model.whenData((m) => m.events),
+            loading: () => const SliverActivityIndicator(
+              padding: EdgeInsets.only(
+                top: 60.0,
+                bottom: 60.0,
+              ),
+            ),
+            empty: (emptyMessage) => SliverNoElementsMessage(
+              message: emptyMessage,
+              minPadding: 50.0,
+            ),
+            success: (events) => SliverToBoxAdapter(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxHeight: 180),
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+                  child: FlutterCarousel(
+                    items:
+                        events.map((event) => EventCard(event: event)).toList(),
+                    options: CarouselOptions(
+                      initialPage: 0,
+                      enableInfiniteScroll: events.length > 1,
+                      enlargeCenterPage: true,
+                      showIndicator: true,
+                      slideIndicator: CircularWaveSlideIndicator(
+                        currentIndicatorColor: theme.accentColor,
+                        indicatorBackgroundColor: theme.groupingColor,
+                      ),
+                      viewportFraction: 0.85,
+                      height: double.infinity,
                     ),
-                    viewportFraction: 0.85,
-                    height: double.infinity,
                   ),
                 ),
               ),
             ),
-            Expanded(
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  color: CupertinoDynamicColor.resolve(
-                      CupertinoColors.systemGrey6, context),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Padding(
-                      padding:
-                          EdgeInsets.only(left: 20.0, top: 20.0, bottom: 5.0),
-                      child: Text(
-                        'Frequently Used',
-                        style: TextStyle(
-                            fontSize: 16, color: CupertinoColors.systemGrey),
-                      ),
-                    ),
-                    Expanded(
-                      child: Container(
-                        margin: const EdgeInsets.only(
-                            left: 20.0, right: 20.0, bottom: 10),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(25),
-                          color: CupertinoTheme.of(context)
-                              .scaffoldBackgroundColor,
-                        ),
-                        child: DocumentCardContainerList(
-                          items: documentCards,
-                          showFavoriteButton: false,
-                        ),
-                      ),
-                    ),
-                  ],
+            emptyMessage: language.infoNoEventsYet,
+            errorMessage: language.errLoadEvents,
+            onNullMessage: language.errLoadEvents,
+            errorMessagesPadding: 40.0,
+          ),
+          SliverAppBar(
+            pinned: true,
+            toolbarHeight: 20.0,
+            backgroundColor: theme.groupingColor,
+            flexibleSpace: FlexibleSpaceBar(
+              titlePadding: const EdgeInsets.only(left: 20.0, bottom: 10.0),
+              title: Text(
+                language.lblFrequentlyUsed,
+                style: TextStyle(
+                  fontSize: 18,
+                  color: theme.textColor,
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+          AsyncSliverListBuilder(
+            future: model.whenData((m) => m.recentItems),
+            success: (recentItems) => DocumentCardContainerList(
+              items: recentItems,
+              showFavoriteButton: false,
+            ),
+            emptyMessage: language.infoNoItemsYet,
+            errorMessage: language.errLoadRecentItems,
+            onNullMessage: language.errLoadRecentItems,
+          )
+        ],
       ),
     );
   }
 }
 
-abstract class HomeController extends StateNotifier<HomeModel> {
-  HomeController(HomeModel state) : super(state);
-
-  List<ItemEvent> get events => state.events;
-  List<SingleItem> get recentItems => state.recentItems;
-}
+abstract class HomeController extends AutoDisposeAsyncNotifier<HomeModel> {}

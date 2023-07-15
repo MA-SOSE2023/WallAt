@@ -1,9 +1,16 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/cupertino.dart';
 
+import '/pages/profiles/profiles_view.dart';
+import '/pages/settings/settings_view.dart';
+import '/pages/camera/camera_view.dart';
+import '/pages/single_item/move_to_folder_view.dart';
+import '/pages/single_item/model/single_item.dart';
 import '/pages/single_item/single_item_view.dart';
 import '/common/custom_widgets/all_custom_widgets.dart'
     show CustomBottomNavBarScreen;
+
+import '/splash_screen.dart';
 
 class GlobalLocation extends BeamLocation<BeamState> {
   // The previous location needs to be handled manually, because otherwise
@@ -13,20 +20,22 @@ class GlobalLocation extends BeamLocation<BeamState> {
   @override
   List<String> get pathPatterns => [
         '/home',
+        '/splash',
         '/favorites',
         '/folders',
-        '/camera',
+        '/camera/view',
         '/settings',
         '/profiles',
-        '/item/:id',
+        '/item',
+        '/item/move',
       ];
 
   @override
   void updateState(RouteInformation routeInformation) {
     if (routeInformation.location != '/settings' &&
-        routeInformation.location != '/camera' &&
         routeInformation.location != '/profiles' &&
-        !(routeInformation.location ?? '').startsWith('/item')) {
+        !(routeInformation.location?.startsWith('/camera') ?? false) &&
+        !(routeInformation.location?.startsWith('/item') ?? false)) {
       prevNavBarLocation = routeInformation.location;
     }
     super.updateState(routeInformation);
@@ -39,21 +48,20 @@ class GlobalLocation extends BeamLocation<BeamState> {
           type: BeamPageType.noTransition,
           child: CustomBottomNavBarScreen(),
         ),
+        if (state.routeInformation.location == '/splash')
+          const BeamPage(
+            key: ValueKey('splash'),
+            title: 'Splash',
+            type: BeamPageType.cupertino,
+            child: SplashScreen(),
+          ),
         if (state.routeInformation.location == '/settings')
           BeamPage(
             key: const ValueKey('settings'),
             title: 'Settings',
             type: BeamPageType.cupertino,
             popToNamed: prevNavBarLocation,
-            child: Placeholder(), // TODO: Settings Screen
-          ),
-        if (state.routeInformation.location == '/camera')
-          BeamPage(
-            key: const ValueKey('camera'),
-            title: 'Camera',
-            type: BeamPageType.cupertino,
-            popToNamed: prevNavBarLocation,
-            child: Placeholder(), // TODO: Camera Screen
+            child: const SettingsPage(),
           ),
         if (state.routeInformation.location == '/profiles')
           BeamPage(
@@ -61,15 +69,31 @@ class GlobalLocation extends BeamLocation<BeamState> {
             title: 'Profiles',
             type: BeamPageType.cupertino,
             popToNamed: prevNavBarLocation,
-            child: Placeholder(), // TODO: Profiles Screen
+            child: const ProfilesPage(),
           ),
-        if ((state.routeInformation.location ?? '').startsWith('/item'))
+        if (state.routeInformation.location == '/camera/view')
+          BeamPage(
+              key: const ValueKey('camera_view'),
+              title: 'Camera View',
+              type: BeamPageType.cupertino,
+              popToNamed: prevNavBarLocation,
+              child: SaveItemScreen(item: data as Future<SingleItem?>)),
+        if (state.routeInformation.location?.startsWith('/item') ?? false) ...[
           BeamPage(
             key: const ValueKey('item'),
             title: 'Item',
             type: BeamPageType.cupertino,
             popToNamed: prevNavBarLocation,
-            child: SingleItemPage(id: state.pathParameters['id']!),
+            child: SingleItemPage(item: data as SingleItem),
           ),
+          if (state.routeInformation.location == '/item/move')
+            BeamPage(
+              key: const ValueKey('item_move'),
+              title: 'Move Item',
+              type: BeamPageType.cupertino,
+              popToNamed: prevNavBarLocation,
+              child: MoveToFolderScreen(item: data as SingleItem, folder: null),
+            ),
+        ]
       ];
 }

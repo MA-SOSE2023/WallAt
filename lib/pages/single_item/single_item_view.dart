@@ -1,119 +1,165 @@
+import 'package:beamer/beamer.dart';
+import 'package:device_calendar/device_calendar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_share/social_share.dart';
 
 import 'full_screen_image_view.dart';
 import 'edit_single_item_view.dart';
 import 'model/single_item.dart';
 import 'model/item_event.dart';
 import '/common/provider.dart';
-import '/common/custom_widgets/all_custom_widgets.dart' show EventsContainer;
+import '/common/localization/language.dart';
+import '/common/theme/custom_theme_data.dart';
+import '/common/custom_widgets/all_custom_widgets.dart'
+    show EventsContainer, AsyncOptionBuilder;
 
 String singleItemHeroTag(String id) {
   return "single_item_image$id";
 }
 
 class SingleItemPage extends ConsumerWidget {
-  const SingleItemPage({required String id, Key? key})
-      : _id = id,
+  const SingleItemPage({required SingleItem item, Key? key})
+      : _item = item,
         super(key: key);
 
-  final String _id;
+  final SingleItem _item;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final SingleItem item =
-        ref.watch(Providers.singleItemControllerProvider(_id));
-    final SingleItemController controller =
-        ref.read(Providers.singleItemControllerProvider(_id).notifier);
-    return CupertinoPageScaffold(
-      navigationBar: CupertinoNavigationBar(
-        middle: Text(item.title),
-      ),
-      child: SafeArea(
-        child: Stack(
-          children: [
-            ListView(
-              children: [
-                SizedBox(
-                  height: MediaQuery.of(context).size.height /
-                      2, // Set the height to half the screen height
-                  child: Hero(
-                    tag: singleItemHeroTag(_id),
-                    child: PictureContainer(
-                      image: controller.getImage().image,
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          CupertinoPageRoute(
-                            builder: (context) => FullScreenImagePage(
-                              itemId: _id,
-                              imageProvider: controller.getImage().image,
+    final AsyncValue<SingleItem?> item =
+        ref.watch(Providers.singleItemControllerProvider(_item.id));
+    final CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
+    final Language language =
+        ref.watch(Providers.settingsControllerProvider).language;
+
+    return AsyncOptionBuilder(
+      future: item,
+      initialData: _item,
+      loading: () => const Align(
+          alignment: Alignment.center, child: CupertinoActivityIndicator()),
+      error: (_) => Align(
+          alignment: Alignment.center, child: Text(language.errGenericLoad)),
+      success: (item) => CupertinoPageScaffold(
+        backgroundColor: theme.backgroundColor,
+        child: SafeArea(
+          child: Stack(
+            children: [
+              CustomScrollView(
+                slivers: [
+                  SliverAppBar(
+                    titleSpacing: 10,
+                    pinned: true,
+                    stretch: true,
+                    leading: CupertinoNavigationBarBackButton(
+                      onPressed: () => context.beamBack(),
+                    ),
+                    backgroundColor: theme.navBarColor,
+                    expandedHeight: MediaQuery.of(context).size.height / 1.5,
+                    flexibleSpace: FlexibleSpaceBar(
+                      title: Row(children: [
+                        Expanded(
+                          child: Container(
+                            padding: const EdgeInsets.only(right: 20),
+                            child: Text(
+                              textAlign: TextAlign.left,
+                              style: const TextStyle(
+                                color: Colors.white,
+                              ),
+                              item.title,
                             ),
-                            fullscreenDialog: true,
                           ),
-                        );
-                      },
+                        ),
+                      ]),
+                      background: GestureDetector(
+                        child: Stack(
+                          children: [
+                            Hero(
+                              tag: singleItemHeroTag(item.id.toString()),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: item.image,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              decoration: const BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [
+                                    Color.fromARGB(255, 50, 50, 50),
+                                    Color.fromARGB(0, 0, 0, 0),
+                                  ],
+                                  begin: Alignment.bottomCenter,
+                                  end: Alignment.topCenter,
+                                  stops: [0.0, 0.3],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            CupertinoPageRoute(
+                              fullscreenDialog: true,
+                              builder: (context) => FullScreenImagePage(
+                                itemId: item.id,
+                                imageProvider: item.image,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 20, right: 20),
-                    child: InfoContainer(
-                      text: item.description,
-                    ),
-                  ),
-                ),
-                Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Container(
+                  SliverPadding(
+                    padding:
+                        const EdgeInsets.only(left: 20, right: 20, top: 20),
+                    sliver: SliverToBoxAdapter(
+                      child: Container(
                         decoration: BoxDecoration(
-                          color: Colors.grey[200],
+                          color: theme.groupingColor,
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child: EventsContainer(id: _id, editable: false))),
-              ],
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Container(
-                color: CupertinoTheme.of(context).barBackgroundColor,
-                padding: const EdgeInsets.only(left: 20, right: 20),
-                child: ActionButtons(itemId: _id, controller: controller),
+                        child: _InfoContainer(
+                          text: item.description,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SliverPadding(
+                    padding: const EdgeInsets.all(20.0),
+                    sliver: SliverToBoxAdapter(
+                      child: Container(
+                          decoration: BoxDecoration(
+                            color: theme.groupingColor,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: EventsContainer(item: item, editable: false)),
+                    ),
+                  ),
+                  // Empty box at the bottom to make sure you can scroll the
+                  // events above the bottom bar
+                  const SliverPadding(
+                      padding: EdgeInsets.only(bottom: 60),
+                      sliver: SliverToBoxAdapter(
+                        child: SizedBox(height: 10),
+                      )),
+                ],
               ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class PictureContainer extends StatelessWidget {
-  const PictureContainer({
-    Key? key,
-    required this.image,
-    required this.onTap,
-  }) : super(key: key);
-
-  final ImageProvider image;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          decoration: BoxDecoration(
-            border: Border.all(color: CupertinoTheme.of(context).primaryColor),
-            borderRadius: BorderRadius.circular(10),
-            image: DecorationImage(
-              image: image,
-              fit: BoxFit.cover,
-            ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  color: theme.navBarColor,
+                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  child: _ActionButtons(itemId: item.id),
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -121,8 +167,8 @@ class PictureContainer extends StatelessWidget {
   }
 }
 
-class InfoContainer extends StatelessWidget {
-  const InfoContainer({Key? key, required this.text}) : super(key: key);
+class _InfoContainer extends StatelessWidget {
+  const _InfoContainer({Key? key, required this.text}) : super(key: key);
 
   final String text;
 
@@ -130,10 +176,6 @@ class InfoContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: MediaQuery.of(context).size.height / 12,
-      decoration: BoxDecoration(
-        color: Colors.grey[200],
-        borderRadius: BorderRadius.circular(10),
-      ),
       padding: const EdgeInsets.all(10.0),
       child: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
@@ -153,93 +195,86 @@ class InfoContainer extends StatelessWidget {
   }
 }
 
-class ActionButtons extends ConsumerWidget {
-  const ActionButtons(
-      {Key? key, required this.itemId, required this.controller})
-      : super(key: key);
+class _ActionButtons extends ConsumerWidget {
+  const _ActionButtons({Key? key, required this.itemId}) : super(key: key);
 
-  final String itemId;
-  final SingleItemController controller;
+  final int itemId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        _buildActionButton(
-          onPressed: () {
-            // Handle share button logic
-          },
-          icon: CupertinoIcons.share, // Use the Cupertino icon
-        ),
-        _buildActionButton(
-          onPressed: () {
-            showModalBottomSheet(
-              context: context,
-              isScrollControlled: true,
-              backgroundColor: Colors.transparent,
-              builder: (context) => EditSingleItemPage(id: itemId),
-            );
-          },
-          icon: CupertinoIcons.slider_horizontal_3, // Use the Cupertino icon
-        ),
-        _buildActionButton(
-          onPressed: () {
-            // Handle delete button logic
-          },
-          icon: CupertinoIcons.delete, // Use the Cupertino icon
-        ),
-        _buildActionButton(
-          onPressed: () {
-            controller.setFavorite();
-          },
-          icon: controller.getFavorite()
-              ? CupertinoIcons.heart_fill
-              : CupertinoIcons.heart, // Use the Cupertino icon
-        ),
-      ],
-    );
-  }
-
-  Widget _buildActionButton({
-    required VoidCallback onPressed,
-    required IconData icon,
-  }) {
-    return CupertinoButton(
-      onPressed: onPressed,
-      child: Icon(icon),
+    final AsyncValue<SingleItem?> item =
+        ref.watch(Providers.singleItemControllerProvider(itemId));
+    final SingleItemController controller =
+        ref.read(Providers.singleItemControllerProvider(itemId).notifier);
+    return AsyncOptionBuilder(
+      future: item,
+      success: (item) => Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          CupertinoButton(
+            onPressed: () {
+              SocialShare.shareOptions(
+                item.title,
+                imagePath: (item.image as FileImage).file.path,
+              );
+            },
+            child: const Icon(CupertinoIcons.share),
+          ),
+          CupertinoButton(
+            onPressed: () {
+              showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                backgroundColor: Colors.transparent,
+                builder: (context) => EditSingleItemPage(singleItem: item),
+              );
+            },
+            child: const Icon(
+                CupertinoIcons.slider_horizontal_3), // Use the Cupertino icon
+          ),
+          CupertinoButton(
+            onPressed: () {
+              controller.deleteItem();
+              context.beamBack();
+            },
+            child: const Icon(CupertinoIcons.delete), // Use the Cupertino icon
+          ),
+          CupertinoButton(
+            onPressed: () {
+              controller.toggleFavorite();
+            },
+            child: Icon(item.isFavorite
+                ? CupertinoIcons.heart_fill
+                : CupertinoIcons.heart), // Use the Cupertino icon
+          ),
+        ],
+      ),
     );
   }
 }
 
-abstract class SingleItemController extends StateNotifier<SingleItem> {
-  SingleItemController(SingleItem state) : super(state);
+abstract class SingleItemController
+    extends AutoDisposeFamilyAsyncNotifier<SingleItem?, int>
+    implements SingleItemControllerInterface {
+  Future<void> updateItem(SingleItem item);
+}
 
-  Image getImage();
+abstract class SingleItemControllerInterface {
+  Future<void> setImage(ImageProvider image);
 
-  void setImage(Image image);
+  Future<void> setDescription(String description);
 
-  String getDescription();
+  Future<void> setTitle(String title);
 
-  void setDescription(String description);
+  Future<void> addEvent({required Event event, required int parentId});
 
-  String getTitle();
+  Future<void> removeEvent(ItemEvent event);
 
-  void setTitle(String title);
+  Future<void> removeEvents(List<ItemEvent> events);
 
-  void addEvent(ItemEvent event);
+  Future<void> deleteItem();
 
-  List<ItemEvent> getEvents();
+  Future<void> toggleFavorite();
 
-  void removeEvent(ItemEvent event);
-
-  void setCurrentDate(DateTime date);
-
-  DateTime? getCurrentDate();
-
-  bool getFavorite();
-
-  void setFavorite();
-
-  void navigateToThisItem();
+  Future<void> navigateToThisItem();
 }

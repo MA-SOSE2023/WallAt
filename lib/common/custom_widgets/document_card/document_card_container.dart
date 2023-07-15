@@ -1,9 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'document_card.dart';
-import '/common/provider.dart';
 import '/pages/single_item/model/single_item.dart';
+import '/common/provider.dart';
+import '/common/localization/language.dart';
+import '/common/theme/custom_theme_data.dart';
+import '/common/custom_widgets/all_custom_widgets.dart'
+    show AsyncOptionBuilder, DocumentCard;
 
 class DocumentCardContainer extends ConsumerWidget {
   const DocumentCardContainer({
@@ -36,32 +39,44 @@ class DocumentCardContainer extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final AsyncValue<SingleItem?> itemFuture =
+        ref.watch(Providers.singleItemControllerProvider(_item.id));
+    final CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
+    final Language language =
+        ref.watch(Providers.settingsControllerProvider).language;
+    Widget documentCardRow(SingleItem item) => Row(
+          children: [
+            Expanded(child: DocumentCard(item: item)),
+            if (_showFavoriteButton)
+              CupertinoButton(
+                onPressed: ref
+                    .read(Providers.singleItemControllerProvider(item.id)
+                        .notifier)
+                    .toggleFavorite,
+                child: Icon(item.isFavorite
+                    ? CupertinoIcons.heart_fill
+                    : CupertinoIcons.heart),
+              ),
+          ],
+        );
+
     return DecoratedBox(
       decoration: _containerDeco ??
           BoxDecoration(
-            color: _backgroundColor ??
-                CupertinoTheme.of(context).scaffoldBackgroundColor,
+            color: _backgroundColor ?? theme.backgroundColor,
             borderRadius: BorderRadius.circular(25),
             border: Border.all(
-              color:
-                  CupertinoDynamicColor.resolve(CupertinoColors.label, context),
+              color: theme.groupingColor,
               width: 1,
             ),
           ),
-      child: Row(
-        children: [
-          Expanded(child: DocumentCard(item: _item)),
-          if (_showFavoriteButton)
-            CupertinoButton(
-              onPressed: ref
-                  .read(
-                      Providers.singleItemControllerProvider(_item.id).notifier)
-                  .setFavorite,
-              child: Icon(_item.isFavorite
-                  ? CupertinoIcons.heart_fill
-                  : CupertinoIcons.heart),
-            ),
-        ],
+      child: AsyncOptionBuilder(
+        future: itemFuture,
+        initialData: _item,
+        loading: () => DocumentCard(item: _item),
+        onNull: () => DocumentCard(item: SingleItem.placeholder(id: _item.id)),
+        error: (_) => DocumentCard(item: SingleItem.error(language)),
+        success: (item) => documentCardRow(item),
       ),
     );
   }

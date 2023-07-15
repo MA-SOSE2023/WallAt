@@ -1,21 +1,22 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '/common/localization/language.dart';
 import '/common/provider.dart';
+import '/common/theme/custom_theme_data.dart';
 import '/common/custom_widgets/all_custom_widgets.dart'
     show
         DocumentCardContainerList,
         CameraButtonHeroDestination,
         SearchBarContainer,
-        NoElementsMessage,
-        ErrorMessage;
+        FutureSliverListBuilder,
+        ProfilesButton;
+
 import '/pages/single_item/model/single_item.dart';
 
 class FavoritesScreen extends ConsumerStatefulWidget {
-  const FavoritesScreen({bool borderlessCards = true, super.key})
-      : _borderlessCards = borderlessCards;
-
-  final bool _borderlessCards;
+  const FavoritesScreen({super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -33,63 +34,51 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    AsyncValue<List<SingleItem>> favoritesFuture =
-        ref.watch(Providers.favoritesControllerProvider);
+    Future<List<SingleItem>> favoritesFuture = ref
+        .watch(Providers.favoritesControllerProvider.notifier)
+        .filterFavorites(searchString);
+
+    final Language language =
+        ref.watch(Providers.settingsControllerProvider).language;
+    final CustomThemeData theme = ref.watch(Providers.themeControllerProvider);
 
     final emptyListMessage = searchString.isEmpty
-        ? 'No favorites yet.\nTry adding some by tapping the heart icon.'
-        : 'No items found for "$searchString".';
-
-    final AsyncValue<List<SingleItem>> filterFavoritesFuture =
-        favoritesFuture.whenData(
-      (favorites) {
-        if (searchString.isEmpty) {
-          return favorites;
-        } else {
-          return favorites
-              .where((item) =>
-                  item.title.toLowerCase().contains(searchString.toLowerCase()))
-              .toList();
-        }
-      },
-    );
-
-    final Widget body = filterFavoritesFuture.when(
-      error: (object, stackTrace) => favoritesFuture.hasError
-          ? const ErrorMessage()
-          : const ErrorMessage(message: 'Filter could not be applied'),
-      loading: () => const CupertinoActivityIndicator(),
-      data: (filteredFavorites) => filteredFavorites.isNotEmpty
-          ? DocumentCardContainerList(
-              items: filteredFavorites,
-              borderlessCards: widget._borderlessCards)
-          : NoElementsMessage(message: emptyListMessage),
-    );
+        ? language.infoFavoritesEmpty
+        : '${language.infoNoItemsFoundForFilter} "$searchString".';
 
     return CupertinoPageScaffold(
-      navigationBar: const CupertinoNavigationBar(
-        middle: Text('Favorites'),
-      ),
+      backgroundColor: theme.backgroundColor,
       child: Stack(
         children: [
-          SafeArea(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                maxHeight: MediaQuery.of(context).size.height,
+          CustomScrollView(
+            slivers: [
+              CupertinoSliverNavigationBar(
+                backgroundColor: theme.navBarColor,
+                largeTitle: Text(language.titleFavorites),
+                trailing: const ProfilesButton(),
               ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(child: filterFavoritesFuture.hasValue ? body : body),
-                  // Search bar for filtering items
-                  SearchBarContainer(onChanged: (text) {
-                    setState(() {
-                      searchString = text;
-                    });
-                  }),
-                ],
+              SliverAppBar(
+                pinned: true,
+                flexibleSpace: FlexibleSpaceBar(
+                  background: SearchBarContainer(
+                    onChanged: (text) {
+                      setState(() {
+                        searchString = text;
+                      });
+                    },
+                  ),
+                ),
+                toolbarHeight: 35.0,
               ),
-            ),
+              FutureSliverListBuilder(
+                future: favoritesFuture,
+                success: (favorites) => DocumentCardContainerList(
+                    items: favorites, borderlessCards: true),
+                emptyMessage: emptyListMessage,
+                errorMessage: language.errApplyFilter,
+                errorMessagesPadding: 25,
+              )
+            ],
           ),
           const CameraButtonHeroDestination(),
         ],
@@ -98,8 +87,11 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
   }
 }
 
-abstract class FavoritesController extends StateNotifier<List<SingleItem>> {
-  FavoritesController(List<SingleItem> state) : super(state);
+abstract class FavoritesController
+    extends StateNotifier<Future<List<SingleItem>>> {
+  FavoritesController(Future<List<SingleItem>> state) : super(state);
 
-  List<SingleItem> get favorites;
+  Future<List<SingleItem>> get favorites;
+
+  Future<List<SingleItem>> filterFavorites(String searchString);
 }
