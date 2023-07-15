@@ -1,6 +1,9 @@
 <img align="left" src="doc/figures/logo.png" width="80px">
-# $\textcolor{lightskyblue}{\textsf{    Wall@}}$ 
+
+#  Wall@
+ 
 <br clear="left"/>
+
 
 ***
 Add badges
