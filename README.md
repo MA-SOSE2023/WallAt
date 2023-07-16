@@ -5,37 +5,29 @@ Add badges when repo is published
 
 ***
 
-Wall@ ist eine innovative mobile App, die das Scannen und Verwalten von Dokumenten auf deinem Smartphone revolutioniert. Mit unserer benutzerfreundlichen und leistungsstarken Anwendung kannst du Dokumente wie Quittungen, Rechnungen, Ausweise und andere wichtige Unterlagen ganz einfach erfassen, speichern und jederzeit griffbereit haben.
+Wall@ is an innovative mobile app that revolutionizes the way you scan and manage documents on your smartphone. With our easy-to-use and powerful app, you can easily capture, store, and keep documents like receipts, invoices, IDs, and other important documents at your fingertips.
 
+## Functions
 
-## Funktionen
-- Dokumentenscanner: Nutze die Kamera deines Smartphones, um Dokumente in hoher Qualität zu scannen und als digitale Versionen zu speichern.
-- Sicherer digitaler Geldbeutel: Verwahre deine gescannten Dokumente sicher und organisiert an einem Ort, immer griffbereit und jederzeit abrufbar.
-- Intuitive Benutzeroberfläche: Eine einfache und ansprechende Benutzeroberfläche ermöglicht eine reibungslose Navigation und eine mühelose Bedienung der App
-- Plattformübergreifende Kompatibilität: Wall@ läuft nahtlos auf iOS- und Android-Geräten und bietet eine konsistente Benutzererfahrung auf beiden Plattformen.
+- Document scanner: Use your smartphone's camera to scan high-quality documents and save them as digital versions.
+- Secure digital wallet: Keep your scanned documents safe and organized in one place, always at hand and always accessible.
+- Intuitive user interface: A simple and engaging user interface allows for smooth navigation and effortless operation of the app
+- Cross-platform compatibility: Wall@ runs seamlessly on iOS and Android devices, providing a consistent user experience across both platforms.
 
 ## Installation
 
 Add current installation instructions here.
 
-## Feedback und Unterstützung
+## Feedback and support
 
-Wir freuen uns über dein Feedback! Bei Fragen, Anregungen oder Problemen steht wir gerne zur Verfügung.
+We are happy about your feedback! If you have any questions, suggestions or problems, please do not hesitate to contact us.
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+## Documentation
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+Find the latest documentation (only availabe in German) [here](/doc/MA-Doc-Gruppe4.pdf) .
 
 ## Usage
 Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
 
 ## Roadmap
 If you have ideas for releases in the future, it is a good idea to list them in the README.
