@@ -1,8 +1,24 @@
-\section{Verweis auf MVC+S (Persistenz als Service)}
+\section{Isar}
 
+Daten werden mithilfe von Isar persistiert. In Bild \ref{img:erm} ist ein ERM-Diagramm der Datenbank abgebildet.
+Auch wenn innerhalb der Zugriffe auf Isar mit speziellen Datenklassen gearbeitet wird, wandeln die DAOs diese beim Zugriff in die
+Model-Klassen der MVC-Schicht um. So werden zum Beispiel die Events direkt in die enthaltene Liste der \verb|SingleItem|-Klasse eingefügt und nicht seperat angefragt.
 
-\section{Isar Db}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{figures/persistenz_erm.png}
+  \caption{Persistenz ERM Diagram}
+  \label{img:erm}
+\end{figure}
 
+Eine technische Besonderheit sind die Profile. Profile erlauben dem Nutzer, Daten noch einmal grober zu kategorisieren als Ordner.
+Um dies umzusetzen, verwaltet Isar ebenfalls eine Tabelle für Profile. Jeder andere Eintrag der Datenbank wird dann einem Profil zugeordnet.
+Die Besonderheit besteht darin, dass beim erstmaligen Starten der App ein Standard-Profil angelegt wird, welches zudem als eine globale Sicht fungiert.
+Das bedeutet, wenn ein Nutzer weitere Profile anlegt und mit Daten füllt, sind diese Daten auch über das Standard-Profil sichtbar.
+Zudem funktioniert die App auch ohne weitere Profile und es ändert sich nichts an der Nutzung, wenn ein Nutzer keine Profile erstellen möchte.
+
+Funktionalitäten zum Verschieben von Inhalten zwischen Profilen aber auch zwischen Ordnern sind im Backend bereits implementiert, allerdings sind diese noch
+nicht über die View zugreifbar.
 
 \section{Shared Preferences für Settings}
 
