@@ -1,7 +1,8 @@
-# ![](/doc/figures/header_gif.gif)
+# ![](/assets/dev_debug_images/splash_gif_small.gif) ![](/doc/figures/header_text.png)
 
-***
+
 Add badges when repo is published
+
 ***
 
 Wall@ ist eine innovative mobile App, die das Scannen und Verwalten von Dokumenten auf deinem Smartphone revolutioniert. Mit unserer benutzerfreundlichen und leistungsstarken Anwendung kannst du Dokumente wie Quittungen, Rechnungen, Ausweise und andere wichtige Unterlagen ganz einfach erfassen, speichern und jederzeit griffbereit haben.
