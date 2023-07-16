@@ -15,15 +15,9 @@
 
 % chapter headers format
 \usepackage{titlesec}
-\titleformat{\chapter}
-  {\normalfont\bfseries\Huge}{\thechapter}{22pt}{\Huge}
-
-\makeatletter
-\let\my@chapter\@chapter
-\renewcommand*{\@chapter}{%
-  \addtocontents{lol}{\protect\addvspace{10pt}}%
-  \my@chapter}
-\makeatother
+\titleformat{\chapter}[hang]{\normalfont\bfseries\Huge}{\thechapter}{0.5em}{\Huge}
+\titlespacing{\chapter}{0pt}{-50pt}{20pt}
+  
 
 % acronyms
 \usepackage{array}
