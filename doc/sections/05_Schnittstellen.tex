@@ -1,1 +1,44 @@
 \section{Kamera via Package}
+
+Bei der Entwicklung von Wall@ war es erforderlich, ein Kamera-Paket in die App zu integrieren, um die Funktionalität des Dokumentenscanners zu ermöglichen. 
+Nach einer gründlichen Evaluierung wurden die folgenden drei verschiedene Kamera-Pakete untersucht, um die Anforderungen unserer App zu erfüllen.
+\newline
+\newline
+\begin{tabular}{|l|>{\raggedright\arraybackslash}p{0.2\linewidth}|>{\raggedright\arraybackslash}p{0.3\linewidth}|}
+  \hline
+  Package & Feature & Problem \\
+  \hline
+  \href{https://pub.dev/packages/flutter_document_scanner}{flutter\_document\_scanner} & Auto Crop, Manuel Crop, ScannLook & compiling errors \\
+  \hline
+  \href{https://pub.dev/documentation/document_scanner_flutter/latest/}{document\_scanner\_flutter} & Auto Crop, Manuel Crop, ScannLook, pdf conv. & depends on photo\_view package 0.12.0 \\
+  \hline
+  \href{https://pub.dev/packages/cunning_document_scanner}{cunning\_document\_scanner} & Auto Crop, Manuel Crop & - \\
+  \hline
+\end{tabular}
+\newline
+\newline
+\newline
+Ursprünglich hatten wir uns für das zweite Kamera-Paket entschieden, das unsere Anforderungen optimal erfüllte. 
+Jedoch ist dieses Paket nicht mit Dart 3 kompatibel, was zu Kompatibilitätsproblemen und potenziellen Einschränkungen 
+bei der Weiterentwicklung führen könnte.
+\newline
+\newline
+Um dieses Problem zu lösen, wurde ein Issue auf dem Entwickler-Git des bevorzugten Kamera-Pakets erstellt 
+(siehe \href{https://github.com/ishaquehassan/document_scanner_flutter/issues/33}{Issue on GitHub}) und das Problem kommuniziert. 
+In der Zwischenzeit haben wir uns für ein alternatives Kamera-Paket entschieden, das mit Dart 3 kompatibel ist und 
+unsere grundlegenden Anforderungen erfüllt.
+Durch die Nutzung des letzten Packet wurde die Funktionalität des Dokumentenscanners in Wall@ implementiert.
+Es ist somit möglich Bilder mittels der Kamera von Dokumenten aufzunehmen wobei die Ränder automatisch erkannt werden 
+und das Bild entsprechend zugeschnitten wird.
+\newline
+\newline
+Langfristig planen wir jedoch, eine eigene Lösung für den Dokumentenscanner in Wall@ zu entwickeln. 
+Dies ermöglicht uns eine maßgeschneiderte Implementierung, die besser auf die spezifischen Anforderungen und 
+zukünftigen Erweiterungen unserer App abgestimmt ist. 
+Die Entwicklung einer eigenen Lösung wird es uns auch ermöglichen, 
+volle Kontrolle über die Funktionalität und die Integration in den Rest der App zu haben.
+\newline
+\newline
+In diesem Zuge soll auch die Funktionalität des Dokumentenscanners erweitert werden, so dass Bilder nicht nur als 
+Bild, sondern auch als PDF gespeichert werden können und diese mittels Filter bearbeitet werden können so dass 
+z.B.: Probleme mit der Belichtung oder dem Kontrast behoben werden können.
