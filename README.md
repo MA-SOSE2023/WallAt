@@ -1,4 +1,4 @@
-# ![](/doc/figures/header.png)
+# ![](/doc/figures/header_gif.gif)
 
 ***
 Add badges when repo is published
