@@ -1,43 +1,58 @@
 \section{Cupertino-Widgets}
+Unser Flutter-Projekt verwendet Cupertino-Widgets und setzt adaptive Design-Techniken ein, um eine Benutzeroberfläche zu erstellen, 
+die den Design-Mustern von Apple-Anwendungen ähnelt.
 
-Unser Flutter-Projekt verwendet Cupertino-Widgets und setzt adaptive Design-Techniken ein, um eine Benutzeroberfläche zu erstellen, die den Design-Mustern von Apple-Anwendungen ähnelt.
-
-Cupertino-Widgets sind eine Reihe von UI-Komponenten, die vom Flutter-Framework bereitgestellt werden und die visuellen und verhaltensbezogenen Eigenschaften von iOS-Anwendungen nachahmen. Diese Widgets zeichnen sich durch das ikonische iOS-Design aus, einschließlich eines sauberen und minimalistischen Erscheinungsbilds mit abgerundeten Ecken und subtilen Animationen. Durch die Verwendung von Cupertino-Widgets stellen wir eine konsistente und vertraute Benutzererfahrung für iOS-Benutzer sicher und stimmen das Design unserer App auf das Apple-Ökosystem ab.
+Cupertino-Widgets sind UI-Komponenten, die vom Flutter-Framework bereitgestellt werden und das Aussehen und Verhalten von 
+iOS-Anwendungen in der Gegenwart widerspiegeln. Diese Widgets haben das ikonische Design von iOS, das sauber und minimalistisch ist, 
+mit abgerundeten Ecken und subtilen Animationen. Indem wir Cupertino-Widgets verwenden, stellen wir sicher, 
+dass unsere App eine konsistente und vertraute Benutzererfahrung für iOS-Benutzer bietet und das Design an das Apple-Ökosystem anpasst.
 
 \section{Adaptives Design mit MediaQuery und Slivers}
+Um die App an verschiedene Bildschirmgrößen und -ausrichtungen anzupassen, verwenden wir die MediaQuery-Klasse von Flutter. 
+MediaQuery ermöglicht es uns, Informationen über die aktuellen Bildschirmdimensionen, Pixeldichte und andere relevante Metriken des Geräts abzurufen. 
+Durch die Nutzung dieser Informationen passen wir das Layout und das Verhalten der UI-Komponenten unserer App 
+dynamisch an und stellen so eine optimale Benutzererfahrung auf verschiedenen Geräten sicher.
 
-Um die App an verschiedene Bildschirmgrößen und -ausrichtungen anzupassen, verwenden wir die MediaQuery-Klasse von Flutter. MediaQuery ermöglicht es uns, Informationen über die aktuellen Bildschirmdimensionen, Pixeldichte und andere relevante Metriken des Geräts abzurufen. Durch die Nutzung dieser Informationen passen wir das Layout und das Verhalten der UI-Komponenten unserer App dynamisch an und stellen so eine optimale Benutzererfahrung auf verschiedenen Geräten sicher.
+Mit MediaQuery können wir beispielsweise die verfügbare Bildschirmgröße ermitteln und das Layout entsprechend anpassen. 
+Wir können die Schriftgröße, den Abstand oder sogar die gesamte Struktur der Benutzeroberfläche basierend auf der Bildschirmgröße und -ausrichtung des Geräts anpassen. 
+Durch die Anpassung der Benutzeroberfläche an verschiedene Geräte stellen wir sicher, dass unsere App auf einer Vielzahl von Bildschirmen visuell ansprechend und funktional bleibt.
 
-Mit MediaQuery können wir beispielsweise die verfügbare Bildschirmgröße ermitteln und das Layout entsprechend anpassen. Wir können die Schriftgröße, den Abstand oder sogar die gesamte Struktur der Benutzeroberfläche basierend auf der Bildschirmgröße und -ausrichtung des Geräts anpassen. Durch die Anpassung der Benutzeroberfläche an verschiedene Geräte stellen wir sicher, dass unsere App auf einer Vielzahl von Bildschirmen visuell ansprechend und funktional bleibt.
-
-Zusätzlich zur MediaQuery nutzen wir Slivers, eine weitere leistungsstarke Funktion in Flutter, um adaptives Design zu erreichen. Slivers ermöglichen es uns, flexible und scrollbare Layouts zu erstellen, die sich automatisch an den verfügbaren Bildschirmplatz anpassen. Durch die Verwendung verschiedener Sliver-Widgets wie \texttt{SliverAppBar}, \texttt{SliverList} und \texttt{SliverGrid} können wir den Inhalt und die Struktur unserer App dynamisch anpassen, wenn der Benutzer scrollt oder sich die Ausrichtung des Geräts ändert.
+Zusätzlich zur MediaQuery nutzen wir Slivers, eine weitere leistungsstarke Funktion in Flutter, um adaptives Design zu erreichen. 
+Slivers ermöglichen es uns, flexible und scrollbare Layouts zu erstellen, die sich automatisch an den verfügbaren Bildschirmplatz anpassen. 
+Durch die Verwendung verschiedener Sliver-Widgets wie \texttt{SliverAppBar}, \texttt{SliverList} und \texttt{SliverGrid} können wir den Inhalt und die Struktur unserer App dynamisch anpassen, 
+wenn der Benutzer scrollt oder sich die Ausrichtung des Geräts ändert.
 
 \section{Animationen}
-
-In unserem Projekt haben wir Animationen genutzt, um eine lebendige und ansprechende Benutzererfahrung zu schaffen. Hier sind zwei wichtige Anwendungsfälle, in denen Animationen zum Einsatz kamen:
+In unserem Projekt nutzen wir Animationen, um eine lebendige und ansprechende Benutzererfahrung zu schaffen. 
+Hier sind zwei wichtige Anwendungsfälle, in denen Animationen zum Einsatz kommen:
 
 \subsection{Hero-Animation von Bildcontainern}
-
-Wir haben die "Hero-Animation" verwendet, um flüssige Übergänge zwischen Bildcontainern zu ermöglichen. Wenn ein Benutzer von der Ordneransicht in einen Einzeleintrag navigiert oder in der Einzelansicht das Bild im Vollbildmodus betrachtet, wird das Bild nahtlos von einem Container zum anderen animiert. Diese Animation sorgt für einen harmonischen und reibungslosen Übergang und verbessert die visuelle Kontinuität in unserer App.
+Wir nutzen die "Hero-Animation", um flüssige Übergänge zwischen Bildcontainern zu ermöglichen. 
+Wenn ein Benutzer von der Ordneransicht in einen Einzeleintrag navigiert oder in der Einzelansicht das Bild im Vollbildmodus betrachtet, 
+wird das Bild nahtlos von einem Container zum anderen animiert. 
+Diese Animation sorgt für einen harmonischen und reibungslosen Übergang und verbessert die visuelle Kontinuität in unserer App.
 
 \subsection{Animation des Kamera-Buttons}
+Um den Kamera-Button in unserer Home-Ansicht ansprechend zu positionieren, haben wir eine Animation implementiert, 
+bei der der Button über der Navigationsleiste schwebt. Dadurch wird der Button als zentrales Bedienelement hervorgehoben und ermöglicht 
+dem Benutzer einen schnellen Zugriff auf die Kamerafunktion.
 
-Um den Kamera-Button in unserer Home-Ansicht ansprechend zu positionieren, haben wir eine Animation implementiert, bei der der Button über der Navigationsleiste schwebt. Dadurch wird der Button als zentrales Bedienelement hervorgehoben und ermöglicht dem Benutzer einen schnellen Zugriff auf die Kamerafunktion.
-
-Bei einem Wechsel zu einer anderen Seite unserer App haben wir eine weitere Animation integriert. Der Kamera-Button bewegt sich sanft in die Navigationsleiste hinein und passt sich dem neuen Kontext an. Durch diese Animationstechnik schaffen wir einen nahtlosen Übergang und eine intuitive Benutzererfahrung.
-
-\newpage
+Bei einem Wechsel zu einer anderen Seite unserer App haben wir eine weitere Animation integriert. 
+Der Kamera-Button bewegt sich sanft in die Navigationsleiste hinein und passt sich dem neuen Kontext an. 
+Durch diese Animationstechnik schaffen wir einen nahtlosen Übergang und eine intuitive Benutzererfahrung.
 
 \section{Widgets der Woche}
-Im Rahmen unseres Projekts haben wir eine Reihe von Flutter-Widgets verwendet, die als "Widgets der Woche" bekannt sind. Diese leistungsstarken Widgets haben uns dabei geholfen, bestimmte Funktionen und Interaktionen in unserer App umzusetzen. Hier sind einige der Schlüsselwidgets, die wir eingesetzt haben:
+Im Rahmen unseres Projekts nutzen wir eine Reihe von Flutter-Widgets, die als "Widgets der Woche" bekannt sind. 
+Diese leistungsstarken Widgets helfen uns dabei, bestimmte Funktionen und Interaktionen in unserer App umzusetzen. 
+Hier sind einige der Schlüsselwidgets, die wir eingesetzen:
 
-\begin{itemize}
+\begin{enumerate}
 \item \textbf{CupertinoNavigationBar:} Wir haben das \texttt{CupertinoNavigationBar}-Widget verwendet, um eine elegante und intuitive Navigation innerhalb unserer App zu ermöglichen. Dieses Widget stellt eine Navigationsleiste im iOS-Stil dar, die es Benutzern ermöglicht, zwischen verschiedenen Ansichten und Bildschirmen unserer App zu wechseln.
 
-\item \textbf{FutureBuilder:} Um Daten aus einer Datenbank abzurufen und anzuzeigen, haben wir das \texttt{FutureBuilder}-Widget verwendet. Dieses Widget ermöglichte es uns, asynchrone Operationen auszuführen und das Ergebnis in Echtzeit in unserer Benutzeroberfläche zu aktualisieren. Dadurch konnten wir eine reibungslose und reaktive Benutzererfahrung gewährleisten.
+\item \textbf{FutureBuilder:} Um Daten aus einer Datenbank abzurufen und anzuzeigen, nutzen wir das \texttt{FutureBuilder}-Widget. Dieses Widget ermöglichte es uns, asynchrone Operationen auszuführen und das Ergebnis in Echtzeit in unserer Benutzeroberfläche zu aktualisieren. Dadurch können wir eine reibungslose und reaktive Benutzererfahrung gewährleisten.
 
-\item \textbf{GridView:} Um eine übersichtliche Darstellung von Ordnern in unserer App zu ermöglichen, haben wir das \texttt{GridView}-Widget verwendet. Mit diesem Widget konnten wir die Ordneransicht in ein Rasterlayout umwandeln, in dem Benutzer auf einfache Weise durch die verschiedenen Ordner navigieren und sie auswählen konnten.
-\end{itemize}
+\item \textbf{GridView:} Um eine übersichtliche Darstellung von Ordnern in unserer App zu ermöglichen, habnutzenen wir das \texttt{GridView}-Widget. Mit diesem Widget konnten wir die Ordneransicht in ein Rasterlayout umwandeln, in dem Benutzer auf einfache Weise durch die verschiedenen Ordner navigieren und sie auswählen zu können.
+\end{enumerate}
 
 \begin{tabular}{lll}
 SafeArea & LinearGradient & StatefulBuilder \\
@@ -53,28 +68,34 @@ LayoutBuilder & SliverList & SliverGrid \\
 
 \section{Themes}
 
-Unser Projekt implementiert ein flexibles Theme-System, das es uns ermöglicht, das Design unserer App einfach anzupassen oder neue Themes hinzuzufügen. Die Hauptfarben für sowohl das Dark- als auch das Light-Theme sind bewusst so gestaltet, dass sie den Apple-Farben ähneln. Dadurch schaffen wir eine konsistente visuelle Ästhetik und sorgen dafür, dass unsere App in das Apple-Ökosystem passt.
+Unser Projekt implementiert ein flexibles Theme-System, das es uns ermöglicht, 
+dass Design unserer App einfach anzupassen oder neue Themes hinzuzufügen. 
+Die Hauptfarben für sowohl das Dark- als auch das Light-Theme sind bewusst so gestaltet, 
+dass sie den Apple-Farben ähneln jedoch unserem Color-CI entsprechen. 
+Dadurch schaffen wir eine konsistente visuelle Ästhetik und sorgen dafür, 
+dass unsere App in das Apple-Ökosystem passt.
 
 
 \section{Spezifische Packages}
+Wir nutzen verschiedene Packages in unserem Projekt, um spezifische Funktionalitäten zu implementieren. 
+Dabei haben folgende Packages eine wichtige Rolle gespielt:
 
-Wir haben verschiedene Packages in unserem Projekt verwendet, um spezifische Funktionalitäten zu implementieren. Dabei haben folgende Packages eine wichtige Rolle gespielt:
+\begin{enumerate}
+\item \textbf{social\_share Package:} Wir nutzen das social\_share Package, um den Benutzern die Möglichkeit zu geben, Einträge aus unserer App einfach und schnell über verschiedene soziale Medienplattformen zu teilen. Durch die Integration dieses Packages können wir eine nahtlose Teilen-Funktionalität implementieren und es unseren Benutzern ermöglichen, ihre Erfahrungen und Inhalte mit anderen zu teilen.
 
-\begin{itemize}
-\item \textbf{social\_share Package:} Wir haben das social\_share Package genutzt, um den Benutzern die Möglichkeit zu geben, Einträge aus unserer App einfach und schnell über verschiedene soziale Medienplattformen zu teilen. Durch die Integration dieses Packages konnten wir eine nahtlose Teilen-Funktionalität implementieren und es unseren Benutzern ermöglichen, ihre Erfahrungen und Inhalte mit anderen zu teilen.
+\item \textbf{device\_calendar Package:} Das device\_calendar Package spielte eine wichtige Rolle bei der Integration von Kalenderfunktionen in unsere App. Mit diesem Package können wir Ereignisse zu den Systemkalendern der Benutzer hinzufügen und entfernen. Dadurch konnten wir eine nahtlose Integration mit den Kalendern auf den Geräten unserer Benutzer gewährleisten und es ihnen ermöglichen, wichtige Termine und Ereignisse direkt aus unserer App heraus zu verwalten.
 
-\item \textbf{device\_calendar Package:} Das device\_calendar Package spielte eine wichtige Rolle bei der Integration von Kalenderfunktionen in unsere App. Mit diesem Package konnten wir Ereignisse zu den Systemkalendern der Benutzer hinzufügen und entfernen. Dadurch konnten wir eine nahtlose Integration mit den Kalendern auf den Geräten unserer Benutzer gewährleisten und es ihnen ermöglichen, wichtige Termine und Ereignisse direkt aus unserer App heraus zu verwalten.
+\item \textbf{isar Package:} Das isar Package wurde verwendet, um eine effiziente Datenbank- und Persistenzverwaltung in unserer App zu ermöglichen. Mit diesem Package können wir Datenbankoperationen wie das Speichern, Abfragen und Aktualisieren von Daten nahtlos und performant durchführen. Die Verwendung von isar ermöglicht es uns, die Daten in unserer App effektiv zu verwalten und die Benutzererfahrung zu verbessern.
 
-\newpage
+\item \textbf{beamer Package:} Das beamer Package hat eine wichtige Rolle bei der Implementierung des Routings innerhalb unserer App gespielt. Mit diesem Package können wir eine effiziente Navigation zwischen verschiedenen Bildschirmen und Ansichten realisieren. Beamer ermöglicht es uns, komplexe Routenstrukturen zu verwalten und eine benutzerfreundliche und intuitive Navigation durch unsere App zu gewährleisten.
 
-\item \textbf{isar Package:} Das isar Package wurde verwendet, um eine effiziente Datenbank- und Persistenzverwaltung in unserer App zu ermöglichen. Mit diesem Package konnten wir Datenbankoperationen wie das Speichern, Abfragen und Aktualisieren von Daten nahtlos und performant durchführen. Die Verwendung von isar ermöglichte es uns, die Daten in unserer App effektiv zu verwalten und die Benutzererfahrung zu verbessern.
+\end{enumerate}
 
-
-\item \textbf{beamer Package:} Das beamer Package hat eine wichtige Rolle bei der Implementierung des Routings innerhalb unserer App gespielt. Mit diesem Package konnten wir eine effiziente Navigation zwischen verschiedenen Bildschirmen und Ansichten realisieren. Beamer ermöglichte es uns, komplexe Routenstrukturen zu verwalten und eine benutzerfreundliche und intuitive Navigation durch unsere App zu gewährleisten.
-
-\end{itemize}
-
-Durch die gezielte Nutzung dieser Packages konnten wir spezifische Funktionen implementieren und die Benutzererfahrung unserer App erweitern. Sie haben es uns ermöglicht, Teilen, persistente Bildspeicherung und Kalenderintegration reibungslos und effizient in unsere App zu integrieren.
+Durch die gezielte Nutzung dieser Packages können wir spezifische Funktionen implementieren und die Benutzererfahrung unserer App erweitern. 
+Sie ermöglichen es uns, Teilen, persistente Bildspeicherung und Kalenderintegration reibungslos und effizient in unsere App zu integrieren.
 
 \section{Splash Screen}
-Neben dem Logo (siehe \ref{fig:logo}) wurde zudem ein ansprechender Splash Screen wurde für unsere App entwickelt, um einen visuell ansprechenden Start zu gewährleisten. Der Splash Screen wird beim Start der App angezeigt und bietet den Benutzern eine sofortige visuelle Identifikation unserer Marke und des Designs.
+Neben dem Logo (siehe \ref{fig:logo}) wurde zudem ein ansprechender Splash Screen wurde für unsere App entwickelt, 
+um einen visuell ansprechenden Start zu gewährleisten. 
+Der Splash Screen wird beim Start der App angezeigt und bietet den Benutzern eine sofortige visuelle Identifikation unserer 
+Marke und des Designs.
